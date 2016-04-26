@@ -19,12 +19,6 @@ import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-
-/**
- * Created on 4:49 17.04.2016
- *
- * @author Bersik (Serhii Kisilchuk)
- */
 @Service("registrationService")
 public class RegistrationService implements IRegistrationService {
 

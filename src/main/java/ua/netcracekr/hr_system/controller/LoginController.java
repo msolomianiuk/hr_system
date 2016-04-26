@@ -13,12 +13,6 @@ import ua.netcracekr.hr_system.model.entity.Candidate;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/**
- * Class for processing login requests
- *
- * @author Bersik (Serhii Kisilchuk)
- * @version 1.0
- */
 @Controller
 public class LoginController {
 

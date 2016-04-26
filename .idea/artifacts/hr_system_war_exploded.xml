@@ -31,7 +31,7 @@
         </element>
       </element>
       <element id="directory" name="META-INF">
-        <element id="file-copy" path="E:\project NetCracker\hr_sys\target/MANIFEST.MF" />
+        <element id="file-copy" path="$PROJECT_DIR$/target/hr_system-1.0-SNAPSHOT/META-INF/MANIFEST.MF" />
       </element>
       <element id="javaee-facet-resources" facet="hr_system/web/Web" />
     </root>
