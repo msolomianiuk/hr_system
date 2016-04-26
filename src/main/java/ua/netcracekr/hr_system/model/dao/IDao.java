@@ -22,10 +22,10 @@ public interface IDao<PK extends Serializable, T> {
     /**
      * Find entity by primary key
      *
-     * @param key primary key
+     * @param sql
      * @return entity
      */
-    T find(PK key);
+    T find(String sql);
 
     /**
      * Insert (save) entity

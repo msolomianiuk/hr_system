@@ -30,9 +30,10 @@ public class UserDaoImpl implements IUserDao {
     }
 
     @Override
-    public User find(Integer key) {
-        throw new UnsupportedOperationException();
+    public User find(String sql) {
+        return null;
     }
+
 
     @Override
     public User findByEmail(String email) {

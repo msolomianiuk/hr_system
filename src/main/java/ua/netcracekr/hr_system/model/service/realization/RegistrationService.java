@@ -3,7 +3,10 @@ package ua.netcracekr.hr_system.model.service.realization;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ua.netcracekr.hr_system.model.dao.ICandidateDao;
 import ua.netcracekr.hr_system.model.dao.IUserDao;
+import ua.netcracekr.hr_system.model.dao.db_dao.CandidateDaoImpl;
+import ua.netcracekr.hr_system.model.entity.Candidate;
 import ua.netcracekr.hr_system.model.entity.Role;
 import ua.netcracekr.hr_system.model.entity.User;
 import ua.netcracekr.hr_system.model.service.IRegistrationService;
@@ -25,7 +28,8 @@ import java.util.Arrays;
 public class RegistrationService implements IRegistrationService {
 
     private static final Logger LOGGER = Logger.getLogger(CustomUserDetailsServiceImpl.class);
-
+    @Autowired
+    CandidateDaoImpl candidateDao;
     @Autowired
     IUserDao userDAO;
 
@@ -47,7 +51,11 @@ public class RegistrationService implements IRegistrationService {
         EmailValidator ev = new EmailValidator();
         NameValidator nv = new NameValidator();
         PasswordValidator pv = new PasswordValidator();
+        //
 
+        Candidate candidate = new Candidate(2,10,1,1);
+        candidateDao.insert(candidate);
+        //
         if (ev.validate(email) && nv.validate(name) && nv.validate(surname)
                 && nv.validate(patronymic) && pv.validate(password)) {
 

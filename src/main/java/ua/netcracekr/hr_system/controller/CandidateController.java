@@ -16,6 +16,8 @@ public class CandidateController {
      */
     @RequestMapping(value = "/student", method = RequestMethod.GET)
     public String mainPage(Model model) {
+
         return "student";
     }
+
 }
