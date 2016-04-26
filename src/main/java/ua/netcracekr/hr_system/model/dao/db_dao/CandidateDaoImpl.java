@@ -26,6 +26,7 @@ public class CandidateDaoImpl implements ICandidateDao {
 
     @Autowired(required = false)
     private void setCandidate(Candidate candidate) {
+
         this.candidate = candidate;
     }
 
@@ -37,7 +38,7 @@ public class CandidateDaoImpl implements ICandidateDao {
     private SimpleJdbcInsert simpleJdbcInsert;
 
 
-    public boolean insertCandidate(Candidate candidate) {
+    public boolean insert(Candidate candidate) {
         simpleJdbcInsert = new SimpleJdbcInsert(dataSource).
                 withTableName("\"hr_system\".candidate").
                 usingColumns("id", "user_id", "status_id", "course_id");
@@ -69,10 +70,7 @@ public class CandidateDaoImpl implements ICandidateDao {
         return null;
     }
 
-    @Override
-    public boolean insert(Candidate elem) {
-        return false;
-    }
+
 
     @Override
     public boolean update(Candidate elem) {

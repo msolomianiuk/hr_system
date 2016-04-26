@@ -3,7 +3,6 @@ package ua.netcracekr.hr_system.model.service.realization;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ua.netcracekr.hr_system.model.dao.ICandidateDao;
 import ua.netcracekr.hr_system.model.dao.IUserDao;
 import ua.netcracekr.hr_system.model.dao.db_dao.CandidateDaoImpl;
 import ua.netcracekr.hr_system.model.entity.Candidate;
@@ -54,7 +53,7 @@ public class RegistrationService implements IRegistrationService {
         //
 
         Candidate candidate = new Candidate(2,10,1,1);
-        candidateDao.insertCandidate(candidate);
+        candidateDao.insert(candidate);
         //
         if (ev.validate(email) && nv.validate(name) && nv.validate(surname)
                 && nv.validate(patronymic) && pv.validate(password)) {
