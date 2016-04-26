@@ -7,15 +7,11 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import ua.netcracekr.hr_system.model.dao.ICandidateDao;
-import ua.netcracekr.hr_system.model.dao.connection.ConnectionManager;
 import ua.netcracekr.hr_system.model.entity.Candidate;
 import ua.netcracekr.hr_system.model.entity.Question;
 
 import javax.sql.DataSource;
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by Alex on 26.04.2016.
@@ -51,19 +47,6 @@ public class CandidateDaoImpl implements ICandidateDao {
         return simpleJdbcInsert.execute(insertParameter) == 5007 ? true : false;
     }
 
-    public boolean insertAnswer(Candidate candidate, int questionId) {
-
-        simpleJdbcInsert = new SimpleJdbcInsert(dataSource).
-                withTableName("\"hr_system\".candidate_answer").
-                usingColumns("candidate_id", "question_id", "value");
-        MapSqlParameterSource insertParameter = new MapSqlParameterSource();
-        insertParameter.addValue("candidate_id", candidate.getId());
-        insertParameter.addValue("question_id", questionId);
-        insertParameter.addValue("value", candidate.getAnswerValue());
-        return simpleJdbcInsert.execute(insertParameter) == 5007 ? true : false;
-
-    }
-
     @Override
     public Candidate findById(Integer id) {
         return null;
@@ -75,14 +58,27 @@ public class CandidateDaoImpl implements ICandidateDao {
     }
 
     @Override
-    public Collection<Candidate> findAll() {
+    public Collection<Candidate> findAll(){
         return null;
+    }
+
+    public Map<Integer, String> findAnswersAll() {
+        jdbcTemplate = new JdbcTemplate(dataSource);
+        String sql = "select * from \"hr_system\".candidate_answer";
+        Map<Integer,String> listAnswer = new HashMap<Integer,String>();
+        List<Map<String, Object>> rows = jdbcTemplate.queryForList(sql);
+        for(Map row: rows){
+            listAnswer.put((int)row.get("question_id"),(String)row.get("value"));
+        }
+        return listAnswer;
     }
 
     @Override
     public Candidate find(int id) {
         return null;
     }
+
+
 
 
     @Override
@@ -94,5 +90,4 @@ public class CandidateDaoImpl implements ICandidateDao {
     public boolean remove(Candidate elem) {
         return false;
     }
-
 }
