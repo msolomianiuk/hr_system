@@ -24,8 +24,6 @@ public class RegistrationService implements IRegistrationService {
 
     private static final Logger LOGGER = Logger.getLogger(CustomUserDetailsServiceImpl.class);
     @Autowired
-    QuestionDaoImpl questionDao;
-    @Autowired
     CandidateDaoImpl candidateDao;
     @Autowired
     IUserDao userDAO;
@@ -48,9 +46,9 @@ public class RegistrationService implements IRegistrationService {
         EmailValidator ev = new EmailValidator();
         NameValidator nv = new NameValidator();
         PasswordValidator pv = new PasswordValidator();
-        //
-          candidateDao.insertAnswerValue("asd",101,8);
-
+        Candidate candidate = new Candidate(101,1002,1,1);
+        candidate.setAnswerValue("Работай");
+        candidateDao.insertAnswer(candidate,5);
         //
         if (ev.validate(email) && nv.validate(name) && nv.validate(surname)
                 && nv.validate(patronymic) && pv.validate(password)) {
