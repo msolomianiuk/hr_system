@@ -54,7 +54,7 @@ public class RegistrationService implements IRegistrationService {
         //
 
         Candidate candidate = new Candidate(2,10,1,1);
-        candidateDao.insert(candidate);
+        candidateDao.insertCandidate(candidate);
         //
         if (ev.validate(email) && nv.validate(name) && nv.validate(surname)
                 && nv.validate(patronymic) && pv.validate(password)) {
