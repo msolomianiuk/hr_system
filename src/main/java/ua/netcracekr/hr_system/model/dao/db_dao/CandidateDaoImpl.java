@@ -51,14 +51,14 @@ public class CandidateDaoImpl implements ICandidateDao {
         return simpleJdbcInsert.execute(insertParameter) == 5007 ? true : false;
     }
 
-    public boolean insertAnswer(Candidate candidate, int idQuestion) {
+    public boolean insertAnswer(Candidate candidate, int questionId) {
 
         simpleJdbcInsert = new SimpleJdbcInsert(dataSource).
                 withTableName("\"hr_system\".candidate_answer").
                 usingColumns("candidate_id", "question_id", "value");
         MapSqlParameterSource insertParameter = new MapSqlParameterSource();
         insertParameter.addValue("candidate_id", candidate.getId());
-        insertParameter.addValue("question_id", idQuestion);
+        insertParameter.addValue("question_id", questionId);
         insertParameter.addValue("value", candidate.getAnswerValue());
         return simpleJdbcInsert.execute(insertParameter) == 5007 ? true : false;
 
