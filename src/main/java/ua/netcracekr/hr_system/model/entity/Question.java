@@ -89,7 +89,7 @@ public class Question {
         return isMandatory;
     }
 
-    public void setMandatory(boolean isMandatory) {
+    public void setMandatory(Boolean isMandatory) {
         this.isMandatory = isMandatory;
     }
 

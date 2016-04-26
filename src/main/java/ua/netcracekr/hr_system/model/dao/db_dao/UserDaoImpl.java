@@ -30,7 +30,7 @@ public class UserDaoImpl implements IUserDao {
     }
 
     @Override
-    public User find(String sql) {
+    public User find(int id) {
         return null;
     }
 

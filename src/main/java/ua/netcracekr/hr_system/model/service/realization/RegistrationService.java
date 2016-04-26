@@ -5,7 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ua.netcracekr.hr_system.model.dao.IUserDao;
 import ua.netcracekr.hr_system.model.dao.db_dao.CandidateDaoImpl;
+import ua.netcracekr.hr_system.model.dao.db_dao.QuestionDaoImpl;
 import ua.netcracekr.hr_system.model.entity.Candidate;
+import ua.netcracekr.hr_system.model.entity.Question;
 import ua.netcracekr.hr_system.model.entity.Role;
 import ua.netcracekr.hr_system.model.entity.User;
 import ua.netcracekr.hr_system.model.service.IRegistrationService;
@@ -27,6 +29,8 @@ import java.util.Arrays;
 public class RegistrationService implements IRegistrationService {
 
     private static final Logger LOGGER = Logger.getLogger(CustomUserDetailsServiceImpl.class);
+    @Autowired
+    QuestionDaoImpl questionDao;
     @Autowired
     CandidateDaoImpl candidateDao;
     @Autowired
@@ -51,9 +55,8 @@ public class RegistrationService implements IRegistrationService {
         NameValidator nv = new NameValidator();
         PasswordValidator pv = new PasswordValidator();
         //
+          candidateDao.insertAnswerValue("asd",101,8);
 
-        Candidate candidate = new Candidate(2,10,1,1);
-        candidateDao.insert(candidate);
         //
         if (ev.validate(email) && nv.validate(name) && nv.validate(surname)
                 && nv.validate(patronymic) && pv.validate(password)) {

@@ -1,4 +1,4 @@
-package ua.netcracekr.hr_system.model.dao.db_dao;
+package ua.netcracekr.hr_system.model.dao;
 
 import ua.netcracekr.hr_system.model.dao.IDao;
 import ua.netcracekr.hr_system.model.entity.Question;
