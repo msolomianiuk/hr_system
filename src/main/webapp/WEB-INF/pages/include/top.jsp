@@ -4,9 +4,7 @@
 
 Hello <sec:authentication property="principal.name"/>&nbsp;<sec:authentication property="principal.surname"/>
 <form name="loginForm" action="<c:url value='/logout' />" method='POST'>
-
     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-
     <p class="submit"><input type="submit" name="commit" value="Logout"></p>
 </form>
 

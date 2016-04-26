@@ -55,7 +55,7 @@
                      expected-type="javax.sql.DataSource"/>
 
     <!-- Set up authentication manager and password encoder
-    see CustomUserDetailsServiceImpl
+    see ua.netcracekr.hr_system.model.service.realization.CustomUserDetailsServiceImpl
     -->
     <authentication-manager>
         <authentication-provider user-service-ref="customUserDetailsService">
@@ -64,9 +64,9 @@
     </authentication-manager>
 
     <beans:bean id="customUserDetailsService"
-                class="ua.netcracker.hr_system.model.service.realization.CustomUserDetailsServiceImpl"/>
+                class="ua.netcracekr.hr_system.model.service.realization.CustomUserDetailsServiceImpl"/>
 
-    <beans:bean id="customSuccessHandler" class="ua.netcracker.hr_system.configuration.CustomSuccessHandler"/>
+    <beans:bean id="customSuccessHandler" class="ua.netcracekr.hr_system.configuration.CustomSuccessHandler"/>
 
-    <context:component-scan base-package="ua.netcracker.hr_system.model.dao"/>
+    <context:component-scan base-package="ua.netcracekr.hr_system.model.dao"/>
 </beans:beans>
