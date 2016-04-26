@@ -8,7 +8,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import ua.netcracekr.hr_system.model.dao.db_dao.CandidateDao;
 import ua.netcracekr.hr_system.model.entity.Candidate;
 
 import javax.servlet.http.HttpServletRequest;
