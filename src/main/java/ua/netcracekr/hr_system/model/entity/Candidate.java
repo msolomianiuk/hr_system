@@ -2,7 +2,9 @@ package ua.netcracekr.hr_system.model.entity;
 
 import org.springframework.stereotype.Component;
 
-
+/**
+ * Created by Alex on 24.04.2016.
+ */
 @Component
 public class Candidate {
     /**

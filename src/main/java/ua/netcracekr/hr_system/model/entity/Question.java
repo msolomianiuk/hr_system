@@ -3,7 +3,7 @@ package ua.netcracekr.hr_system.model.entity;
 import org.springframework.stereotype.Component;
 
 /**
- * Created by user on 24.04.2016.
+ * Created by Alex on 24.04.2016.
  */
 @Component
 public class Question {

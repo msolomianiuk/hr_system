@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 
 @Controller
-public class StudentController {
+public class CandidateController {
     /**
      * This method return String param for page web-interface "Student"
      *

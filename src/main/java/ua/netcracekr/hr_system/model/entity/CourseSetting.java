@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 import java.util.Date;
 
 /**
- * Created by user on 24.04.2016.
+ * Created by Alex on 24.04.2016.
  */
 @Component
 public class CourseSetting {
