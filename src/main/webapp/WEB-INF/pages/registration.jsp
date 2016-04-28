@@ -48,6 +48,7 @@
                 <div class="col-sm-8 col-sm-offset-2 text">
                     <%@ include file="include/H1title.jsp" %>
                     <h1>Register Forms</h1>
+
                     <div class="description">
                         <!-- <p>
                             This is a free responsive <strong>"login and register forms"</strong> template made with Bootstrap.
@@ -67,7 +68,9 @@
                                 <div class="form-top">
                                     <div class="form-top-left">
                                         <h3>Sign up</h3>
+
                                         <p>You have successfully signed up!</p>
+
                                         <p>Please, <a href="<c:url value="/login"/>">log in</a></p>
                                     </div>
                                 </div>
@@ -77,6 +80,7 @@
                                 <div class="form-top">
                                     <div class="form-top-left">
                                         <h3>Sign up now</h3>
+
                                         <p>Fill in the form below to get instant access:</p>
                                     </div>
                                     <div class="form-top-right">

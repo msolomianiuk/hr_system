@@ -25,6 +25,8 @@
         <intercept-url pattern="/login*" access="isAnonymous()"/>
         <intercept-url pattern="/static*" access="permitAll"/>
         <intercept-url pattern="/registration*" access="isAnonymous()"/>
+        <intercept-url pattern="/service/user" access="hasRole('ROLE_ADMIN')"/>
+        <intercept-url pattern="/new_personal" access="hasRole('ROLE_ADMIN')"/>
         <intercept-url pattern="/info*" access="permitAll"/>
         <intercept-url pattern="/" access="permitAll"/>
         <intercept-url pattern="/admin*" access="hasRole('ROLE_ADMIN')"/>
@@ -55,18 +57,19 @@
                      expected-type="javax.sql.DataSource"/>
 
     <!-- Set up authentication manager and password encoder
-    see ua.netcracekr.hr_system.model.service.realization.CustomUserDetailsServiceImpl
+    see CustomUserDetailsServiceImpl
     -->
     <authentication-manager>
-        <authentication-provider user-service-ref="customUserDetailsService">
+        <authentication-provider user-service-ref="userDetailsService">
             <password-encoder hash="sha-256"/>
         </authentication-provider>
     </authentication-manager>
 
-    <beans:bean id="customUserDetailsService"
-                class="ua.netcracekr.hr_system.model.service.realization.CustomUserDetailsServiceImpl"/>
+    <beans:bean id="userDetailsService"
+                class="ua.netcracker.hr_system.model.service.serviceImpl.CustomUserDetailsServiceImpl"/>
 
-    <beans:bean id="customSuccessHandler" class="ua.netcracekr.hr_system.configuration.CustomSuccessHandler"/>
+    <beans:bean id="customSuccessHandler" class="ua.netcracker.hr_system.configuration.CustomSuccessHandler"/>
 
-    <context:component-scan base-package="ua.netcracekr.hr_system.model.dao"/>
+    <context:component-scan base-package="ua.netcracker.hr_system.model.dao"/>
+
 </beans:beans>

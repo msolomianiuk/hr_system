@@ -11,7 +11,8 @@
          http://www.springframework.org/schema/context
          http://www.springframework.org/schema/context/spring-context.xsd
          http://www.springframework.org/schema/jee
-         http://www.springframework.org/schema/jee/spring-jee.xsd">
+         http://www.springframework.org/schema/jee/spring-jee.xsd
+         ">
 
     <!-- ========================= DATASOURCE DEFINITION ========================= -->
 
@@ -19,8 +20,23 @@
     <!-- (in this case, JDBC-related settings for the dataSource definition below) -->
     <context:property-placeholder location="/WEB-INF/spring/data-access.properties" system-properties-mode="OVERRIDE"/>
 
+    <!--<bean name="springDataSource" class="org.springframework.jndi.JndiObjectFactoryBean" destroy-method="close">-->
+        <!--<property name="jdbcUrl"><value>//localhost:5432/hr_system</value></property>-->
+        <!--<property name="user"><value>admin</value></property>-->
+        <!--<property name="password"><value>CP2netCR</value></property>-->
+    <!--</bean>-->
+
     <jee:jndi-lookup id="dataSource" jndi-name="jdbc/${jdbc.jndi_name}"
                      expected-type="javax.sql.DataSource"/>
+
+
+
+    <!--<bean id="springDataSource" class="org.springframework.jndi.JndiObjectFactoryBean">-->
+        <!--<property name="jndiName" value="jdbc/${jdbc.jndi_name}"/>-->
+        <!--<property name="lookupOnStartup" value="true"/>-->
+        <!--<property name="proxyInterface" value="javax.sql.DataSource"/>-->
+    <!--</bean>-->
+
 
     <!-- Database initializer. If any of the script fails, the initialization stops. -->
     <!-- As an alternative, for embedded databases see <jdbc:embedded-database/>.
