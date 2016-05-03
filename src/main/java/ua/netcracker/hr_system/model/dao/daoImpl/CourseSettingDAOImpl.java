@@ -43,7 +43,7 @@ public class CourseSettingDAOImpl implements CourseSettingDAO<CourseSetting> {
         );
         return courseSetting;
     }
-//1234567890
+
     private CourseSetting getCourseSetting(ResultSet resultSet) throws SQLException {
         CourseSetting courseSetting = new CourseSetting();
         courseSetting.setId(resultSet.getInt("id"));
