@@ -2,7 +2,7 @@ package ua.netcracker.hr_system.model.service.serviceImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ua.netcracker.hr_system.model.dao.daoImpl.CourseSettingDAOImpl;
+import ua.netcracker.hr_system.model.dao.daoImpl.CourseSettingDAOImpl1234;
 import ua.netcracker.hr_system.model.entity.CourseSetting;
 import ua.netcracker.hr_system.model.service.serviceInterface.CourseSettingService;
 
@@ -14,10 +14,10 @@ import java.util.Collection;
 @Service("courseSettingService")
 public class CourseSettingServiceImpl implements CourseSettingService {
     @Autowired
-    private CourseSettingDAOImpl courseSettingDao;
+    private CourseSettingDAOImpl1234 courseSettingDao;
 
     @Autowired(required = false)
-    private void setCourseSettingDao(CourseSettingDAOImpl courseSettingDao) {
+    private void setCourseSettingDao(CourseSettingDAOImpl1234 courseSettingDao) {
         this.courseSettingDao = courseSettingDao;
     }
 
