@@ -75,7 +75,7 @@ public class CourseSettingDAOImpl implements CourseSettingDAO<CourseSetting> {
                 courseSetting.getStudentInterviewCount());
         return true;
     }
-
+//E{FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFff
 
     private String getNormaliDateInsert(String date) {
         return "'" + date + "'";
@@ -92,22 +92,6 @@ public class CourseSettingDAOImpl implements CourseSettingDAO<CourseSetting> {
         return false;
     }
 
-
-//    private SqlParameterSource getSqlParametrByModel(CourseSetting courseSetting) {
-//
-//        MapSqlParameterSource parameterSource = new MapSqlParameterSource();
-//        parameterSource.addValue("id", courseSetting.getId());
-//        parameterSource.addValue("interview_end_date", courseSetting.getInterviewEndDate());
-//        parameterSource.addValue("interview_start_date", courseSetting.getInterviewStartDate());
-//        parameterSource.addValue("registration_start_date", courseSetting.getRegistrationStartDate());
-//        parameterSource.addValue("registration_end_date", courseSetting.getRegistrationEndDate());
-//        parameterSource.addValue("course_start_date", courseSetting.getStartCourseDate());
-//        parameterSource.addValue("interview_time_for_student", courseSetting.getInterviewTimeForStudent());
-//        parameterSource.addValue("student_for_courses_count", courseSetting.getStudentForCourseCount());
-//        parameterSource.addValue("student_for_interview_count", courseSetting.getStudentForInterviewCount());
-//
-//        return parameterSource;
-//    }
 
 
 }
