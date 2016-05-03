@@ -58,7 +58,6 @@ public class CourseSettingDAOImpl implements CourseSettingDAO<CourseSetting> {
         return courseSetting;
     }
 
-
     @Override
     public boolean insert(CourseSetting courseSetting) {
 
@@ -70,9 +69,15 @@ public class CourseSettingDAOImpl implements CourseSettingDAO<CourseSetting> {
                         "course_start_date, interview_time_for_student," +
                         " student_for_interview_count, student_for_courses_count) " +
                         "values (?,?,?,?,?,?,?,?,?)",
-                courseSetting.getId(), null, null, null, null, null, 34,
-                courseSetting.getStudentCourseCount(),
-                courseSetting.getStudentInterviewCount());
+                courseSetting.getId(),
+                courseSetting.getInterviewEndDate(),
+                courseSetting.getInterviewStartDate(),
+                courseSetting.getRegistrationStartDate(),
+                courseSetting.getRegistrationEndDate(),
+                courseSetting.getCourseStartDate(),
+                courseSetting.getInterviewTime(),
+                courseSetting.getStudentInterviewCount(),
+                courseSetting.getStudentCourseCount());
         return true;
     }
 
