@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/mvc
+       http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+    <!-- Scan packages for the String components (@Component,@Repository, @Controller,@Service-->
+
+    <context:component-scan base-package="ua.netcracker.hr_system.model.entity"/>
+    <context:component-scan base-package="ua.netcracker.hr_system.model.utils"/>
+    <context:component-scan base-package="ua.netcracker.hr_system.controller"/>
+    <context:component-scan base-package="ua.netcracker.hr_system.model.service"/>
+    <context:component-scan base-package="ua.netcracker.hr_system.model.dao"/>
+
+    <!-- Method viewResolver configures a view resolver to identify the real view.-->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="viewClass"
+                  value="org.springframework.web.servlet.view.JstlView"/>
+        <property name="prefix" value="/WEB-INF/pages/"/>
+        <property name="suffix" value=".jsp"/>
+    </bean>
+
+    <!--Method addResourceHandlers configures the ResourceHandler for static resources.
+    CSS, JavaScript, images etc are static resources your pages needs.Above configuration
+    says that all resource requests starting with /static/ will be served from /static/ folder under webapp.
+    In this example, we will put all the css files under /static/css inside webapp directory. Note that this method
+    is defined in WebMvcConfigurerAdapter so we needed to extend this class to override this method in order to
+    register our static resources.-->
+    <mvc:annotation-driven/>
+    <mvc:resources mapping="/static/**" location="/static/"/>
+    <mvc:default-servlet-handler/>
+</beans>

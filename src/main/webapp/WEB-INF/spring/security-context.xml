@@ -1,0 +1,75 @@
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:jee="http://www.springframework.org/schema/jee"
+             xmlns:context="http://www.springframework.org/schema/context"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+             http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
+     http://www.springframework.org/schema/context
+     http://www.springframework.org/schema/context/spring-context.xsd
+     http://www.springframework.org/schema/jee
+     http://www.springframework.org/schema/jee/spring-jee.xsd">
+
+    <!-- load properties from file data-access.properties-->
+    <context:property-placeholder location="/WEB-INF/spring/data-access.properties" system-properties-mode="OVERRIDE"/>
+
+    <http auto-config="true">
+        <!--
+        Configures HttpSecurity which allows configuring web based security for specific http requests. By default it will be applied to all
+        requests, but can be restricted using requestMatcher(RequestMatcher)/antMathchers or other similar methods.
+
+        In above configuration, we say that URL’s ‘/’ & ‘/info’ are not secured, anyone can access them. URL ‘/admin/**’
+        can only be accessed by someone who have ADMIN role. URL ‘/student/**’ can only be accessed by someone who have
+        both STUDENT role.
+         -->
+        <intercept-url pattern="/login/**" access="isAnonymous()"/>
+        <intercept-url pattern="/static/**" access="permitAll"/>
+        <intercept-url pattern="/registration/**" access="isAnonymous()"/>
+        <intercept-url pattern="/service/user" access="hasRole('ROLE_ADMIN')"/>
+        <intercept-url pattern="/new_personal" access="hasRole('ROLE_ADMIN')"/>
+        <intercept-url pattern="/info/**" access="permitAll"/>
+        <intercept-url pattern="/" access="permitAll"/>
+        <intercept-url pattern="/admin/**" access="hasRole('ROLE_ADMIN')"/>
+        <intercept-url pattern="/hr/**" access="hasRole('ROLE_HR')"/>
+        <intercept-url pattern="/ba/**" access="hasRole('ROLE_BA')"/>
+        <intercept-url pattern="/dev/**" access="hasRole('ROLE_DEV')"/>
+        <intercept-url pattern="/student/**" access="hasRole('ROLE_STUDENT')"/>
+        <!-- login form details-->
+        <form-login
+                login-page="/login"
+                username-parameter="form-username"
+                password-parameter="form-password"
+                authentication-success-handler-ref="customSuccessHandler"
+                authentication-failure-url="/login?error"/>
+        <logout logout-success-url="/logout"/>
+        <access-denied-handler error-page="/error?access_denied"/>
+        <csrf/>
+
+        <!--– token-validity-seconds = “remember-me” cookie, in seconds. 1209600 = 2 weeks (14 days),
+        86400 = 1 day, 18000 = 5 hours.-->
+        <remember-me
+                token-validity-seconds="1209600"
+                remember-me-parameter="form-remember-me"/>
+    </http>
+
+    <!-- data source from jndi -->
+    <jee:jndi-lookup id="dataSource" jndi-name="jdbc/${jdbc.jndi_name}"
+                     expected-type="javax.sql.DataSource"/>
+
+    <!-- Set up authentication manager and password encoder
+    see CustomUserDetailsServiceImpl
+    -->
+    <authentication-manager>
+        <authentication-provider user-service-ref="userDetailsService">
+            <password-encoder hash="sha-256"/>
+        </authentication-provider>
+    </authentication-manager>
+
+    <beans:bean id="userDetailsService"
+                class="ua.netcracker.hr_system.model.service.serviceImpl.CustomUserDetailsServiceImpl"/>
+
+    <beans:bean id="customSuccessHandler" class="ua.netcracker.hr_system.configuration.CustomSuccessHandler"/>
+
+    <context:component-scan base-package="ua.netcracker.hr_system.model.dao"/>
+
+</beans:beans>
