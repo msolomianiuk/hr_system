@@ -17,7 +17,7 @@ import java.util.Collection;
  * Created by Legion on 24.04.2016.
  */
 @Repository("courseSettingDao")
-public class CourseSettingDAOImpl1234 implements CourseSettingDAO<CourseSetting> {
+public class CourseSettingDAOImpl implements CourseSettingDAO<CourseSetting> {
 
     @Autowired()
     private DataSource dataSource;
