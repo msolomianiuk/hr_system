@@ -75,7 +75,6 @@ public class CourseSettingDAOImpl implements CourseSettingDAO<CourseSetting> {
                 courseSetting.getStudentInterviewCount());
         return true;
     }
-//E{FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFff
 
     private String getNormaliDateInsert(String date) {
         return "'" + date + "'";
