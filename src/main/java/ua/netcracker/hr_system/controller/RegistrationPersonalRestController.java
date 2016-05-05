@@ -6,10 +6,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import ua.netcracker.hr_system.model.dao.daoInterface.UserDAO;
+import ua.netcracker.hr_system.model.entity.Role;
 import ua.netcracker.hr_system.model.entity.User;
 import ua.netcracker.hr_system.model.service.serviceImpl.CustomUserDetailsServiceImpl;
 
+import java.security.MessageDigest;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by Legion on 27.04.2016.
@@ -18,49 +23,63 @@ import java.util.ArrayList;
 public class RegistrationPersonalRestController {
 
     private User user;
-
+    @Autowired
     private void setUser(User user) {
         this.user = user;
     }
 
-//    private UserDaoNew userDaoNew;
-//
-//    @Autowired
-//    private void setUserDao (UserDaoNew userDaoNew){
-//        this.userDaoNew = userDaoNew;
-//    }
+    private UserDAO userDAO;
     @Autowired
-    private CustomUserDetailsServiceImpl userDetailsService;
-
-
-    @Autowired
-    private void setUserDetailsService(CustomUserDetailsServiceImpl userDetailsService) {
-        this.userDetailsService = userDetailsService;
+    private void setUserDao (UserDAO userDAO){
+        this.userDAO = userDAO;
     }
 
+    private static String sha256Password(String password) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
 
+            md.update(password.getBytes("UTF-8"));
+            byte[] digest = md.digest();
+            return String.format("%064x", new java.math.BigInteger(1, digest));
+        } catch (Exception e) {
+//            LOGGER.error(e);
+        }
+        return null;
+    }
+    public static Role getRoleByStr(String role) {
+        if (Role.ADMIN.toString().equals(role))
+            return Role.ADMIN;
+        if (Role.STUDENT.toString().equals(role))
+            return Role.STUDENT;
+        if (Role.HR.toString().equals(role))
+            return Role.HR;
+        if (Role.BA.toString().equals(role))
+            return Role.BA;
+        if (Role.DEV.toString().equals(role))
+            return Role.DEV;
+        return null;
+    }
 
     @RequestMapping(value = "/new_personal", method = RequestMethod.GET)
     public ResponseEntity<User> setNewPersonal(
-            @RequestParam String idRole,
-            @RequestParam String name,
-            @RequestParam String surname,
-            @RequestParam String email,
-            @RequestParam String password,
-            @RequestParam String patronymic
+            @RequestParam String Role_Id,
+            @RequestParam String name_peronal,
+            @RequestParam String sername_peronal,
+            @RequestParam String email_peronal,
+            @RequestParam String password_peronal,
+            @RequestParam String patronymic_peronal
     ) {
 
-        ArrayList role = new ArrayList();
-        role.add(idRole);
 
-        user.setName(name);
-        user.setSurname(surname);
-        user.setPatronymic(patronymic);
-        user.setPassword(password);
-        user.setEmail(email);
-        user.setRoles(role);
+        user.setName(name_peronal);
+        user.setSurname(sername_peronal);
+        user.setPatronymic(patronymic_peronal);
+        user.setPassword(sha256Password(password_peronal));
+        user.setEmail(email_peronal);
+        user.setRoles( new ArrayList<>(Arrays.asList(getRoleByStr(Role_Id))));
 
-//                userDaoNew.insert(user);
+        userDAO.insert(user);
+
 
         return ResponseEntity.ok(user);
     }

@@ -12,6 +12,7 @@ import ua.netcracker.hr_system.model.dao.daoInterface.UserDAO;
 import ua.netcracker.hr_system.model.entity.Role;
 import ua.netcracker.hr_system.model.entity.User;
 import ua.netcracker.hr_system.model.utils.RolesUtils;
+import ua.netcracker.hr_system.model.utils.SendEmailsUtils;
 
 import javax.sql.DataSource;
 import java.sql.PreparedStatement;
@@ -192,6 +193,7 @@ public class UserDAOImpl implements UserDAO {
         Number key = simpleJdbcInsert.executeAndReturnKey(insertParameter);
         if (key != null) {
             user.setId(key.intValue());
+//            SendEmailsUtils.sendLettersToEmails(new String[]{user.getEmail()}, "Hello. You Reg", "HELLO");
             return insertUserRoles(user);
         }
         return false;

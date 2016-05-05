@@ -1,10 +1,10 @@
 /**
  * Created by Серый on 30.04.2016.
  */
-$(document).ready(function() {
+$(document).ready(function () {
 
     $.ajax({
-        url: "http://localhost:8080/hr_system-1.0-SNAPSHOT/student/test",
+        url: "http://localhost:8080/hr_system-1.0-SNAPSHOT/personal_list",
         type: "GET",
         //   contentType : "application/json",
         //beforeSend: funcbefor,
@@ -21,39 +21,34 @@ $(document).ready(function() {
 
 });
 
-function funcForAjax(data){
+function funcForAjax(data) {
     dataNewIn = data;
-    for(var indexba in data["BA"])
-    {
+    for (var indexba in data["BA"]) {
         baIndex = data["BA"][indexba];
-          $("#TableBA").append('<tr>' +
-                                  '<td>'+baIndex.name+'</td>' +
-                                  '<td>'+baIndex.surname+'</td>' +
-                                  '<td>'+baIndex.patronymic+'</td>' +
-                                  '<td>'+baIndex.email+'</td>' +
-                               '</tr>');
+        $("#TableBA").append('<tr>' +
+        '<td>' + baIndex.name + '</td>' +
+        '<td>' + baIndex.surname + '</td>' +
+        '<td>' + baIndex.patronymic + '</td>' +
+        '<td>' + baIndex.email + '</td>' +
+        '</tr>');
     }
-    for(var indexhr in data["HR"])
-    {
+    for (var indexhr in data["HR"]) {
         hrIndex = data["HR"][indexhr];
         $("#TableHR").append('<tr>' +
-                                '<td>'+hrIndex.name+'</td>' +
-                                '<td>'+hrIndex.surname+'</td>' +
-                                '<td>'+hrIndex.patronymic+'</td>' +
-                                '<td>'+hrIndex.email+'</td>' +
-                             '</tr>');
+        '<td>' + hrIndex.name + '</td>' +
+        '<td>' + hrIndex.surname + '</td>' +
+        '<td>' + hrIndex.patronymic + '</td>' +
+        '<td>' + hrIndex.email + '</td>' +
+        '</tr>');
     }
-    for(var indexdev in data["DEV"])
-    {
+    for (var indexdev in data["DEV"]) {
         devIndex = data["DEV"][indexdev];
         $("#TableDEV").append('<tr>' +
-        '<td>'+devIndex.name+'</td>' +
-        '<td>'+devIndex.surname+'</td>' +
-        '<td>'+devIndex.patronymic+'</td>' +
-        '<td>'+devIndex.email+'</td>' +
+        '<td>' + devIndex.name + '</td>' +
+        '<td>' + devIndex.surname + '</td>' +
+        '<td>' + devIndex.patronymic + '</td>' +
+        '<td>' + devIndex.email + '</td>' +
         '</tr>');
     }
 
 }
-
-

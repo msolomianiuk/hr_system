@@ -16,7 +16,7 @@ import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-@Service("registrationService")
+@Service("registration service")
 public class RegistrationServiceImp implements RegistrationService {
 
     private static final Logger LOGGER = Logger.getLogger(CustomUserDetailsServiceImpl.class);

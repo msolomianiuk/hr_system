@@ -67,4 +67,19 @@ public class InterviewDaysDetailsDAOImpl implements InterviewDaysDetailsDAO {
     public boolean remove(InterviewDaysDetails elem) {
         return false;
     }
+
+
+    public String getStartTimeInterview(){
+        String time = "";
+        return time;
+    }
+    public String getEndTimeInterview(){
+        String time = "";
+        return time;
+    }
+    public String getDateofInterview(){
+        String date = "";
+        return date;
+    }
+
 }

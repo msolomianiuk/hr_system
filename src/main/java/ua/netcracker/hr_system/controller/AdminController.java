@@ -8,32 +8,35 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import ua.netcracker.hr_system.model.entity.Candidate;
 import ua.netcracker.hr_system.model.entity.CourseSetting;
+import ua.netcracker.hr_system.model.service.date.MyDate;
+import ua.netcracker.hr_system.model.service.serviceImpl.CandidateServiceImpl;
 import ua.netcracker.hr_system.model.service.serviceImpl.CourseSettingServiceImpl;
 
-import java.util.Random;
 
-/**
- * Class for processing requests related to administrator
- *
- * @author Bersik (Serhii Kisilchuk)
- * @version 1.0
- */
 @Controller
 @RequestMapping(value = "/admin", method = RequestMethod.GET)
 public class AdminController {
 
-    private CourseSettingServiceImpl courseSettingService;
-    private CourseSetting courseSetting;
-
     @Autowired(required = false)
-    private void setCourseSettingService(CourseSettingServiceImpl courseSettingService) {
-        this.courseSettingService = courseSettingService;
-    }
+    private CourseSettingServiceImpl courseSettingService;
+
+    private CourseSetting courseSetting;
 
     @Autowired(required = false)
     private void setCourseSetting(CourseSetting courseSetting) {
         this.courseSetting = courseSetting;
+    }
+
+    @Autowired(required = false)
+    private CandidateServiceImpl candidateService;
+
+    private MyDate date;
+
+    @Autowired(required = false)
+    private void setDate(MyDate date) {
+        this.date = date;
     }
 
     @RequestMapping(value = "", method = RequestMethod.GET)
@@ -76,10 +79,11 @@ public class AdminController {
     @RequestMapping(value = "/setting", method = RequestMethod.GET)
     public String getAllUsers(Model model) {
 
-        return "course_setting";
+        return "admin_setting";
     }
 
-    @RequestMapping(value = "/course_setting", method = RequestMethod.GET)
+
+    @RequestMapping(value = "/admin_setting", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<CourseSetting> setCourseSettingFromFromEnd(
             @RequestParam String registrationStartDate,
@@ -90,19 +94,18 @@ public class AdminController {
             @RequestParam String interviewTimeForStudent,
             @RequestParam String studentForInterviewCount,
             @RequestParam String studentForCourseCount
-    ) {
-        Random rand = new Random();
 
-        int randomNum = rand.nextInt((100 - 10) + 1) + 23;
-        courseSetting.setId(randomNum + 5000);
-        courseSetting.setRegistrationStartDate(registrationStartDate);
-        courseSetting.setInterviewEndDate(interviewEndDate);
-        courseSetting.setInterviewStartDate(interviewStartDate);
-        courseSetting.setRegistrationEndDate(registrationEndDate);
-        courseSetting.setCourseStartDate(courseStartDate);
-        courseSetting.setInterviewTime (Integer.parseInt(interviewTimeForStudent));
-        courseSetting.setStudentCourseCount (Integer.parseInt(studentForCourseCount));
-        courseSetting.setStudentInterviewCount (Integer.parseInt(studentForInterviewCount));
+    ) {
+
+        courseSetting.setId(date.getCurrentYear() * 100 + date.getCurrentMonth());
+        courseSetting.setRegistrationStartDate(setDate(registrationStartDate));
+        courseSetting.setInterviewEndDate(setDate(interviewEndDate));
+        courseSetting.setInterviewStartDate(setDate(interviewStartDate));
+        courseSetting.setRegistrationEndDate(setDate(registrationEndDate));
+        courseSetting.setCourseStartDate(setDate(courseStartDate));
+        courseSetting.setInterviewTime(Integer.parseInt(interviewTimeForStudent));
+        courseSetting.setStudentCourseCount(Integer.parseInt(studentForCourseCount));
+        courseSetting.setStudentInterviewCount(Integer.parseInt(studentForInterviewCount));
 
         courseSettingService.saveOrUpdate(courseSetting);
 
@@ -111,4 +114,28 @@ public class AdminController {
         }
         return ResponseEntity.ok(courseSetting);
     }
+
+    private String setDate(String inDate) {
+        date = new MyDate();
+        return String.valueOf(date.setDateMillis(inDate));
+    }
+
+    @RequestMapping(value = "/up_setting", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<CourseSetting> getSetting() {
+
+        return ResponseEntity.ok(courseSettingService.getIdLastSetting());
+    }
+
+    @RequestMapping(value = "/get_candidate", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<Candidate> setCandidate(
+            @RequestParam String id
+    ) {
+        Candidate candidate = candidateService.getCandidate(Integer.parseInt(id));
+
+        return ResponseEntity.ok(candidate);
+    }
+
+
 }

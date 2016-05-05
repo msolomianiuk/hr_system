@@ -35,12 +35,6 @@ public class RolesUtils {
         return roles.contains(Role.STUDENT.toString());
     }
 
-    /**
-     * Determine where to redirect users to its authority granted
-     *
-     * @param authorities authority granted
-     * @return redirect link
-     */
     public static String getUrlByRoles(Collection<? extends GrantedAuthority> authorities) {
         String url;
 
@@ -66,12 +60,6 @@ public class RolesUtils {
         return url;
     }
 
-    /**
-     * Find Role with its String form
-     *
-     * @param role role in string
-     * @return role
-     */
     public static Role getRoleByStr(String role) {
         if (Role.ADMIN.toString().equals(role))
             return Role.ADMIN;

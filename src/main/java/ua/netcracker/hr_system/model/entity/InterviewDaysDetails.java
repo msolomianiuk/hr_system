@@ -9,45 +9,21 @@ import java.util.Date;
  */
 @Component
 public class InterviewDaysDetails {
-    /**
-     * Table "interview_days_details"
-     * ID entry in table "interview_result"
-     */
+
     private int id;
-    /**
-     * Table "interview_days_details"
-     * ID entry in table "course_setting"
-     */
+
     private int courseId;
-    /**
-     * Table "interview_days_details"
-     * Date interview
-     */
+
     private String interviewDate;
-    /**
-     * Tables "interview_days_details" and "address"
-     * ID entry in tables "address"
-     */
+
     private int addressId;
-    /**
-     * Table "interview_days_details"
-     * Max count employees on interview
-     */
+
     private int employeesMaxCount;
-    /**
-     * Table "interview_days_details"
-     * Max count candidates on interview
-     */
+
     private int candidateMaxCount;
-    /**
-     * Table "address"
-     * Address interview
-     */
+
     private String interviewAddress;
-    /**
-     * Table "address"
-     * Capacity room
-     */
+
     private int roomCapacity;
 
     public InterviewDaysDetails() {

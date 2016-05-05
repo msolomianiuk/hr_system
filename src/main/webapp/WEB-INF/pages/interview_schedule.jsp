@@ -75,7 +75,7 @@
           <div class="menu_section">
             <h3>Administrator</h3>
             <ul class="nav side-menu">
-              <li><a href=""><i class="fa fa-home"></i> Home </a></li>
+              <li><a href="../"><i class="fa fa-home"></i> Home </a></li>
               <li><a href="students"><i class="fa fa-list"></i> Students List </a></li>
               <li><a href="personal"><i class="fa fa-list-ul"></i> Personal List </a></li>
               <li><a href="interview_schedule"><i class="fa fa-calendar"></i> Interview Schedule </a></li>
@@ -117,7 +117,7 @@
                 <li>
                   <a href="javascript:;">Help</a>
                 </li>
-                <li><a href="logout"><i class="fa fa-sign-out pull-right"></i> Log Out</a>
+                <li><a href="../logout"><i class="fa fa-sign-out pull-right"></i> Log Out</a>
                 </li>
               </ul>
             </li>

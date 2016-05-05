@@ -12,8 +12,8 @@
 
     <!-- CSS -->
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:400,100,300,500">
-    <link rel="stylesheet" href="<c:url value="/static/bootstrap/css/bootstrap.min.css"/>">
-    <link rel="stylesheet" href="<c:url value='/static/font-awesome/css/font-awesome.min.css'/>">
+    <link rel="stylesheet" href="<c:url value="/static/css/bootstrap.min.css"/>">
+    <link rel="stylesheet" href="<c:url value='/static/fonts/css/font-awesome.min.css'/>">
     <link rel="stylesheet" href="<c:url value='/static/css/form-elements.css'/>">
     <link rel="stylesheet" href="<c:url value='/static/css/style.css'/>">
 
@@ -24,15 +24,7 @@
     <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 
-    <!-- Favicon and touch icons -->
-    <link rel="shortcut icon" href="<c:url value='/static/ico/favicon.png'/>">
-    <link rel="apple-touch-icon-precomposed" sizes="144x144"
-          href="<c:url value='/static/ico/apple-touch-icon-144-precomposed.png'/>">
-    <link rel="apple-touch-icon-precomposed" sizes="114x114"
-          href="<c:url value='/static/ico/apple-touch-icon-114-precomposed.png'/>">
-    <link rel="apple-touch-icon-precomposed" sizes="72x72"
-          href="<c:url value='/static/ico/apple-touch-icon-72-precomposed.png'/>">
-    <link rel="apple-touch-icon-precomposed" href="<c:url value='/static/ico/apple-touch-icon-57-precomposed.png'/>">
+
 
 </head>
 
@@ -92,8 +84,8 @@
 <%@ include file="include/footer.jsp" %>
 
 <!-- Javascript -->
-<script src="<c:url value="/static/js/jquery-1.11.1.min.js"/>"/>
-<script src="<c:url value="/static/bootstrap/js/bootstrap.min.js"/>"/>
+<script src="<c:url value="/static/js/jquery.min.js"/>"/>
+<script src="<c:url value="/static/js/bootstrap.min.js"/>"/>
 </body>
 
 </html>

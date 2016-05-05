@@ -8,5 +8,7 @@ import ua.netcracker.hr_system.model.entity.CourseSetting;
  */
 public interface CourseSettingService extends EntityService<CourseSetting> {
 
-    CourseSetting findById(int id);
+    public CourseSetting getIdLastSetting();
+
+   public CourseSetting findById(int id);
 }

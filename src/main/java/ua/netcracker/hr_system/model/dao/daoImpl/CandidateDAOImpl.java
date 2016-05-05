@@ -18,6 +18,7 @@ import java.util.*;
 
 @Repository("candidateDao")
 public class CandidateDAOImpl implements CandidateDAO {
+
     static final Logger LOGGER = Logger.getLogger(CandidateDAOImpl.class);
     private Candidate candidate;
     private User user;
@@ -28,6 +29,17 @@ public class CandidateDAOImpl implements CandidateDAO {
     private JdbcTemplate jdbcTemplate;
 
     private SimpleJdbcInsert simpleJdbcInsert;
+
+    public Candidate getCandidateByUserId(int userId){
+        jdbcTemplate = new JdbcTemplate(dataSource);
+        String sql = "Select * from \"hr_system\".candidate Where user_id = " + userId;
+        List<Map<String, Object>> rows = jdbcTemplate.queryForList(sql);
+        for (Map row : rows){
+            candidate = new Candidate((int)row.get("id"), (int)row.get("user_Id"), (int)row.get("interview_days_details_id"), (int)row.get("status_id"), (int)row.get("course_id"));
+        }
+        return candidate;
+    }
+
 
     @Autowired(required = false)
     private void setDataSource(DataSource dataSource) {
@@ -44,7 +56,7 @@ public class CandidateDAOImpl implements CandidateDAO {
         this.candidate = candidate;
     }
 
-    public  boolean insert(Candidate candidate) {
+    public boolean insert(Candidate candidate) {
         simpleJdbcInsert = new SimpleJdbcInsert(dataSource).
                 withTableName("\"hr_system\".candidate").
                 usingColumns("user_id", "status_id", "course_id");
@@ -52,7 +64,7 @@ public class CandidateDAOImpl implements CandidateDAO {
         insertParameter.addValue("user_id", candidate.getUserId());
         insertParameter.addValue("status_id", candidate.getStatusId());
         insertParameter.addValue("course_id", candidate.getCourseId());
-        return simpleJdbcInsert.execute(insertParameter) == 5007? true : false;
+        return simpleJdbcInsert.execute(insertParameter) == 5007 ? true : false;
     }
 
     @Override
@@ -98,7 +110,29 @@ public class CandidateDAOImpl implements CandidateDAO {
     @Override
     public Candidate findById(Integer id) {
 
-        return null;
+        jdbcTemplate = new JdbcTemplate(dataSource);
+        String sql = "select * from \"hr_system\".candidate where id = " + id;
+
+        candidate = null;
+        try {
+            candidate = jdbcTemplate.queryForObject(sql, new RowMapper<Candidate>() {
+                        @Override
+                        public Candidate mapRow(ResultSet resultSet, int i) throws SQLException {
+
+                            return getCandidate(resultSet);
+                        }
+                    }
+            );
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return candidate;
+    }
+
+    private Candidate getCandidate(ResultSet resultSet) throws SQLException {
+        candidate = new Candidate();
+        candidate.setUserId(resultSet.getInt("user_id"));
+        return candidate;
     }
 
     @Override
@@ -107,14 +141,12 @@ public class CandidateDAOImpl implements CandidateDAO {
     }
 
     /**
-     *
      * @param statusId
      * @return
-     *
      */
     @Override
 
-    public String findStatusById(Integer statusId) throws SQLException{
+    public String findStatusById(Integer statusId) throws SQLException {
         jdbcTemplate = new JdbcTemplate(dataSource);
         String sql = "select * from \"hr_system\".status WHERE id = " + statusId;
         final String status = jdbcTemplate.queryForObject(sql, new RowMapper<String>() {
@@ -128,7 +160,6 @@ public class CandidateDAOImpl implements CandidateDAO {
     }
 
     /**
-     *
      * @param candidateId
      * @return
      */
@@ -138,24 +169,26 @@ public class CandidateDAOImpl implements CandidateDAO {
         HashMap<Integer, Integer> mark = new HashMap<>();
         String sql = "Select mark, id_interviewer from \"hr_system\".interview_result Where candidate_id = " + candidateId;
         List<Map<String, Object>> rows = jdbcTemplate.queryForList(sql);
-        for (Map row : rows){
-            mark.put((int)row.get("interviewer_id"), (int)row.get("mark"));
+        for (Map row : rows) {
+            mark.put((int) row.get("interviewer_id"), (int) row.get("mark"));
         }
-            return mark;
-        }
+        return mark;
+    }
 
+    public void saveOrUpdate(Candidate candidate){
+        deleteAnswer(candidate);
+        insertAnswer(candidate);
+    }
 
-
-
-     @Override
-    public HashMap<Integer, String> getRecommendation(Integer id) throws SQLException{
+    @Override
+    public HashMap<Integer, String> getRecommendation(Integer id) throws SQLException {
         jdbcTemplate = new JdbcTemplate(dataSource);
         HashMap<Integer, String> recommendation = new HashMap<>();
         String sql = "Select r.value, i.interviewer_id from \"hr_system\".interview_result i Inner JOIN \"hr_system\".recommendation r " +
                 "ON i.recommendation_id = r.id Where i.candidate_id = " + id;
         List<Map<String, Object>> rows = jdbcTemplate.queryForList(sql);
-        for (Map row : rows){
-            recommendation.put((int)row.get("interviewer_id"), (String)row.get("value"));
+        for (Map row : rows) {
+            recommendation.put((int) row.get("interviewer_id"), (String) row.get("value"));
         }
         return recommendation;
     }
@@ -166,8 +199,8 @@ public class CandidateDAOImpl implements CandidateDAO {
         HashMap<Integer, String> response = new HashMap<>();
         String sql = "Select response from \"hr_system\".interview_result Where i.candidate_id = " + id;
         List<Map<String, Object>> rows = jdbcTemplate.queryForList(sql);
-        for (Map row : rows){
-            response.put((int)row.get("interviewer_id"), (String)row.get("value"));
+        for (Map row : rows) {
+            response.put((int) row.get("interviewer_id"), (String) row.get("value"));
         }
         return response;
     }
@@ -187,22 +220,52 @@ public class CandidateDAOImpl implements CandidateDAO {
     }
 
     @Override
-   public void insertAnswer(Candidate candidate) {
+    public List<Candidate> getAllAnketsCandidates() {
+
+
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+
+        String sql = "SELECT u.name , u.surname, u.patronymic , u.email, can.id\n" +
+                "FROM \"hr_system\".users u\n" +
+                "JOIN \"hr_system\".candidate can ON can.user_id = u.id";
+
+        List<Candidate> listOfCandidate = jdbcTemplate.query(sql, new RowMapper<Candidate>() {
+
+            @Override
+            public Candidate mapRow(ResultSet rs, int rowNumber) throws SQLException {
+                candidate = new Candidate();
+                user = new User();
+                candidate.setId(rs.getInt("id"));
+                user.setName(rs.getString("name"));
+                user.setEmail(rs.getString("email"));
+                user.setSurname(rs.getString("surname"));
+                user.setPatronymic(rs.getString("patronymic"));
+
+                candidate.setUser(user);
+                return candidate;
+            }
+
+        });
+        return listOfCandidate;
+    }
+
+    @Override
+    public void insertAnswer(Candidate candidate) {
         jdbcTemplate = new JdbcTemplate(dataSource);
         ArrayList<String> answerList;
         for (Map.Entry<Integer, Object> answer : candidate.getAnswerValue().entrySet()) {
             try {
                 answerList = ((ArrayList<String>) answer.getValue());
-                for (String answers : answerList){
+                for (String answers : answerList) {
                     executeInsertAnswer(candidate.getId(), answer.getKey(), answers);
                 }
-            }catch(ClassCastException e){
-                executeInsertAnswer(candidate.getId(), answer.getKey(), (String)answer.getValue());
+            } catch (ClassCastException e) {
+                executeInsertAnswer(candidate.getId(), answer.getKey(), (String) answer.getValue());
             }
         }
     }
 
-    private void executeInsertAnswer(int candidateId, int questionId, String value){
+    private void executeInsertAnswer(int candidateId, int questionId, String value) {
         jdbcTemplate = new JdbcTemplate(dataSource);
         String sql = "INSERT INTO \"hr_system\".candidate_answer(candidate_id, question_id, value) VALUES(" + candidateId +
                 "," + questionId + ",'" + value + "')";
@@ -211,14 +274,14 @@ public class CandidateDAOImpl implements CandidateDAO {
 
     @Override
     //not tested
-    public void updateAnswer(Candidate candidate){
+    public void updateAnswer(Candidate candidate) {
         deleteAnswer(candidate);
         insertAnswer(candidate);
     }
 
     @Override
     //not tested
-    public void deleteAnswer(Candidate candidate){
+    public void deleteAnswer(Candidate candidate) {
         jdbcTemplate = new JdbcTemplate(dataSource);
         String sql = "DELETE FROM \"hr_system\".candidate_answer WHERE candidate_id = " + candidate.getId();
         jdbcTemplate.update(sql);
@@ -229,7 +292,6 @@ public class CandidateDAOImpl implements CandidateDAO {
 
         return null;
     }
-
 
 
     public Map<Integer, String> findAnswersAll() {
@@ -258,4 +320,17 @@ public class CandidateDAOImpl implements CandidateDAO {
     public boolean remove(Candidate candidate) {
         return false;
     }
+
+    public Map<Integer, String> getAllCandidateAnswers() {
+        jdbcTemplate = new JdbcTemplate(dataSource);
+        String sql = "select * from \"hr_system\".candidate_answer where candidate_id = " + candidate.getId();
+        Map<Integer, String> listAnswer = new HashMap<Integer, String>();
+        List<Map<String, Object>> rows = jdbcTemplate.queryForList(sql);
+        for (Map row : rows) {
+            listAnswer.put((int) row.get("question_id"), (String) row.get("value"));
+        }
+        return listAnswer;
+    }
+
+
 }

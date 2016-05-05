@@ -6,22 +6,14 @@ import javax.mail.internet.MimeMessage;
 import java.util.Properties;
 
 public class SendEmailsUtils {
-    /**
-     * Send letters to emails
-     *
-     * @param toEmails Emails where letters will be send
-     * @param subject  Subject of the letter
-     * @param text     Text of the letter
-     */
+
     public static void sendLettersToEmails(String[] toEmails, String subject, String text) {
 
         //you can choose your email
         final String username = "netcracker.company";
         final String password = "netcracker.company1";
 
-        /**
-         * Properties for gmail: https://support.google.com/mail/answer/13287?hl=en
-         */
+
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");
@@ -39,10 +31,6 @@ public class SendEmailsUtils {
 
             Message message = new MimeMessage(session);
 
-            /**
-             * From which address(Email) letters will be sending
-             * Must be turn on here: https://www.google.com/settings/security/lesssecureapps
-             */
             message.setFrom(new InternetAddress(username));
 
             InternetAddress[] addressTo = new InternetAddress[toEmails.length];

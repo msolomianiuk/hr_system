@@ -1,14 +1,15 @@
 package ua.netcracker.hr_system.model.entity;
 
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
 import java.util.Map;
 
 /**
  * Created by Alex on 24.04.2016.
  */
 @Component
+
 public class Candidate {
 
     private int id;
@@ -35,6 +36,23 @@ public class Candidate {
 
     private Map<Integer, Object> answer;
 
+
+    public int getInterviewDaysDetails() {
+        return interviewDaysDetails;
+    }
+
+    public Candidate( int id, int userId, int interviewDaysDetails, int statusId, int courseId) {
+        this.id = id;
+        this.interviewDaysDetails = interviewDaysDetails;
+        this.userId = userId;
+        this.statusId = statusId;
+        this.courseId = courseId;
+    }
+
+    public void setInterviewDaysDetails(int interviewDaysDetails) {
+        this.interviewDaysDetails = interviewDaysDetails;
+    }
+
     public Candidate() {
     }
 
@@ -56,7 +74,7 @@ public class Candidate {
     }
 
     public Candidate(int id, int userId, int courseId, int statusId, String statusValue, int questionId, User user,
-                      Map<Integer, Integer> mark, Map<Integer, String> response, Map<Integer,
+                     Map<Integer, Integer> mark, Map<Integer, String> response, Map<Integer,
             String> recommendation, int interviewDaysDetails, Map<Integer, Object> answer) {
         this.id = id;
         this.userId = userId;
@@ -70,6 +88,12 @@ public class Candidate {
         this.recommendation = recommendation;
         this.interviewDaysDetails = interviewDaysDetails;
         this.answer = answer;
+    }
+    public void setUser(User user) {
+        this.user = user;
+    }
+    public User getUser() {
+        return user;
     }
 
     public int getId() {
@@ -129,7 +153,6 @@ public class Candidate {
                 "}";
     }
 
-    public void setUser(User user) {
-        this.user = user;
-    }
+
+
 }

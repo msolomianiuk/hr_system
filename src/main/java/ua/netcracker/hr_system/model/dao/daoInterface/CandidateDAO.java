@@ -29,6 +29,7 @@ public interface CandidateDAO extends DAO<Integer, Candidate> {
 
     int getInterviewDaysDetailsById(Integer id);
 
+    List<Candidate> getAllAnketsCandidates();
 
 
     void insertAnswer(Candidate candidate);
