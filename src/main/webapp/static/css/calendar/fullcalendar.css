@@ -997,7 +997,7 @@ a.fc-more:hover {
 	border-top-width: 0;
 	padding-top: 1px;
 
-	/* remove top rounded corners */
+	/* delete top rounded corners */
 	border-top-left-radius: 0;
 	border-top-right-radius: 0;
 }
@@ -1007,7 +1007,7 @@ a.fc-more:hover {
 	border-bottom-width: 0;
 	padding-bottom: 1px;
 
-	/* remove bottom rounded corners */
+	/* delete bottom rounded corners */
 	border-bottom-left-radius: 0;
 	border-bottom-right-radius: 0;
 }

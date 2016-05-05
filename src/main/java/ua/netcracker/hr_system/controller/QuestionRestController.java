@@ -6,8 +6,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import ua.netcracker.hr_system.model.dao.daoImpl.QuestionDAOImpl;
 import ua.netcracker.hr_system.model.entity.Question;
+import ua.netcracker.hr_system.model.service.serviceInterface.QuestionService;
 
 import java.util.List;
 
@@ -17,12 +17,12 @@ import java.util.List;
 @RestController
 public class QuestionRestController {
     @Autowired
-    private QuestionDAOImpl questionDao;
+    private QuestionService questionService;
 
     @RequestMapping(value = "/service/getAllMandatoryQuestions", method = RequestMethod.GET)
 
     public ResponseEntity<List<Question>> getAllMandatoryQuestions() {
-        List<Question> questions= (List<Question>) questionDao.findAll();
+        List<Question> questions= (List<Question>) questionService.getAllMandatory();
         if(questions.isEmpty()){
             return new ResponseEntity<List<Question>>(HttpStatus.NO_CONTENT);
         }

@@ -4,91 +4,24 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-/**
- * Created by Alex on 24.04.2016.
- */
+
 @Component
 public class Question {
-    /**
-     * Table "question"
-     * ID entry in tables "candidate_answer", "question_addition" and "question_course_maps"
-     */
     private int id;
-    /**
-     * Table "question"
-     * Description question
-     */
+
     private String caption;
-    /**
-     * Table "question"
-     * Mandatory question
-     */
+
     private boolean isMandatory;
 
-    /**
-     * Table "type"
-     * Value type by type_id
-     */
-    private String typeValue;
-    /**
-     * Table "question_addition"
-     * ID with question_addition
-     */
+    private String type;
 
+    private List<String> answerVariants;
 
+    private int courseID;
 
-    private List<String> additionValue;
-    /**
-     * Table "question_course_maps"
-     * ID entry in tables "course_setting"
-     */
-    private int courseId;
-    /**
-     * Table "question_course_maps"
-     * Number order with question_id and course_id in profile
-     */
     private int orderNumber;
 
-    @Override
-    public String toString() {
-        return "Question{" +
-                "id=" + id +
-                ", caption='" + caption + '\'' +
-                ", isMandatory=" + isMandatory +
-                ", typeValue='" + typeValue + '\'' +
-                ", additionValue=" + additionValue +
-                ", courseId=" + courseId +
-                ", orderNumber=" + orderNumber +
-                '}';
-    }
-
-
-
-
-
-
-
     public Question() {
-    }
-
-    public Question(int id, String caption, boolean isMandatory, String typeValue, int courseId, int orderNumber) {
-        this.id = id;
-        this.caption = caption;
-        this.isMandatory = isMandatory;
-        this.typeValue = typeValue;
-        this.courseId = courseId;
-        this.orderNumber = orderNumber;
-    }
-
-
-    public Question(int id, String caption, boolean isMandatory, String typeValue, int courseId, int orderNumber, List<String> additionValue) {
-        this.id = id;
-        this.caption = caption;
-        this.isMandatory = isMandatory;
-        this.typeValue = typeValue;
-        this.additionValue = additionValue;
-        this.courseId = courseId;
-        this.orderNumber = orderNumber;
     }
 
     public int getId() {
@@ -111,38 +44,32 @@ public class Question {
         return isMandatory;
     }
 
-    public void setMandatory(Boolean isMandatory) {
-        this.isMandatory = isMandatory;
-    }
-
-
-    public String getTypeValue() {
-        return typeValue;
-    }
-
-    public void setTypeValue(String typeValue) {
-        this.typeValue = typeValue;
-    }
-
-
     public void setMandatory(boolean mandatory) {
         isMandatory = mandatory;
     }
 
-    public List<String> getAdditionValue() {
-        return additionValue;
+    public String getType() {
+        return type;
     }
 
-    public void setAdditionValue(List<String> additionValue) {
-        this.additionValue = additionValue;
+    public void setType(String type) {
+        this.type = type;
     }
 
-    public int getCourseId() {
-        return courseId;
+    public List<String> getAnswerVariants() {
+        return answerVariants;
     }
 
-    public void setCourseId(int courseId) {
-        this.courseId = courseId;
+    public void setAnswerVariants(List<String> answerVariants) {
+        this.answerVariants = answerVariants;
+    }
+
+    public int getCourseID() {
+        return courseID;
+    }
+
+    public void setCourseID(int courseID) {
+        this.courseID = courseID;
     }
 
     public int getOrderNumber() {
@@ -153,4 +80,16 @@ public class Question {
         this.orderNumber = orderNumber;
     }
 
+    @Override
+    public String toString() {
+        return "Question{" +
+                "id=" + id +
+                ", caption='" + caption + '\'' +
+                ", isMandatory=" + isMandatory +
+                ", type='" + type + '\'' +
+                ", answerVariants=" + answerVariants +
+                ", courseID=" + courseID +
+                ", orderNumber=" + orderNumber +
+                '}';
+    }
 }

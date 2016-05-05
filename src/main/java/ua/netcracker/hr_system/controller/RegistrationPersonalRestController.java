@@ -9,12 +9,10 @@ import org.springframework.web.bind.annotation.RestController;
 import ua.netcracker.hr_system.model.dao.daoInterface.UserDAO;
 import ua.netcracker.hr_system.model.entity.Role;
 import ua.netcracker.hr_system.model.entity.User;
-import ua.netcracker.hr_system.model.service.serviceImpl.CustomUserDetailsServiceImpl;
 
 import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 /**
  * Created by Legion on 27.04.2016.

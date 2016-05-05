@@ -1,28 +1,27 @@
 package ua.netcracker.hr_system.model.entity;
 
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Map;
 
 /**
  * Created by Alex on 24.04.2016.
  */
 @Component
-
 public class Candidate {
 
-    private int id;
+    private int ID;
 
-    private int userId;
+    private int userID;
 
-    private int courseId;
+    private int courseID;
 
-    private int statusId;
+    private int statusID;
 
-    private Status statusValue;
+    private Status status;
 
-    private int questionId;
+    private List<Integer> questionsID;
 
     private User user;
 
@@ -34,125 +33,131 @@ public class Candidate {
 
     private int interviewDaysDetails;
 
-    private Map<Integer, Object> answer;
+    private Map<Integer, Object> answers;
 
+
+    public Candidate() {
+    }
+
+    public Candidate(int ID, int userID, int interviewDaysDetails, int statusID, int courseID) {
+        this.ID = ID;
+        this.interviewDaysDetails = interviewDaysDetails;
+        this.userID = userID;
+        this.statusID = statusID;
+        this.courseID = courseID;
+    }
+
+    public Map<Integer, Object> getAnswers() {
+        return answers;
+    }
 
     public int getInterviewDaysDetails() {
         return interviewDaysDetails;
     }
 
-    public Candidate( int id, int userId, int interviewDaysDetails, int statusId, int courseId) {
-        this.id = id;
-        this.interviewDaysDetails = interviewDaysDetails;
-        this.userId = userId;
-        this.statusId = statusId;
-        this.courseId = courseId;
+    public Map<Integer, String> getRecommendation() {
+        return recommendation;
+    }
+
+    public Map<Integer, String> getResponse() {
+        return response;
+    }
+
+    public Map<Integer, Integer> getMark() {
+        return mark;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public List<Integer> getQuestionsID() {
+        return questionsID;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public int getStatusID() {
+        return statusID;
+    }
+
+    public int getCourseID() {
+        return courseID;
+    }
+
+    public int getUserID() {
+        return userID;
+    }
+
+    public int getID() {
+        return ID;
+    }
+
+    public void setID(int ID) {
+        this.ID = ID;
+    }
+
+    public void setUserID(int userID) {
+        this.userID = userID;
+    }
+
+    public void setCourseID(int courseID) {
+        this.courseID = courseID;
+    }
+
+    public void setStatusID(int statusID) {
+        this.statusID = statusID;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    public void setQuestionsID(List<Integer> questionsID) {
+        this.questionsID = questionsID;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public void setMark(Map<Integer, Integer> mark) {
+        this.mark = mark;
+    }
+
+    public void setResponse(Map<Integer, String> response) {
+        this.response = response;
+    }
+
+    public void setRecommendation(Map<Integer, String> recommendation) {
+        this.recommendation = recommendation;
     }
 
     public void setInterviewDaysDetails(int interviewDaysDetails) {
         this.interviewDaysDetails = interviewDaysDetails;
     }
 
-    public Candidate() {
+    public void setAnswers(Map<Integer, Object> answers) {
+        this.answers = answers;
     }
-
-    public void setAnswer(Map<Integer, Object> answer) {
-        this.answer = answer;
-    }
-
-    public Candidate(int id, int userId, int statusId, int courseId) {
-        this.id = id;
-        this.userId = userId;
-        this.statusId = statusId;
-        this.courseId = courseId;
-    }
-
-    public Candidate(int userId, int statusId, int courseId) {
-        this.userId = userId;
-        this.statusId = statusId;
-        this.courseId = courseId;
-    }
-
-    public Candidate(int id, int userId, int courseId, int statusId, String statusValue, int questionId, User user,
-                     Map<Integer, Integer> mark, Map<Integer, String> response, Map<Integer,
-            String> recommendation, int interviewDaysDetails, Map<Integer, Object> answer) {
-        this.id = id;
-        this.userId = userId;
-        this.courseId = courseId;
-        this.statusId = statusId;
-        this.questionId = questionId;
-        this.user = user;
-
-        this.mark = mark;
-        this.response = response;
-        this.recommendation = recommendation;
-        this.interviewDaysDetails = interviewDaysDetails;
-        this.answer = answer;
-    }
-    public void setUser(User user) {
-        this.user = user;
-    }
-    public User getUser() {
-        return user;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int user_id) {
-        this.userId = user_id;
-    }
-
-    public int getStatusId() {
-        return statusId;
-    }
-
-    public void setStatusId(int status_id) {
-        this.statusId = status_id;
-    }
-
-    public int getCourseId() {
-        return courseId;
-    }
-
-    public void setCourseId(int course_id) {
-        this.courseId = course_id;
-    }
-
-    public int getQuestionId() {
-        return questionId;
-    }
-
-    public void setQuestionId(int questionId) {
-        this.questionId = questionId;
-    }
-
-    public Map<Integer, Object> getAnswerValue() {
-        return answer;
-    }
-
-
 
     @Override
     public String toString() {
-        return "Candidate {" +
-                "id=" + id +
-                ", user_id=" + userId +
-                ", status_id=" + statusId +
-                ", status_value=" + statusValue +
-                ", course_id=" + courseId +
-                "}";
+        return "Candidate{" +
+                "ID=" + ID +
+                ", userID=" + userID +
+                ", courseID=" + courseID +
+                ", statusID=" + statusID +
+                ", status=" + status +
+                ", questionsID=" + questionsID +
+                ", user=" + user +
+                ", mark=" + mark +
+                ", response=" + response +
+                ", recommendation=" + recommendation +
+                ", interviewDaysDetails=" + interviewDaysDetails +
+                ", answers=" + answers +
+                '}';
     }
-
-
-
 }

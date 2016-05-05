@@ -2,6 +2,7 @@ package ua.netcracker.hr_system.model.dao.daoImpl;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -12,7 +13,6 @@ import ua.netcracker.hr_system.model.dao.daoInterface.UserDAO;
 import ua.netcracker.hr_system.model.entity.Role;
 import ua.netcracker.hr_system.model.entity.User;
 import ua.netcracker.hr_system.model.utils.RolesUtils;
-import ua.netcracker.hr_system.model.utils.SendEmailsUtils;
 
 import javax.sql.DataSource;
 import java.sql.PreparedStatement;
@@ -21,65 +21,56 @@ import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
 
-
+/**
+ * @author Bersik (Serhii Kisilchuk)
+ */
 @Repository("userDao")
 public class UserDAOImpl implements UserDAO {
 
     static final Logger LOGGER = Logger.getLogger(UserDAOImpl.class);
-    //private User user;
-
-    @Autowired(required = false)
-    private User user;
 
     @Autowired
-    private DataSource dataSource;
-
     private JdbcTemplate jdbcTemplate;
     private SimpleJdbcInsert simpleJdbcInsert;
 
+    @Autowired
+    public void setSimpleJdbcInsert(DataSource dataSource) {
+        simpleJdbcInsert = new SimpleJdbcInsert(dataSource).
+                withTableName("\"hr_system\".users").
+                usingColumns("email", "password", "name", "surname", "patronymic").
+                usingGeneratedKeyColumns("id");
+    }
+
     @Override
     public List<User> findByName(String name) {
-        jdbcTemplate = new JdbcTemplate(dataSource);
-
         String sql = "SELECT * FROM \"hr_system\".users WHERE name='" + name + "'";
-
-        List<User> users = jdbcTemplate.query(sql, new RowMapper<User>() {
+        return jdbcTemplate.query(sql, new RowMapper<User>() {
             @Override
             public User mapRow(ResultSet rs, int rowNumber) throws SQLException {
                 return createUserWithResultSet(rs);
             }
         });
-        return users;
     }
 
     @Override
     public List<User> findBySurname(String surname) {
-        jdbcTemplate = new JdbcTemplate(dataSource);
-
         String sql = "SELECT * FROM \"hr_system\".users WHERE surname='" + surname + "'";
-
-        List<User> users = jdbcTemplate.query(sql, new RowMapper<User>() {
+        return jdbcTemplate.query(sql, new RowMapper<User>() {
             @Override
             public User mapRow(ResultSet rs, int rowNumber) throws SQLException {
                 return createUserWithResultSet(rs);
             }
         });
-        return users;
     }
 
     @Override
     public List<User> getAllPersonalById(int roleId) {
-
         List<User> users = null;
-
         if (roleId >= 1 && roleId <= 4) {
-            jdbcTemplate = new JdbcTemplate(dataSource);
-
             String sql = "SELECT * " +
                     "FROM \"hr_system\".users u " +
                     "JOIN \"hr_system\".role_users_maps rol ON rol.user_id = u.id " +
                     "WHERE rol.role_id=" + roleId;
-
             users = jdbcTemplate.query(sql, new RowMapper<User>() {
 
                 @Override
@@ -93,9 +84,7 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public User findByEmail(String email) {
-        jdbcTemplate = new JdbcTemplate(dataSource);
         String sql = "select * from \"hr_system\".users where lower(email)=lower('" + email + "')";
-
         User user = jdbcTemplate.queryForObject(
                 sql,
                 new RowMapper<User>() {
@@ -121,17 +110,12 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public Collection<User> findAll() {
-
-        List<User> users = null;
-
-        jdbcTemplate = new JdbcTemplate(dataSource);
-
         String sql = "SELECT * " +
                 "FROM \"hr_system\".users u " +
                 "JOIN \"hr_system\".role_users_maps rol ON rol.user_id = u.id " +
                 "WHERE rol.role_id=";
 
-        users = jdbcTemplate.query(sql, new RowMapper<User>() {
+        List<User> users = jdbcTemplate.query(sql, new RowMapper<User>() {
 
             @Override
             public User mapRow(ResultSet rs, int rowNumber) throws SQLException {
@@ -146,9 +130,7 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public User find(int id) {
-        jdbcTemplate = new JdbcTemplate(dataSource);
         String sql = "select * from \"hr_system\".users where id=" + id + ")";
-
         User user = jdbcTemplate.queryForObject(
                 sql,
                 new RowMapper<User>() {
@@ -163,7 +145,6 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public List<Role> getUserRolesById(int userId) {
-        jdbcTemplate = new JdbcTemplate(dataSource);
         String sql = "select name from \"hr_system\".role " +
                 "JOIN \"hr_system\".role_users_maps ON \"hr_system\".role_users_maps.role_id=\"hr_system\".role.id " +
                 "where user_id=" + userId;
@@ -179,10 +160,6 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public boolean insert(User user) {
-        simpleJdbcInsert = new SimpleJdbcInsert(dataSource).
-                withTableName("\"hr_system\".users").
-                usingColumns("email", "password", "name", "surname", "patronymic").
-                usingGeneratedKeyColumns("id");
         MapSqlParameterSource insertParameter = new MapSqlParameterSource();
         insertParameter.addValue("email", user.getEmail());
         insertParameter.addValue("password", user.getPassword());
@@ -190,11 +167,14 @@ public class UserDAOImpl implements UserDAO {
         insertParameter.addValue("surname", user.getSurname());
         insertParameter.addValue("patronymic", user.getPatronymic());
         insertParameter.addValue("image", user.getImage());
-        Number key = simpleJdbcInsert.executeAndReturnKey(insertParameter);
-        if (key != null) {
-            user.setId(key.intValue());
-//            SendEmailsUtils.sendLettersToEmails(new String[]{user.getEmail()}, "Hello. You Reg", "HELLO");
-            return insertUserRoles(user);
+        try {
+            Number key = simpleJdbcInsert.executeAndReturnKey(insertParameter);
+            if (key != null) {
+                user.setId(key.intValue());
+                return insertUserRoles(user);
+            }
+        } catch (DuplicateKeyException ex) {
+            return false;
         }
         return false;
     }
@@ -202,7 +182,6 @@ public class UserDAOImpl implements UserDAO {
     @Override
     public boolean insertUserRoles(final User user) {
         String sql = "insert into \"hr_system\".role_users_maps (role_id,user_id) values (?,?)";
-        jdbcTemplate = new JdbcTemplate(dataSource);
         final Object[] roles = user.getRoles().toArray();
         int[] res = jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
             @Override
@@ -226,7 +205,6 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public boolean update(User user) {
-        jdbcTemplate = new JdbcTemplate(dataSource);
         String sql = "update \"hr_system\".users set email=?,password=?,name=?,surname=?,patronymic=?,image=? " +
                 "where id=?";
 
@@ -240,7 +218,6 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public boolean remove(User user) {
-        jdbcTemplate = new JdbcTemplate(dataSource);
         String sql = "delete from \"hr_system\".users where id=?";
 
         if (jdbcTemplate.update(sql, user.getId()) == 1) {
@@ -251,9 +228,7 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public boolean removeUserRoles(int userId) {
-        jdbcTemplate = new JdbcTemplate(dataSource);
         String sql = "delete from \"hr_system\".role_users_maps where user_id=?";
         return jdbcTemplate.update(sql, userId) > 0;
-
     }
 }

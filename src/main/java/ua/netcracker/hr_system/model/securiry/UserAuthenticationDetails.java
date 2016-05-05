@@ -1,6 +1,5 @@
 package ua.netcracker.hr_system.model.securiry;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,16 +22,9 @@ import java.util.HashSet;
 public class UserAuthenticationDetails implements UserDetails {
     private static final long serialVersionUID = 4000L;
 
-    @Autowired
     private User user;
 
     private Collection<SimpleGrantedAuthority> authorities;
-    /**
-     * Oles 24.04.2016
-     * */
-    public void setUserDetails(User user){
-        this.user=user;
-    }
 
     public UserAuthenticationDetails(User user) {
         this.user = user;
@@ -42,7 +34,6 @@ public class UserAuthenticationDetails implements UserDetails {
             authorities.add(new SimpleGrantedAuthority(role.toString()));
         }
     }
-
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

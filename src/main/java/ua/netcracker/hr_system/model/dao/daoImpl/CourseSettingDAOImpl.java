@@ -25,12 +25,12 @@ public class CourseSettingDAOImpl implements CourseSettingDAO<CourseSetting> {
     private JdbcTemplate jdbcTemplate;
 
 
-    @Override
+
     public Collection<CourseSetting> findAll() {
         return null;
     }
 
-    @Override
+  
     public CourseSetting find(int id) {
         CourseSetting courseSetting = null;
         jdbcTemplate = new JdbcTemplate(dataSource);
@@ -65,7 +65,7 @@ public class CourseSettingDAOImpl implements CourseSettingDAO<CourseSetting> {
         return courseSetting;
     }
 
-    @Override
+ 
     public boolean insert(CourseSetting courseSetting) {
 
         jdbcTemplate = new JdbcTemplate(dataSource);
@@ -89,7 +89,7 @@ public class CourseSettingDAOImpl implements CourseSettingDAO<CourseSetting> {
     }
 
 
-    @Override
+   
     public boolean update(CourseSetting courseSetting) {
 
         jdbcTemplate = new JdbcTemplate(dataSource);
@@ -109,7 +109,7 @@ public class CourseSettingDAOImpl implements CourseSettingDAO<CourseSetting> {
 
     }
 
-    @Override
+
     public boolean remove(CourseSetting courseSetting) {
         return false;
     }

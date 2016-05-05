@@ -5,8 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-
-import ua.netcracker.hr_system.model.dao.daoImpl.UserDAOImpl;
+import ua.netcracker.hr_system.model.dao.daoInterface.UserDAO;
 import ua.netcracker.hr_system.model.entity.User;
 import ua.netcracker.hr_system.model.securiry.UserAuthenticationDetails;
 
@@ -23,7 +22,7 @@ public class CustomUserDetailsServiceImpl implements UserDetailsService {
     private static final Logger LOGGER = Logger.getLogger(CustomUserDetailsServiceImpl.class);
 
     @Autowired
-    UserDAOImpl userDAO;
+    UserDAO userDAO;
 
     /**
      * Locates the user based on the username. In the actual implementation, the search

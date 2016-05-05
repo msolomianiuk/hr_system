@@ -1,6 +1,5 @@
 package ua.netcracker.hr_system.model.dao.daoInterface;
 
-import java.io.Serializable;
 import java.util.Collection;
 
 /**
@@ -11,12 +10,7 @@ import java.util.Collection;
  * @author Bersik (Serhii Kisilchuk)
  * @version 1.0
  */
-public interface DAO<PK extends Serializable, T> {
-    /**
-     * Get all entities
-     *
-     * @return all entities
-     */
+public interface DAO<T> {
     Collection<T> findAll();
 
     /**
@@ -43,11 +37,4 @@ public interface DAO<PK extends Serializable, T> {
      */
     boolean update(T entity);
 
-    /**
-     * Remove entity
-     *
-     * @param elem entity
-     * @return if remove was successful - true; else - false
-     */
-    boolean remove(T elem);
 }

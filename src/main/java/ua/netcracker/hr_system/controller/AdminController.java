@@ -113,7 +113,7 @@ public class AdminController {
     public ResponseEntity<Candidate> setCandidate(
             @RequestParam String id
     ) {
-        Candidate candidate = candidateService.getCandidate(Integer.parseInt(id));
+        Candidate candidate = candidateService.getCandidateByID(Integer.parseInt(id));
 
         return ResponseEntity.ok(candidate);
     }
