@@ -14,10 +14,7 @@ import ua.netcracker.hr_system.model.entity.User;
 import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Repository("candidateDao")
 public class CandidateDAOImpl implements CandidateDAO {
@@ -303,4 +300,26 @@ public class CandidateDAOImpl implements CandidateDAO {
 
 
     }
+
+    @Override
+    public Collection<Candidate> findAll() {
+        return null;
+    }
+
+    @Override
+    public Candidate find(int id) {
+        return null;
+    }
+
+    @Override
+    public boolean insert(Candidate entity) {
+        return false;
+    }
+
+    @Override
+    public boolean update(Candidate entity) {
+        return false;
+    }
+
+
 }

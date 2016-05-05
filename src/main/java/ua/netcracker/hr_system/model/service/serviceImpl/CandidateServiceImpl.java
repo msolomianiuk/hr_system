@@ -11,7 +11,7 @@ import ua.netcracker.hr_system.model.entity.Candidate;
 @Service()
 public class CandidateServiceImpl {
 
-    @Autowired(required = false)
+    @Autowired
     private CandidateDAOImpl candidateDAO;
 
     public Candidate getCandidate (int id){
