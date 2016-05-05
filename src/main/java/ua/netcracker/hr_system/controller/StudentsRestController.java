@@ -6,9 +6,12 @@ package ua.netcracker.hr_system.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import ua.netcracker.hr_system.model.dao.daoInterface.CandidateDAO;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 import ua.netcracker.hr_system.model.entity.Candidate;
+import ua.netcracker.hr_system.model.service.serviceInterface.CandidateService;
+
 import java.util.List;
 
 
@@ -16,7 +19,8 @@ import java.util.List;
 public class StudentsRestController {
 
     @Autowired
-    private CandidateDAO candidate;
+    private CandidateService candidate;
+
 
     @RequestMapping(value = "/getStudents", method = RequestMethod.GET)
     public ResponseEntity<List<Candidate>> listAllStudents() {

@@ -154,7 +154,7 @@ public class CandidateDAOImpl implements CandidateDAO {
         return response;
     }
     @Override
-    public int getInterviewDaysDetailsByID(Integer ID) {
+    public int getInterviewDayDetailsByID(Integer ID) {
         if (ID > 0) {
             try {
                 JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
@@ -296,10 +296,7 @@ public class CandidateDAOImpl implements CandidateDAO {
         return null;
     }
 
-    public void saveOrUpdate(Candidate candidate) {
 
-
-    }
 
     @Override
     public Collection<Candidate> findAll() {

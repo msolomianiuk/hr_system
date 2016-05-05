@@ -18,7 +18,7 @@ public interface CandidateDAO extends DAO<Candidate> {
     HashMap<Integer, Integer> getMarks(Integer candidateID);
     HashMap<Integer, String> getRecommendations(Integer ID);
     HashMap<Integer, String> getResponses(Integer ID);
-    int getInterviewDaysDetailsByID(Integer ID);
+    int getInterviewDayDetailsByID(Integer ID);
     Candidate getCandidateByUserID(Integer userID);
     Map<Integer, String> getAllCandidateAnswers(Candidate candidate);
 

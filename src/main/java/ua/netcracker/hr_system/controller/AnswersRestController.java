@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import ua.netcracker.hr_system.model.dao.daoImpl.CandidateDAOImpl;
 import ua.netcracker.hr_system.model.entity.Candidate;
 import ua.netcracker.hr_system.model.securiry.UserAuthenticationDetails;
+import ua.netcracker.hr_system.model.service.serviceInterface.CandidateService;
 
 import java.util.*;
 
@@ -26,8 +26,8 @@ import java.util.*;
 public class AnswersRestController {
     private Integer userId;
     @Autowired
-    private CandidateDAOImpl candidateDAO;
-    @Autowired(required = false)
+    private CandidateService candidateService;
+    @Autowired
     private Candidate candidate;
 
     @RequestMapping(value = "/service/saveAnswers", method = RequestMethod.GET)
@@ -59,12 +59,12 @@ public class AnswersRestController {
             candidate.setStatusID(1);
             candidate.setCourseID(1);
             candidate.setInterviewDaysDetails(1);
-            candidateDAO.insertCandidate(candidate);
-            candidate = candidateDAO.getCandidateByUserID(userId);
+            candidateService.saveCandidate(candidate);
+            candidate = candidateService.getCandidateByUserID(userId);
         }
 
         candidate.setAnswers(data);
-        candidateDAO.saveOrUpdate(candidate);
+        candidateService.saveOrUpdate(candidate);
 
         return ResponseEntity.ok(candidate);
     }
@@ -78,7 +78,7 @@ public class AnswersRestController {
             userId = userDetails.getUserId();
         }
 
-        return candidateDAO.getCandidateByUserID(userId);
+        return candidateService.getCandidateByUserID(userId);
     }
 
     @RequestMapping(value = "/service/getAnswers", method = RequestMethod.GET)
@@ -86,7 +86,7 @@ public class AnswersRestController {
 
     ){
 
-        Map<Integer, String> answers = candidateDAO.getAllCandidateAnswers(candidate);
+        Map<Integer, String> answers = candidateService.getAllCandidateAnswers(candidate);
         if(answers.isEmpty()){
             return new ResponseEntity<Map<Integer, String>>(HttpStatus.NO_CONTENT);
         }
