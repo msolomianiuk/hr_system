@@ -405,7 +405,7 @@
         var questionsAnswers;
 
         for (var index in questionsList) {
-            switch (questionsList[index].typeValue) {
+            switch (questionsList[index].type) {
                 case "String":
                     questionType = "text";
                     break
@@ -430,7 +430,7 @@
             questionInput.find("select").attr("name", "question-" + questionsList[index].id);
             questionInput.find("input").attr("id", "question-" + questionsList[index].id);
 
-            questionsAnswers = questionsList[index].additionValue;
+            questionsAnswers = questionsList[index].answerVariants;
 
             if ((questionType == "select") || (questionType == "textANDselect")) {
                 for (var indexAnswer in questionsAnswers) {
