@@ -26,7 +26,6 @@ public class QuestionDAOImpl implements QuestionDAO {
     private Question question;
 
 
-
     public Collection<Question> getQuestions(String sql) {
         jdbcTemplate = new JdbcTemplate(dataSource);
         List<Question> questions = new ArrayList<Question>();

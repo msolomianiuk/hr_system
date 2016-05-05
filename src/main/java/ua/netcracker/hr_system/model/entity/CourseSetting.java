@@ -1,13 +1,6 @@
 package ua.netcracker.hr_system.model.entity;
 
 
-import org.springframework.stereotype.Component;
-
-/**
- * Created by Alex on 24.04.2016.
- */
-@Component
-//@Scope("prototype")
 public class CourseSetting {
 
     private int id;
@@ -175,18 +168,4 @@ public class CourseSetting {
         return result;
     }
 
-    @Override
-    public String toString() {
-        return "CourseSetting{" +
-                "id=" + id +
-                ", studentInterviewCount=" + studentInterviewCount +
-                ", studentCourseCount=" + studentCourseCount +
-                ", registrationStartDate='" + registrationStartDate + '\'' +
-                ", registrationEndDate='" + registrationEndDate + '\'' +
-                ", interviewStartDate='" + interviewStartDate + '\'' +
-                ", interviewEndDate='" + interviewEndDate + '\'' +
-                ", courseStartDate='" + courseStartDate + '\'' +
-                ", interviewTimeForStudent=" + interviewTime +
-                '}';
-    }
 }

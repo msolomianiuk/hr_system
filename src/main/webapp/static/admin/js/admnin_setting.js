@@ -35,7 +35,7 @@ $(document).ready(function () {
 
 
         $.ajax({
-            url: "http://localhost:8080/hr_system-1.0-SNAPSHOT/admin/course_setting",
+            url: "http://localhost:8080/hr_system-1.0-SNAPSHOT/admin/admin_setting",
             type: "GET",
             //   contentType : "application/json",
             //beforeSend: funcbefor,

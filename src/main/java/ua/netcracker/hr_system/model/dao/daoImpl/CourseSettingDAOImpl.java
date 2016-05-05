@@ -8,7 +8,7 @@ import ua.netcracker.hr_system.model.dao.daoInterface.CourseSettingDAO;
 import ua.netcracker.hr_system.model.entity.CourseSetting;
 
 import javax.sql.DataSource;
-import java.lang.reflect.Executable;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
@@ -24,10 +24,6 @@ public class CourseSettingDAOImpl implements CourseSettingDAO<CourseSetting> {
     private DataSource dataSource;
     private JdbcTemplate jdbcTemplate;
 
-    @Autowired(required = false)
-    private CourseSetting courseSetting;
-
-
 
     @Override
     public Collection<CourseSetting> findAll() {
@@ -36,11 +32,10 @@ public class CourseSettingDAOImpl implements CourseSettingDAO<CourseSetting> {
 
     @Override
     public CourseSetting find(int id) {
-
+        CourseSetting courseSetting = null;
         jdbcTemplate = new JdbcTemplate(dataSource);
         String sql = "select * from \"hr_system\".course_setting where id = " + id;
 
-        courseSetting = null;
         try {
             courseSetting = jdbcTemplate.queryForObject(sql, new RowMapper<CourseSetting>() {
                         @Override
@@ -57,7 +52,7 @@ public class CourseSettingDAOImpl implements CourseSettingDAO<CourseSetting> {
     }
 
     private CourseSetting getCourseSetting(ResultSet resultSet) throws SQLException {
-
+        CourseSetting courseSetting = new CourseSetting();
         courseSetting.setId(resultSet.getInt("id"));
         courseSetting.setInterviewEndDate(resultSet.getString("interview_end"));
         courseSetting.setInterviewStartDate(resultSet.getString("interview_start"));
@@ -103,11 +98,11 @@ public class CourseSettingDAOImpl implements CourseSettingDAO<CourseSetting> {
                 " SET student_for_interview_count = " + courseSetting.getStudentInterviewCount() +
                 ", student_for_courses_count = " + courseSetting.getStudentCourseCount() +
                 ", interview_time_for_student = " + courseSetting.getInterviewTime() +
-                ", interview_end = " + courseSetting.getInterviewEndDate() +
-                ", interview_start = " + courseSetting.getInterviewStartDate() +
-                ", registration_start_date = " + courseSetting.getRegistrationStartDate() +
-                ", registration_end_date = " + courseSetting.getRegistrationEndDate() +
-                ", course_start_date = " + courseSetting.getCourseStartDate() +
+                ", interview_end = '" + courseSetting.getInterviewEndDate()  +"'"+
+                ", interview_start =' " + courseSetting.getInterviewStartDate() +"'" +
+                ", registration_start_date = '" + courseSetting.getRegistrationStartDate() +"'" +
+                ", registration_end_date = '" + courseSetting.getRegistrationEndDate()  +"'"+
+                ", course_start_date = '" + courseSetting.getCourseStartDate() +"'" +
                 " WHERE " +
                 "id = " + courseSetting.getId());
         return true;
@@ -121,17 +116,16 @@ public class CourseSettingDAOImpl implements CourseSettingDAO<CourseSetting> {
 
 
     @Override
-    public int getLastIdSetting() {
+    public CourseSetting getLastSetting() {
+
         jdbcTemplate = new JdbcTemplate(dataSource);
         String sql = "SELECT * from \"hr_system\".course_setting order by id desc limit 1";
-        int lastId = jdbcTemplate.queryForObject(sql, new RowMapper<Integer>() {
+        CourseSetting courseSetting = jdbcTemplate.queryForObject(sql, new RowMapper<CourseSetting>() {
             @Override
-            public Integer mapRow(ResultSet resultSet, int i) throws SQLException {
-
-                courseSetting.setId(resultSet.getInt("id"));
-                return courseSetting.getId();
+            public CourseSetting mapRow(ResultSet resultSet, int i) throws SQLException {
+                return getCourseSetting(resultSet);
             }
         });
-        return lastId;
+        return courseSetting;
     }
 }

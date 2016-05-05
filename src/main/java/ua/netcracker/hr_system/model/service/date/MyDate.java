@@ -17,14 +17,14 @@ public class MyDate {
 
     private Calendar calendar = new GregorianCalendar();
 
-    public long setDateMillis(String dateMillis){
-        String [] date = dateMillis.split(" ");
+    public Calendar getDateInCalendar (String s){
+        String [] date = s.split(" ");
         calendar.set(Integer.valueOf(date[0]),Integer.valueOf(date[1])-1,Integer.valueOf(date[2]));
-        return calendar.getTimeInMillis();
+        return calendar;
     }
 
     public long getCurrentTime(){
-      return calendar.getTimeInMillis();
+        return calendar.getTimeInMillis();
     }
 
     public int getCurrentYear (){
@@ -32,12 +32,12 @@ public class MyDate {
         return calendar.get(Calendar.YEAR);
     }
 
-    public int getCurrentDay(){
-        return calendar.get(Calendar.DAY_OF_MONTH);
-    }
-
     public int getCurrentMonth(){
         return calendar.get(Calendar.MONTH);
+    }
+
+    public int getCurrentDay(){
+        return calendar.get(Calendar.DAY_OF_MONTH);
     }
 
     public String getSFTime (String timeM){
