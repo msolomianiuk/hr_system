@@ -7,7 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import ua.netcracker.hr_system.model.entity.User;
-import ua.netcracker.hr_system.model.service.serviceImpl.RegistrationServiceImp;
+import ua.netcracker.hr_system.model.service.serviceInterface.RegistrationService;
 
 /**
  * Class for processing registration requests
@@ -19,7 +19,7 @@ import ua.netcracker.hr_system.model.service.serviceImpl.RegistrationServiceImp;
 public class RegistrationController {
 
     @Autowired
-    private RegistrationServiceImp registrationService;
+    private RegistrationService registrationService;
 
     @RequestMapping(value = "/registration", method = RequestMethod.GET)
     public String registerPage(ModelMap model,

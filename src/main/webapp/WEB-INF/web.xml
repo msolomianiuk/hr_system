@@ -13,7 +13,7 @@
         <init-param>
             <param-name>contextConfigLocation</param-name>
             <!-- servlet configuration-->
-            <param-value>/WEB-INF/spring/hr-system-servlet.xml</param-value>
+            <param-value>/WEB-INF/spring/mvc-config.xml</param-value>
         </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>
@@ -31,8 +31,7 @@
     <!-- read context information from this files-->
     <context-param>
         <param-name>contextConfigLocation</param-name>
-        <param-value>/WEB-INF/spring/datasource-config.xml , /WEB-INF/spring/security-context.xml
-        </param-value>
+        <param-value>/WEB-INF/spring/business-config.xml</param-value>
     </context-param>
 
     <!-- The filter element defines a filter class and its initialization attributes. For more information on filters,
@@ -46,7 +45,7 @@
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 
-    <!-- log4f settings-->
+    <!-- log4j settings-->
     <context-param>
         <param-name>log4j-config-location</param-name>
         <param-value>WEB-INF/log4j.properties</param-value>

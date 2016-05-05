@@ -11,8 +11,7 @@ import java.util.List;
  * @author Bersik (Serhii Kisilchuk)
  * @version 1.0
  */
-public interface UserDAO extends DAO<Integer, User> {
-    boolean insert(User user);
+public interface UserDAO extends DAO<User> {
     List<User> findByName(String name);
 
     List<User> findBySurname(String surname);
@@ -26,4 +25,6 @@ public interface UserDAO extends DAO<Integer, User> {
     boolean removeUserRoles(int userId);
 
     boolean insertUserRoles(User user);
+
+    boolean remove(User user);
 }

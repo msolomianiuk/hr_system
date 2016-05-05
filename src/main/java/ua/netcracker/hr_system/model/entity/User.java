@@ -14,37 +14,20 @@ import java.util.List;
  */
 @Component
 public class User implements Serializable {
-    /**
-     * User id
-     */
     private int id;
-    /**
-     * User email
-     */
+
     private String email;
-    /**
-     * User password
-     */
+
     private String password;
-    /**
-     * User name
-     */
+
     private String name;
-    /**
-     * User surname
-     */
+
     private String surname;
-    /**
-     * User patronymic
-     */
+
     private String patronymic;
-    /**
-     * User authority granted
-     */
+
     private List<Role> roles;
-    /**
-     * Path for user photo
-     */
+
     private String image;
 
     public User() {

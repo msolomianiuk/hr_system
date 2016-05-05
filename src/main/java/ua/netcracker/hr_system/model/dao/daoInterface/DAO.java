@@ -1,6 +1,5 @@
 package ua.netcracker.hr_system.model.dao.daoInterface;
 
-import java.io.Serializable;
 import java.util.Collection;
 
 /**
@@ -11,7 +10,7 @@ import java.util.Collection;
  * @author Bersik (Serhii Kisilchuk)
  * @version 1.0
  */
-public interface DAO<PK extends Serializable, T> {
+public interface DAO<T> {
     Collection<T> findAll();
 
     /**

@@ -11,7 +11,7 @@ import java.util.Map;
 /**
  * Created by Alex on 26.04.2016.
  */
-public interface CandidateDAO extends DAO<Integer, Candidate> {
+public interface CandidateDAO extends DAO<Candidate> {
     Candidate getCandidateByID(Integer candidateID);
     List<Candidate> getAllProfiles();
     String getStatusById(Integer statusID);

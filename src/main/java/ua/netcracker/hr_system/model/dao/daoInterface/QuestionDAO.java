@@ -7,6 +7,6 @@ import java.util.List;
 /**
  * Created by Alex on 26.04.2016.
  */
-public interface QuestionDAO extends DAO<Integer,Question> {
+public interface QuestionDAO extends DAO<Question> {
     List<String> findVariantsAnswer(int questionId);
 }
