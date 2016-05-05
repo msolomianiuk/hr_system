@@ -22,7 +22,7 @@ public interface CandidateDAO extends DAO<Candidate> {
     Candidate getCandidateByUserID(Integer userID);
     Map<Integer, String> getAllCandidateAnswers(Candidate candidate);
 
-    List<User> getInterviewers(Candidate candidate);
+    List<Map<String, Object>> getInterviewers(Candidate candidate);
     String getCandidateAnswer(Integer candidateID,Integer questionID);
 
 

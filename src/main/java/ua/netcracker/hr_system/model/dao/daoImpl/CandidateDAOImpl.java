@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import ua.netcracker.hr_system.model.dao.daoInterface.CandidateDAO;
+import ua.netcracker.hr_system.model.dao.daoInterface.UserDAO;
 import ua.netcracker.hr_system.model.entity.Candidate;
 import ua.netcracker.hr_system.model.entity.User;
 
@@ -24,13 +25,16 @@ public class CandidateDAOImpl implements CandidateDAO {
 
     @Autowired
     private DataSource dataSource;
+    @Autowired
+    private UserDAO userDAO;
     @Override
     public Candidate getCandidateByID(Integer candidateID){
+        Candidate candidate = new Candidate();
         if (candidateID > 0) {
             try {
                 JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
                 String sql = "select * from \"hr_system\".candidate WHERE id = " + candidateID;
-                Candidate candidate = jdbcTemplate.queryForObject(sql, new RowMapper<Candidate>() {
+                 candidate= jdbcTemplate.queryForObject(sql, new RowMapper<Candidate>() {
                             @Override
                             public Candidate mapRow(ResultSet rs, int rowNum) throws SQLException {
                                Candidate candidate = new Candidate();
@@ -48,7 +52,7 @@ public class CandidateDAOImpl implements CandidateDAO {
                 LOGGER.info(e.getMessage());
             }
         }
-        return null;
+        return candidate;
 
     }
     @Override
@@ -226,6 +230,24 @@ public class CandidateDAOImpl implements CandidateDAO {
         return listAnswers;
     }
 
+    @Override
+    public List<Map<String, Object>> getInterviewers(Candidate candidate) {
+        List<Map<String, Object>> rows = new ArrayList<Map<String, Object>>();
+        if(candidate!=null){
+            try{
+                User interviewer = null;
+                JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+                String sql = "select interviewer_id from \"hr_system\".interview_result WHERE candidate_id ="
+                        + candidate.getID();
+               rows = jdbcTemplate.queryForList(sql);
+            }catch (Exception e){
+                LOGGER.debug(e.getStackTrace());
+                LOGGER.info(e.getMessage());
+            }
+        }
+        return rows;
+    }
+
     public void insertAnswers(Candidate candidate) {
         if (candidate != null) {
             try {
@@ -286,15 +308,15 @@ public class CandidateDAOImpl implements CandidateDAO {
         }
     }
 
-    @Override
-    public List<User> getInterviewers(Candidate candidate) {
-        return null;
-    }
+
+
+
 
     @Override
     public String getCandidateAnswer(Integer candidateID, Integer questionID) {
         return null;
     }
+
 
 
 

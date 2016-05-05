@@ -25,7 +25,7 @@ public interface CandidateService {
     HashMap<Integer, String> getResponses(Integer id);
     int getInterviewDayDetailsByID(Integer id);
 
-    List<User> getInterviewers(Candidate candidate);
+    List<Map<String, Object>> getInterviewers(Candidate candidate);
     String getCandidateAnswer(Integer candidateID,Integer questionID);
     Map<Integer, String> getAllCandidateAnswers(Candidate candidate);
     

@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ua.netcracker.hr_system.model.dao.daoImpl.CandidateDAOImpl;
 import ua.netcracker.hr_system.model.entity.Candidate;
-import ua.netcracker.hr_system.model.entity.User;
 import ua.netcracker.hr_system.model.service.serviceInterface.CandidateService;
 
 import java.util.HashMap;
@@ -15,7 +14,7 @@ import java.util.Map;
 /**
  * @author Alyona Bilous 05/05/2016
  */
-@Service()
+@Service("Candidate Service")
 public class CandidateServiceImpl implements CandidateService{
 
     private static final Logger LOGGER = Logger.getLogger(CandidateServiceImpl.class);
@@ -71,7 +70,7 @@ public class CandidateServiceImpl implements CandidateService{
     }
 
     @Override
-    public List<User> getInterviewers(Candidate candidate) {
+    public List<Map<String, Object>> getInterviewers(Candidate candidate) {
         return candidateDAO.getInterviewers(candidate);
     }
 
