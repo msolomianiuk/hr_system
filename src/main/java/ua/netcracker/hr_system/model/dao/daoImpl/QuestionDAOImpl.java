@@ -45,7 +45,7 @@ public class QuestionDAOImpl implements QuestionDAO {
         return questions;
     }
 
-    @Override
+
     public Collection<Question> findAll() {
         String sql = "SELECT qcp.order_number, q.*,t.value ,qcp.course_id " +
                 "FROM \"hr_system\".question_course_maps qcp " +
@@ -65,7 +65,7 @@ public class QuestionDAOImpl implements QuestionDAO {
         return getQuestions(sql);
     }
 
-    @Override
+
     public Question find(int id) {
         jdbcTemplate = new JdbcTemplate(dataSource);
         String sql = "SELECT qcp.order_number, q.*,t.value ,qcp.course_id " +
@@ -106,7 +106,7 @@ public class QuestionDAOImpl implements QuestionDAO {
         return id;
     }
 
-    @Override
+
     public boolean insert(Question question) {
 
         simpleJdbcInsert = new SimpleJdbcInsert(dataSource).
@@ -145,7 +145,7 @@ public class QuestionDAOImpl implements QuestionDAO {
             return true;
     }
 
-    @Override
+
     //Not checked
     public boolean update(Question question) {
         jdbcTemplate = new JdbcTemplate(dataSource);
@@ -178,7 +178,7 @@ public class QuestionDAOImpl implements QuestionDAO {
      * @param question
      * @return
      */
-    @Override
+
     public boolean remove(Question question) {
         jdbcTemplate = new JdbcTemplate(dataSource);
         String sql = "DELETE FROM \"hr_system\".question WHERE id =" + question.getId();

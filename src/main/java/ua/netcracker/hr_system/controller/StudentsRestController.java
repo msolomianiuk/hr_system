@@ -16,12 +16,12 @@ import java.util.List;
 public class StudentsRestController {
 
     @Autowired
-    private CandidateDAO candidat;
+    private CandidateDAO candidate;
 
     @RequestMapping(value = "/getStudents", method = RequestMethod.GET)
     public ResponseEntity<List<Candidate>> listAllStudents() {
 
-        List<Candidate> students = candidat.getAllAnketsCandidates();
+        List<Candidate> students = candidate.getAllProfiles();
 
         if(students.isEmpty()){
             return new ResponseEntity<List<Candidate>>(HttpStatus.NO_CONTENT);

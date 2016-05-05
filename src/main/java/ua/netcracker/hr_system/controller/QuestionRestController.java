@@ -22,7 +22,7 @@ public class QuestionRestController {
     @RequestMapping(value = "/service/getAllMandatoryQuestions", method = RequestMethod.GET)
 
     public ResponseEntity<List<Question>> getAllMandatoryQuestions() {
-        List<Question> questions= (List<Question>) questionDao.findAll();
+        List<Question> questions= (List<Question>) questionDao.findAllMandatory();
         if(questions.isEmpty()){
             return new ResponseEntity<List<Question>>(HttpStatus.NO_CONTENT);
         }

@@ -3,9 +3,7 @@ package ua.netcracker.hr_system.controller;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -16,16 +14,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ua.netcracker.hr_system.model.dao.daoImpl.CandidateDAOImpl;
 import ua.netcracker.hr_system.model.entity.Candidate;
-import ua.netcracker.hr_system.model.entity.Role;
-import ua.netcracker.hr_system.model.entity.User;
 import ua.netcracker.hr_system.model.securiry.UserAuthenticationDetails;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.*;
 
 /**
@@ -36,7 +26,7 @@ import java.util.*;
 public class AnswersRestController {
     private Integer userId;
     @Autowired
-    private CandidateDAOImpl candidateService;
+    private CandidateDAOImpl candidateDAO;
     @Autowired(required = false)
     private Candidate candidate;
 
@@ -64,17 +54,17 @@ public class AnswersRestController {
 
                 candidate = getCurrentCandidate();
 
-        if( candidate.getId() == 0 ){
-            candidate.setUserId(userId);
-            candidate.setStatusId(1);
-            candidate.setCourseId(1);
+        if( candidate.getID() == 0 ){
+            candidate.setUserID(userId);
+            candidate.setStatusID(1);
+            candidate.setCourseID(1);
             candidate.setInterviewDaysDetails(1);
-            candidateService.insert(candidate);
-            candidate = candidateService.getCandidateByUserId(userId);
+            candidateDAO.insertCandidate(candidate);
+            candidate = candidateDAO.getCandidateByUserID(userId);
         }
 
-       candidate.setAnswer(data);
-        candidateService.saveOrUpdate(candidate);
+        candidate.setAnswers(data);
+        candidateDAO.saveOrUpdate(candidate);
 
         return ResponseEntity.ok(candidate);
     }
@@ -88,7 +78,7 @@ public class AnswersRestController {
             userId = userDetails.getUserId();
         }
 
-        return candidateService.getCandidateByUserId(userId);
+        return candidateDAO.getCandidateByUserID(userId);
     }
 
     @RequestMapping(value = "/service/getAnswers", method = RequestMethod.GET)
@@ -96,7 +86,7 @@ public class AnswersRestController {
 
     ){
 
-        Map<Integer, String> answers = candidateService.getAllCandidateAnswers();
+        Map<Integer, String> answers = candidateDAO.getAllCandidateAnswers(candidate);
         if(answers.isEmpty()){
             return new ResponseEntity<Map<Integer, String>>(HttpStatus.NO_CONTENT);
         }

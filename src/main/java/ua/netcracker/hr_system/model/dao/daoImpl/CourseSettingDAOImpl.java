@@ -8,7 +8,6 @@ import ua.netcracker.hr_system.model.dao.daoInterface.CourseSettingDAO;
 import ua.netcracker.hr_system.model.entity.CourseSetting;
 
 import javax.sql.DataSource;
-import java.lang.reflect.Executable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
@@ -29,12 +28,12 @@ public class CourseSettingDAOImpl implements CourseSettingDAO<CourseSetting> {
 
 
 
-    @Override
+
     public Collection<CourseSetting> findAll() {
         return null;
     }
 
-    @Override
+  
     public CourseSetting find(int id) {
 
         jdbcTemplate = new JdbcTemplate(dataSource);
@@ -70,7 +69,7 @@ public class CourseSettingDAOImpl implements CourseSettingDAO<CourseSetting> {
         return courseSetting;
     }
 
-    @Override
+ 
     public boolean insert(CourseSetting courseSetting) {
 
         jdbcTemplate = new JdbcTemplate(dataSource);
@@ -94,7 +93,7 @@ public class CourseSettingDAOImpl implements CourseSettingDAO<CourseSetting> {
     }
 
 
-    @Override
+   
     public boolean update(CourseSetting courseSetting) {
 
         jdbcTemplate = new JdbcTemplate(dataSource);
@@ -114,7 +113,7 @@ public class CourseSettingDAOImpl implements CourseSettingDAO<CourseSetting> {
 
     }
 
-    @Override
+
     public boolean remove(CourseSetting courseSetting) {
         return false;
     }

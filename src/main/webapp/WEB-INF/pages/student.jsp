@@ -369,7 +369,7 @@
 
         $('.loading').attr('style', 'display: flex');
         $.ajax({
-            url: "http://31.131.25.42:8080/hr_system-1.0-SNAPSHOT/service/saveAnswers",
+            url: "http://localhost:8080/hr_system-1.0-SNAPSHOT/service/saveAnswers",
             type: "GET",
             dataType: "json",
             data: {'answersJsonString': JSON.stringify($('.profile form').serializeObject())},
@@ -387,7 +387,7 @@
 
     $(document).ready(function () {
         $.ajax({
-            url: "http://31.131.25.42:8080/hr_system-1.0-SNAPSHOT/service/getAllMandatoryQuestions",
+            url: "http://localhost:8080/hr_system-1.0-SNAPSHOT/service/getAllMandatoryQuestions",
             type: "GET",
             dataType: "json",
             contentType: 'application/json',

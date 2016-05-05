@@ -12,7 +12,6 @@ import ua.netcracker.hr_system.model.dao.daoInterface.UserDAO;
 import ua.netcracker.hr_system.model.entity.Role;
 import ua.netcracker.hr_system.model.entity.User;
 import ua.netcracker.hr_system.model.utils.RolesUtils;
-import ua.netcracker.hr_system.model.utils.SendEmailsUtils;
 
 import javax.sql.DataSource;
 import java.sql.PreparedStatement;
@@ -119,7 +118,7 @@ public class UserDAOImpl implements UserDAO {
         return user;
     }
 
-    @Override
+
     public Collection<User> findAll() {
 
         List<User> users = null;
@@ -144,7 +143,7 @@ public class UserDAOImpl implements UserDAO {
         return users;
     }
 
-    @Override
+
     public User find(int id) {
         jdbcTemplate = new JdbcTemplate(dataSource);
         String sql = "select * from \"hr_system\".users where id=" + id + ")";
@@ -177,7 +176,7 @@ public class UserDAOImpl implements UserDAO {
         return roles;
     }
 
-    @Override
+
     public boolean insert(User user) {
         simpleJdbcInsert = new SimpleJdbcInsert(dataSource).
                 withTableName("\"hr_system\".users").
@@ -224,7 +223,6 @@ public class UserDAOImpl implements UserDAO {
         return true;
     }
 
-    @Override
     public boolean update(User user) {
         jdbcTemplate = new JdbcTemplate(dataSource);
         String sql = "update \"hr_system\".users set email=?,password=?,name=?,surname=?,patronymic=?,image=? " +
@@ -238,7 +236,7 @@ public class UserDAOImpl implements UserDAO {
         return false;
     }
 
-    @Override
+ 
     public boolean remove(User user) {
         jdbcTemplate = new JdbcTemplate(dataSource);
         String sql = "delete from \"hr_system\".users where id=?";

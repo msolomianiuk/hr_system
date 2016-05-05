@@ -4,9 +4,11 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ua.netcracker.hr_system.model.dao.daoImpl.UserDAOImpl;
+import ua.netcracker.hr_system.model.dao.daoInterface.CandidateDAO;
+import ua.netcracker.hr_system.model.entity.Candidate;
 import ua.netcracker.hr_system.model.entity.Role;
+import ua.netcracker.hr_system.model.entity.Status;
 import ua.netcracker.hr_system.model.entity.User;
-
 import ua.netcracker.hr_system.model.service.serviceInterface.RegistrationService;
 import ua.netcracker.hr_system.model.utils.regex.EmailValidator;
 import ua.netcracker.hr_system.model.utils.regex.NameValidator;
@@ -21,7 +23,11 @@ public class RegistrationServiceImp implements RegistrationService {
 
     private static final Logger LOGGER = Logger.getLogger(CustomUserDetailsServiceImpl.class);
     @Autowired
-    UserDAOImpl userDao;
+    private UserDAOImpl userDao;
+
+
+    @Autowired
+    private CandidateDAO candidateDAO;
 
     private static String sha256Password(String password) {
         try {
@@ -47,7 +53,12 @@ public class RegistrationServiceImp implements RegistrationService {
 
             User user = new User(email, sha256Password(password), name, surname, patronymic,
                     new ArrayList<>(Arrays.asList(Role.STUDENT)));
-            return userDao.insert(user);
+            userDao.insert(user);
+            Candidate candidate = new Candidate();
+            candidate.setUserID(userDao.findByEmail(email).getId());
+            candidate.setStatusID(Status.NEW.getId());
+            candidate.setCourseID(1);
+            return candidateDAO.insertCandidate(candidate);
         }
         return false;
     }

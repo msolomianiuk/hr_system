@@ -15,7 +15,7 @@ public class CandidateServiceImpl {
     private CandidateDAOImpl candidateDAO;
 
     public Candidate getCandidate (int id){
-        return candidateDAO.findById(id);
+        return candidateDAO.getCandidateByID(id);
     }
 
 }

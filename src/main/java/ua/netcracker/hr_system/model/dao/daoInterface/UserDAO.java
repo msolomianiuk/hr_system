@@ -12,7 +12,7 @@ import java.util.List;
  * @version 1.0
  */
 public interface UserDAO extends DAO<Integer, User> {
-
+    boolean insert(User user);
     List<User> findByName(String name);
 
     List<User> findBySurname(String surname);

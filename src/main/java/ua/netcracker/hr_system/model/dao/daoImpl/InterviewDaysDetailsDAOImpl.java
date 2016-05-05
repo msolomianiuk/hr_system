@@ -32,12 +32,12 @@ public class InterviewDaysDetailsDAOImpl implements InterviewDaysDetailsDAO {
         this.dataSource = dataSource;
     }
 
-    @Override
+
     public Collection<InterviewDaysDetails> findAll() {
         return null;
     }
 
-    @Override
+
     public InterviewDaysDetails find(int id) {
         return null;
     }
@@ -63,7 +63,7 @@ public class InterviewDaysDetailsDAOImpl implements InterviewDaysDetailsDAO {
         return false;
     }
 
-    @Override
+
     public boolean remove(InterviewDaysDetails elem) {
         return false;
     }
