@@ -11,12 +11,12 @@
         <constructor-arg ref="dataSource"/>
     </bean>
 
-    <context:component-scan base-package="ua.netcracker.hr_system.model.service"/>
-    <context:component-scan base-package="ua.netcracker.hr_system.model.dao"/>
+    <context:component-scan base-package="ua.netcracker.model.service"/>
+    <context:component-scan base-package="ua.netcracker.model.dao"/>
 
     <!-- remove later -->
-    <context:component-scan base-package="ua.netcracker.hr_system.model.entity"/>
-    <context:component-scan base-package="ua.netcracker.hr_system.model.utils"/>
+    <context:component-scan base-package="ua.netcracker.model.entity"/>
+    <context:component-scan base-package="ua.netcracker.model.utils"/>
     <!--              -->
 
     <import resource="security-context.xml"/>
