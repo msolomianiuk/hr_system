@@ -21,23 +21,27 @@ import java.util.List;
 @Repository("interviewDao")
 public class InterviewDaysDetailsDAOImpl implements InterviewDaysDetailsDAO {
     static final Logger LOGGER = Logger.getLogger(InterviewDaysDetailsDAOImpl.class);
-    private static final String updateSql = "UPDATE hr_system.interview_days_details SET date=?, start_time=?, end_time=?, address_id=? WHERE id = ?";
-    private static final String removeSql = "DELETE FROM \"hr_system\".interview_days_details WHERE id=?";
-    private static final String getAllSql = "SELECT id, course_id, date, start_time, end_time, address_id FROM \"hr_system\".interview_days_details";
 
-    private InterviewDaysDetails interviewDaysDetails;
+    private static final String UPDATE_SQL = "UPDATE hr_system.interview_days_details SET date=?, start_time=?, end_time=?, address_id=? WHERE id = ?";
+    private static final String REMOVE_SQL = "DELETE FROM \"hr_system\".interview_days_details WHERE id=?";
+    private static final String FIND_ALL_SQL = "SELECT id, course_id, date, start_time, end_time, address_id FROM \"hr_system\".interview_days_details ORDER BY id";
+    private static final String FIND_SQL = "SELECT id, course_id, date, start_time, end_time, address_id FROM \"hr_system\".interview_days_details WHERE id = ?";
 
     @Autowired
     private DataSource dataSource;
 
-//    @Override
-//    public Collection<InterviewDaysDetails> findAll() {
-//        return null;
-//    }
-
     @Override
     public InterviewDaysDetails find(int id) {
-        return null;
+        InterviewDaysDetails interviewDaysDetails = null;
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+        String sql = "SELECT id, course_id, date, start_time, end_time, address_id FROM \"hr_system\".interview_days_details WHERE id = "+id;
+        interviewDaysDetails = jdbcTemplate.queryForObject(FIND_SQL,
+                new RowMapper<InterviewDaysDetails>() {
+                    public InterviewDaysDetails mapRow(ResultSet rs, int rowNum) throws SQLException {
+                        return createInterviewWithResultSet(rs);
+                    }
+                });
+        return interviewDaysDetails;
     }
 
     @Override
@@ -57,13 +61,13 @@ public class InterviewDaysDetailsDAOImpl implements InterviewDaysDetailsDAO {
     @Override
     public boolean update(InterviewDaysDetails interviewDaysDetails) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-        return (jdbcTemplate.update(updateSql,interviewDaysDetails.getInterviewDate(),interviewDaysDetails.getStartTime(),
+        return (jdbcTemplate.update(UPDATE_SQL,interviewDaysDetails.getInterviewDate(),interviewDaysDetails.getStartTime(),
                 interviewDaysDetails.getEndTime(),interviewDaysDetails.getAddressId(),interviewDaysDetails.getId())>0);
     }
 
     public boolean remove(long id) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-        return jdbcTemplate.update(removeSql, id)>0;
+        return jdbcTemplate.update(REMOVE_SQL, id)>0;
     }
 
 
@@ -75,7 +79,7 @@ public class InterviewDaysDetailsDAOImpl implements InterviewDaysDetailsDAO {
     public List<InterviewDaysDetails> findAll(){
         List<InterviewDaysDetails> interviewList = null;
         JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-        interviewList = jdbcTemplate.query(getAllSql,
+        interviewList = jdbcTemplate.query(FIND_ALL_SQL,
                 new RowMapper<InterviewDaysDetails>() {
                     public InterviewDaysDetails mapRow(ResultSet rs, int rowNum) throws SQLException {
                         return createInterviewWithResultSet(rs);

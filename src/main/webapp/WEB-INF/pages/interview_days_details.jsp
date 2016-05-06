@@ -10,13 +10,25 @@
 
 <%@ include file="include/H1title.jsp" %>
 <style>
-
     table {
         margin: auto;
         color: #fff;
     }
+
+    .container {
+        padding-right: 15px;
+        padding-left: 15px;
+        margin-right: auto;
+        margin-left: auto;
+    }
+
+    .row {
+        margin-right: -15px;
+        margin-left: -15px;
+    }
+
     .btn {
-        width: auto;
+        width: 120px;
         height: 50px;
         margin-top: 10px;
         padding: 0 20px;
@@ -116,15 +128,25 @@
     <div class="container">
         <div class="row">
             <form method="post">
-                <table>
-                    <h1/>Address
+                <table class="col-md-4">
+
+                    <tbody>
+                    <h1/>Interview Days Details
                     <tr>
-                        <td>address</td>
-                        <td><input name="address" class="field" placeholder=""></td>
+                        <td>Date</td>
+                        <td><input name="date" class="field" placeholder=""></td>
                     </tr>
                     <tr>
-                        <td>roomCapacity</td>
-                        <td><input name="roomCapacity" class="field" placeholder=""></td>
+                        <td>Start_time</td>
+                        <td><input name="start_time" class="field" placeholder=""></td>
+                    </tr>
+                    <tr>
+                        <td>End_time</td>
+                        <td><input name="end_time" class="field" placeholder=""></td>
+                    </tr>
+                    <tr>
+                        <td>Address_id</td>
+                        <td><input name="address_id" class="field" placeholder=""></td>
                     </tr>
                     <tr>
                         <td>
@@ -144,16 +166,16 @@
                     </tr>
                     <tr>
                         <td>
-                            <a href="../interviewDetails"> <input type="button" class='btn' id="ButtonReturn"
-                                                       value="Return to Interview Details"> </a>
+                           <a href="interviewDetails/address">  <input type="button" class='btn' id="ButtonAddressPage" value="Add address"> </a>
                         </td>
                     </tr>
+                    </tbody>
                 </table>
             </form>
 
             <div class="First">
-            </div>
 
+            </div>
         </div>
     </div>
 </div>
@@ -163,14 +185,16 @@
     $(document).ready(function () {
 
         $("#ButtonInsert").bind("click", function () {
-            var address = $("input[name='address']").val();
-            var roomCapacity = $("input[name='roomCapacity']").val();
+            var date = $("input[name='date']").val();
+            var start_time = $("input[name='start_time']").val();
+            var end_time = $("input[name='end_time']").val();
+            var address_id = $("input[name='address_id']").val();
 
             $.ajax({
-                url: "http://localhost:8080/hr_system-1.0-SNAPSHOT/admin/address_insert",
+                url: "http://localhost:8080/hr_system-1.0-SNAPSHOT/admin/interview_details_insert",
                 type: "GET",
                 dataType: "json",
-                data: {'address': address, 'roomCapacity': roomCapacity},
+                data: {'date': date, 'start_time': start_time, 'end_time': end_time, 'address_id': address_id},
                 contentType: 'application/json',
                 mimeType: 'application/json',
                 success: funcForAjax,
@@ -184,7 +208,7 @@
             var id = $("input[name='id']").val();
 
             $.ajax({
-                url: "http://localhost:8080/hr_system-1.0-SNAPSHOT/admin/address_delete",
+                url: "http://localhost:8080/hr_system-1.0-SNAPSHOT/admin/interview_details_delete",
                 type: "GET",
                 dataType: "json",
                 data: {'id': id},
@@ -199,17 +223,21 @@
 
         $("#ButtonUpdate").bind("click", function () {
             var id = $("input[name='id']").val();
-            var address = $("input[name='address']").val();
-            var roomCapacity = $("input[name='roomCapacity']").val();
+            var date = $("input[name='date']").val();
+            var start_time = $("input[name='start_time']").val();
+            var end_time = $("input[name='end_time']").val();
+            var address_id = $("input[name='address_id']").val();
 
             $.ajax({
-                url: "http://localhost:8080/hr_system-1.0-SNAPSHOT/admin/address_update",
+                url: "http://localhost:8080/hr_system-1.0-SNAPSHOT/admin/interview_details_update",
                 type: "GET",
                 dataType: "json",
                 data: {
                     'id': id,
-                    'address': address,
-                    'roomCapacity': roomCapacity
+                    'date': date,
+                    'start_time': start_time,
+                    'end_time': end_time,
+                    'address_id': address_id
                 },
                 contentType: 'application/json',
                 mimeType: 'application/json',
@@ -222,7 +250,7 @@
 
         $("#ButtonShow").bind("click", function () {
             $.ajax({
-                url: "http://localhost:8080/hr_system-1.0-SNAPSHOT/admin/address_list",
+                url: "http://localhost:8080/hr_system-1.0-SNAPSHOT/admin/interview_details_list",
                 type: "GET",
                 dataType: "json",
                 contentType: 'application/json',
@@ -234,9 +262,9 @@
             });
         });
 
-        $("#ButtonReturn").bind("click", function () {
+        $("#ButtonAddressPage").bind("click", function () {
             $.ajax({
-                url: "http://localhost:8080/hr_system-1.0-SNAPSHOT/admin/service/interviewDetails",
+                url: "http://localhost:8080/hr_system-1.0-SNAPSHOT/admin/service/interviewDetails/address",
                 type: "GET",
                 dataType: "json",
                 contentType: 'application/json',
@@ -249,22 +277,24 @@
         });
 
     });
+
     function funcForAjax(data) {
         newData = data;
         $(".field").val("");
         $("#ButtonShow").click();
-//        alert("Hello");
     }
 
     function funcSuccess(data) {
-//        alert("Hello");
         $(".First").empty();
         dataNew = data;
         for (index in data) {
             $(".First").append(
                     '<p class="p1">' + data[index].id + '</p>' +
-                    '<p class="p2">' + data[index].address + '</p>' +
-                    '<p class="p3">' + data[index].roomCapacity + '</p>' +
+                    '<p class="p2">' + data[index].courseId + '</p>' +
+                    '<p class="p3">' + data[index].interviewDate + '</p>' +
+                    '<p class="p4">' + data[index].startTime + '</p>' +
+                    '<p class="p5">' + data[index].endTime + '</p>' +
+                    '<p class="p6">' + data[index].addressId + '</p>' +
                     '<div class="clear"></div>');
         }
     }

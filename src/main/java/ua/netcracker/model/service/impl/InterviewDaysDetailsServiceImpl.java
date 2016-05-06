@@ -2,6 +2,7 @@ package ua.netcracker.model.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ua.netcracker.model.dao.InterviewDaysDetailsDAO;
 import ua.netcracker.model.dao.impl.InterviewDaysDetailsDAOImpl;
 import ua.netcracker.model.entity.InterviewDaysDetails;
 import ua.netcracker.model.service.InterviewDaysDetailsService;
@@ -13,8 +14,9 @@ import java.util.List;
  */
 @Service("Interview Service")
 public class InterviewDaysDetailsServiceImpl implements InterviewDaysDetailsService {
+
     @Autowired
-    InterviewDaysDetailsDAOImpl interviewDaysDetailsDAO;
+    InterviewDaysDetailsDAO interviewDaysDetailsDAO;
 
     InterviewDaysDetails interviewDaysDetails;
 
@@ -35,12 +37,12 @@ public class InterviewDaysDetailsServiceImpl implements InterviewDaysDetailsServ
 
     @Override
     public InterviewDaysDetails findById(int id) {
-        return null;
+        return interviewDaysDetailsDAO.find(id);
     }
 
     @Override
     public List<InterviewDaysDetails> findAllSetting() {
-        return interviewDaysDetailsDAO.findAll();
+        return (List <InterviewDaysDetails>)interviewDaysDetailsDAO.findAll();
     }
 
     @Override

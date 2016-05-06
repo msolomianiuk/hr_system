@@ -10,5 +10,4 @@ public interface InterviewDaysDetailsService extends EntityService<InterviewDays
     public String getEndTimeofInterview();
     public String getDateofInterview();
     public boolean insert(InterviewDaysDetails interviewDaysDetails);
-
 }

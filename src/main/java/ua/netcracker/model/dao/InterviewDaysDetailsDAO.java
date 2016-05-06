@@ -9,4 +9,7 @@ public interface InterviewDaysDetailsDAO extends DAO<InterviewDaysDetails> {
     public boolean update(InterviewDaysDetails interviewDaysDetails);
     public boolean remove(long id);
     public boolean remove(InterviewDaysDetails interviewDaysDetails);
+    public String getStartTimeInterview(InterviewDaysDetails interviewDaysDetails);
+    public String getEndTimeInterview(InterviewDaysDetails interviewDaysDetails);
+    public String getDateofInterview(InterviewDaysDetails interviewDaysDetails);
 }

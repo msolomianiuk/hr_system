@@ -1,6 +1,7 @@
 package ua.netcracker.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -8,15 +9,29 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import ua.netcracker.model.entity.Address;
 import ua.netcracker.model.entity.Candidate;
 import ua.netcracker.model.entity.CourseSetting;
+import ua.netcracker.model.entity.InterviewDaysDetails;
+import ua.netcracker.model.service.AddressService;
+import ua.netcracker.model.service.InterviewDaysDetailsService;
+import ua.netcracker.model.service.impl.AddressServiceImpl;
 import ua.netcracker.model.service.impl.CandidateServiceImpl;
 import ua.netcracker.model.service.impl.CourseSettingServiceImpl;
+import ua.netcracker.model.service.impl.InterviewDaysDetailsServiceImpl;
+
+import java.util.List;
 
 
 @Controller
 @RequestMapping(value = "/admin", method = RequestMethod.GET)
 public class AdminController {
+
+    @Autowired
+    private AddressService addressService;
+
+    @Autowired
+    private InterviewDaysDetailsService interviewDaysDetailsService;
 
     @Autowired
     private CourseSettingServiceImpl courseSettingService;
@@ -32,11 +47,6 @@ public class AdminController {
     @RequestMapping(value = "/candidate", method = RequestMethod.GET)
     public String mainPageStudentsList() {
         return "candidate";
-    }
-
-    @RequestMapping(value = "/service/inter", method = RequestMethod.GET)
-    public String getInterviewDays() {
-        return "inter_day";
     }
 
     @RequestMapping(value = "/interview_schedule", method = RequestMethod.GET)
@@ -115,7 +125,146 @@ public class AdminController {
         return ResponseEntity.ok(candidate);
     }
 
-    @RequestMapping(value = "/service/inter/address", method = RequestMethod.GET)
+    //---Controllers for InterviewDaysDetails---
+
+    @RequestMapping(value = "/service/interviewDetails", method = RequestMethod.GET)
+    public String getInterviewDays() {
+        return "interview_days_details";
+    }
+
+    //---REST Controllers for InterviewDaysDetails---
+
+    @RequestMapping(value = "/interview_details_list", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<List<InterviewDaysDetails>> getAll() {
+        List<InterviewDaysDetails> interview = (List <InterviewDaysDetails>) interviewDaysDetailsService.findAllSetting();
+        if (interview.isEmpty()) {
+            return new ResponseEntity<List<InterviewDaysDetails>>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<List<InterviewDaysDetails>>(interview, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/interview_details_insert", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<InterviewDaysDetails> setInterviewDaysDetails(
+            @RequestParam String date,
+            @RequestParam String start_time,
+            @RequestParam String end_time,
+            @RequestParam String address_id
+    ) {
+        InterviewDaysDetails interviewDaysDetails = new InterviewDaysDetails();
+        interviewDaysDetails.setCourseId(1);
+        interviewDaysDetails.setInterviewDate(date);
+        interviewDaysDetails.setStartTime(start_time);
+        interviewDaysDetails.setEndTime(end_time);
+        interviewDaysDetails.setAddressId(Integer.parseInt(address_id));
+        interviewDaysDetailsService.insert(interviewDaysDetails);
+        if (interviewDaysDetails == null) {
+            return ResponseEntity.accepted().body(interviewDaysDetails);
+        }
+        return ResponseEntity.ok(interviewDaysDetails);
+    }
+
+    @RequestMapping(value = "/interview_details_delete", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<InterviewDaysDetails> removeInterviewController(
+            @RequestParam String id
+    ) {
+        InterviewDaysDetails interviewDaysDetails = new InterviewDaysDetails();
+        interviewDaysDetailsService.delete(Integer.parseInt(id));
+        if (interviewDaysDetails == null) {
+            return ResponseEntity.accepted().body(interviewDaysDetails);
+        }
+        return ResponseEntity.ok(interviewDaysDetails);
+    }
+
+    @RequestMapping(value = "/interview_details_update", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<InterviewDaysDetails> updateInterviewController(
+            @RequestParam String id,
+            @RequestParam String date,
+            @RequestParam String start_time,
+            @RequestParam String end_time,
+            @RequestParam String address_id
+
+    ) {
+        InterviewDaysDetails interviewDaysDetails = new InterviewDaysDetails(
+                Integer.parseInt(id),
+                date,
+                start_time,
+                Integer.parseInt(address_id),
+                end_time
+        );
+        interviewDaysDetailsService.saveOrUpdate(interviewDaysDetails);
+        if (interviewDaysDetails == null) {
+            return ResponseEntity.accepted().body(interviewDaysDetails);
+        }
+        return ResponseEntity.ok(interviewDaysDetails);
+    }
+
+    //---Controllers for Address---
+
+    @RequestMapping(value = "/service/interviewDetails/address", method = RequestMethod.GET)
     public String getAddressPage(){return "address";}
 
+    //---REST Controllers for Address---
+
+    @RequestMapping(value = "/address_list", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<List<Address>> getAllAddressController() {
+        List<Address> addressList = (List <Address>) addressService.findAllSetting();
+        if (addressList.isEmpty()) {
+            return new ResponseEntity<List<Address>>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<List<Address>>(addressList, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/address_insert", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<Address> setAddressMethod(
+            @RequestParam String address,
+            @RequestParam String roomCapacity
+    ) {
+        Address addressEntity = new Address();
+        addressEntity.setAddress(address);
+        addressEntity.setRoomCapacity(Integer.parseInt(roomCapacity));
+        addressService.insert(addressEntity);
+        if (addressEntity == null) {
+            return ResponseEntity.accepted().body(addressEntity);
+        }
+        return ResponseEntity.ok(addressEntity);
+    }
+
+    @RequestMapping(value = "/address_delete", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<Address> removeAddress(
+            @RequestParam String id
+    ) {
+        Address addressEntity = new Address();
+        addressEntity.setId(Integer.parseInt(id));
+        addressService.delete(addressEntity.getId());
+        if (addressEntity == null) {
+            return ResponseEntity.accepted().body(addressEntity);
+        }
+        return ResponseEntity.ok(addressEntity);
+    }
+
+    @RequestMapping(value = "/address_update", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<Address> updateAddressController(
+            @RequestParam String id,
+            @RequestParam String address,
+            @RequestParam String roomCapacity
+    ) {
+        Address addressEntity = new Address(
+                Integer.parseInt(id),
+                address,
+                Integer.parseInt(roomCapacity)
+        );
+        addressService.saveOrUpdate(addressEntity);
+        if (addressEntity == null) {
+            return ResponseEntity.accepted().body(addressEntity);
+        }
+        return ResponseEntity.ok(addressEntity);
+    }
 }
