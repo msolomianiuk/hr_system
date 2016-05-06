@@ -10,6 +10,7 @@ import ua.netcracker.model.entity.Status;
 import ua.netcracker.model.entity.User;
 import ua.netcracker.model.service.CandidateService;
 import ua.netcracker.model.service.RegistrationService;
+import ua.netcracker.model.service.SendEmailService;
 import ua.netcracker.model.utils.regex.EmailValidator;
 import ua.netcracker.model.utils.regex.NameValidator;
 import ua.netcracker.model.utils.regex.PasswordValidator;
@@ -27,6 +28,9 @@ public class RegistrationServiceImp implements RegistrationService {
 
     @Autowired
     private CandidateService candidateService;
+
+    @Autowired
+    private SendEmailService sendEmailService;
 
     private static String sha256Password(String password) {
         try {
@@ -51,8 +55,11 @@ public class RegistrationServiceImp implements RegistrationService {
                 && nv.validate(patronymic) && pv.validate(password)) {
 
             User user = new User(email, sha256Password(password), name, surname, patronymic,
-                    new ArrayList<>(Arrays.asList(Role.STUDENT)));
+                    new ArrayList<>(Arrays.asList(Role.ROLE_STUDENT)));
             if (userDao.insert(user)) {
+                //TODO:
+                //get EmailTemplate and paste it
+                sendEmailService.sendLetterToEmails(new String[]{user.getEmail()}, "You successfully registered", "You successfully registered on site");
                 Candidate candidate = new Candidate();
                 candidate.setUserId(userDao.findByEmail(email).getId());
                 candidate.setStatusId(Status.NEW.getId());

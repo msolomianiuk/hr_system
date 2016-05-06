@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import static ua.netcracker.model.entity.Role.*;
+
 /**
  * Class to work with roles (authority granted)
  *
@@ -15,44 +17,28 @@ import java.util.List;
  */
 public class RolesUtils {
 
-    private static boolean isAdmin(List<String> roles) {
-        return roles.contains(Role.ADMIN.toString());
-    }
-
-    private static boolean isHR(List<String> roles) {
-        return roles.contains(Role.HR.toString());
-    }
-
-    private static boolean isBA(List<String> roles) {
-        return roles.contains(Role.BA.toString());
-    }
-
-    private static boolean isDev(List<String> roles) {
-        return roles.contains(Role.DEV.toString());
-    }
-
-    private static boolean isStudent(List<String> roles) {
-        return roles.contains(Role.STUDENT.toString());
+    private static boolean isContains(List<String> roles, Role role) {
+        return roles.contains(role.name());
     }
 
     public static String getUrlByRoles(Collection<? extends GrantedAuthority> authorities) {
         String url;
 
-        List<String> roles = new ArrayList<String>();
+        List<String> roles = new ArrayList<>();
 
         for (GrantedAuthority a : authorities) {
             roles.add(a.getAuthority());
         }
 
-        if (isAdmin(roles)) {
+        if (isContains(roles, ROLE_ADMIN)) {
             url = "/admin";
-        } else if (isHR(roles)) {
+        } else if (isContains(roles, ROLE_HR)) {
             url = "/hr";
-        } else if (isBA(roles)) {
+        } else if (isContains(roles, ROLE_BA)) {
             url = "/ba";
-        } else if (isDev(roles)) {
+        } else if (isContains(roles, ROLE_DEV)) {
             url = "/dev";
-        } else if (isStudent(roles)) {
+        } else if (isContains(roles, ROLE_STUDENT)) {
             url = "/student";
         } else {
             url = "/error";
@@ -60,17 +46,4 @@ public class RolesUtils {
         return url;
     }
 
-    public static Role getRoleByStr(String role) {
-        if (Role.ADMIN.toString().equals(role))
-            return Role.ADMIN;
-        if (Role.STUDENT.toString().equals(role))
-            return Role.STUDENT;
-        if (Role.HR.toString().equals(role))
-            return Role.HR;
-        if (Role.BA.toString().equals(role))
-            return Role.BA;
-        if (Role.DEV.toString().equals(role))
-            return Role.DEV;
-        return null;
-    }
 }
