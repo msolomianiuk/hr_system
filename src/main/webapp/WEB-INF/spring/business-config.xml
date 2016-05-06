@@ -11,6 +11,15 @@
         <constructor-arg ref="dataSource"/>
     </bean>
 
+    <bean id="SendEmail Service" class="ua.netcracker.model.service.SendEmailService">
+        <property name="email" value="netcracker.company"/>
+        <property name="password" value="netcracker.company1"/>
+        <property name="auth" value="true"/>
+        <property name="starttls" value="true"/>
+        <property name="host" value="smtp.gmail.com"/>
+        <property name="port" value="587"/>
+    </bean>
+
     <context:component-scan base-package="ua.netcracker.model.service"/>
     <context:component-scan base-package="ua.netcracker.model.dao"/>
 
