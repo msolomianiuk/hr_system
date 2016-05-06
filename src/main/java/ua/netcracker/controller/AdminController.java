@@ -61,7 +61,7 @@ public class AdminController {
     }
 
     @RequestMapping(value = "/admin_settings", method = RequestMethod.GET)
-    public String mainPageSS() {
+    public String adminSetting() {
         return "admin_settings";
     }
 
@@ -73,7 +73,7 @@ public class AdminController {
 
     @RequestMapping(value = "/admin_setting", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<CourseSetting> setCourseSettingFromFromEnd(
+    public ResponseEntity<CourseSetting> setCourseSetting(
             @RequestParam String registrationStartDate,
             @RequestParam String registrationEndDate,
             @RequestParam String interviewStartDate,

@@ -27,7 +27,7 @@ public class Candidate {
 
     private Map<Integer, Integer> mark;
 
-    private Map<Integer, String> response;
+    private Map<Integer, String> responds;
 
     private Map<Integer, String> recommendation;
 
@@ -59,8 +59,8 @@ public class Candidate {
         return recommendation;
     }
 
-    public Map<Integer, String> getResponse() {
-        return response;
+    public Map<Integer, String> getResponds() {
+        return responds;
     }
 
     public Map<Integer, Integer> getMark() {
@@ -127,8 +127,8 @@ public class Candidate {
         this.mark = mark;
     }
 
-    public void setResponse(Map<Integer, String> response) {
-        this.response = response;
+    public void setResponds(Map<Integer, String> responds) {
+        this.responds = responds;
     }
 
     public void setRecommendation(Map<Integer, String> recommendation) {
@@ -143,21 +143,4 @@ public class Candidate {
         this.answers = answers;
     }
 
-    @Override
-    public String toString() {
-        return "Candidate{" +
-                "ID=" + ID +
-                ", userID=" + userID +
-                ", courseID=" + courseID +
-                ", statusID=" + statusID +
-                ", status=" + status +
-                ", questionsID=" + questionsID +
-                ", user=" + user +
-                ", mark=" + mark +
-                ", response=" + response +
-                ", recommendation=" + recommendation +
-                ", interviewDaysDetails=" + interviewDaysDetails +
-                ", answers=" + answers +
-                '}';
-    }
 }

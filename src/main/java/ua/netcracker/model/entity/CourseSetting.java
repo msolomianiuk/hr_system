@@ -1,6 +1,5 @@
 package ua.netcracker.model.entity;
 
-
 public class CourseSetting {
 
     private int id;

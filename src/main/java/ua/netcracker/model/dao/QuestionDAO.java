@@ -1,5 +1,6 @@
 package ua.netcracker.model.dao;
 
+
 import ua.netcracker.model.entity.Question;
 
 import java.util.Collection;

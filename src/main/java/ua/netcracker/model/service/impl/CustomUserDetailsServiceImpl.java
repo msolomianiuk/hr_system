@@ -9,6 +9,7 @@ import ua.netcracker.model.dao.UserDAO;
 import ua.netcracker.model.entity.User;
 import ua.netcracker.model.securiry.UserAuthenticationDetails;
 
+
 /**
  * Class for load user-specific data
  *

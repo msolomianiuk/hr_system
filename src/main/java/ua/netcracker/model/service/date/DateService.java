@@ -1,4 +1,4 @@
-package ua.netcracker.hr_system.model.service.date;
+package ua.netcracker.model.service.date;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;

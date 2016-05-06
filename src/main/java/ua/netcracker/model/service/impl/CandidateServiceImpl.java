@@ -3,7 +3,7 @@ package ua.netcracker.model.service.impl;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ua.netcracker.model.dao.CandidateDAO;
+import ua.netcracker.model.dao.impl.CandidateDAOImpl;
 import ua.netcracker.model.entity.Candidate;
 import ua.netcracker.model.service.CandidateService;
 
@@ -15,14 +15,12 @@ import java.util.Map;
  * @author Alyona Bilous 05/05/2016
  */
 @Service("Candidate Service")
-public class CandidateServiceImpl implements CandidateService {
+public class CandidateServiceImpl implements CandidateService{
 
     private static final Logger LOGGER = Logger.getLogger(CandidateServiceImpl.class);
 
     @Autowired
-    private CandidateDAO candidateDAO;
-
-
+    private CandidateDAOImpl candidateDAO;
 
     @Override
     public Candidate getCandidateByID(Integer id){
@@ -105,3 +103,4 @@ public class CandidateServiceImpl implements CandidateService {
         }
     }
 }
+

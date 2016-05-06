@@ -2,8 +2,6 @@ package ua.netcracker.model.entity;
 
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
-
 /**
  * @author MaXim
  *

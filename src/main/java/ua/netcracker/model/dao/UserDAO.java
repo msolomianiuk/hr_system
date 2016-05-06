@@ -1,5 +1,6 @@
 package ua.netcracker.model.dao;
 
+
 import ua.netcracker.model.entity.Role;
 import ua.netcracker.model.entity.User;
 

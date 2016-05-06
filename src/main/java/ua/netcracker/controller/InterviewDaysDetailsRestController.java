@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import ua.netcracker.hr_system.model.dao.impl.AddressDAOImpl;
-import ua.netcracker.hr_system.model.entity.Address;
+import ua.netcracker.model.dao.impl.AddressDAOImpl;
+import ua.netcracker.model.entity.Address;
 import ua.netcracker.model.entity.InterviewDaysDetails;
 import ua.netcracker.model.service.impl.InterviewDaysDetailsServiceImpl;
 
@@ -23,7 +23,6 @@ public class InterviewDaysDetailsRestController {
     //    @Autowired(required = false)
     private InterviewDaysDetails interviewDaysDetails;
     private Address addressEnt;
-
     private AddressDAOImpl addressDAO;
 
     @Autowired
@@ -147,16 +146,16 @@ public class InterviewDaysDetailsRestController {
             @RequestParam String address,
             @RequestParam String roomCapacity
     ) {
-        Address addressEntity = new Address(
+        Address addressEntiti = new Address(
                 Integer.parseInt(id),
                 address,
                 Integer.parseInt(roomCapacity)
         );
-        addressDAO.update(addressEntity);
-        if (addressEntity == null) {
-            return ResponseEntity.accepted().body(addressEntity);
+        addressDAO.update(addressEntiti);
+        if (addressEntiti == null) {
+            return ResponseEntity.accepted().body(addressEntiti);
         }
-        return ResponseEntity.ok(addressEntity);
+        return ResponseEntity.ok(addressEntiti);
     }
 
 }

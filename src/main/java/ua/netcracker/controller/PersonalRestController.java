@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ua.netcracker.model.dao.UserDAO;
 import ua.netcracker.model.entity.User;
 
-import java.lang.String;import java.util.HashMap;
+import java.util.HashMap;
 import java.util.List;
 
 @RestController

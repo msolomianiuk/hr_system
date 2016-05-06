@@ -1,15 +1,17 @@
 package ua.netcracker.model.service.date;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import ua.netcracker.model.dao.impl.InterviewDaysDetailsDAOImpl;
 import ua.netcracker.model.entity.CourseSetting;
 import ua.netcracker.model.service.impl.CourseSettingServiceImpl;
 
-import java.util.Calendar;
+import java.time.LocalDate;
 
 /**
 * Created by Legion on 04.05.2016.
 */
+@Service("caclulation setting")
 public class CalculateSetting {
 
     @Autowired
@@ -19,13 +21,21 @@ public class CalculateSetting {
     private InterviewDaysDetailsDAOImpl interviewDaysDetailsDAO;
 
     @Autowired
-    private MyDate myDate;
+    private DateService myDate;
 
     public int getDay (){
 
         CourseSetting courseSetting = courseSettingService.getLastSetting();
-        Calendar startInterviewDay = myDate.getDateInCalendar(courseSetting.getInterviewStartDate());
-        Calendar endInterviewDay = myDate.getDateInCalendar(courseSetting.getInterviewEndDate());
+
+        LocalDate startInterviewDay = myDate.getDate(courseSetting.getInterviewStartDate());
+        LocalDate endInterviewDay = myDate.getDate(courseSetting.getInterviewEndDate());
+        LocalDate startRegistrationDay = myDate.getDate(courseSetting.getRegistrationStartDate());
+        LocalDate endRegistrationDay = myDate.getDate(courseSetting.getRegistrationEndDate());
+
+        int maxStudentForInterview = courseSetting.getStudentInterviewCount();
+        int maxStudentForCourse = courseSetting.getStudentCourseCount();
+
+        int timeForInterview = courseSetting.getInterviewTime();
 
 
 
@@ -43,3 +53,4 @@ public class CalculateSetting {
     }
 
 }
+
