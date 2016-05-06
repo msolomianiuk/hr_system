@@ -2,107 +2,55 @@ package ua.netcracker.model.entity;
 
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * Created by Alex on 24.04.2016.
  */
 @Component
 public class InterviewResult {
-    /**
-     * Table "interview_result"
-     * ID entry in table "users"
-     */
-    private int interviewerId;
-    /**
-     * Table "interview_result"
-     * ID entry in table "candidate"
-     */
-    private int candidateId;
-    /**
-     * Table "interview_result"
-     * Mark for Candidate with candidate_id from Interviewer with interviewer_id
-     */
-    private int mark;
-    /**
-     * Table "interview_result"
-     * Response for Candidate with candidate_id from Interviewer with interviewer_id
-     */
-    private String response;
-    /**
-     * Table "interview_result"
-     * ID entry in table "interview_days_details"
-     */
-    private int daysDetailsId;
-    /**
-     * Tables "interview_result" and "recommendation"
-     * ID entry in table "recommendation"
-     */
-    private int recommendationId;
 
-    /**
-     * Table "recommendation"
-     * Value recommendation by recommendation_id
-     */
-    private String recommendationValue;
+    private List<User> interviewers;
+
+    private Map<Integer,Integer> marks;
+
+    private Map<Integer,String> responds;
+
+    private int daysDetailsId;
+
+    private Map<Integer,String> recommendations;
 
     public InterviewResult() {
 
     }
 
-    public InterviewResult(int candidateId, int mark, String response, int recommendationId, int daysDetailsId) {
-        this.candidateId = candidateId;
-        this.mark = mark;
-        this.response = response;
-        this.recommendationId = recommendationId;
-        this.daysDetailsId = daysDetailsId;
+    public void addInterviewer(User interviewer){
+        this.interviewers.add(interviewer);
     }
 
-    public InterviewResult(int interviewerId, int candidateId, int mark, String response, int recommendationId, int daysDetailsId) {
-        this.interviewerId = interviewerId;
-        this.candidateId = candidateId;
-        this.mark = mark;
-        this.response = response;
-        this.recommendationId = recommendationId;
-        this.daysDetailsId = daysDetailsId;
+    public List<User> getInterviewers() {
+        return interviewers;
     }
 
-    public int getInterviewerId() {
-        return interviewerId;
+    public void setInterviewers(List<User> interviewers) {
+        this.interviewers = interviewers;
     }
 
-    public void setInterviewerId(int interviewerId) {
-        this.interviewerId = interviewerId;
+    public Map<Integer, Integer> getMarks() {
+        return marks;
     }
 
-    public int getCandidateId() {
-        return candidateId;
+    public void setMarks(Map<Integer, Integer> marks) {
+        this.marks = marks;
     }
 
-    public void setCandidateId(int candidateId) {
-        this.candidateId = candidateId;
+    public Map<Integer, String> getResponds() {
+        return responds;
     }
 
-    public int getMark() {
-        return mark;
-    }
-
-    public void setMark(int mark) {
-        this.mark = mark;
-    }
-
-    public String getResponse() {
-        return response;
-    }
-
-    public void setResponse(String response) {
-        this.response = response;
-    }
-
-    public int getRecommendationId() {
-        return recommendationId;
-    }
-
-    public void setRecommendationId(int recommendationId) {
-        this.recommendationId = recommendationId;
+    public void setResponds(Map<Integer, String> responds) {
+        this.responds = responds;
     }
 
     public int getDaysDetailsId() {
@@ -113,23 +61,11 @@ public class InterviewResult {
         this.daysDetailsId = daysDetailsId;
     }
 
-    public String getRecommendationValue() {
-        return recommendationValue;
+    public Map<Integer, String> getRecommendations() {
+        return recommendations;
     }
 
-    public void setRecommendationValue(String recommendationValue) {
-        this.recommendationValue = recommendationValue;
-    }
-
-    @Override
-    public String toString() {
-        return "Interview_Result{" +
-                "interviewer_id=" + interviewerId +
-                ", candidate_id=" + candidateId +
-                ", mark=" + mark +
-                ", response=" + response +
-                ", recommendation_id=" + recommendationId +
-                ", interview_days_details_id=" + daysDetailsId +
-                "}";
+    public void setRecommendations(Map<Integer, String> recommendations) {
+        this.recommendations = recommendations;
     }
 }

@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 import ua.netcracker.model.entity.User;
 import ua.netcracker.model.service.RegistrationService;
 
-
 /**
  * Class for processing registration requests
  *

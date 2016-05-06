@@ -15,8 +15,8 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
   <script src='<c:url value="/static/admin/js/template/script.js"/>'></script>
   <link rel="stylesheet" href='<c:url value="/static/admin/css/template/style.css"/>'/>
-  <link rel="stylesheet" href="<c:url value="/static/bootstrap/css/bootstrap.min.css"/>">
-  <link rel="stylesheet" href="<c:url value='/static/font-awesome/css/font-awesome.min.css'/>">
+  <link rel="stylesheet" href="<c:url value="/static/admin/css/bootstrap.min.css"/>">
+  <link rel="stylesheet" href="<c:url value='/static/fonts/css/font-awesome.min.css'/>">
 </head>
 
 <body>

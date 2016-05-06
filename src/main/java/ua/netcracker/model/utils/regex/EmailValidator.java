@@ -7,7 +7,6 @@ package ua.netcracker.model.utils.regex;
  * @version 1.0
  */
 public class EmailValidator extends AbstractValidator {
-
     @Override
     protected String getPattern() {
         return "^[a-zA-Z0-9]+(\\.[a-zA-Z0-9]+)*@[a-zA-Z0-9]+(\\.[a-zA-Z0-9]+)*(\\.[a-zA-Z]{2,})$";

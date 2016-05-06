@@ -1,3 +1,4 @@
+
 package ua.netcracker.controller;
 
 import org.json.JSONArray;
@@ -18,9 +19,11 @@ import ua.netcracker.model.service.CandidateService;
 
 import java.util.*;
 
+
 /**
- * Created by ksenzod on 02.05.16.
- */
+* Created by ksenzod on 02.05.16.
+*/
+
 
 @RestController
 public class AnswersRestController {
@@ -52,18 +55,17 @@ public class AnswersRestController {
             data.put(Integer.valueOf(key.replace("question-","")), value);
         }
 
-                candidate = getCurrentCandidate();
+        candidate = getCurrentCandidate();
 
-        if( candidate.getID() == 0 ){
-            candidate.setUserID(userId);
-            candidate.setStatusID(1);
-            candidate.setCourseID(1);
-            candidate.setInterviewDaysDetails(1);
+        if( candidate.getId() == 0 ){
+            candidate.setUserId(userId);
+            candidate.setStatusId(1);
+            candidate.setCourseId(1);
             candidateService.saveCandidate(candidate);
             candidate = candidateService.getCandidateByUserID(userId);
         }
 
-        candidate.setAnswers(data);
+        candidate.setAnswers(candidateService.convertBack(data));
         candidateService.saveOrUpdate(candidate);
 
         return ResponseEntity.ok(candidate);
@@ -82,120 +84,129 @@ public class AnswersRestController {
     }
 
     @RequestMapping(value = "/service/getAnswers", method = RequestMethod.GET)
-    public ResponseEntity<Map<Integer, String>> getAnswers(
+
+    public ResponseEntity<Map<Integer, Object>> getAnswers(
+
 
     ){
 
-        Map<Integer, String> answers = candidateService.getAllCandidateAnswers(candidate);
+        Map<Integer, Object> answers = candidateService.convert(candidateService.getAllCandidateAnswers(candidate));
+
         if(answers.isEmpty()){
-            return new ResponseEntity<Map<Integer, String>>(HttpStatus.NO_CONTENT);
+
+            return new ResponseEntity<Map<Integer, Object>>(HttpStatus.NO_CONTENT);
         }
-        return new ResponseEntity<Map<Integer, String>>(answers, HttpStatus.OK);
+        return new ResponseEntity<Map<Integer, Object>>(answers, HttpStatus.OK);
+
     }
 
-//    @RequestMapping(value = "/service/getPDF", method = RequestMethod.GET)
-//    public ResponseEntity<byte[]> getPDF() {
+// @RequestMapping(value = "/service/getPDF", method = RequestMethod.GET)
+// public ResponseEntity<byte[]> getPDF() {
 //
-//        Candidate candidate = new Candidate();
+// Candidate candidate = new Candidate();
 //
-//        //TODO:
-//        //Candidate candidate = AnswersRestController.getCurrentCandidate();
+// //TODO:
+// //Candidate candidate = AnswersRestController.getCurrentCandidate();
 //
-//        candidate.setUser(new User("email", "password", "UserName", "UserSurname", "UserPatronymic", Arrays.asList(Role.STUDENT)));
+// candidate.setUser(new User("email", "password", "UserName", "UserSurname", "UserPatronymic", Arrays.asList(Role.STUDENT)));
 //
-//        Map<Integer, Object> answers = new HashMap();
-//        answers.put(1, "answer1");
-//        answers.put(2, "answer2");
-//        answers.put(3, "answer3");
-//        answers.put(4, "answer4");
-//        answers.put(5, "answer5");
-//        candidate.setAnswer(answers);
+// Map<Integer, Object> answers = new HashMap();
+// answers.put(1, "answer1");
+// answers.put(2, "answer2");
+// answers.put(3, "answer3");
+// answers.put(4, "answer4");
+// answers.put(5, "answer5");
+// candidate.setAnswer(answers);
 //
-//        // generate pdf file with candidate answers
-//        generatePDF(candidate);
+// // generate pdf file with candidate answers
+// generatePDF(candidate);
 //
-//        byte[] contents = new byte[0];
-//        try {
-//            contents = Files.readAllBytes(Paths.get("src/form.pdf"));
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.setContentType(MediaType.parseMediaType("application/pdf"));
-//        String filename = "form.pdf";
-//        headers.setContentDispositionFormData(filename, filename);
-//        headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
-//
-//        return new ResponseEntity<>(contents, headers, HttpStatus.OK);
-//    }
+// byte[] contents = new
 
-    /**
-     * Generate pdf document
-     *
-     * @param candidate
-     * @return form.pdf
-     */
-//    private Document generatePDF(Candidate candidate) {
-//        Document document = new Document();
+//    byte[0];
+// try {
+// contents = Files.readAllBytes(Paths.get("src/form.pdf"));
+// } catch (IOException e) {
+// e.printStackTrace();
+// }
 //
-//        try {
-//            PdfWriter.getInstance(document, new FileOutputStream("src/form.pdf"));
-//            document.open();
+// HttpHeaders headers = new HttpHeaders();
+// headers.setContentType(MediaType.parseMediaType("application/pdf"));
+// String filename = "form.pdf";
+// headers.setContentDispositionFormData(filename, filename);
+// headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
 //
-//            Font font = FontFactory.getFont(FontFactory.HELVETICA);
+// return new ResponseEntity<>(contents, headers, HttpStatus.OK);
+// }
+
+
+/**
+* Generate pdf document
+*
+* @param candidate
+* @return form.pdf
+*/
+
+// private Document generatePDF(Candidate candidate) {
+// Document document = new Document();
 //
-//            PdfPTable table = new PdfPTable(2);
-//            PdfPCell cellName = new PdfPCell();
+// try {
+// PdfWriter.getInstance(document, new FileOutputStream("src/form.pdf"));
+// document.open();
 //
-//            Paragraph paragraphName = new Paragraph();
-//            paragraphName.add(new Phrase(candidate.getUser().getName() + " "));
-//            paragraphName.add(new Phrase(candidate.getUser().getSurname() + " "));
-//            paragraphName.add(new Phrase(candidate.getUser().getPatronymic()));
+// Font font = FontFactory.getFont(FontFactory.HELVETICA);
 //
-//            cellName.addElement(paragraphName);
+// PdfPTable table = new PdfPTable(2);
+// PdfPCell cellName = new PdfPCell();
+//
+// Paragraph paragraphName = new Paragraph();
+// paragraphName.add(new Phrase(candidate.getUser().getName() + " "));
+// paragraphName.add(new Phrase(candidate.getUser().getSurname() + " "));
+// paragraphName.add(new Phrase(candidate.getUser().getPatronymic()));
+//
+// cellName.addElement(paragraphName);
 //
 //
-//            PdfPCell cellImage = new PdfPCell(
-//                    Image.getInstance("src/res/user.png"), true);
-//            //TODO:
-//            //Image.getInstance(candidate.getUser().getImage(),true);
+// PdfPCell cellImage = new PdfPCell(
+// Image.getInstance("src/res/user.png"), true);
+// //TODO:
+// //Image.getInstance(candidate.getUser().getImage(),true);
 //
-//            cellName.setBorder(Rectangle.NO_BORDER);
-//            cellImage.setBorder(Rectangle.NO_BORDER);
+// cellName.setBorder(Rectangle.NO_BORDER);
+// cellImage.setBorder(Rectangle.NO_BORDER);
 //
-//            table.addCell(cellName);
-//            table.addCell(cellImage);
-//            float[] columnWidths = new float[]{30f, 12f};
-//            table.setWidthPercentage(90f);
-//            table.setWidths(columnWidths);
+// table.addCell(cellName);
+// table.addCell(cellImage);
+// float[] columnWidths = new float[]{30f, 12f};
+// table.setWidthPercentage(90f);
+// table.setWidths(columnWidths);
 //
-//            document.add(table);
+// document.add(table);
 //
-//            Map<String,Object> map = new HashMap<>();
-//            //TODO:
-//            //get questions caption and answer
-//            //map = getQuestionCaptionAndAnswers;
+// Map<String,Object> map = new HashMap<>();
+// //TODO:
+// //get questions caption and answer
+// //map = getQuestionCaptionAndAnswers;
 //
-//            //Map.Entry<Integer, Object> === Map.Entry<String, Object>
-//            for (Map.Entry<Integer, Object> entry : candidate.getAnswerValue().entrySet()) {
-//                Paragraph paragraphQuestion = new Paragraph(new Phrase(String.valueOf(entry.getKey())));
-//                document.add(paragraphQuestion);
+// //Map.Entry<Integer, Object> === Map.Entry<String, Object>
+// for (Map.Entry<Integer, Object> entry : candidate.getAnswerValue().entrySet()) {
+// Paragraph paragraphQuestion = new Paragraph(new Phrase(String.valueOf(entry.getKey())));
+// document.add(paragraphQuestion);
 //
-//                Paragraph paragraphAnswer = new Paragraph(new Phrase(String.valueOf(entry.getValue()) + "\n\n"));
-//                document.add(paragraphAnswer);
-//            }
+// Paragraph paragraphAnswer = new Paragraph(new Phrase(String.valueOf(entry.getValue()) + "\n\n"));
+// document.add(paragraphAnswer);
+// }
 //
-//            document.close();
-//        } catch (DocumentException e) {
-//            e.printStackTrace();
-//        } catch (FileNotFoundException e) {
-//            e.printStackTrace();
-//        } catch (MalformedURLException e) {
-//            e.printStackTrace();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        return document;
-//    }
+// document.close();
+// } catch (DocumentException e) {
+// e.printStackTrace();
+// } catch (FileNotFoundException e) {
+// e.printStackTrace();
+// } catch (MalformedURLException e) {
+// e.printStackTrace();
+// } catch (IOException e) {
+// e.printStackTrace();
+// }
+// return document;
+// }
 }

@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import ua.netcracker.model.securiry.UserAuthenticationDetails;
 import ua.netcracker.model.utils.RolesUtils;
 
-
 /**
  * Class for processing requests to main page
  *

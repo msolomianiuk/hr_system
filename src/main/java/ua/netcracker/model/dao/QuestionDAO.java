@@ -1,6 +1,5 @@
 package ua.netcracker.model.dao;
 
-
 import ua.netcracker.model.entity.Question;
 
 import java.util.Collection;
@@ -20,5 +19,7 @@ public interface QuestionDAO extends DAO<Question> {
 
     List<String> findAnswerVariants(Question question);
 
-
+    List<Question> findType();
+    int findQuantityQuestions();
+    int findCurseId();
 }

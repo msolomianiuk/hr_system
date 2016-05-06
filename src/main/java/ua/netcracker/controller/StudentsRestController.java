@@ -3,7 +3,6 @@ package ua.netcracker.controller;
 /**
  * Created by Серый on 02.05.2016.
  */
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

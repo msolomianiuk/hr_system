@@ -26,7 +26,7 @@
 
     <link href="<c:url value="/static/admin/fonts/css/font-awesome.min.css"/>" rel="stylesheet">
     <link href="<c:url value="/static/admin/css/animate.min.css"/>" rel="stylesheet">
-
+    <link href="<c:url value="/static/admin/css/adminSetting.css"/>" rel="stylesheet">
     <!-- Custom styling plus plugins -->
     <link href="<c:url value="/static/admin/css/custom.css"/>" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="<c:url value="/static/admin/css/maps/jquery-jvectormap-2.0.3.css"/>"/>
@@ -254,9 +254,7 @@
                                             <input type="email" name="email_peronal" class="form-control"
                                                    id="email_personal">
                                         </div>
-                                        <div
-                                                02:22:33
-                                                class="form-group">
+                                        <div class="form-group">
                                             <label for="password_personal">Password:</label>
                                             <input type="password" name="password_peronal" class="form-control"
                                                    id="password_personal">
@@ -272,12 +270,43 @@
                             <div class="panel panel-success">
                                 <div class="panel-heading" role="button" data-toggle="collapse" href="#main-setting3"
                                      aria-expanded="true"
-                                     21:06:46
                                      aria-controls="main-setting3">
-                                    <h3 class="panel-title">Main Setting</h3>
+                                    <h3 class="panel-title">Create Question</h3>
                                 </div>
                                 <div class="panel-body" id="main-setting3">
-
+                                    <div class="col-md-12 col-lg-12 col-sm-12 col-xs-12">
+                                        <div class="row">
+                                            <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                                                <div class="form-group">
+                                                    <label for="Caption">Question:</label>
+                                                    <input type="text" name="Caption" class="form-control"
+                                                           id="Caption">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                                                <div class="TypeOfQuestionNew">
+                                                    <select  id="TypeOfQuestion">
+                                                        <option selected>Choose Type</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div id="ComboBox">
+                                            <div id="HowToAdd">
+                                                <div>
+                                                    <div class="form-group NewVariant">
+                                                        <span>Possible answers to the question:</span>
+                                                        <input type="text" name="VariantQuestion" class="VariantQuestion form-control">
+                                                    </div>
+                                                    <span class="glyphicon glyphicon-plus-sign plus"></span>
+                                                    <span class="glyphicon glyphicon-minus-sign minus"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12 col-lg-12 col-sm-12 col-xs-12">
+                                            <button type="button" id="ButtonQuestion" class="btn btn-success">Add Question</button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
@@ -326,8 +355,11 @@
 <!-- bootstrap progress js -->
 <script src="<c:url value="/static/admin/js/progressbar/bootstrap-progressbar.min.js"/>"></script>
 <script src="<c:url value="/static/admin/js/nicescroll/jquery.nicescroll.min.js"/>"></script>
-<script src="<c:url value="/static/admin/js/selectSetting.js"/>"></script>
 <script src="<c:url value="/static/admin/js/admnin_setting.js"/>"></script>
+<script src="<c:url value="/static/admin/js/selectSetting.js"/>"></script>
+<script src="<c:url value="/static/admin/js/SelectQuery.js"/>"></script>
+
+
 
 
 <!-- icheck -->

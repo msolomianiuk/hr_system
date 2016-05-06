@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
+
 import ua.netcracker.model.dao.CourseSettingDAO;
 import ua.netcracker.model.entity.CourseSetting;
 
@@ -34,9 +35,9 @@ public class CourseSettingDAOImpl implements CourseSettingDAO<CourseSetting> {
     private static final String UPDATE = "update \"hr_system\".course_setting" +
             " SET student_for_interview_count = ? , " +
             "student_for_courses_count = ? , interview_time_for_student = ? , " +
-            "interview_end = '?', interview_start = '?' , " +
-            "registration_start_date = '?' , registration_end_date = '?'" +
-            ", course_start_date = '?' WHERE id = ?";
+            "interview_end = ? , interview_start = ? , " +
+            "registration_start_date = ? , registration_end_date = ?" +
+            ", course_start_date = ? WHERE id = ?";
 
     private static final String LAST_SETTING = "SELECT * from \"hr_system\".course_setting order by id desc limit 1";
 
@@ -98,6 +99,7 @@ public class CourseSettingDAOImpl implements CourseSettingDAO<CourseSetting> {
                 return getSetting(resultSet);
             }
         });
+
         return courseSetting;
     }
 

@@ -16,7 +16,6 @@ public class DateService {
     public LocalDate getDate(String s) {
         String[] date = s.split(" ");
         LocalDate localDate = LocalDate.of(Integer.valueOf(date[0]), Integer.valueOf(date[1]) - 1, Integer.valueOf(date[2]));
-//        calendar.set(Integer.valueOf(date[0]),Integer.valueOf(date[1])-1,Integer.valueOf(date[2]));
         return localDate;
     }
 
@@ -45,5 +44,14 @@ public class DateService {
         return dateIsValid;
     }
 
+    /**
+     *
+     * @param time
+     * @return
+     */
+    public String [] getTime(String time){
+        String[] timePars = time.split(":");
+        return timePars;
+    }
 
 }

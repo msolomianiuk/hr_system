@@ -1,5 +1,6 @@
 package ua.netcracker.model.entity;
 
+
 public class CourseSetting {
 
     private int id;
@@ -22,33 +23,6 @@ public class CourseSetting {
 
     public CourseSetting() {
 
-    }
-
-    public CourseSetting(int id, int studentInterviewCount, int studentCourseCount, int interviewTime,
-                         String interviewStartDate, String interviewEndDate, String registrationStartDate,
-                         String registrationEndDate, String courseStartDate) {
-        this.id = id;
-        this.studentInterviewCount = studentInterviewCount;
-        this.studentCourseCount = studentCourseCount;
-        this.interviewTime = interviewTime;
-        this.interviewStartDate = interviewStartDate;
-        this.interviewEndDate = interviewEndDate;
-        this.registrationStartDate = registrationStartDate;
-        this.registrationEndDate = registrationEndDate;
-        this.courseStartDate = courseStartDate;
-    }
-
-    public CourseSetting(int studentInterviewCount, int studentCourseCount, int interviewTime, String interviewStartDate,
-                         String interviewEndDate, String registrationStartDate, String registrationEndDate,
-                         String courseStartDate) {
-        this.studentInterviewCount = studentInterviewCount;
-        this.studentCourseCount = studentCourseCount;
-        this.interviewTime = interviewTime;
-        this.interviewStartDate = interviewStartDate;
-        this.interviewEndDate = interviewEndDate;
-        this.registrationStartDate = registrationStartDate;
-        this.registrationEndDate = registrationEndDate;
-        this.courseStartDate = courseStartDate;
     }
 
     public String getInterviewStartDate() {

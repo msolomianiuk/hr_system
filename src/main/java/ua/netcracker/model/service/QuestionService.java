@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import ua.netcracker.model.entity.Question;
 
 import java.util.Collection;
+import java.util.List;
 
 /**
  * Created by bohda on 05.05.2016.
@@ -21,6 +22,16 @@ public interface QuestionService {
     boolean update(Question question);
 
     boolean remove(Question question);
+
+    public List<String> parseListJson(List<String> list);
+
+    public List<Question> getTypeOfQuestion();
+
+    public int getQuantityQuestions();
+
+    public void setQuestion(Question question);
+
+    public int getCurseId();
 
 
 }

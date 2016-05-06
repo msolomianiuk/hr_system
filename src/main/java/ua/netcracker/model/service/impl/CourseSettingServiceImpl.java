@@ -16,13 +16,13 @@ import java.util.Collection;
 @Service("course setting service")
 public class CourseSettingServiceImpl implements CourseSettingService {
 
+    private static final Logger LOGGER = Logger.getLogger(CourseSettingServiceImpl.class);
+
     @Autowired
     private DateService dateService;
 
     @Autowired
     private CourseSettingDAOImpl courseSettingDAO;
-
-    static final Logger LOGGER = Logger.getLogger(CourseSettingServiceImpl.class);
 
     @Autowired(required = false)
     private void setCourseSettingDAO(CourseSettingDAOImpl courseSettingDAO) {
@@ -31,30 +31,23 @@ public class CourseSettingServiceImpl implements CourseSettingService {
 
     @Override
     public CourseSetting getLastSetting() {
-        CourseSetting courseSetting = courseSettingDAO.getLastSetting();
-        courseSetting.setCourseStartDate(courseSetting.getCourseStartDate());
-        courseSetting.setInterviewEndDate(courseSetting.getInterviewEndDate());
-        courseSetting.setInterviewStartDate(courseSetting.getInterviewStartDate());
-        courseSetting.setRegistrationEndDate(courseSetting.getRegistrationEndDate());
-        courseSetting.setRegistrationStartDate(courseSetting.getRegistrationStartDate());
-        return courseSetting;
+        return courseSettingDAO.getLastSetting();
     }
 
     @Override
     public CourseSetting findById(int id) {
-
         return courseSettingDAO.find(id);
     }
 
     @Override
     public CourseSetting setCourseSetting(String registrationStartDate,
-                                                                               String registrationEndDate,
-                                                                               String interviewStartDate,
-                                                                               String interviewEndDate,
-                                                                               String courseStartDate,
-                                                                               String interviewTimeForStudent,
-                                                                               String studentForInterviewCount,
-                                                                               String studentForCourseCount) {
+                                          String registrationEndDate,
+                                          String interviewStartDate,
+                                          String interviewEndDate,
+                                          String courseStartDate,
+                                          String interviewTimeForStudent,
+                                          String studentForInterviewCount,
+                                          String studentForCourseCount) {
 
         if (dateValidator(registrationStartDate)||dateValidator(registrationEndDate)||
                 dateValidator(interviewStartDate)||dateValidator(interviewEndDate)||
