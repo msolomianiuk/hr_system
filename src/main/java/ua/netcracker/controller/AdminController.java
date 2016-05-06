@@ -35,13 +35,9 @@ public class AdminController {
     }
 
     @RequestMapping(value = "/service/inter", method = RequestMethod.GET)
-    public String getInterviewDays(Model model) {
-        return null;
-    }
-   /* @RequestMapping(value = "/service/inter", method = RequestMethod.GET)
     public String getInterviewDays() {
         return "inter_day";
-    }*/
+    }
 
     @RequestMapping(value = "/interview_schedule", method = RequestMethod.GET)
     public String mainPageS() {
@@ -120,6 +116,6 @@ public class AdminController {
     }
 
     @RequestMapping(value = "/service/inter/address", method = RequestMethod.GET)
-    public String getAddressPage(Model model){return "address";}
+    public String getAddressPage(){return "address";}
 
 }
