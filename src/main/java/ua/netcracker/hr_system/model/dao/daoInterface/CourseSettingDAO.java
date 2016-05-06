@@ -5,6 +5,6 @@ package ua.netcracker.hr_system.model.dao.daoInterface;
  */
 public interface CourseSettingDAO<CourseSetting> extends DAO<CourseSetting> {
 
-    public int getLastIdSetting();
+    public CourseSetting getLastSetting();
 
 }

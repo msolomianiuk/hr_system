@@ -15,16 +15,10 @@ import java.util.Collection;
 @Service()
 public class CourseSettingServiceImpl implements CourseSettingService {
 
-    private CourseSetting courseSetting;
-    @Autowired(required = false)
-    private void setCourseSetting(CourseSetting courseSetting){
-        this.courseSetting = courseSetting;
-    }
-
     private MyDate date;
 
     @Autowired(required = false)
-    private void setMyDate (MyDate date){
+    private void setMyDate(MyDate date) {
         this.date = date;
     }
 
@@ -37,19 +31,41 @@ public class CourseSettingServiceImpl implements CourseSettingService {
     }
 
     @Override
-    public CourseSetting getIdLastSetting() {
-        courseSetting = courseSettingDAO.find(courseSettingDAO.getLastIdSetting());
-        courseSetting.setCourseStartDate(date.getSFTime(courseSetting.getCourseStartDate()));
-        courseSetting.setInterviewEndDate(date.getSFTime(courseSetting.getInterviewEndDate()));
-        courseSetting.setInterviewStartDate(date.getSFTime(courseSetting.getInterviewStartDate()));
-        courseSetting.setRegistrationEndDate(date.getSFTime(courseSetting.getRegistrationEndDate()));
-        courseSetting.setRegistrationStartDate(date.getSFTime(courseSetting.getRegistrationStartDate()));
-        return  courseSetting ;
+    public CourseSetting getLastSetting() {
+        CourseSetting courseSetting = courseSettingDAO.getLastSetting();
+        courseSetting.setCourseStartDate(courseSetting.getCourseStartDate());
+        courseSetting.setInterviewEndDate(courseSetting.getInterviewEndDate());
+        courseSetting.setInterviewStartDate(courseSetting.getInterviewStartDate());
+        courseSetting.setRegistrationEndDate(courseSetting.getRegistrationEndDate());
+        courseSetting.setRegistrationStartDate(courseSetting.getRegistrationStartDate());
+        return courseSetting;
     }
 
     @Override
     public CourseSetting findById(int id) {
         return courseSettingDAO.find(id);
+    }
+
+    @Override
+    public CourseSetting setCourseSetting(String registrationStartDate,
+                                          String registrationEndDate,
+                                          String interviewStartDate,
+                                          String interviewEndDate,
+                                          String courseStartDate,
+                                          String interviewTimeForStudent,
+                                          String studentForInterviewCount,
+                                          String studentForCourseCount) {
+        CourseSetting courseSetting = new CourseSetting();
+        courseSetting.setId(date.getCurrentYear() * 100 + date.getCurrentMonth());
+        courseSetting.setRegistrationStartDate(registrationStartDate);
+        courseSetting.setInterviewEndDate(interviewEndDate);
+        courseSetting.setInterviewStartDate(interviewStartDate);
+        courseSetting.setRegistrationEndDate(registrationEndDate);
+        courseSetting.setCourseStartDate(courseStartDate);
+        courseSetting.setInterviewTime(Integer.parseInt(interviewTimeForStudent));
+        courseSetting.setStudentCourseCount(Integer.parseInt(studentForCourseCount));
+        courseSetting.setStudentInterviewCount(Integer.parseInt(studentForInterviewCount));
+        return courseSetting;
     }
 
     @Override

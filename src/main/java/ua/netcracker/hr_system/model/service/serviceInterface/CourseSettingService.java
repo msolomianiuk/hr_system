@@ -8,7 +8,16 @@ import ua.netcracker.hr_system.model.entity.CourseSetting;
  */
 public interface CourseSettingService extends EntityService<CourseSetting> {
 
-    public CourseSetting getIdLastSetting();
+    public CourseSetting getLastSetting();
 
    public CourseSetting findById(int id);
+
+    public CourseSetting setCourseSetting (String registrationStartDate,
+                                           String registrationEndDate,
+                                           String interviewStartDate,
+                                           String interviewEndDate,
+                                           String  courseStartDate,
+                                           String interviewTimeForStudent,
+                                           String studentForInterviewCount,
+                                           String studentForCourseCount);
 }
