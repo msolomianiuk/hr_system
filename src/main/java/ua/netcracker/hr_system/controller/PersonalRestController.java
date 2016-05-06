@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import ua.netcracker.hr_system.model.dao.daoInterface.UserDAO;
+import ua.netcracker.hr_system.model.dao.UserDAO;
 import ua.netcracker.hr_system.model.entity.User;
 
 import java.lang.String;import java.util.HashMap;

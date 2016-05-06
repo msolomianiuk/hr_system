@@ -2,9 +2,9 @@ package ua.netcracker.hr_system.model.service.date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ua.netcracker.hr_system.model.dao.daoImpl.InterviewDaysDetailsDAOImpl;
+import ua.netcracker.hr_system.model.dao.impl.InterviewDaysDetailsDAOImpl;
 import ua.netcracker.hr_system.model.entity.CourseSetting;
-import ua.netcracker.hr_system.model.service.serviceImpl.CourseSettingServiceImpl;
+import ua.netcracker.hr_system.model.service.impl.CourseSettingServiceImpl;
 
 import java.time.LocalDate;
 

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import ua.netcracker.hr_system.model.entity.Candidate;
-import ua.netcracker.hr_system.model.service.serviceInterface.CandidateService;
+import ua.netcracker.hr_system.model.service.CandidateService;
 
 import java.util.List;
 
