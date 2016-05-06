@@ -38,7 +38,7 @@ $(document).ready(function () {
         var index = getIndexByRadio();
 
         $.ajax({
-            url: "http://localhost:8080/hr_system-1.0-SNAPSHOT/service/createReport",
+            url: "http://localhost:8080/hr_system-1.0-SNAPSHOT/admin/service/createReport",
             type: "GET",
             dataType: "json",
             data:{"query":curData[index].query},
@@ -97,7 +97,7 @@ var maxID = 0;
 
 function init() {
     $.ajax({
-        url: "http://localhost:8080/hr_system-1.0-SNAPSHOT/service/getReportQuery",
+        url: "http://localhost:8080/hr_system-1.0-SNAPSHOT/admin/service/getReportQuery",
         type: "GET",
         dataType: "json",
         success:function (data){
@@ -149,7 +149,6 @@ function showReport(data){
     for(var i in data){
         table = table + '<tr>';
         for(var j in data[i]){
-            //report.append('<td>'+data[i][j]+'</td>');
             table = table + '<td>'+data[i][j]+'</td>';
         }
         table = table + '</tr>';
@@ -173,7 +172,7 @@ function sendAjax(){
     for(var index in curData){
         if(curData[index].status!=="new"){
             $.ajax({
-                url: "http://localhost:8080/hr_system-1.0-SNAPSHOT/service/setReportQuery",
+                url: "http://localhost:8080/hr_system-1.0-SNAPSHOT/admin/service/setReportQuery",
                 type: "GET",
                 dataType: "json",
                 data:curData[index],

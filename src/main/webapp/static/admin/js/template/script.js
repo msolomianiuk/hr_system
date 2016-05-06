@@ -74,7 +74,7 @@ var maxID = 0;
 
 function init() {
     $.ajax({
-        url: "http://localhost:8080/hr_system-1.0-SNAPSHOT/service/getEmailTemplates",
+        url: "http://localhost:8080/hr_system-1.0-SNAPSHOT/admin/service/getEmailTemplates",
         type: "GET",
         dataType: "json",
         success: function (data) {
@@ -138,7 +138,7 @@ function sendAjax() {
     for (var index in curData) {
         if (curData[index].status !== "new") {
             $.ajax({
-                url: "http://localhost:8080/hr_system-1.0-SNAPSHOT/service/setEmailTemplates",
+                url: "http://localhost:8080/hr_system-1.0-SNAPSHOT/admin/service/setEmailTemplates",
                 type: "GET",
                 dataType: "json",
                 data: curData[index],
