@@ -11,9 +11,7 @@ import ua.netcracker.model.entity.User;
 import ua.netcracker.model.service.CandidateService;
 import ua.netcracker.model.service.RegistrationService;
 import ua.netcracker.model.service.SendEmailService;
-import ua.netcracker.model.utils.regex.EmailValidator;
-import ua.netcracker.model.utils.regex.NameValidator;
-import ua.netcracker.model.utils.regex.PasswordValidator;
+import ua.netcracker.model.service.ValidationService;
 
 import java.security.MessageDigest;
 import java.util.ArrayList;
@@ -32,6 +30,9 @@ public class RegistrationServiceImp implements RegistrationService {
     @Autowired
     private SendEmailService sendEmailService;
 
+    @Autowired
+    private ValidationService validationService;
+
     private static String sha256Password(String password) {
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-256");
@@ -47,12 +48,12 @@ public class RegistrationServiceImp implements RegistrationService {
 
     @Override
     public boolean registrationStudent(String email, String name, String surname, String patronymic, String password) {
-        EmailValidator ev = new EmailValidator();
-        NameValidator nv = new NameValidator();
-        PasswordValidator pv = new PasswordValidator();
 
-        if (ev.validate(email) && nv.validate(name) && nv.validate(surname)
-                && nv.validate(patronymic) && pv.validate(password)) {
+        if (validationService.emailValidation(email) &&
+                validationService.nameValidation(name) &&
+                validationService.nameValidation(surname) &&
+                validationService.nameValidation(patronymic) &&
+                validationService.passwordValidation(password)) {
 
             User user = new User(email, sha256Password(password), name, surname, patronymic,
                     new ArrayList<>(Arrays.asList(Role.ROLE_STUDENT)));
