@@ -49,7 +49,7 @@ public class AdminController {
         return "candidate";
     }
 
-    @RequestMapping(value = "admin/service/inter", method = RequestMethod.GET)
+    @RequestMapping(value = "/service/inter", method = RequestMethod.GET)
     public String getInterviewDays(Model model) {
         return "inter_day";
     }
@@ -137,5 +137,7 @@ public class AdminController {
         return ResponseEntity.ok(candidate);
     }
 
+    @RequestMapping(value = "/service/inter/address", method = RequestMethod.GET)
+    public String getAddressPage(Model model){return "address";}
 
 }

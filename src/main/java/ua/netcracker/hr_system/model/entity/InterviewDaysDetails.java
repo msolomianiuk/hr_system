@@ -5,8 +5,10 @@ import org.springframework.stereotype.Component;
 import java.util.Date;
 
 /**
- * Created by Alex on 24.04.2016.
+ * @author MaXim
+ *
  */
+
 @Component
 public class InterviewDaysDetails {
 
@@ -16,37 +18,37 @@ public class InterviewDaysDetails {
 
     private String interviewDate;
 
+    private String startTime;
+
+    private String endTime;
+
     private int addressId;
 
-    private int employeesMaxCount;
+    public InterviewDaysDetails() {}
 
-    private int candidateMaxCount;
-
-    private String interviewAddress;
-
-    private int roomCapacity;
-
-    public InterviewDaysDetails() {
-
-    }
-
-    public InterviewDaysDetails(int id, int courseId, String interviewDate, int addressId, int employeesMaxCount,
-                                int candidateMaxCount) {
+    public InterviewDaysDetails(int id, int courseId, String interviewDate, String startTime, String endTime, int addressId) {
         this.id = id;
         this.courseId = courseId;
         this.interviewDate = interviewDate;
+        this.startTime = startTime;
+        this.endTime = endTime;
         this.addressId = addressId;
-        this.employeesMaxCount = employeesMaxCount;
-        this.candidateMaxCount = candidateMaxCount;
     }
 
-    public InterviewDaysDetails(int courseId, String interviewDate, int addressId, int employeesMaxCount,
-                                int candidateMaxCount) {
+    public InterviewDaysDetails(int courseId, String interviewDate, String startTime, String endTime, int addressId) {
         this.courseId = courseId;
         this.interviewDate = interviewDate;
+        this.startTime = startTime;
+        this.endTime = endTime;
         this.addressId = addressId;
-        this.employeesMaxCount = employeesMaxCount;
-        this.candidateMaxCount = candidateMaxCount;
+    }
+
+    public InterviewDaysDetails(int id, String interviewDate, String startTime, int addressId, String endTime) {
+        this.id = id;
+        this.interviewDate = interviewDate;
+        this.startTime = startTime;
+        this.addressId = addressId;
+        this.endTime = endTime;
     }
 
     public int getId() {
@@ -73,6 +75,22 @@ public class InterviewDaysDetails {
         this.interviewDate = interviewDate;
     }
 
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
+    }
+
     public int getAddressId() {
         return addressId;
     }
@@ -81,46 +99,16 @@ public class InterviewDaysDetails {
         this.addressId = addressId;
     }
 
-    public int getEmployeesMaxCount() {
-        return employeesMaxCount;
-    }
 
-    public void setEmployeesMaxCount(int employeesMaxCount) {
-        this.employeesMaxCount = employeesMaxCount;
-    }
-
-    public int getCandidateMaxCount() {
-        return candidateMaxCount;
-    }
-
-    public void setCandidateMaxCount(int candidateMaxCount) {
-        this.candidateMaxCount = candidateMaxCount;
-    }
-
-    public String getInterviewAddress() {
-        return interviewAddress;
-    }
-
-    public void setInterviewAddress(String interviewAddress) {
-        this.interviewAddress = interviewAddress;
-    }
-
-    public int getRoomCapacity() {
-        return roomCapacity;
-    }
-
-    public void setRoomCapacity(int roomCapacity) {
-        this.roomCapacity = roomCapacity;
-    }
     @Override
-    public String toString(){
-        return "Interview_Days_Details{" +
+    public String toString() {
+        return "InterviewDaysDetails{" +
                 "id=" + id +
-                ", course_id=" + courseId +
-                ", interview_date=" + interviewDate +
-                ", address_id=" + addressId +
-                ", employees_max_count=" + employeesMaxCount +
-                ", candidate_max_count=" + candidateMaxCount +
-                "}";
+                ", courseId=" + courseId +
+                ", interviewDate='" + interviewDate + '\'' +
+                ", startTime='" + startTime + '\'' +
+                ", endTime='" + endTime + '\'' +
+                ", addressId=" + addressId +
+                '}';
     }
 }

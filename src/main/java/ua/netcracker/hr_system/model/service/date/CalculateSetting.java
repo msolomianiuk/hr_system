@@ -2,6 +2,7 @@ package ua.netcracker.hr_system.model.service.date;
 
 import ua.netcracker.hr_system.model.dao.daoImpl.InterviewDaysDetailsDAOImpl;
 import ua.netcracker.hr_system.model.service.serviceImpl.CourseSettingServiceImpl;
+import ua.netcracker.hr_system.model.service.serviceImpl.InterviewDaysDetailsServiceImpl;
 
 /**
  * Created by Legion on 04.05.2016.
@@ -10,7 +11,7 @@ public class CalculateSetting {
 
     CourseSettingServiceImpl courseSettingService = null;
     MyDate myDate = new MyDate();
-    InterviewDaysDetailsDAOImpl interviewDaysDetailsDAO = null;
+    InterviewDaysDetailsServiceImpl interviewDaysDetailsDAO = null;
 
     public int getDay (){
         courseSettingService.getIdLastSetting();
@@ -22,8 +23,8 @@ public class CalculateSetting {
         String [] v2 = myDate.getSFTime(s1).split(" ");
         String [] v3 = myDate.getSFTime(s2).split(" ");
 
-        String [] t1 = interviewDaysDetailsDAO.getStartTimeInterview().split(":");
-        String [] t2 = interviewDaysDetailsDAO.getEndTimeInterview().split(":");
+        String [] t1 = interviewDaysDetailsDAO.getStartTimeofInterview().split(":");
+        String [] t2 = interviewDaysDetailsDAO.getEndTimeofInterview().split(":");
 
         int t = Integer.valueOf(t2[0]) - Integer.valueOf(t1[0]);
         int d = Integer.valueOf(v2[2]) - Integer.valueOf(v3[2]);
