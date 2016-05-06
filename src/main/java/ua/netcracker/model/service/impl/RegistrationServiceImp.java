@@ -54,9 +54,9 @@ public class RegistrationServiceImp implements RegistrationService {
                     new ArrayList<>(Arrays.asList(Role.STUDENT)));
             if (userDao.insert(user)) {
                 Candidate candidate = new Candidate();
-                candidate.setUserID(userDao.findByEmail(email).getId());
-                candidate.setStatusID(Status.NEW.getId());
-                candidate.setCourseID(1);
+                candidate.setUserId(userDao.findByEmail(email).getId());
+                candidate.setStatusId(Status.NEW.getId());
+                candidate.setCourseId(1);
                 return candidateService.saveCandidate(candidate);
             }
         }

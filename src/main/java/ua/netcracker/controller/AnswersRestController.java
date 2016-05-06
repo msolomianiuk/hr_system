@@ -54,16 +54,15 @@ public class AnswersRestController {
 
                 candidate = getCurrentCandidate();
 
-        if( candidate.getID() == 0 ){
-            candidate.setUserID(userId);
-            candidate.setStatusID(1);
-            candidate.setCourseID(1);
-            candidate.setInterviewDaysDetails(1);
+        if( candidate.getId() == 0 ){
+            candidate.setUserId(userId);
+            candidate.setStatusId(1);
+            candidate.setCourseId(1);
             candidateService.saveCandidate(candidate);
             candidate = candidateService.getCandidateByUserID(userId);
         }
 
-        candidate.setAnswers(data);
+        candidate.setAnswers(candidateService.convertBack(data));
         candidateService.saveOrUpdate(candidate);
 
         return ResponseEntity.ok(candidate);
@@ -82,15 +81,16 @@ public class AnswersRestController {
     }
 
     @RequestMapping(value = "/service/getAnswers", method = RequestMethod.GET)
-    public ResponseEntity<Map<Integer, String>> getAnswers(
+    public ResponseEntity<Map<Integer, Object>> getAnswers(
 
     ){
 
-        Map<Integer, String> answers = candidateService.getAllCandidateAnswers(candidate);
+        Map<Integer, Object> answers = candidateService.convert(candidateService.getAllCandidateAnswers(candidate));
+
         if(answers.isEmpty()){
-            return new ResponseEntity<Map<Integer, String>>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<Map<Integer, Object>>(HttpStatus.NO_CONTENT);
         }
-        return new ResponseEntity<Map<Integer, String>>(answers, HttpStatus.OK);
+        return new ResponseEntity<Map<Integer, Object>>(answers, HttpStatus.OK);
     }
 
 //    @RequestMapping(value = "/service/getPDF", method = RequestMethod.GET)

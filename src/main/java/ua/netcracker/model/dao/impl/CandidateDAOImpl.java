@@ -29,7 +29,7 @@ public class CandidateDAOImpl implements CandidateDAO {
     private UserDAO userDAO;
     @Override
     public Candidate getCandidateByID(Integer candidateID){
-        Candidate candidate = new Candidate();
+        Candidate candidate = null;
         if (candidateID > 0) {
             try {
                 JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
@@ -37,12 +37,11 @@ public class CandidateDAOImpl implements CandidateDAO {
                  candidate= jdbcTemplate.queryForObject(sql, new RowMapper<Candidate>() {
                             @Override
                             public Candidate mapRow(ResultSet rs, int rowNum) throws SQLException {
-                               Candidate candidate = new Candidate();
-                                candidate.setID(rs.getInt("id"));
-                                candidate.setUserID(rs.getInt("user_id"));
-                                candidate.setStatusID(rs.getInt("status_id"));
-                                candidate.setInterviewDaysDetails(rs.getInt("interview_days_details_id"));
-                                candidate.setCourseID(rs.getInt("course_id"));
+                                Candidate candidate = new Candidate();
+                                candidate.setId(rs.getInt("id"));
+                                candidate.setUserId(rs.getInt("user_id"));
+                                candidate.setStatusId(rs.getInt("status_id"));
+                                candidate.setCourseId(rs.getInt("course_id"));
                                 return candidate;
                             }
                         }
@@ -178,19 +177,7 @@ public class CandidateDAOImpl implements CandidateDAO {
         }
         return 0;
     }
-    @Override
-    public void deleteAnswers(Candidate candidate) {
-        if (candidate != null) {
-            try {
-                JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-                String sql = "DELETE FROM \"hr_system\".candidate_answer WHERE candidate_id = " + candidate.getID();
-                jdbcTemplate.update(sql);
-            } catch (Exception e) {
-                LOGGER.debug(e.getStackTrace());
-                LOGGER.info(e.getMessage());
-            }
-        }
-    }
+
     public Candidate getCandidateByUserID(Integer userID) {
         Candidate candidate = new Candidate();
         if (userID > 0) {
@@ -199,11 +186,10 @@ public class CandidateDAOImpl implements CandidateDAO {
                 String sql = "Select * from \"hr_system\".candidate Where user_id = " + userID;
                 List<Map<String, Object>> rows = jdbcTemplate.queryForList(sql);
                 for (Map row : rows) {
-                    candidate.setID((int) row.get("id"));
-                    candidate.setUserID((int) row.get("user_Id"));
-                    candidate.setInterviewDaysDetails((int) row.get("interview_days_details_id"));
-                    candidate.setStatusID((int) row.get("status_id"));
-                    candidate.setCourseID((int) row.get("course_id"));
+                    candidate.setId((int) row.get("id"));
+                    candidate.setUserId((int) row.get("user_Id"));
+                   candidate.setStatusId((int) row.get("status_id"));
+                    candidate.setCourseId((int) row.get("course_id"));
                 }
             } catch (Exception e) {
                 LOGGER.debug(e.getStackTrace());
@@ -212,64 +198,8 @@ public class CandidateDAOImpl implements CandidateDAO {
         }
         return candidate;
     }
-    public Map<Integer, String> getAllCandidateAnswers(Candidate candidate) {
-        Map<Integer, String> listAnswers = new HashMap<Integer, String>();
-        if (candidate != null) {
-            try {
-                JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-                String sql = "select * from \"hr_system\".candidate_answer where candidate_id = " + candidate.getID();
-                List<Map<String, Object>> rows = jdbcTemplate.queryForList(sql);
-                for (Map row : rows) {
-                    listAnswers.put((int) row.get("question_id"), (String) row.get("value"));
-                }
-            } catch (Exception e) {
-                LOGGER.debug(e.getStackTrace());
-                LOGGER.info(e.getMessage());
-            }
-        }
-        return listAnswers;
-    }
 
-    @Override
-    public List<Map<String, Object>> getInterviewers(Candidate candidate) {
-        List<Map<String, Object>> rows = new ArrayList<Map<String, Object>>();
-        if(candidate!=null){
-            try{
-                User interviewer = null;
-                JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-                String sql = "select interviewer_id from \"hr_system\".interview_result WHERE candidate_id ="
-                        + candidate.getID();
-               rows = jdbcTemplate.queryForList(sql);
-            }catch (Exception e){
-                LOGGER.debug(e.getStackTrace());
-                LOGGER.info(e.getMessage());
-            }
-        }
-        return rows;
-    }
 
-    public void insertAnswers(Candidate candidate) {
-        if (candidate != null) {
-            try {
-                ArrayList<String> answerList;
-                for (Map.Entry<Integer, Object> answer : candidate.getAnswers().entrySet()) {
-                    try {
-                        answerList = ((ArrayList<String>) answer.getValue());
-                        for (String answers : answerList) {
-                            executeInsertAnswer(candidate.getID(), answer.getKey(), answers);
-                        }
-                    } catch (ClassCastException e) {
-                        LOGGER.debug(e.getStackTrace());
-                        LOGGER.info(e.getMessage());
-                        executeInsertAnswer(candidate.getID(), answer.getKey(), (String) answer.getValue());
-                    }
-                }
-            } catch (Exception e) {
-                LOGGER.debug(e.getStackTrace());
-                LOGGER.info(e.getMessage());
-            }
-        }
-    }
     public boolean insertCandidate(Candidate candidate) {
         if (candidate != null) {
             try {
@@ -278,9 +208,9 @@ public class CandidateDAOImpl implements CandidateDAO {
                         usingColumns("user_id", "status_id","course_id")
                         .usingGeneratedKeyColumns("id");;
                 MapSqlParameterSource insertParameter = new MapSqlParameterSource();
-                insertParameter.addValue("user_id", candidate.getUserID());
-                insertParameter.addValue("status_id", candidate.getStatusID());
-                insertParameter.addValue("course_id", candidate.getCourseID());
+                insertParameter.addValue("user_id", candidate.getUserId());
+                insertParameter.addValue("status_id", candidate.getStatusId());
+                insertParameter.addValue("course_id", candidate.getCourseId());
                 simpleJdbcInsert.execute(insertParameter);
 
             } catch (Exception e) {
@@ -290,31 +220,6 @@ public class CandidateDAOImpl implements CandidateDAO {
             return true;
         }
         return false;
-    }
-
-
-    private void executeInsertAnswer(int candidateID, int questionID, String value) {
-        if ((candidateID > 0) && (questionID > 0) && (value != null)) {
-            try {
-                JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-                String sql = "INSERT INTO \"hr_system\".candidate_answer(candidate_id, question_id, value) " +
-                        "VALUES(" + candidateID +
-                        "," + questionID + ",'" + value + "')";
-                jdbcTemplate.execute(sql);
-            } catch (Exception e) {
-                LOGGER.debug(e.getStackTrace());
-                LOGGER.info(e.getMessage());
-            }
-        }
-    }
-
-
-
-
-
-    @Override
-    public String getCandidateAnswer(Integer candidateID, Integer questionID) {
-        return null;
     }
 
 
