@@ -1,4 +1,4 @@
-package ua.netcracker.hr_system.model.dao.daoInterface;
+package ua.netcracker.hr_system.model.dao;
 
 import ua.netcracker.hr_system.model.entity.Question;
 

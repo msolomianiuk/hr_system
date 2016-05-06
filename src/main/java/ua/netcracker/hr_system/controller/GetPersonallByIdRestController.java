@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import ua.netcracker.hr_system.model.dao.daoImpl.UserDAOImpl;
+import ua.netcracker.hr_system.model.dao.impl.UserDAOImpl;
 import ua.netcracker.hr_system.model.entity.User;
 
 import java.util.List;

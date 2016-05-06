@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import ua.netcracker.hr_system.model.entity.Question;
-import ua.netcracker.hr_system.model.service.serviceInterface.QuestionService;
+import ua.netcracker.hr_system.model.service.QuestionService;
 
 import java.util.List;
 

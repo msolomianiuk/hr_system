@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ua.netcracker.hr_system.model.entity.Candidate;
 import ua.netcracker.hr_system.model.securiry.UserAuthenticationDetails;
-import ua.netcracker.hr_system.model.service.serviceInterface.CandidateService;
+import ua.netcracker.hr_system.model.service.CandidateService;
 
 import java.util.*;
 

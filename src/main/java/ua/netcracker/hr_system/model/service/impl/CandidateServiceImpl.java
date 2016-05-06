@@ -1,11 +1,11 @@
-package ua.netcracker.hr_system.model.service.serviceImpl;
+package ua.netcracker.hr_system.model.service.impl;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ua.netcracker.hr_system.model.dao.daoImpl.CandidateDAOImpl;
+import ua.netcracker.hr_system.model.dao.impl.CandidateDAOImpl;
 import ua.netcracker.hr_system.model.entity.Candidate;
-import ua.netcracker.hr_system.model.service.serviceInterface.CandidateService;
+import ua.netcracker.hr_system.model.service.CandidateService;
 
 import java.util.HashMap;
 import java.util.List;

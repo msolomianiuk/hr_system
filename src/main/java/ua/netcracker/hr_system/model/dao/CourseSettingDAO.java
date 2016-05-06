@@ -1,4 +1,4 @@
-package ua.netcracker.hr_system.model.dao.daoInterface;
+package ua.netcracker.hr_system.model.dao;
 
 /**
  * Created by Legion on 24.04.2016.

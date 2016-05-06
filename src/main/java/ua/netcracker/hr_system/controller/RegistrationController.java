@@ -7,7 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import ua.netcracker.hr_system.model.entity.User;
-import ua.netcracker.hr_system.model.service.serviceInterface.RegistrationService;
+import ua.netcracker.hr_system.model.service.RegistrationService;
 
 /**
  * Class for processing registration requests

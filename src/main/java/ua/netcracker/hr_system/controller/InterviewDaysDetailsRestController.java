@@ -7,15 +7,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import ua.netcracker.hr_system.model.dao.daoImpl.AddressDAOImpl;
-import ua.netcracker.hr_system.model.dao.daoImpl.InterviewDaysDetailsDAOImpl;
+import ua.netcracker.hr_system.model.dao.impl.AddressDAOImpl;
 import ua.netcracker.hr_system.model.entity.Address;
 import ua.netcracker.hr_system.model.entity.InterviewDaysDetails;
-import ua.netcracker.hr_system.model.service.serviceImpl.InterviewDaysDetailsServiceImpl;
-import ua.netcracker.hr_system.model.service.serviceInterface.InterviewDaysDetailsService;
+import ua.netcracker.hr_system.model.service.impl.InterviewDaysDetailsServiceImpl;
 
-import java.sql.ResultSet;
-import java.util.ArrayList;
 import java.util.List;
 
 /**

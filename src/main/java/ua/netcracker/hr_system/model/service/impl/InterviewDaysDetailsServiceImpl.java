@@ -1,12 +1,11 @@
-package ua.netcracker.hr_system.model.service.serviceImpl;
+package ua.netcracker.hr_system.model.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ua.netcracker.hr_system.model.dao.daoImpl.InterviewDaysDetailsDAOImpl;
+import ua.netcracker.hr_system.model.dao.impl.InterviewDaysDetailsDAOImpl;
 import ua.netcracker.hr_system.model.entity.InterviewDaysDetails;
-import ua.netcracker.hr_system.model.service.serviceInterface.InterviewDaysDetailsService;
+import ua.netcracker.hr_system.model.service.InterviewDaysDetailsService;
 
-import java.util.Collection;
 import java.util.List;
 
 /**

@@ -1,11 +1,11 @@
-package ua.netcracker.hr_system.model.service.serviceImpl;
+package ua.netcracker.hr_system.model.service.impl;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import ua.netcracker.hr_system.model.dao.daoInterface.UserDAO;
+import ua.netcracker.hr_system.model.dao.UserDAO;
 import ua.netcracker.hr_system.model.entity.User;
 import ua.netcracker.hr_system.model.securiry.UserAuthenticationDetails;
 

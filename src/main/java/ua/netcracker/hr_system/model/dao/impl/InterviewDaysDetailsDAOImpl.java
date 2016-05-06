@@ -1,4 +1,4 @@
-package ua.netcracker.hr_system.model.dao.daoImpl;
+package ua.netcracker.hr_system.model.dao.impl;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,18 +7,12 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import ua.netcracker.hr_system.model.dao.daoInterface.InterviewDaysDetailsDAO;
-import ua.netcracker.hr_system.model.entity.Address;
+import ua.netcracker.hr_system.model.dao.InterviewDaysDetailsDAO;
 import ua.netcracker.hr_system.model.entity.InterviewDaysDetails;
 
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Collection;
 import java.util.List;
 
 /**

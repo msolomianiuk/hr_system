@@ -1,18 +1,17 @@
 package ua.netcracker.hr_system.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import ua.netcracker.hr_system.model.entity.Candidate;
 import ua.netcracker.hr_system.model.entity.CourseSetting;
-import ua.netcracker.hr_system.model.service.serviceImpl.CandidateServiceImpl;
-import ua.netcracker.hr_system.model.service.serviceImpl.CourseSettingServiceImpl;
-import ua.netcracker.hr_system.model.service.serviceImpl.UserServiceImpl;
+import ua.netcracker.hr_system.model.service.impl.CandidateServiceImpl;
+import ua.netcracker.hr_system.model.service.impl.CourseSettingServiceImpl;
 
 
 
@@ -38,10 +37,12 @@ public class AdminController {
 
     @RequestMapping(value = "/service/inter", method = RequestMethod.GET)
     public String getInterviewDays(Model model) {
-    @RequestMapping(value = "/service/inter", method = RequestMethod.GET)
+        return null;
+    }
+   /* @RequestMapping(value = "/service/inter", method = RequestMethod.GET)
     public String getInterviewDays() {
         return "inter_day";
-    }
+    }*/
 
     @RequestMapping(value = "/interview_schedule", method = RequestMethod.GET)
     public String mainPageS() {
@@ -106,7 +107,6 @@ public class AdminController {
     @RequestMapping(value = "/up_setting", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<CourseSetting> getSetting() {
-
         return ResponseEntity.ok(courseSettingService.getLastSetting());
     }
 

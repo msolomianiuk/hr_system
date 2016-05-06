@@ -1,10 +1,10 @@
-package ua.netcracker.hr_system.model.service.serviceImpl;
+package ua.netcracker.hr_system.model.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ua.netcracker.hr_system.model.dao.daoImpl.QuestionDAOImpl;
+import ua.netcracker.hr_system.model.dao.impl.QuestionDAOImpl;
 import ua.netcracker.hr_system.model.entity.Question;
-import ua.netcracker.hr_system.model.service.serviceInterface.QuestionService;
+import ua.netcracker.hr_system.model.service.QuestionService;
 
 import java.util.Collection;
 

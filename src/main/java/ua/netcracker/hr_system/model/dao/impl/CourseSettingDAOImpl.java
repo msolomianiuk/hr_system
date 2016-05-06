@@ -1,10 +1,10 @@
-package ua.netcracker.hr_system.model.dao.daoImpl;
+package ua.netcracker.hr_system.model.dao.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
-import ua.netcracker.hr_system.model.dao.daoInterface.CourseSettingDAO;
+import ua.netcracker.hr_system.model.dao.CourseSettingDAO;
 import ua.netcracker.hr_system.model.entity.CourseSetting;
 
 import javax.sql.DataSource;

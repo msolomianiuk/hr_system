@@ -1,11 +1,11 @@
-package ua.netcracker.hr_system.model.service.serviceImpl;
+package ua.netcracker.hr_system.model.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ua.netcracker.hr_system.model.dao.daoImpl.CourseSettingDAOImpl;
+import ua.netcracker.hr_system.model.dao.impl.CourseSettingDAOImpl;
 import ua.netcracker.hr_system.model.entity.CourseSetting;
 import ua.netcracker.hr_system.model.service.date.MyDate;
-import ua.netcracker.hr_system.model.service.serviceInterface.CourseSettingService;
+import ua.netcracker.hr_system.model.service.CourseSettingService;
 
 import java.util.Collection;
 

@@ -1,15 +1,15 @@
-package ua.netcracker.hr_system.model.service.serviceImpl;
+package ua.netcracker.hr_system.model.service.impl;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ua.netcracker.hr_system.model.dao.daoInterface.UserDAO;
+import ua.netcracker.hr_system.model.dao.UserDAO;
 import ua.netcracker.hr_system.model.entity.Candidate;
 import ua.netcracker.hr_system.model.entity.Role;
 import ua.netcracker.hr_system.model.entity.Status;
 import ua.netcracker.hr_system.model.entity.User;
-import ua.netcracker.hr_system.model.service.serviceInterface.CandidateService;
-import ua.netcracker.hr_system.model.service.serviceInterface.RegistrationService;
+import ua.netcracker.hr_system.model.service.CandidateService;
+import ua.netcracker.hr_system.model.service.RegistrationService;
 import ua.netcracker.hr_system.model.utils.regex.EmailValidator;
 import ua.netcracker.hr_system.model.utils.regex.NameValidator;
 import ua.netcracker.hr_system.model.utils.regex.PasswordValidator;

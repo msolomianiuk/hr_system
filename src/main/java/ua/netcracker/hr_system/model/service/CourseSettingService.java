@@ -1,4 +1,4 @@
-package ua.netcracker.hr_system.model.service.serviceInterface;
+package ua.netcracker.hr_system.model.service;
 
 
 import ua.netcracker.hr_system.model.entity.CourseSetting;

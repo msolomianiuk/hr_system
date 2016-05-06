@@ -1,4 +1,4 @@
-package ua.netcracker.hr_system.model.service.serviceInterface;
+package ua.netcracker.hr_system.model.service;
 
 import org.springframework.stereotype.Service;
 import ua.netcracker.hr_system.model.entity.Candidate;
