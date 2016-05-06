@@ -22,8 +22,6 @@ public class CandidateServiceImpl implements CandidateService{
     @Autowired
     private CandidateDAOImpl candidateDAO;
 
-
-
     @Override
     public Candidate getCandidateByID(Integer id){
         return candidateDAO.getCandidateByID(id);

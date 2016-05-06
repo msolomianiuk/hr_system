@@ -1,7 +1,6 @@
 package ua.netcracker.hr_system.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,8 +11,6 @@ import ua.netcracker.hr_system.model.entity.Candidate;
 import ua.netcracker.hr_system.model.entity.CourseSetting;
 import ua.netcracker.hr_system.model.service.serviceImpl.CandidateServiceImpl;
 import ua.netcracker.hr_system.model.service.serviceImpl.CourseSettingServiceImpl;
-import ua.netcracker.hr_system.model.service.serviceImpl.UserServiceImpl;
-
 
 
 @Controller
@@ -59,7 +56,7 @@ public class AdminController {
     }
 
     @RequestMapping(value = "/admin_settings", method = RequestMethod.GET)
-    public String mainPageSS() {
+    public String adminSetting() {
         return "admin_settings";
     }
 

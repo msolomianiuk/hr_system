@@ -23,6 +23,7 @@
         <property name="suffix" value=".jsp"/>
     </bean>
 
+
     <!--Method addResourceHandlers configures the ResourceHandler for static resources.
     CSS, JavaScript, images etc are static resources your pages needs.Above configuration
     says that all resource requests starting with /static/ will be served from /static/ folder under webapp.
