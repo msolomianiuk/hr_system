@@ -5,4 +5,13 @@ package ua.netcracker.model.entity;
  */
 public class AnswerString extends Answer<String>{
 
+    @Override
+    public String toString() {
+        return getValue();
+    }
+
+    @Override
+    public String getValueDBFormat() {
+        return getValue();
+    }
 }

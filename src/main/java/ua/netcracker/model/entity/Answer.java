@@ -24,4 +24,8 @@ public abstract class Answer <T> {
     public void setValue(T value) {
         this.value = value;
     }
+
+    public abstract String toString();
+
+    public abstract String getValueDBFormat();
 }
