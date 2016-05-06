@@ -68,7 +68,7 @@ public class AdminController {
 
     @RequestMapping(value = "/admin_setting", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<CourseSetting> setCourseSettingFromFromEnd(
+    public ResponseEntity<CourseSetting> setCourseSetting(
             @RequestParam String registrationStartDate,
             @RequestParam String registrationEndDate,
             @RequestParam String interviewStartDate,
