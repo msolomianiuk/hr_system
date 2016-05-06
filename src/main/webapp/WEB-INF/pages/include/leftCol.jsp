@@ -17,7 +17,7 @@
                     <sec:authentication property="principal.user.image"/>
                 </c:set>
 
-                <c:if test="${photo} == null">
+                <c:if test="${empty photo}">
                     <c:set var="photo" scope="page" value="static/images/user.png"/>
                 </c:if>
 
