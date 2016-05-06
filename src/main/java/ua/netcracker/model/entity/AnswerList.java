@@ -13,6 +13,10 @@ public class AnswerList extends Answer<ArrayList<String>>{
         super.setValue(parseValue(value));
     }
 
+    public void setValue(ArrayList<String> value) {
+        super.setValue(value);
+    }
+
     private ArrayList<String> parseValue(String value){
         Pattern pattern = Pattern.compile("<%>");
         String[] answers = pattern.split(value);
