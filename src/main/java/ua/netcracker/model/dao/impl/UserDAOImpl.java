@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 import ua.netcracker.model.dao.UserDAO;
 import ua.netcracker.model.entity.Role;
 import ua.netcracker.model.entity.User;
+import ua.netcracker.model.service.SendEmailService;
 import ua.netcracker.model.utils.RolesUtils;
 
 import javax.sql.DataSource;
@@ -32,6 +33,9 @@ public class UserDAOImpl implements UserDAO {
     @Autowired
     private JdbcTemplate jdbcTemplate;
     private SimpleJdbcInsert simpleJdbcInsert;
+
+    @Autowired
+    private SendEmailService sendEmailService;
 
     @Autowired
     public void setSimpleJdbcInsert(DataSource dataSource) {
@@ -171,6 +175,9 @@ public class UserDAOImpl implements UserDAO {
             Number key = simpleJdbcInsert.executeAndReturnKey(insertParameter);
             if (key != null) {
                 user.setId(key.intValue());
+                //TODO:
+                //get EmailTemplate and paste it
+                sendEmailService.sendLetterToEmails(new String[]{user.getEmail()},"You successfully registered","You successfully registered on site");
                 return insertUserRoles(user);
             }
         } catch (DuplicateKeyException ex) {
