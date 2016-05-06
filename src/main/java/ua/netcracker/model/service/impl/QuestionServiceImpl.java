@@ -1,10 +1,10 @@
-package ua.netcracker.hr_system.model.service.impl;
+package ua.netcracker.model.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ua.netcracker.hr_system.model.dao.QuestionDAO;
-import ua.netcracker.hr_system.model.entity.Question;
-import ua.netcracker.hr_system.model.service.QuestionService;
+import ua.netcracker.model.dao.impl.QuestionDAOImpl;
+import ua.netcracker.model.entity.Question;
+import ua.netcracker.model.service.QuestionService;
 
 import java.util.Collection;
 
@@ -14,7 +14,7 @@ import java.util.Collection;
 @Service()
 public class QuestionServiceImpl implements QuestionService {
     @Autowired
-    private QuestionDAO questionDao;
+    private QuestionDAOImpl questionDao;
 
     @Override
     public Collection<Question> getAllMandatory() {

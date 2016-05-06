@@ -1,4 +1,4 @@
-package ua.netcracker.hr_system.model.entity;
+package ua.netcracker.model.entity;
 
 import org.springframework.stereotype.Component;
 
