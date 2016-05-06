@@ -4,7 +4,7 @@
     <div class="left_col scroll-view">
 
         <div class="navbar nav_title" style="border: 0;">
-            <a href="testAdmin" class="site_title"><i class="fa fa-paw"></i>
+            <a href="<c:url value="/"/>" class="site_title"><i class="fa fa-paw"></i>
                 <span>Net<strong>Cracker</strong></span></a>
         </div>
         <div class="clearfix"></div>
@@ -17,7 +17,7 @@
                     <sec:authentication property="principal.user.image"/>
                 </c:set>
 
-                <c:if test="${empty photo}">
+                <c:if test="${photo eq 'null'}">
                     <c:set var="photo" scope="page" value="static/images/user.png"/>
                 </c:if>
 
