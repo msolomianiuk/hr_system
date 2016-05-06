@@ -99,6 +99,7 @@ public class CourseSettingDAOImpl implements CourseSettingDAO<CourseSetting> {
                 return getSetting(resultSet);
             }
         });
+
         return courseSetting;
     }
 

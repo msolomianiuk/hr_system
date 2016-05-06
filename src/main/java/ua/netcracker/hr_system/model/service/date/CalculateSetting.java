@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import ua.netcracker.hr_system.model.dao.impl.InterviewDaysDetailsDAOImpl;
 import ua.netcracker.hr_system.model.entity.CourseSetting;
 import ua.netcracker.hr_system.model.service.impl.CourseSettingServiceImpl;
+import ua.netcracker.hr_system.model.service.impl.InterviewDaysDetailsServiceImpl;
 
 import java.time.LocalDate;
 
@@ -19,7 +20,7 @@ public class CalculateSetting {
     private CourseSettingServiceImpl courseSettingService;
 
     @Autowired
-    private InterviewDaysDetailsDAOImpl interviewDaysDetailsDAO;
+    private InterviewDaysDetailsServiceImpl interviewService;
 
     @Autowired
     private DateService myDate;
@@ -38,7 +39,7 @@ public class CalculateSetting {
 
         int timeForInterview = courseSetting.getInterviewTime();
 
-
+//        int startTime = interviewService.getStartTimeofInterview();
 
 //        int st = 600;
 //
