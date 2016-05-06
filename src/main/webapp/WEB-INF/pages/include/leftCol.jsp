@@ -12,7 +12,16 @@
         <!-- menu prile quick info -->
         <div class="profile">
             <div class="profile_pic">
-                <img src="<c:url value="/static/admin/images/img.jpg"/>" alt="..."
+
+                <c:set var="photo" scope="page">
+                    <sec:authentication property="principal.user.image"/>
+                </c:set>
+
+                <c:if test="${photo} == null">
+                    <c:set var="photo" scope="page" value="static/images/user.png"/>
+                </c:if>
+
+                <img src="<c:url value="${photo}"/>" alt="..."
                      class="img-circle profile_img">
             </div>
             <div class="profile_info">
