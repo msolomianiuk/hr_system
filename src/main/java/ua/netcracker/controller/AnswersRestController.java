@@ -1,3 +1,4 @@
+
 package ua.netcracker.controller;
 
 import org.json.JSONArray;
@@ -18,9 +19,11 @@ import ua.netcracker.model.service.CandidateService;
 
 import java.util.*;
 
+
 /**
- * Created by ksenzod on 02.05.16.
- */
+* Created by ksenzod on 02.05.16.
+*/
+
 
 @RestController
 public class AnswersRestController {
@@ -136,12 +139,14 @@ public class AnswersRestController {
 // return new ResponseEntity<>(contents, headers, HttpStatus.OK);
 // }
 
+
 /**
- * Generate pdf document
- *
- * @param candidate
- * @return form.pdf
- */
+* Generate pdf document
+*
+* @param candidate
+* @return form.pdf
+*/
+
 // private Document generatePDF(Candidate candidate) {
 // Document document = new Document();
 //

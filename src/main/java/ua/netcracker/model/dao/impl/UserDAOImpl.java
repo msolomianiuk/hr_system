@@ -177,7 +177,7 @@ public class UserDAOImpl implements UserDAO {
                 user.setId(key.intValue());
                 //TODO:
                 //get EmailTemplate and paste it
-                sendEmailService.sendLetterToEmails(new String[]{user.getEmail()},"You successfully registered","You successfully registered on site");
+                sendEmailService.sendLetterToEmails(new String[]{user.getEmail()}, "You successfully registered", "You successfully registered on site");
                 return insertUserRoles(user);
             }
         } catch (DuplicateKeyException ex) {
