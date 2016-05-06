@@ -2,13 +2,12 @@ package ua.netcracker.model.service.date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import ua.netcracker.model.entity.CourseSetting;
 import ua.netcracker.model.service.impl.CourseSettingServiceImpl;
 import ua.netcracker.model.service.impl.InterviewDaysDetailsServiceImpl;
 
-
 import java.time.LocalDate;
+import java.time.Period;
 
 
 /**
@@ -26,7 +25,7 @@ public class CalculateSetting {
     @Autowired
     private DateService myDate;
 
-    public int getDay (){
+    public int getDay() {
 
         CourseSetting courseSetting = courseSettingService.getLastSetting();
 
@@ -40,7 +39,32 @@ public class CalculateSetting {
 
         int timeForInterview = courseSetting.getInterviewTime();
 
-//        int startTime = interviewService.getStartTimeofInterview();
+
+        /**
+         * Start interview hour - timeInterview [0]
+         * End interview hour - timeInterview [3]
+         *
+         * Start interview min - timeInterview [2]
+         * End interview min - timeInterview [4]
+         */
+        int [] timeInterview = {Integer.parseInt(myDate.getTime(interviewService.getStartTimeofInterview())[0]),
+                Integer.parseInt(myDate.getTime(interviewService.getStartTimeofInterview())[1]),
+                Integer.parseInt(myDate.getTime(interviewService.getEndTimeofInterview())[0]),
+                Integer.parseInt(myDate.getTime(interviewService.getEndTimeofInterview())[1])};
+
+        int interviewTime=0;
+        if (timeInterview [4] < timeInterview [2]) {
+            interviewTime = timeInterview [2] + timeInterview [4];
+        } else {
+            interviewTime = (timeInterview [3] - timeInterview [0]) * 60
+                    + timeInterview [2] - timeInterview [4];
+        }
+        // кількість днів інтерв'ю -1
+        Period period = startInterviewDay.until(endInterviewDay);
+
+        int studentFromDay = maxStudentForInterview/(period.getDays()+1);
+
+//        int
 
 //        int st = 600;
 //

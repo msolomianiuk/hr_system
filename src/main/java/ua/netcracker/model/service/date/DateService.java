@@ -44,6 +44,14 @@ public class DateService {
         return dateIsValid;
     }
 
-//    public int get
+    /**
+     *
+     * @param time
+     * @return
+     */
+    public String [] getTime(String time){
+        String[] timePars = time.split(":");
+        return timePars;
+    }
 
 }

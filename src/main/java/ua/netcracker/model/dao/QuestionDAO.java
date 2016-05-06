@@ -19,5 +19,7 @@ public interface QuestionDAO extends DAO<Question> {
 
     List<String> findAnswerVariants(Question question);
 
-
+    List<Question> findType();
+    int findQuantityQuestions();
+    int findCurseId();
 }

@@ -51,6 +51,9 @@ public class QuestionDAOImpl implements QuestionDAO {
     private static final String UPDATE_QUESTION_COURSE_MAPS = "UPDATE \"hr_system\".question_course_maps SET course_id = ?, " +
             "order_number = ?, Where question_id = ?;";
 
+    private static final String LAST_ID_QUESTION = "SELECT id from \"hr_system\".question order by id desc limit 1";
+    private static final String Curse_Id = "SELECT id FROM \"hr_system\".course_setting order by id desc limit 1";
+
     @Autowired
     private DataSource dataSource;
 
@@ -236,5 +239,60 @@ public class QuestionDAOImpl implements QuestionDAO {
             LOGGER.error(e);
         }
         return null;
+    }
+
+    @Override
+    public List<Question> findType() {
+
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+
+        String sql = "SELECT value FROM \"hr_system\".type";
+
+        List<Question> questionType =  jdbcTemplate.query(sql, new RowMapper<Question>() {
+            @Override
+            public Question mapRow(ResultSet resultSet, int i) throws SQLException {
+                Question question = new Question();
+
+                question.setType(resultSet.getString("value"));
+
+                return question;
+            }
+        });
+        return questionType;
+    }
+
+    @Override
+    public int findQuantityQuestions() {
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+
+        int question = jdbcTemplate.queryForObject(LAST_ID_QUESTION, new RowMapper<Integer>() {
+            @Override
+            public Integer mapRow(ResultSet resultSet, int i) throws SQLException {
+
+                int quantityQuestions = resultSet.getInt("id");
+
+                return quantityQuestions;
+            }
+        });
+        return question;
+    }
+
+    @Override
+    public int findCurseId() {
+
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+
+        int curseId = jdbcTemplate.queryForObject(Curse_Id, new RowMapper<Integer>() {
+
+            @Override
+            public Integer mapRow(ResultSet resultSet, int i) throws SQLException {
+
+                int curseID = resultSet.getInt("id");
+
+                return curseID;
+            }
+        });
+
+        return curseId;
     }
 }
