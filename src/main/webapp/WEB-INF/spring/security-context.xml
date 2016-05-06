@@ -53,8 +53,8 @@
     </authentication-manager>
 
     <beans:bean id="userDetailsService"
-                class="ua.netcracker.hr_system.model.service.serviceImpl.CustomUserDetailsServiceImpl"/>
+                class="ua.netcracker.model.service.impl.CustomUserDetailsServiceImpl"/>
 
-    <beans:bean id="customSuccessHandler" class="ua.netcracker.hr_system.configuration.CustomSuccessHandler"/>
+    <beans:bean id="customSuccessHandler" class="ua.netcracker.configuration.CustomSuccessHandler"/>
 
 </beans:beans>

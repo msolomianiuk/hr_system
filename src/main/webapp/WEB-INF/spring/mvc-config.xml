@@ -13,7 +13,7 @@
     <!-- Scan packages for the String components (@Component,@Repository, @Controller,@Service-->
     <!--<context:component-scan base-package="ua.netcracker.hr_system"/>-->
 
-    <context:component-scan base-package="ua.netcracker.hr_system.controller"/>
+    <context:component-scan base-package="ua.netcracker.controller"/>
 
     <!-- Method viewResolver configures a view resolver to identify the real view.-->
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
@@ -22,6 +22,7 @@
         <property name="prefix" value="/WEB-INF/pages/"/>
         <property name="suffix" value=".jsp"/>
     </bean>
+
 
     <!--Method addResourceHandlers configures the ResourceHandler for static resources.
     CSS, JavaScript, images etc are static resources your pages needs.Above configuration
