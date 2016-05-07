@@ -61,4 +61,21 @@ public class OrderedNumberFilter implements Filter{
 
         return list;
     }
+
+
+    public int getQ_id() {
+        return q_id;
+    }
+
+    public void setQ_id(int q_id) {
+        this.q_id = q_id;
+    }
+
+    public boolean isAscendingOrder() {
+        return ascendingOrder;
+    }
+
+    public void setAscendingOrder(boolean ascendingOrder) {
+        this.ascendingOrder = ascendingOrder;
+    }
 }

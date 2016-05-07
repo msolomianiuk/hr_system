@@ -38,4 +38,20 @@ public class TextFilter implements Filter{
         }
         return list;
     }
+
+    public int getQ_id() {
+        return q_id;
+    }
+
+    public void setQ_id(int q_id) {
+        this.q_id = q_id;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
+    }
 }

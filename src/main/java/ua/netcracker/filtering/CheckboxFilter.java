@@ -27,4 +27,20 @@ public class CheckboxFilter implements Filter{
         }
         return list;
     }
+
+    public int getQ_id() {
+        return q_id;
+    }
+
+    public void setQ_id(int q_id) {
+        this.q_id = q_id;
+    }
+
+    public ArrayList<String> getAnswers() {
+        return answers;
+    }
+
+    public void setAnswers(ArrayList<String> answers) {
+        this.answers = answers;
+    }
 }

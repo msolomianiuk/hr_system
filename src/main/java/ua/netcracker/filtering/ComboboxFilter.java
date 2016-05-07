@@ -1,19 +1,14 @@
 package ua.netcracker.filtering;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ua.netcracker.model.entity.Answer;
 import ua.netcracker.model.entity.Candidate;
-import ua.netcracker.model.service.QuestionService;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
 @Service
 public class ComboboxFilter implements Filter {
-
-    @Autowired
-    QuestionService questionService;
 
     private int q_id;
 
@@ -37,5 +32,21 @@ public class ComboboxFilter implements Filter {
             }
         }
         return list;
+    }
+
+    public int getQ_id() {
+        return q_id;
+    }
+
+    public void setQ_id(int q_id) {
+        this.q_id = q_id;
+    }
+
+    public int getQ_addition_id() {
+        return q_addition_id;
+    }
+
+    public void setQ_addition_id(int q_addition_id) {
+        this.q_addition_id = q_addition_id;
     }
 }
