@@ -55,7 +55,7 @@ public class AnswersDAOImpl implements AnswersDAO {
                 answer = new AnswerString();
                 break;
             }
-            case "Int": {
+            case "int": {
                 answer = new AnswerInt();
                 break;
             }

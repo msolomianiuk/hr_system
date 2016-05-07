@@ -1,6 +1,5 @@
 package ua.netcracker.model.service;
 
-import org.springframework.stereotype.Service;
 import ua.netcracker.model.entity.Answer;
 import ua.netcracker.model.entity.Candidate;
 
@@ -12,7 +11,7 @@ import java.util.Map;
 /**
  * @author Alyona Bilous 05/05/2016
  */
-@Service
+
 public interface CandidateService {
 
 
@@ -34,7 +33,7 @@ public interface CandidateService {
 
     Collection<Answer> getAllCandidateAnswers(Candidate candidate);
 
-    Map<Integer,Object> convert(Collection<Answer> listAnswers);
+    Map<Integer, Object> convert(Collection<Answer> listAnswers);
 
     Collection<Answer> convertBack(Map<Integer, Object> mapAnswers);
 

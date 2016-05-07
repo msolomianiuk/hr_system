@@ -10,11 +10,11 @@ public class AnswerInt extends Answer<Integer> {
 
     @Override
     public String toString() {
-        return getValue().toString();
+        return getValue()+"";
     }
 
     @Override
     public String getValueDBFormat() {
-        return getValue().toString();
+        return getValue()+"";
     }
 }

@@ -17,7 +17,7 @@ import java.util.*;
  * @author Alyona Bilous 05/05/2016
  */
 @Service("Candidate Service")
-public class CandidateServiceImpl implements CandidateService{
+public class CandidateServiceImpl implements CandidateService {
 
     private static final Logger LOGGER = Logger.getLogger(CandidateServiceImpl.class);
     @Autowired
@@ -28,7 +28,7 @@ public class CandidateServiceImpl implements CandidateService{
     private AnswersDAO answersDAO;
 
     @Override
-    public Candidate getCandidateByID(Integer id){
+    public Candidate getCandidateByID(Integer id) {
         return candidateDAO.getCandidateByID(id);
     }
 
@@ -71,18 +71,20 @@ public class CandidateServiceImpl implements CandidateService{
     public Collection<Answer> getAllCandidateAnswers(Candidate candidate) {
         return answersDAO.findAll(candidate.getId(), questionDAO.findAllMandatory());
     }
+
     @Override
-    public Map<Integer,Object> convert(Collection<Answer> listAnswers){
+    public Map<Integer, Object> convert(Collection<Answer> listAnswers) {
         Map<Integer, Object> mapElements = new HashMap<>();
-        for(Answer answer : listAnswers){
-            mapElements.put(answer.getQuestionId(),answer.getValue());
+        for (Answer answer : listAnswers) {
+            mapElements.put(answer.getQuestionId(), answer.getValue());
         }
         return mapElements;
     }
+
     @Override
-    public Collection<Answer> convertBack(Map<Integer,Object> mapAnswers){
+    public Collection<Answer> convertBack(Map<Integer, Object> mapAnswers) {
         ArrayList<Answer> listAnswers = new ArrayList<>();
-        for(Map.Entry<Integer,Object> entry: mapAnswers.entrySet()){
+        for (Map.Entry<Integer, Object> entry : mapAnswers.entrySet()) {
             Answer answer = new AnswerString();
             answer.setQuestionId(entry.getKey());
             answer.setValue(entry.getValue());
@@ -90,7 +92,6 @@ public class CandidateServiceImpl implements CandidateService{
         }
         return listAnswers;
     }
-
 
 
     @Override
@@ -110,10 +111,10 @@ public class CandidateServiceImpl implements CandidateService{
 
     @Override
     public void saveOrUpdate(Candidate candidate) {
-        try{
+        try {
             answersDAO.deleteAnswers(candidate.getId());
             answersDAO.saveAll(candidate);
-        } catch (Exception e){
+        } catch (Exception e) {
             LOGGER.debug(e.getStackTrace());
             LOGGER.info(e.getMessage());
         }

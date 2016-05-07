@@ -18,7 +18,9 @@ import ua.netcracker.model.entity.Candidate;
 import ua.netcracker.model.securiry.UserAuthenticationDetails;
 import ua.netcracker.model.service.CandidateService;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Created by ksenzod on 02.05.16.
@@ -33,32 +35,31 @@ public class AnswersRestController {
     private Candidate candidate;
 
     @RequestMapping(value = "/service/saveAnswers", method = RequestMethod.GET)
-    public ResponseEntity<Candidate> setAnswers(@RequestParam String answersJsonString)
-    {
+    public ResponseEntity<Candidate> setAnswers(@RequestParam String answersJsonString) {
         List<Answer> listAnswers = new ArrayList<>();
 
         JSONObject obj = new JSONObject(answersJsonString);
         Iterator<?> keys = obj.keys();
-        while( keys.hasNext() ) {
-            String key = (String)keys.next();
-            if ( obj.get(key) instanceof JSONArray ) {
+        while (keys.hasNext()) {
+            String key = (String) keys.next();
+            if (obj.get(key) instanceof JSONArray) {
                 JSONArray array = (JSONArray) obj.get(key);
                 for (int i = 0; i < array.length(); i++) {
                     Answer answer = new AnswerString();
-                    answer.setQuestionId(Integer.valueOf(key.replace("question-","")));
+                    answer.setQuestionId(Integer.valueOf(key.replace("question-", "")));
                     answer.setValue(array.getString(i));
                     listAnswers.add(answer);
                 }
                 continue;
             }
-            Answer answer = new AnswerString();
-            answer.setQuestionId(Integer.valueOf(key.replace("question-","")));
-            answer.setValue((String)obj.get(key));
-            listAnswers.add(answer);
-        }
+                Answer answer = new AnswerString();
+                answer.setQuestionId(Integer.valueOf(key.replace("question-", "")));
+                answer.setValue((String) obj.get(key));
+                listAnswers.add(answer);
 
+        }
         candidate = getCurrentCandidate();
-        if( candidate.getId() == 0 ){
+        if (candidate.getId() == 0) {
             candidate.setUserId(userId);
             candidate.setStatusId(1);
             candidate.setCourseId(1);
@@ -72,7 +73,7 @@ public class AnswersRestController {
         return ResponseEntity.ok(candidate);
     }
 
-    private Candidate getCurrentCandidate(){
+    private Candidate getCurrentCandidate() {
         userId = 0;
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (!(auth instanceof AnonymousAuthenticationToken)) {
@@ -85,13 +86,13 @@ public class AnswersRestController {
     }
 
     @RequestMapping(value = "/service/getAnswers", method = RequestMethod.GET)
-    public ResponseEntity<List> getAnswers(){
+    public ResponseEntity<List> getAnswers() {
 
         candidate = getCurrentCandidate();
 
         List<Answer> answers = (List<Answer>) candidateService.getAllCandidateAnswers(candidate);
 
-        if(answers.isEmpty()){
+        if (answers.isEmpty()) {
             return new ResponseEntity<List>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<List>(answers, HttpStatus.OK);
