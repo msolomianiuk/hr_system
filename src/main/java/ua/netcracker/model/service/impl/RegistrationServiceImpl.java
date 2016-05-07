@@ -10,7 +10,6 @@ import ua.netcracker.model.entity.Status;
 import ua.netcracker.model.entity.User;
 import ua.netcracker.model.service.CandidateService;
 import ua.netcracker.model.service.RegistrationService;
-import ua.netcracker.model.service.SendEmailService;
 import ua.netcracker.model.service.ValidationService;
 
 import java.security.MessageDigest;
@@ -18,9 +17,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 @Service
-public class RegistrationServiceImp implements RegistrationService {
+public class RegistrationServiceImpl implements RegistrationService {
 
-    private static final Logger LOGGER = Logger.getLogger(RegistrationServiceImp.class);
+    private static final Logger LOGGER = Logger.getLogger(RegistrationServiceImpl.class);
     @Autowired
     private UserDAO userDao;
 
@@ -28,7 +27,7 @@ public class RegistrationServiceImp implements RegistrationService {
     private CandidateService candidateService;
 
     @Autowired
-    private SendEmailService sendEmailService;
+    private SendEmailServiceImpl sendEmailServiceImpl;
 
     @Autowired
     private ValidationService validationService;
@@ -60,7 +59,7 @@ public class RegistrationServiceImp implements RegistrationService {
             if (userDao.insert(user)) {
                 //TODO:
                 //get EmailTemplate and paste it
-                sendEmailService.sendLetterToEmails(new String[]{user.getEmail()}, "You successfully registered", "You successfully registered on site");
+                sendEmailServiceImpl.sendLetterToEmails(new String[]{user.getEmail()}, "You successfully registered", "You successfully registered on site");
                 Candidate candidate = new Candidate();
                 candidate.setUserId(userDao.findByEmail(email).getId());
                 candidate.setStatusId(Status.NEW.getId());
