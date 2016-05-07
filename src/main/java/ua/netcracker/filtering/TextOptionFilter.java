@@ -7,32 +7,49 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 /**
- *
+ * filter for questions with multiple options (checkbox)
  */
-public class MultipleOptionsFilter implements Filter{
+public class TextOptionFilter implements Filter{
 
     private int q_id;
 
-    private ArrayList<String> answers;
+    private ArrayList<String> stringAnswers;
 
-    public MultipleOptionsFilter(int q_id, ArrayList<String> answers) {
+    public TextOptionFilter(int q_id, ArrayList<String> stringAnswers) {
         this.q_id = q_id;
-        this.answers = answers;
+        this.stringAnswers = stringAnswers;
     }
 
     @Override
     public ArrayList<Candidate> filter(ArrayList<Candidate> list) {
+
+        if (stringAnswers.size() == 1) {
+            String value = stringAnswers.get(0);
+            ArrayList<Candidate> result = new ArrayList<>();
+            for (Candidate candidate : list) {
+                Collection<Answer> answers = candidate.getAnswers();
+                for (Answer answer : answers) {
+                    if (answer.getQuestionId().equals(q_id)) {
+                        if (answer.getValue().toLowerCase().contains(value.toLowerCase())) {
+                            result.add(candidate);
+                        }
+                    }
+                }
+            }
+            return result;
+        }
+
         ArrayList<Candidate> result = new ArrayList<>();
         for (Candidate candidate : list) {
             Collection<Answer> allAnswers = candidate.getAnswers();
             ArrayList<Answer> neededAnswers = new ArrayList<>();
-            ArrayList<String> specifiedAnswers = answers;
+            ArrayList<String> specifiedAnswers = stringAnswers;
             for (Answer answer : allAnswers) {
                 if (answer.getQuestionId() == q_id) {
                     neededAnswers.add(answer);
                 }
             }
-            if (neededAnswers.size() == answers.size()) {
+            if (neededAnswers.size() == stringAnswers.size()) {
                 for (Answer neededAnswer : neededAnswers) {
                     for (String answer : specifiedAnswers) {
                         if (neededAnswer.getValue().equals(answer)) {
@@ -57,11 +74,11 @@ public class MultipleOptionsFilter implements Filter{
         this.q_id = q_id;
     }
 
-    public ArrayList<String> getAnswers() {
-        return answers;
+    public ArrayList<String> getStringAnswers() {
+        return stringAnswers;
     }
 
-    public void setAnswers(ArrayList<String> answers) {
-        this.answers = answers;
+    public void setStringAnswers(ArrayList<String> stringAnswers) {
+        this.stringAnswers = stringAnswers;
     }
 }
