@@ -36,6 +36,7 @@ public class AnswersDAOImpl implements AnswersDAO {
                 Answer answer = createAnswer(question, rows.get(i));
                 answer.setQuestionId(question.getId());
                 answer.setValue(rows.get(i).get("value"));
+                answer.setType(question.getType());
                 answers.add(answer);
             }
         } catch (Exception e) {

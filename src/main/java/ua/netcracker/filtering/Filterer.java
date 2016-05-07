@@ -27,7 +27,7 @@ public class Filterer{
 
     public ArrayList<Candidate> filter(ArrayList<Candidate> list) {
         if (list == null || list.isEmpty()) {
-            list = (ArrayList<Candidate>) candidateService.getAllProfiles();
+            list = (ArrayList<Candidate>) candidateService.getAll();
         }
         for (Filter filter : filters) {
             list = filter.filter(list);

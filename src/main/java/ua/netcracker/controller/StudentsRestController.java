@@ -25,7 +25,7 @@ public class StudentsRestController {
     @RequestMapping(value = "/getStudents", method = RequestMethod.GET)
     public ResponseEntity<List<Candidate>> listAllStudents() {
 
-        List<Candidate> students = candidate.getAllProfiles();
+        List<Candidate> students = candidate.getAll();
 
         if(students.isEmpty()){
             return new ResponseEntity<List<Candidate>>(HttpStatus.NO_CONTENT);

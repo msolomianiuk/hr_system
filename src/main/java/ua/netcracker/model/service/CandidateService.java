@@ -18,7 +18,7 @@ public interface CandidateService {
 
     Candidate getCandidateByUserID(Integer userID);
 
-    List<Candidate> getAllProfiles();
+    List<Candidate> getAll();
 
     String getStatusByID(Integer statusID);
 

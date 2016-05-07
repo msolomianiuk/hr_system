@@ -6,8 +6,9 @@ package ua.netcracker.model.entity;
 public abstract class Answer <T> {
     private Integer questionId;
     private T value;
-
+    private String type;
     public Answer() {};
+
 
     public Integer getQuestionId() {
         return questionId;
@@ -28,4 +29,12 @@ public abstract class Answer <T> {
     public abstract String toString();
 
     public abstract String getValueDBFormat();
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 }

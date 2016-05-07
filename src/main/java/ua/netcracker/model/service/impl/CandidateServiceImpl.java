@@ -39,7 +39,7 @@ public class CandidateServiceImpl implements CandidateService {
     }
 
     @Override
-    public List<Candidate> getAllProfiles() {
+    public List<Candidate> getAll() {
         return candidateDAO.getAllProfiles();
     }
 
