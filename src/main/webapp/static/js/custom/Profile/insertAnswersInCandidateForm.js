@@ -1,5 +1,5 @@
 function insertAnswersInCandidateForm(answers) {
-    // console.log(answers);
+
     for (var index in answers) {
         var questionType, questionInpute;
         questionInpute = $(".candidate-profile .questions .item [name='question-" + answers[index].questionId + "']").parents('.item.form-group');

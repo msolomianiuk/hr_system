@@ -2,6 +2,7 @@ function drawQuestionForm(questionsList) {
     var questionType;
     var questionInput;
     var questionsAnswers;
+    console.log("questions build");
     for (var index in questionsList) {
         switch (questionsList[index].type) {
             case "Text":
@@ -55,5 +56,5 @@ function drawQuestionForm(questionsList) {
         $('.loading .questions_text').hide();
         $('.loading .answers_text').removeClass('hidden');
     }, 1000);
-
+    loadAnswers();
 }
