@@ -4,19 +4,19 @@ function drawQuestionForm(questionsList) {
     var questionsAnswers;
     for (var index in questionsList) {
         switch (questionsList[index].type) {
-            case "String":
+            case "Text":
                 questionType = "text";
                 break
-            case "int":
+            case "Number":
                 questionType = "int";
                 break
-            case "combobox":
+            case "Select":
                 questionType = "select";
                 break
-            case "checkbox":
+            case "Checkboxes":
                 questionType = "check";
                 break
-            case 5:
+            case "Select or text":
                 questionType = "textANDselect";
                 break
 
