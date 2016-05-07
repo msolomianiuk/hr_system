@@ -42,7 +42,7 @@
                         <li><a data-toggle="modal" data-target="#upload-image"><i class="fa fa-upload"></i> Load Image</a></li>
                     </sec:authorize>
                     <sec:authorize access="hasAnyRole('ROLE_STUDENT')">
-                        <li><a data-toggle="modal" data-target="#get-pdf"><i class="fa fa-file-pdf-o"></i> Print PDF</a></li>
+                        <li><a data-toggle="modal" id="get-pdf"><i class="fa fa-file-pdf-o"></i> Print PDF</a></li>
                     </sec:authorize>
                         <li><a href="<c:url value="/logout"/>"><i class="fa fa-sign-out"></i> Logout </a></li>
                 </ul>
