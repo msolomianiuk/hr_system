@@ -29,28 +29,28 @@ public class CandidateServiceImpl implements CandidateService {
     private AnswersDAO answersDAO;
 
     @Override
-    public Candidate getCandidateByID(Integer id) {
-        return candidateDAO.getCandidateByID(id);
+    public Candidate getCandidateById(Integer id) {
+        return candidateDAO.findCandidateById(id);
     }
 
     @Override
-    public Candidate getCandidateByUserID(Integer userID) {
-        return candidateDAO.getCandidateByUserID(userID);
+    public Candidate getCandidateByUserId(Integer userId) {
+        return candidateDAO.getCandidateByUserId(userId);
     }
 
     @Override
     public List<Candidate> getAll() {
-        return candidateDAO.getAllProfiles();
+        return candidateDAO.findAll();
     }
 
     @Override
-    public String getStatusByID(Integer statusID) {
-        return candidateDAO.getStatusById(statusID);
+    public String getStatusById(Integer statusId) {
+        return candidateDAO.findStatusById(statusId);
     }
 
     @Override
-    public HashMap<Integer, Integer> getMarks(Integer candidateID) {
-        return candidateDAO.getMarks(candidateID);
+    public HashMap<Integer, Integer> getMarks(Integer candidateId) {
+        return candidateDAO.getMarks(candidateId);
     }
 
     @Override
@@ -64,13 +64,13 @@ public class CandidateServiceImpl implements CandidateService {
     }
 
     @Override
-    public int getInterviewDayDetailsByID(Integer id) {
-        return candidateDAO.getInterviewDayDetailsByID(id);
+    public int getInterviewDayDetailsById(Integer id) {
+        return candidateDAO.getInterviewDayDetailsById(id);
     }
 
     @Override
     public Collection<Answer> getAllCandidateAnswers(Candidate candidate) {
-        return answersDAO.findAll(candidate.getId(), questionDAO.findAllMandatory());
+        return answersDAO.findAll(candidate.getId());
     }
 
     @Override

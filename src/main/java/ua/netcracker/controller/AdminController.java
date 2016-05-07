@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -15,14 +14,12 @@ import ua.netcracker.model.entity.CourseSetting;
 import ua.netcracker.model.entity.InterviewDaysDetails;
 import ua.netcracker.model.service.AddressService;
 import ua.netcracker.model.service.InterviewDaysDetailsService;
-import ua.netcracker.model.service.impl.AddressServiceImpl;
 import ua.netcracker.model.entity.EmailTemplate;
 import ua.netcracker.model.entity.ReportQuery;
 import ua.netcracker.model.service.EmailTemplateService;
 import ua.netcracker.model.service.ReportService;
 import ua.netcracker.model.service.impl.CandidateServiceImpl;
 import ua.netcracker.model.service.impl.CourseSettingServiceImpl;
-import ua.netcracker.model.service.impl.InterviewDaysDetailsServiceImpl;
 
 import java.util.List;
 
@@ -126,7 +123,7 @@ public class AdminController {
     public ResponseEntity<Candidate> setCandidate(
             @RequestParam String id
     ) {
-        Candidate candidate = candidateService.getCandidateByID(Integer.parseInt(id));
+        Candidate candidate = candidateService.getCandidateById(Integer.parseInt(id));
 
         return ResponseEntity.ok(candidate);
     }

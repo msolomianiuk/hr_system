@@ -3,7 +3,6 @@ package ua.netcracker.model.dao;
 
 import ua.netcracker.model.entity.Answer;
 import ua.netcracker.model.entity.Candidate;
-import ua.netcracker.model.entity.Question;
 
 import java.util.Collection;
 
@@ -12,7 +11,7 @@ import java.util.Collection;
  */
 public interface AnswersDAO extends DAO {
 
-    Collection<Answer> findAll(int candidateId, Collection<Question> listQuestions);
+    Collection<Answer> findAll(int candidateId);
 
     void saveAll(Candidate candidate);
 

@@ -22,6 +22,8 @@ public class Candidate {
 
     private Collection<Answer> answers;
 
+    private InterviewResult interviewResult;
+
     private User user;
 
 

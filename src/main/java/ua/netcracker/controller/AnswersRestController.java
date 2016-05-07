@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ua.netcracker.model.entity.Answer;
-import ua.netcracker.model.entity.AnswerString;
 import ua.netcracker.model.entity.Candidate;
 import ua.netcracker.model.entity.Status;
 import ua.netcracker.model.securiry.UserAuthenticationDetails;
@@ -49,14 +48,14 @@ public class AnswersRestController {
             if (obj.get(key) instanceof JSONArray) {
                 JSONArray array = (JSONArray) obj.get(key);
                 for (int i = 0; i < array.length(); i++) {
-                    Answer answer = new AnswerString();
+                    Answer answer = new Answer();
                     answer.setQuestionId(Integer.valueOf(key.replace("question-", "")));
                     answer.setValue(array.getString(i));
                     listAnswers.add(answer);
                 }
                 continue;
             }
-            Answer answer = new AnswerString();
+            Answer answer = new Answer();
             answer.setQuestionId(Integer.valueOf(key.replace("question-", "")));
             answer.setValue((String) obj.get(key));
             listAnswers.add(answer);
@@ -68,7 +67,7 @@ public class AnswersRestController {
             candidate.setStatusId(Status.NEW.getId());
             candidate.setCourseId(courseSettingService.getLastSetting().getId());
             candidateService.saveCandidate(candidate);
-            candidate = candidateService.getCandidateByUserID(userId);
+            candidate = candidateService.getCandidateById(userId);
         }
 
         candidate.setAnswers(listAnswers);
@@ -86,7 +85,7 @@ public class AnswersRestController {
             userId = userDetails.getUserId();
         }
 
-        return candidateService.getCandidateByUserID(userId);
+        return candidateService.getCandidateById(userId);
     }
 
     @RequestMapping(value = "/service/getAnswers", method = RequestMethod.GET)

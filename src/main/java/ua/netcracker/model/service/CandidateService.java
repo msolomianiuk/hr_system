@@ -14,13 +14,13 @@ import java.util.List;
 public interface CandidateService {
 
 
-    Candidate getCandidateByID(Integer id);
+    Candidate getCandidateById(Integer id);
 
-    Candidate getCandidateByUserID(Integer userID);
+    Candidate getCandidateByUserId(Integer userID);
 
     List<Candidate> getAll();
 
-    String getStatusByID(Integer statusID);
+    String getStatusById(Integer statusID);
 
     HashMap<Integer, Integer> getMarks(Integer candidateID);
 
@@ -28,7 +28,7 @@ public interface CandidateService {
 
     HashMap<Integer, String> getResponses(Integer id);
 
-    int getInterviewDayDetailsByID(Integer id);
+    int getInterviewDayDetailsById(Integer id);
 
     Collection<Answer> getAllCandidateAnswers(Candidate candidate);
 
