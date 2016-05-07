@@ -2,26 +2,28 @@ function drawQuestionForm(questionsList) {
     var questionType;
     var questionInput;
     var questionsAnswers;
+    console.log("questions build");
     for (var index in questionsList) {
         switch (questionsList[index].type) {
-            case "String":
+            case "Text":
                 questionType = "text";
                 break
-            case "int":
+            case "Number":
                 questionType = "int";
                 break
-            case "combobox":
+            case "Select":
                 questionType = "select";
                 break
-            case "checkbox":
+            case "Checkboxes":
                 questionType = "check";
                 break
-            case 5:
+            case "Select or text":
                 questionType = "textANDselect";
                 break
 
         }
         questionInput = $(".hidden ." + questionType + "-input-type").clone();
+        questionInput.attr('q-type', questionType + "-input-type");
         questionInput.find("label.caption").html(questionsList[index].caption);
         questionInput.find("label.caption").attr("for", "question-" + questionsList[index].id);
         questionInput.find("input").attr("name", "question-" + questionsList[index].id);
@@ -54,5 +56,5 @@ function drawQuestionForm(questionsList) {
         $('.loading .questions_text').hide();
         $('.loading .answers_text').removeClass('hidden');
     }, 1000);
-
+    loadAnswers();
 }
