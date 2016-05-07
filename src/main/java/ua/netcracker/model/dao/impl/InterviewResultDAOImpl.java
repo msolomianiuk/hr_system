@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Repository;
 import ua.netcracker.model.dao.InterviewResultDAO;
 
 import javax.sql.DataSource;
@@ -17,6 +18,7 @@ import java.util.Map;
 /**
  * Created by Alex on 07.05.2016.
  */
+@Repository("InterviewResultDao")
 public class InterviewResultDAOImpl implements InterviewResultDAO {
     @Autowired
     private DataSource dataSource;
