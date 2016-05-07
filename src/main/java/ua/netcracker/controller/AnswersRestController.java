@@ -12,11 +12,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import ua.netcracker.model.entity.Answer;
 import ua.netcracker.model.entity.Candidate;
+import ua.netcracker.model.entity.Status;
 import ua.netcracker.model.securiry.UserAuthenticationDetails;
 import ua.netcracker.model.service.CandidateService;
+import ua.netcracker.model.service.CourseSettingService;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Created by ksenzod on 02.05.16.
@@ -29,47 +34,49 @@ public class AnswersRestController {
     private CandidateService candidateService;
     @Autowired
     private Candidate candidate;
+    @Autowired
+    private CourseSettingService courseSettingService;
 
     @RequestMapping(value = "/service/saveAnswers", method = RequestMethod.GET)
-    public ResponseEntity<Candidate> setAnswers(@RequestParam String answersJsonString){
-        Map<Integer, Object> data = new HashMap<>();
-        JSONObject obj = new JSONObject(answersJsonString);
+    public ResponseEntity<Candidate> setAnswers(@RequestParam String answersJsonString) {
+        List<Answer> listAnswers = new ArrayList<>();
 
+        JSONObject obj = new JSONObject(answersJsonString);
         Iterator<?> keys = obj.keys();
-        while( keys.hasNext() ) {
-            String key = (String)keys.next();
-            if ( obj.get(key) instanceof JSONArray ) {
+        while (keys.hasNext()) {
+            String key = (String) keys.next();
+            if (obj.get(key) instanceof JSONArray) {
                 JSONArray array = (JSONArray) obj.get(key);
-                List<String> answersList = new ArrayList<>();
                 for (int i = 0; i < array.length(); i++) {
-                    String value = array.getString(i);
-                    answersList.add(value);
+                    Answer answer = new Answer();
+                    answer.setQuestionId(Integer.valueOf(key.replace("question-", "")));
+                    answer.setValue(array.getString(i));
+                    listAnswers.add(answer);
                 }
-                data.put(Integer.valueOf(key.replace("question-","")), answersList);
                 continue;
             }
-            String value = (String)obj.get(key);
-            data.put(Integer.valueOf(key.replace("question-","")), value);
+            Answer answer = new Answer();
+            answer.setQuestionId(Integer.valueOf(key.replace("question-", "")));
+            answer.setValue((String) obj.get(key));
+            listAnswers.add(answer);
+
         }
-
-                candidate = getCurrentCandidate();
-
-        if( candidate.getID() == 0 ){
-            candidate.setUserID(userId);
-            candidate.setStatusID(1);
-            candidate.setCourseID(1);
-            candidate.setInterviewDaysDetails(1);
+        candidate = getCurrentCandidate();
+        if (candidate.getId() == 0) {
+            candidate.setUserId(userId);
+            candidate.setStatusId(Status.NEW.getId());
+            candidate.setCourseId(courseSettingService.getLastSetting().getId());
             candidateService.saveCandidate(candidate);
-            candidate = candidateService.getCandidateByUserID(userId);
+            candidate = candidateService.getCandidateById(userId);
         }
 
-        candidate.setAnswers(data);
+        candidate.setAnswers(listAnswers);
         candidateService.saveOrUpdate(candidate);
 
         return ResponseEntity.ok(candidate);
     }
 
-    private Candidate getCurrentCandidate(){
+    private Candidate getCurrentCandidate() {
         userId = 0;
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (!(auth instanceof AnonymousAuthenticationToken)) {
@@ -78,19 +85,20 @@ public class AnswersRestController {
             userId = userDetails.getUserId();
         }
 
-        return candidateService.getCandidateByUserID(userId);
+        return candidateService.getCandidateById(userId);
     }
 
     @RequestMapping(value = "/service/getAnswers", method = RequestMethod.GET)
-    public ResponseEntity<Map<Integer, String>> getAnswers(
+    public ResponseEntity<List> getAnswers() {
 
-    ){
+        candidate = getCurrentCandidate();
 
-        Map<Integer, String> answers = candidateService.getAllCandidateAnswers(candidate);
-        if(answers.isEmpty()){
-            return new ResponseEntity<Map<Integer, String>>(HttpStatus.NO_CONTENT);
+        List<Answer> answers = (List<Answer>) candidateService.getAllCandidateAnswers(candidate);
+
+        if (answers.isEmpty()) {
+            return new ResponseEntity<List>(HttpStatus.NO_CONTENT);
         }
-        return new ResponseEntity<Map<Integer, String>>(answers, HttpStatus.OK);
+        return new ResponseEntity<List>(answers, HttpStatus.OK);
     }
 
 //    @RequestMapping(value = "/service/getPDF", method = RequestMethod.GET)

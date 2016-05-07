@@ -3,11 +3,13 @@ package ua.netcracker.model.entity;
 /**
  * Created by Alyona on 06.05.2016.
  */
-public abstract class Answer <T> {
+public class Answer {
     private Integer questionId;
-    private T value;
+    private String value;
 
-    public Answer() {};
+    public Answer() {
+    }
+
 
     public Integer getQuestionId() {
         return questionId;
@@ -17,15 +19,11 @@ public abstract class Answer <T> {
         this.questionId = questionId;
     }
 
-    public T getValue() {
+    public String getValue() {
         return value;
     }
 
-    public void setValue(T value) {
+    public void setValue(String value) {
         this.value = value;
     }
-
-    public abstract String toString();
-
-    public abstract String getValueDBFormat();
 }

@@ -9,6 +9,7 @@ import ua.netcracker.model.service.impl.CourseSettingServiceImpl;
 import java.time.LocalDate;
 import java.time.Period;
 
+
 /**
  * Created by Legion on 04.05.2016.
  */
@@ -85,6 +86,7 @@ public class CalculateSetting {
         LocalDate startInterviewDay = myDate.getDate(courseSetting.getInterviewStartDate());
         LocalDate endInterviewDay = myDate.getDate(courseSetting.getInterviewEndDate());
 
+
         int maxStudentForInterview = courseSetting.getStudentInterviewCount();
 
         // кількість днів інтерв'ю -1
@@ -93,6 +95,7 @@ public class CalculateSetting {
         // кількість студентів на день
         return (int) Math.ceil(maxStudentForInterview / (period.getDays() + 1));
     }
+
 
     public int getPersonal(InterviewDaysDetails interviewDaysDetails) {
         return getSettingDay(interviewDaysDetails)[1];

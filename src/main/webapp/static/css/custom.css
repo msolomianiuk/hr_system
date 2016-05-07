@@ -37,7 +37,7 @@ body.nav-sm .nav.side-menu li a {
   font-size: 10px;
   padding: 10px 5px;
 }
-body.nav-sm .nav.side-menu li.active-sm {
+body.nav-sm {
   border-right: 5px solid #1ABB9C;
 }
 body.nav-sm > .nav.side-menu > li.active-sm > a {
@@ -531,28 +531,29 @@ body.nav-md ul.nav.child_menu li:after {
   font-weight: 500;
 }
 .nav>li>a {
+  cursor: pointer;
   position: relative;
   display: block;
   padding: 13px 15px 7px;
 }
-.nav.side-menu> li.current-page, .nav.side-menu> li.active {
+.nav.side-menu> li.current-page {
   border-right: 5px solid #1ABB9C;
 }
 li.current-page {
   background: rgba(255, 255, 255, 0.05);
 }
-.nav.side-menu> li.active > a {
-  color: #ff0000;
-  text-shadow: rgba(0, 0, 0, 0.25) 0 -1px 0;
-  background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #5b6479), color-stop(100%, #4c5566)), #686e78;
-  background: -webkit-linear-gradient(#334556, #2C4257), #2A3F54;
-  background: -moz-linear-gradient(#334556, #2C4257), #2A3F54;
-  background: -o-linear-gradient(#334556, #2C4257), #2A3F54;
-  background: linear-gradient(#334556, #2C4257), #2A3F54;
-  -webkit-box-shadow: rgba(0, 0, 0, 0.25) 0 1px 0, inset rgba(255, 255, 255, 0.16) 0 1px 0;
-  -moz-box-shadow: rgba(0, 0, 0, 0.25) 0 1px 0, inset rgba(255, 255, 255, 0.16) 0 1px 0;
-  box-shadow: rgba(0, 0, 0, 0.25) 0 1px 0, inset rgba(255, 255, 255, 0.16) 0 1px 0;
-}
+/*.nav.side-menu> li.active > a {*/
+  /*color: #ff0000;*/
+  /*text-shadow: rgba(0, 0, 0, 0.25) 0 -1px 0;*/
+  /*background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #5b6479), color-stop(100%, #4c5566)), #686e78;*/
+  /*background: -webkit-linear-gradient(#334556, #2C4257), #2A3F54;*/
+  /*background: -moz-linear-gradient(#334556, #2C4257), #2A3F54;*/
+  /*background: -o-linear-gradient(#334556, #2C4257), #2A3F54;*/
+  /*background: linear-gradient(#334556, #2C4257), #2A3F54;*/
+  /*-webkit-box-shadow: rgba(0, 0, 0, 0.25) 0 1px 0, inset rgba(255, 255, 255, 0.16) 0 1px 0;*/
+  /*-moz-box-shadow: rgba(0, 0, 0, 0.25) 0 1px 0, inset rgba(255, 255, 255, 0.16) 0 1px 0;*/
+  /*box-shadow: rgba(0, 0, 0, 0.25) 0 1px 0, inset rgba(255, 255, 255, 0.16) 0 1px 0;*/
+/*}*/
 li.current-page a {
   color: #1ABB9C !important
 }
@@ -617,6 +618,7 @@ li.current-page a {
   float: left;
   margin: 0;
   padding-top: 16px;
+  padding-bottom: 14px;
   width: 70px;
 }
 .toggle a {

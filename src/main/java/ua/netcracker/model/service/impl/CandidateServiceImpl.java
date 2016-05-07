@@ -3,11 +3,15 @@ package ua.netcracker.model.service.impl;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ua.netcracker.model.dao.AnswersDAO;
 import ua.netcracker.model.dao.CandidateDAO;
+import ua.netcracker.model.dao.InterviewResultDAO;
+import ua.netcracker.model.dao.QuestionDAO;
+import ua.netcracker.model.entity.Answer;
 import ua.netcracker.model.entity.Candidate;
 import ua.netcracker.model.service.CandidateService;
 
-import java.util.HashMap;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -20,88 +24,86 @@ public class CandidateServiceImpl implements CandidateService {
     private static final Logger LOGGER = Logger.getLogger(CandidateServiceImpl.class);
 
     @Autowired
+    private QuestionDAO questionDAO;
+
+    @Autowired
     private CandidateDAO candidateDAO;
 
+    @Autowired
+    private AnswersDAO answersDAO;
 
+    @Autowired
+    private InterviewResultDAO interviewResultDAO;
 
     @Override
-    public Candidate getCandidateByID(Integer id){
-        return candidateDAO.getCandidateByID(id);
+    public Candidate getCandidateById(Integer id) {
+        return candidateDAO.findCandidateById(id);
     }
 
     @Override
-    public Candidate getCandidateByUserID(Integer userID) {
-        return candidateDAO.getCandidateByUserID(userID);
+    public Candidate getCandidateByUserId(Integer userId) {
+        return candidateDAO.findCandidateByUserId(userId);
     }
 
     @Override
-    public List<Candidate> getAllProfiles() {
-        return candidateDAO.getAllProfiles();
+    public List<Candidate> getAllCandidates() {
+        return candidateDAO.findAll();
     }
 
     @Override
-    public String getStatusByID(Integer statusID) {
-        return candidateDAO.getStatusById(statusID);
+    public String getStatusById(Integer statusId) {
+        return candidateDAO.findStatusById(statusId);
     }
 
     @Override
-    public HashMap<Integer, Integer> getMarks(Integer candidateID) {
-        return candidateDAO.getMarks(candidateID);
+    public Map<Integer, Integer> getMarks(Integer candidateId) {
+        return interviewResultDAO.findMarks(candidateId);
     }
 
     @Override
-    public HashMap<Integer, String> getRecommendations(Integer id) {
-        return candidateDAO.getRecommendations(id);
+    public Map<Integer, String> getRecommendations(Integer candidateId) {
+        return interviewResultDAO.findRecommendations(candidateId);
     }
 
     @Override
-    public HashMap<Integer, String> getResponses(Integer id) {
-        return candidateDAO.getResponses(id);
+    public Map<Integer, String> getComments(Integer candidateId) {
+        return interviewResultDAO.findComments(candidateId);
     }
 
     @Override
-    public int getInterviewDayDetailsByID(Integer id) {
-        return candidateDAO.getInterviewDayDetailsByID(id);
+    public int getInterviewDayDetailsById(Integer candidateId) {
+        return interviewResultDAO.getInterviewDayDetailsById(candidateId);
     }
 
     @Override
-    public Map<Integer, String> getAllCandidateAnswers(Candidate candidate) {
-        return candidateDAO.getAllCandidateAnswers(candidate);
-    }
-
-    @Override
-    public List<Map<String, Object>> getInterviewers(Candidate candidate) {
-        return candidateDAO.getInterviewers(candidate);
-    }
-
-    @Override
-    public String getCandidateAnswer(Integer candidateID, Integer questionID) {
-        return candidateDAO.getCandidateAnswer(candidateID, questionID);
+    public Collection<Answer> getAllCandidateAnswers(Candidate candidate) {
+        return answersDAO.findAll(candidate.getId());
     }
 
     @Override
     public boolean saveCandidate(Candidate candidate) {
-        return candidateDAO.insertCandidate(candidate);
+        return candidateDAO.saveCandidate(candidate);
     }
 
     @Override
     public void saveAnswers(Candidate candidate) {
-        candidateDAO.insertAnswers(candidate);
+        answersDAO.saveAll(candidate);
     }
 
     @Override
     public void deleteAnswers(Candidate candidate) {
-        candidateDAO.deleteAnswers(candidate);
+        answersDAO.deleteAnswers(candidate.getId());
     }
 
     @Override
     public void saveOrUpdate(Candidate candidate) {
-        try{
-            candidateDAO.deleteAnswers(candidate);
-            candidateDAO.insertAnswers(candidate);
-        } catch (Exception e){
+        try {
+            answersDAO.deleteAnswers(candidate.getId());
+            answersDAO.saveAll(candidate);
+        } catch (Exception e) {
             LOGGER.debug(e.getStackTrace());
             LOGGER.info(e.getMessage());
         }
     }
 }
+

@@ -19,13 +19,13 @@ import java.util.List;
 public class StudentsRestController {
 
     @Autowired
-    private CandidateService candidate;
+    private CandidateService candidateService;
 
 
     @RequestMapping(value = "/getStudents", method = RequestMethod.GET)
     public ResponseEntity<List<Candidate>> listAllStudents() {
 
-        List<Candidate> students = candidate.getAllProfiles();
+        List<Candidate> students = (List<Candidate>)candidateService.getAllCandidates();
 
         if(students.isEmpty()){
             return new ResponseEntity<List<Candidate>>(HttpStatus.NO_CONTENT);

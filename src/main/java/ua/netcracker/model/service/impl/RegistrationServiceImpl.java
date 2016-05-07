@@ -10,23 +10,27 @@ import ua.netcracker.model.entity.Status;
 import ua.netcracker.model.entity.User;
 import ua.netcracker.model.service.CandidateService;
 import ua.netcracker.model.service.RegistrationService;
-import ua.netcracker.model.utils.regex.EmailValidator;
-import ua.netcracker.model.utils.regex.NameValidator;
-import ua.netcracker.model.utils.regex.PasswordValidator;
+import ua.netcracker.model.service.ValidationService;
 
 import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 @Service
-public class RegistrationServiceImp implements RegistrationService {
+public class RegistrationServiceImpl implements RegistrationService {
 
-    private static final Logger LOGGER = Logger.getLogger(RegistrationServiceImp.class);
+    private static final Logger LOGGER = Logger.getLogger(RegistrationServiceImpl.class);
     @Autowired
     private UserDAO userDao;
 
     @Autowired
     private CandidateService candidateService;
+
+    @Autowired
+    private SendEmailServiceImpl sendEmailServiceImpl;
+
+    @Autowired
+    private ValidationService validationService;
 
     private static String sha256Password(String password) {
         try {
@@ -43,20 +47,23 @@ public class RegistrationServiceImp implements RegistrationService {
 
     @Override
     public boolean registrationStudent(String email, String name, String surname, String patronymic, String password) {
-        EmailValidator ev = new EmailValidator();
-        NameValidator nv = new NameValidator();
-        PasswordValidator pv = new PasswordValidator();
 
-        if (ev.validate(email) && nv.validate(name) && nv.validate(surname)
-                && nv.validate(patronymic) && pv.validate(password)) {
+        if (validationService.emailValidation(email) &&
+                validationService.nameValidation(name) &&
+                validationService.nameValidation(surname) &&
+                validationService.nameValidation(patronymic) &&
+                validationService.passwordValidation(password)) {
 
             User user = new User(email, sha256Password(password), name, surname, patronymic,
-                    new ArrayList<>(Arrays.asList(Role.STUDENT)));
+                    new ArrayList<>(Arrays.asList(Role.ROLE_STUDENT)));
             if (userDao.insert(user)) {
+                //TODO:
+                //get EmailTemplate and paste it
+                sendEmailServiceImpl.sendLetterToEmails(new String[]{user.getEmail()}, "You successfully registered", "You successfully registered on site");
                 Candidate candidate = new Candidate();
-                candidate.setUserID(userDao.findByEmail(email).getId());
-                candidate.setStatusID(Status.NEW.getId());
-                candidate.setCourseID(1);
+                candidate.setUserId(userDao.findByEmail(email).getId());
+                candidate.setStatusId(Status.NEW.getId());
+                candidate.setCourseId(1);
                 return candidateService.saveCandidate(candidate);
             }
         }

@@ -4,9 +4,9 @@ import org.apache.log4j.Logger;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
+
 import java.time.DateTimeException;
 import java.time.LocalDate;
-
 /**
  * Created by Legion on 03.05.2016.
  */

@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Controller
 public class HRController {
 
-    @RequestMapping(value = "/hr", method = RequestMethod.GET)
+    @RequestMapping(value = "hr/students_list", method = RequestMethod.GET)
     public String devMainPage(Model model) {
 
-        return "hr";
+        return "studentsList";
     }
 }
