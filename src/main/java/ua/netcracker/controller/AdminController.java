@@ -134,7 +134,7 @@ public class AdminController {
     //---Controllers for InterviewDaysDetails---
 
     @RequestMapping(value = "/service/interviewDetails", method = RequestMethod.GET)
-    public String getInterviewDays() {
+    public String getInterviewDaysDetailsPage() {
         return "interview_days_details";
     }
 
@@ -142,8 +142,8 @@ public class AdminController {
 
     @RequestMapping(value = "/interview_details_list", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<List<InterviewDaysDetails>> getAll() {
-        List<InterviewDaysDetails> interview = (List <InterviewDaysDetails>) interviewDaysDetailsService.findAllSetting();
+    public ResponseEntity<List<InterviewDaysDetails>> getAllInterviewDaysDetails() {
+        List<InterviewDaysDetails> interview = (List <InterviewDaysDetails>) interviewDaysDetailsService.findAll();
         if (interview.isEmpty()) {
             return new ResponseEntity<List<InterviewDaysDetails>>(HttpStatus.NO_CONTENT);
         }
@@ -164,7 +164,7 @@ public class AdminController {
         interviewDaysDetails.setStartTime(start_time);
         interviewDaysDetails.setEndTime(end_time);
         interviewDaysDetails.setAddressId(Integer.parseInt(address_id));
-        interviewDaysDetailsService.insert(interviewDaysDetails);
+        interviewDaysDetailsService.add(interviewDaysDetails);
         if (interviewDaysDetails == null) {
             return ResponseEntity.accepted().body(interviewDaysDetails);
         }
@@ -173,11 +173,25 @@ public class AdminController {
 
     @RequestMapping(value = "/interview_details_delete", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<InterviewDaysDetails> removeInterviewController(
+    public ResponseEntity<InterviewDaysDetails> removeInterviewDaysDetails(
             @RequestParam String id
     ) {
         InterviewDaysDetails interviewDaysDetails = new InterviewDaysDetails();
-        interviewDaysDetailsService.delete(Integer.parseInt(id));
+        interviewDaysDetailsService.remove(Integer.parseInt(id));
+        if (interviewDaysDetails == null) {
+            return ResponseEntity.accepted().body(interviewDaysDetails);
+        }
+        return ResponseEntity.ok(interviewDaysDetails);
+    }
+
+    @RequestMapping(value = "/interview_details_getTime", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<InterviewDaysDetails> getInterviewDetailsByDate(
+            @RequestParam String id
+    ) {
+        InterviewDaysDetails interviewDaysDetails;
+        interviewDaysDetails = interviewDaysDetailsService.findById(interviewDaysDetailsService.getIdbyDate(id));
+//        String s = Integer.toString(interviewDaysDetailsService.getIdbyDate(id));
         if (interviewDaysDetails == null) {
             return ResponseEntity.accepted().body(interviewDaysDetails);
         }
@@ -186,7 +200,7 @@ public class AdminController {
 
     @RequestMapping(value = "/interview_details_update", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<InterviewDaysDetails> updateInterviewController(
+    public ResponseEntity<InterviewDaysDetails> updateInterviewDaysDetails(
             @RequestParam String id,
             @RequestParam String date,
             @RequestParam String start_time,
@@ -201,7 +215,7 @@ public class AdminController {
                 Integer.parseInt(address_id),
                 end_time
         );
-        interviewDaysDetailsService.saveOrUpdate(interviewDaysDetails);
+        interviewDaysDetailsService.update(interviewDaysDetails);
         if (interviewDaysDetails == null) {
             return ResponseEntity.accepted().body(interviewDaysDetails);
         }
@@ -217,7 +231,7 @@ public class AdminController {
 
     @RequestMapping(value = "/address_list", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<List<Address>> getAllAddressController() {
+    public ResponseEntity<List<Address>> getAllAddress() {
         List<Address> addressList = (List <Address>) addressService.findAllSetting();
         if (addressList.isEmpty()) {
             return new ResponseEntity<List<Address>>(HttpStatus.NO_CONTENT);
@@ -227,7 +241,7 @@ public class AdminController {
 
     @RequestMapping(value = "/address_insert", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<Address> setAddressMethod(
+    public ResponseEntity<Address> setAddress(
             @RequestParam String address,
             @RequestParam String roomCapacity
     ) {
@@ -257,7 +271,7 @@ public class AdminController {
 
     @RequestMapping(value = "/address_update", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<Address> updateAddressController(
+    public ResponseEntity<Address> updateAddress(
             @RequestParam String id,
             @RequestParam String address,
             @RequestParam String roomCapacity

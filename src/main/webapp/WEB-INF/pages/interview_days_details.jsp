@@ -166,7 +166,13 @@
                     </tr>
                     <tr>
                         <td>
-                           <a href="interviewDetails/address">  <input type="button" class='btn' id="ButtonAddressPage" value="Add address"> </a>
+                            <a href="interviewDetails/address"> <input type="button" class='btn' id="ButtonAddressPage"
+                                                                       value="Add address"> </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input type="button" class='btn' id="ButtonGetTime" value="GetTime">
                         </td>
                     </tr>
                     </tbody>
@@ -183,6 +189,23 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 <script>
     $(document).ready(function () {
+
+        $("#ButtonGetTime").bind("click", function () {
+            var id = $("input[name='id']").val();
+
+            $.ajax({
+                url: "http://localhost:8080/hr_system-1.0-SNAPSHOT/admin/interview_details_getTime",
+                type: "GET",
+                dataType: "json",
+                data: {'id':id},
+                contentType: 'application/json',
+                mimeType: 'application/json',
+                success: funcForAjax,
+                error: function (data) {
+                    console.log(data);
+                }
+            });
+        });
 
         $("#ButtonInsert").bind("click", function () {
             var date = $("input[name='date']").val();

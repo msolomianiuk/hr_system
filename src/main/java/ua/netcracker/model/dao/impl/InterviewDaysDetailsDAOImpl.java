@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import ua.netcracker.model.dao.InterviewDaysDetailsDAO;
 import ua.netcracker.model.entity.InterviewDaysDetails;
+import ua.netcracker.model.utils.JdbcTemplateFactory;
 
 import javax.sql.DataSource;
 import java.sql.ResultSet;
@@ -22,64 +23,65 @@ import java.util.List;
 public class InterviewDaysDetailsDAOImpl implements InterviewDaysDetailsDAO {
     static final Logger LOGGER = Logger.getLogger(InterviewDaysDetailsDAOImpl.class);
 
-    private static final String UPDATE_SQL = "UPDATE hr_system.interview_days_details SET date=?, start_time=?, end_time=?, address_id=? WHERE id = ?";
-    private static final String REMOVE_SQL = "DELETE FROM \"hr_system\".interview_days_details WHERE id=?";
-    private static final String FIND_ALL_SQL = "SELECT id, course_id, date, start_time, end_time, address_id FROM \"hr_system\".interview_days_details ORDER BY id";
-    private static final String FIND_SQL = "SELECT id, course_id, date, start_time, end_time, address_id FROM \"hr_system\".interview_days_details WHERE id = ?";
+    @Autowired
+    JdbcTemplateFactory jdbcTemplateFactory;
 
     @Autowired
     private DataSource dataSource;
 
+    private static final String UPDATE_SQL = "UPDATE hr_system.interview_days_details SET date=?, start_time=?, end_time=?, address_id=? WHERE id = ?";
+    private static final String REMOVE_SQL = "DELETE FROM \"hr_system\".interview_days_details WHERE id=?";
+    private static final String FIND_ALL_SQL = "SELECT id, course_id, date, start_time, end_time, address_id FROM \"hr_system\".interview_days_details ORDER BY id";
+    private static final String FIND_SQL = "SELECT id, course_id, date, start_time, end_time, address_id FROM \"hr_system\".interview_days_details WHERE id = ?";
+    private static final String INSERT_SQL = "INSERT INTO \"hr_system\".interview_days_details(course_id, date, start_time, end_time, address_id) VALUES (?, ?, ?, ?, ?);";
+
+
     @Override
     public InterviewDaysDetails find(int id) {
         InterviewDaysDetails interviewDaysDetails = null;
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-        String sql = "SELECT id, course_id, date, start_time, end_time, address_id FROM \"hr_system\".interview_days_details WHERE id = "+id;
-        interviewDaysDetails = jdbcTemplate.queryForObject(FIND_SQL,
+        interviewDaysDetails = jdbcTemplateFactory.getJdbcTemplate(dataSource).queryForObject(FIND_SQL,
                 new RowMapper<InterviewDaysDetails>() {
-                    public InterviewDaysDetails mapRow(ResultSet rs, int rowNum) throws SQLException {
-                        return createInterviewWithResultSet(rs);
-                    }
-                });
+                            public InterviewDaysDetails mapRow(ResultSet rs, int rowNum) throws SQLException {
+                                return createInterviewWithResultSet(rs);
+                            }
+                        },
+                id);
         return interviewDaysDetails;
     }
 
     @Override
     public boolean insert(InterviewDaysDetails interviewDaysDetails) {
-        SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(dataSource).
-                withTableName("\"hr_system\".interview_days_details").
-                usingColumns("course_id","date","start_time","end_time","address_id");
-        MapSqlParameterSource insertParameter = new MapSqlParameterSource();
-        insertParameter.addValue("course_id",interviewDaysDetails.getCourseId());
-        insertParameter.addValue("date", interviewDaysDetails.getInterviewDate());
-        insertParameter.addValue("start_time",interviewDaysDetails.getStartTime());
-        insertParameter.addValue("end_time",interviewDaysDetails.getEndTime());
-        insertParameter.addValue("address_id", interviewDaysDetails.getAddressId());
-        return simpleJdbcInsert.execute(insertParameter) == 5007 ? true : false;
+        return jdbcTemplateFactory.getJdbcTemplate(dataSource).update(INSERT_SQL,
+                interviewDaysDetails.getCourseId(),
+                interviewDaysDetails.getInterviewDate(),
+                interviewDaysDetails.getStartTime(),
+                interviewDaysDetails.getEndTime(),
+                interviewDaysDetails.getAddressId()) > 0;
     }
 
     @Override
     public boolean update(InterviewDaysDetails interviewDaysDetails) {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-        return (jdbcTemplate.update(UPDATE_SQL,interviewDaysDetails.getInterviewDate(),interviewDaysDetails.getStartTime(),
-                interviewDaysDetails.getEndTime(),interviewDaysDetails.getAddressId(),interviewDaysDetails.getId())>0);
+        try {
+            return jdbcTemplateFactory.getJdbcTemplate(dataSource).update(UPDATE_SQL,
+                    interviewDaysDetails.getInterviewDate(),
+                    interviewDaysDetails.getStartTime(),
+                    interviewDaysDetails.getEndTime(),
+                    interviewDaysDetails.getAddressId(),
+                    interviewDaysDetails.getId()) > 0;
+        } catch (Exception e){
+            LOGGER.error(e);
+            return false;
+        }
     }
 
-    public boolean remove(long id) {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-        return jdbcTemplate.update(REMOVE_SQL, id)>0;
-    }
-
-
-    public boolean remove(InterviewDaysDetails elem) {
-        return false;
+    public boolean remove(int id) {
+        return jdbcTemplateFactory.getJdbcTemplate(dataSource).update(REMOVE_SQL, id) > 0;
     }
 
     @Override
-    public List<InterviewDaysDetails> findAll(){
+    public List<InterviewDaysDetails> findAll() {
         List<InterviewDaysDetails> interviewList = null;
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-        interviewList = jdbcTemplate.query(FIND_ALL_SQL,
+        interviewList = jdbcTemplateFactory.getJdbcTemplate(dataSource).query(FIND_ALL_SQL,
                 new RowMapper<InterviewDaysDetails>() {
                     public InterviewDaysDetails mapRow(ResultSet rs, int rowNum) throws SQLException {
                         return createInterviewWithResultSet(rs);
@@ -97,18 +99,6 @@ public class InterviewDaysDetailsDAOImpl implements InterviewDaysDetailsDAO {
         interviewDaysDetails.setEndTime(rs.getString("end_time"));
         interviewDaysDetails.setAddressId(rs.getInt("address_id"));
         return interviewDaysDetails;
-    }
-
-    public String getStartTimeInterview(InterviewDaysDetails interviewDaysDetails){
-        return interviewDaysDetails.getStartTime();
-    }
-
-    public String getEndTimeInterview(InterviewDaysDetails interviewDaysDetails){
-        return interviewDaysDetails.getEndTime();
-    }
-
-    public String getDateofInterview(InterviewDaysDetails interviewDaysDetails){
-        return interviewDaysDetails.getInterviewDate();
     }
 
 }

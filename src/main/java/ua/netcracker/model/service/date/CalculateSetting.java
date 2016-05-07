@@ -28,11 +28,11 @@ public class CalculateSetting {
     public int getDay() {
 
         CourseSetting courseSetting = courseSettingService.getLastSetting();
-
-        LocalDate startInterviewDay = myDate.getDate(courseSetting.getInterviewStartDate());
-        LocalDate endInterviewDay = myDate.getDate(courseSetting.getInterviewEndDate());
-        LocalDate startRegistrationDay = myDate.getDate(courseSetting.getRegistrationStartDate());
-        LocalDate endRegistrationDay = myDate.getDate(courseSetting.getRegistrationEndDate());
+//
+//        LocalDate startInterviewDay = myDate.getDate(courseSetting.getInterviewStartDate());
+//        LocalDate endInterviewDay = myDate.getDate(courseSetting.getInterviewEndDate());
+//        LocalDate startRegistrationDay = myDate.getDate(courseSetting.getRegistrationStartDate());
+//        LocalDate endRegistrationDay = myDate.getDate(courseSetting.getRegistrationEndDate());
 
         int maxStudentForInterview = courseSetting.getStudentInterviewCount();
         int maxStudentForCourse = courseSetting.getStudentCourseCount();
@@ -47,22 +47,22 @@ public class CalculateSetting {
          * Start interview min - timeInterview [2]
          * End interview min - timeInterview [4]
          */
-        int [] timeInterview = {Integer.parseInt(myDate.getTime(interviewService.getStartTimeofInterview())[0]),
-                Integer.parseInt(myDate.getTime(interviewService.getStartTimeofInterview())[1]),
-                Integer.parseInt(myDate.getTime(interviewService.getEndTimeofInterview())[0]),
-                Integer.parseInt(myDate.getTime(interviewService.getEndTimeofInterview())[1])};
-
-        int interviewTime=0;
-        if (timeInterview [4] < timeInterview [2]) {
-            interviewTime = timeInterview [2] + timeInterview [4];
-        } else {
-            interviewTime = (timeInterview [3] - timeInterview [0]) * 60
-                    + timeInterview [2] - timeInterview [4];
-        }
-        // кількість днів інтерв'ю -1
-        Period period = startInterviewDay.until(endInterviewDay);
-
-        int studentFromDay = maxStudentForInterview/(period.getDays()+1);
+//        int [] timeInterview = {Integer.parseInt(myDate.getTime(interviewService.getStartTimeofInterview())[0]),
+//                Integer.parseInt(myDate.getTime(interviewService.getStartTimeofInterview())[1]),
+//                Integer.parseInt(myDate.getTime(interviewService.getEndTimeofInterview())[0]),
+//                Integer.parseInt(myDate.getTime(interviewService.getEndTimeofInterview())[1])};
+//
+//        int interviewTime=0;
+//        if (timeInterview [4] < timeInterview [2]) {
+//            interviewTime = timeInterview [2] + timeInterview [4];
+//        } else {
+//            interviewTime = (timeInterview [3] - timeInterview [0]) * 60
+//                    + timeInterview [2] - timeInterview [4];
+////        }
+//        // кількість днів інтерв'ю -1
+//        Period period = startInterviewDay.until(endInterviewDay);
+//
+//        int studentFromDay = maxStudentForInterview/(period.getDays()+1);
 
 //        int
 
