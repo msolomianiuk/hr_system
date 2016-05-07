@@ -37,12 +37,7 @@
                     <div class="clearfix"></div>
                 </div>
                 <div class="x_content">
-                    <div class="candidate-profile row">
-                        <%@ include file="include/profile/profileForm.jsp" %>
-                    </div>
-                    <div class="hidden">
-                        <%@ include file="include/profile/question/questionsFieldsTemplate.jsp" %>
-                    </div>
+
                 </div>
             </div>
             <!-- footer content -->
@@ -56,8 +51,6 @@
 <%@ include file="include/links/linksBootstrapProgressJs.jsp" %>
 <!-- custom css+js -->
 <%@ include file="include/links/linksCustomCSSAndJS.jsp" %>
-<!-- custom js for candidate -->
-<%@ include file="include/profile/customJsLinks.jsp" %>
 <!-- js for PNotify -->
 <%@ include file="include/links/linksPNotify.jsp" %>
 </body>

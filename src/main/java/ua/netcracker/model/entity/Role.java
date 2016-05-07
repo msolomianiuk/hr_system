@@ -7,14 +7,12 @@ package ua.netcracker.model.entity;
  * @version 1.0
  */
 public enum Role {
-    ADMIN(1, "ROLE_ADMIN"), HR(2, "ROLE_HR"), BA(3, "ROLE_BA"), DEV(4, "ROLE_DEV"), STUDENT(5, "ROLE_STUDENT");
+    ROLE_ADMIN(1), ROLE_HR(2), ROLE_BA(3), ROLE_DEV(4), ROLE_STUDENT(5);
 
     int id;
-    String role;
 
-    Role(int id, String role) {
+    Role(int id) {
         this.id = id;
-        this.role = role;
     }
 
     public int getId() {
@@ -23,7 +21,7 @@ public enum Role {
 
     @Override
     public String toString() {
-        return role;
+        return name();
     }
 
 

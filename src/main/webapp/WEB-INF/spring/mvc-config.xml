@@ -11,7 +11,7 @@
        http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
     <!-- Scan packages for the String components (@Component,@Repository, @Controller,@Service-->
-    <!--<context:component-scan base-package="ua.netcracker.hr_system"/>-->
+    <!--<context:component-scan base-package="ua.netcracker"/>-->
 
     <context:component-scan base-package="ua.netcracker.controller"/>
 

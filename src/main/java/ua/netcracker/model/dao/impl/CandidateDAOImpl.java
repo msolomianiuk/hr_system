@@ -10,100 +10,104 @@ import org.springframework.stereotype.Repository;
 import ua.netcracker.model.dao.CandidateDAO;
 import ua.netcracker.model.dao.UserDAO;
 import ua.netcracker.model.entity.Candidate;
+import ua.netcracker.model.entity.Role;
 import ua.netcracker.model.entity.User;
 
 import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Repository("candidateDao")
 public class CandidateDAOImpl implements CandidateDAO {
     private static final Logger LOGGER = Logger.getLogger(CandidateDAOImpl.class);
-
+    private static final String FIND_BY_ID = "select * from \"hr_system\".candidate WHERE id = ";
+    private static final String FIND_ALL = "SELECT u.id , u.name , u.email, u.surname, u.patronymic " +
+            "FROM \"hr_system\".users u JOIN \"hr_system\".role_users_maps rol ON rol.user_id = u.id WHERE rol.role_id=";
+    private static final String FIND_STATUS_BY_ID = "select * from \"hr_system\".status WHERE id = ";
     private User user;
 
     @Autowired
     private DataSource dataSource;
     @Autowired
     private UserDAO userDAO;
+
     @Override
-    public Candidate getCandidateByID(Integer candidateID){
+    public Candidate findCandidateById(Integer candidateId) {
         Candidate candidate = null;
-        if (candidateID > 0) {
-            try {
-                JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-                String sql = "select * from \"hr_system\".candidate WHERE id = " + candidateID;
-                 candidate= jdbcTemplate.queryForObject(sql, new RowMapper<Candidate>() {
-                            @Override
-                            public Candidate mapRow(ResultSet rs, int rowNum) throws SQLException {
-                                Candidate candidate = new Candidate();
+        try {
+            JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+            candidate = jdbcTemplate.queryForObject(FIND_BY_ID + candidateId, new RowMapper<Candidate>() {
+                        @Override
+                        public Candidate mapRow(ResultSet rs, int rowNum) {
+                            Candidate candidate = new Candidate();
+                            try {
                                 candidate.setId(rs.getInt("id"));
                                 candidate.setUserId(rs.getInt("user_id"));
                                 candidate.setStatusId(rs.getInt("status_id"));
                                 candidate.setCourseId(rs.getInt("course_id"));
-                                return candidate;
+                            } catch (SQLException e) {
+                                LOGGER.info(e.getMessage());
+                                LOGGER.debug(e.getStackTrace());
                             }
+                            return candidate;
                         }
-                );
-            } catch (Exception e) {
-                LOGGER.debug(e.getStackTrace());
-                LOGGER.info(e.getMessage());
-            }
+                    }
+            );
+        } catch (Exception e) {
+            LOGGER.error(e.getStackTrace());
         }
         return candidate;
 
     }
+
     @Override
-    public List<Candidate> getAllProfiles() {
+    public List<Candidate> findAll() {
         List list = null;
         try {
             JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-            String sql = "SELECT u.id , u.name , u.email, u.surname, u.patronymic " +
-                    "FROM \"hr_system\".users u " +
-                    "JOIN \"hr_system\".role_users_maps rol ON rol.user_id = u.id " +
-                    "WHERE rol.role_id=" + 5;
-            List<Candidate> listOfCandidate = jdbcTemplate.query(sql, new RowMapper<Candidate>() {
 
-                @Override
-                public Candidate mapRow(ResultSet rs, int rowNumber) throws SQLException {
-                    Candidate candidate = new Candidate();
-                    user = new User();
-                    user.setName(rs.getString("name"));
-                    user.setEmail(rs.getString("email"));
-                    candidate.setUser(user);
-                    return candidate;
-                }
+            List<Candidate> listCandidates = jdbcTemplate.query(FIND_ALL + Role.ROLE_STUDENT.getId(),
+                    new RowMapper<Candidate>() {
 
-            });
-            list = listOfCandidate;
+                        @Override
+                        public Candidate mapRow(ResultSet rs, int rowNumber) throws SQLException {
+                            Candidate candidate = new Candidate();
+                            user = new User();
+                            user.setName(rs.getString("name"));
+                            user.setEmail(rs.getString("email"));
+                            candidate.setUser(user);
+                            return candidate;
+                        }
+                    });
+            list = listCandidates;
         } catch (Exception e) {
-            LOGGER.debug(e.getStackTrace());
-            LOGGER.info(e.getMessage());
+            LOGGER.error(e.getStackTrace());
         }
 
         return list;
     }
+
     @Override
-    public String getStatusById(Integer statusID) {
-        if (statusID > 0) {
-            try {
-                JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-                String sql = "select * from \"hr_system\".status WHERE id = " + statusID;
-                final String status = jdbcTemplate.queryForObject(sql, new RowMapper<String>() {
-                            @Override
-                            public String mapRow(ResultSet rs, int rowNum) throws SQLException {
-                                return rs.getString("value");
-                            }
+    public String findStatusById(Integer statusId) {
+        try {
+            JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+            final String status = jdbcTemplate.queryForObject(FIND_STATUS_BY_ID + statusId, new RowMapper<String>() {
+                        @Override
+                        public String mapRow(ResultSet rs, int rowNum) throws SQLException {
+                            return rs.getString("value");
                         }
-                );
-            } catch (Exception e) {
-                LOGGER.debug(e.getStackTrace());
-                LOGGER.info(e.getMessage());
-            }
+                    }
+            );
+        } catch (Exception e) {
+            LOGGER.error(e.getStackTrace());
         }
+
         return null;
     }
+
     @Override
     public HashMap<Integer, Integer> getMarks(Integer candidateID) {
         HashMap<Integer, Integer> mark = new HashMap<>();
@@ -123,6 +127,7 @@ public class CandidateDAOImpl implements CandidateDAO {
         }
         return mark;
     }
+
     @Override
     public HashMap<Integer, String> getRecommendations(Integer ID) {
         HashMap<Integer, String> recommendation = new HashMap<>();
@@ -143,6 +148,7 @@ public class CandidateDAOImpl implements CandidateDAO {
         }
         return recommendation;
     }
+
     @Override
     public HashMap<Integer, String> getResponses(Integer ID) {
         HashMap<Integer, String> response = new HashMap<>();
@@ -156,8 +162,9 @@ public class CandidateDAOImpl implements CandidateDAO {
         }
         return response;
     }
+
     @Override
-    public int getInterviewDayDetailsByID(Integer ID) {
+    public int getInterviewDayDetailsById(Integer ID) {
         if (ID > 0) {
             try {
                 JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
@@ -178,7 +185,7 @@ public class CandidateDAOImpl implements CandidateDAO {
         return 0;
     }
 
-    public Candidate getCandidateByUserID(Integer userID) {
+    public Candidate getCandidateByUserId(Integer userID) {
         Candidate candidate = new Candidate();
         if (userID > 0) {
             try {
@@ -188,7 +195,7 @@ public class CandidateDAOImpl implements CandidateDAO {
                 for (Map row : rows) {
                     candidate.setId((int) row.get("id"));
                     candidate.setUserId((int) row.get("user_Id"));
-                   candidate.setStatusId((int) row.get("status_id"));
+                    candidate.setStatusId((int) row.get("status_id"));
                     candidate.setCourseId((int) row.get("course_id"));
                 }
             } catch (Exception e) {
@@ -205,8 +212,9 @@ public class CandidateDAOImpl implements CandidateDAO {
             try {
                 SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(dataSource).
                         withTableName("\"hr_system\".candidate").
-                        usingColumns("user_id", "status_id","course_id")
-                        .usingGeneratedKeyColumns("id");;
+                        usingColumns("user_id", "status_id", "course_id")
+                        .usingGeneratedKeyColumns("id");
+                ;
                 MapSqlParameterSource insertParameter = new MapSqlParameterSource();
                 insertParameter.addValue("user_id", candidate.getUserId());
                 insertParameter.addValue("status_id", candidate.getStatusId());
@@ -222,13 +230,6 @@ public class CandidateDAOImpl implements CandidateDAO {
         return false;
     }
 
-
-
-
-    @Override
-    public Collection<Candidate> findAll() {
-        return null;
-    }
 
     @Override
     public Candidate find(int id) {
