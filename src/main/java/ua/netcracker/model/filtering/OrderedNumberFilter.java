@@ -1,26 +1,19 @@
-package ua.netcracker.filtering;
+package ua.netcracker.model.filtering;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import ua.netcracker.model.entity.Answer;
 import ua.netcracker.model.entity.Candidate;
-import ua.netcracker.model.service.CandidateService;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 
-@Service
 public class OrderedNumberFilter implements Filter{
-
-    @Autowired
-    CandidateService candidateService;
 
     private int q_id;
 
     /**
-     * asc or desc order
+     * ascending or descending order
      */
     private boolean ascendingOrder;
 

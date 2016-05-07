@@ -1,4 +1,4 @@
-package ua.netcracker.filtering;
+package ua.netcracker.model.filtering;
 
 import ua.netcracker.model.entity.Answer;
 import ua.netcracker.model.entity.Candidate;

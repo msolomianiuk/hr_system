@@ -1,4 +1,4 @@
-package ua.netcracker.filtering;
+package ua.netcracker.model.filtering;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,12 +11,13 @@ import java.util.ArrayList;
  * Main filter - to run and apply all chosen filters
  */
 @Service
-public class Filterer implements Filter{
+public class Filterer {
 
     @Autowired
     CandidateService candidateService;
 
     private ArrayList<Filter> filters;
+    private ArrayList<Candidate> list;
 
     public Filterer() {
     }
@@ -25,8 +26,7 @@ public class Filterer implements Filter{
         this.filters = filters;
     }
 
-    @Override
-    public ArrayList<Candidate> filter(ArrayList<Candidate> list) {
+    public ArrayList<Candidate> filter() {
         if (list == null || list.isEmpty()) {
             list = (ArrayList<Candidate>) candidateService.getAllCandidates();
         }
@@ -35,6 +35,14 @@ public class Filterer implements Filter{
         }
 
         return list;
+    }
+
+    public ArrayList<Candidate> getList() {
+        return list;
+    }
+
+    public void setList(ArrayList<Candidate> list) {
+        this.list = list;
     }
 
     public void addFilter(Filter filter) {
