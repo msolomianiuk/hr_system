@@ -11,7 +11,7 @@ import java.util.ArrayList;
  * Main filter - to run and apply all chosen filters
  */
 @Service
-public class Filterer{
+public class Filterer implements Filter{
 
     @Autowired
     CandidateService candidateService;
@@ -25,6 +25,7 @@ public class Filterer{
         this.filters = filters;
     }
 
+    @Override
     public ArrayList<Candidate> filter(ArrayList<Candidate> list) {
         if (list == null || list.isEmpty()) {
             list = (ArrayList<Candidate>) candidateService.getAllCandidates();
