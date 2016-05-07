@@ -11,7 +11,7 @@ import java.util.List;
 public interface QuestionDAO extends DAO<Question> {
     Collection<Question> findQuestions(String sql);
 
-    Collection<Question> findAllMandatory();
+    Collection<Question> findAllMandatory(int courseId);
 
     int findTypeIdByValue(String value);
 
@@ -21,5 +21,5 @@ public interface QuestionDAO extends DAO<Question> {
 
     List<Question> findType();
     int findQuantityQuestions();
-    int findCurseId();
+    int findCourseId();
 }
