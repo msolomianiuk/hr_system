@@ -56,7 +56,7 @@
 <%@ include file="include/links/linksBootstrapProgressJs.jsp" %>
 <!-- custom css+js -->
 <%@ include file="include/links/linksCustomCSSAndJS.jsp" %>
-<!-- custom js -->
+<!-- custom js for candidate -->
 <%@ include file="include/profile/customJsLinks.jsp" %>
 </body>
 </html>
