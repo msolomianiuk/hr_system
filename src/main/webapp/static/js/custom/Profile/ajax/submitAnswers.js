@@ -8,11 +8,21 @@ $("button#save").on("click", function () {
         contentType: 'application/json',
         mimeType: 'application/json',
         success: function (data) {
-            // Modal "Your Answers Saved"
-            location.reload();
+            setTimeout(function () { $('.loading').hide(); }, 1000);
+            new PNotify({
+                title: 'Saved answer',
+                text: 'Your answers was successfully saved!',
+                type: 'success'
+            });
+            setTimeout(function () {location.reload(); }, 3000);
         },
         error: function (data) {
-        //  Modal "Some Problems"
+            setTimeout(function () { $('.loading').hide(); }, 1000);
+            new PNotify({
+                title: 'Some Problem',
+                text: 'There have been some problems!',
+                type: 'error'
+            });
         }
     });
 });

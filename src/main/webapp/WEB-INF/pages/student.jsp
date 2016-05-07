@@ -58,5 +58,7 @@
 <%@ include file="include/links/linksCustomCSSAndJS.jsp" %>
 <!-- custom js for candidate -->
 <%@ include file="include/profile/customJsLinks.jsp" %>
+<!-- js for PNotify -->
+<%@ include file="include/links/linksPNotify.jsp" %>
 </body>
 </html>

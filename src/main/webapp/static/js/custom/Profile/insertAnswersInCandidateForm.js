@@ -1,6 +1,6 @@
 function insertAnswersInCandidateForm(answers) {
     for (var index in answers) {
-        switch (answers[index].type) {
+        switch (answers[index].questionId) {
             case "String":
                 questionType = "text";
                 break
@@ -18,6 +18,5 @@ function insertAnswersInCandidateForm(answers) {
                 break
 
         }
-
     }
 }
