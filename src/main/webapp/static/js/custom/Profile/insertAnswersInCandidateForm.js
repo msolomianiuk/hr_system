@@ -1,14 +1,12 @@
 function insertAnswersInCandidateForm(answers) {
-    console.log(answers);
+    // console.log(answers);
     for (var index in answers) {
-            answers[index].questionId
-            var questionType;
-                questionType = $('.candidate-profile .questions .item [name="question-' + answers[index].questionId + '"]').parents('.item.form-group')[0].classList[2];
-
+        var questionType, questionInpute;
+        questionInpute = $('.candidate-profile .questions .item [name="question-' + answers[index].questionId + '"]').parents('.item.form-group')[0];
+        questionType = questionInpute.classList[2];
         switch (questionType) {
             case "text-input-type" :
                 $('.candidate-profile .questions .item input[name="question-' + answers[index].questionId + '"]').val(answers[index].value);
-                
                 break
             case "int-input-type":
                 $('.candidate-profile .questions .item input[name="question-' + answers[index].questionId + '"]').val(parseInt(answers[index].value));
