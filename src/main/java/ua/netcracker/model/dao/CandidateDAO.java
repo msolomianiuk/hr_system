@@ -3,21 +3,17 @@ package ua.netcracker.model.dao;
 
 import ua.netcracker.model.entity.Candidate;
 
-import java.util.HashMap;
 import java.util.List;
 
 /**
  * Created by Alex on 26.04.2016.
  */
 public interface CandidateDAO extends DAO<Candidate> {
-    Candidate findCandidateById(Integer candidateID);
+    Candidate findCandidateById(Integer candidateId);
     List<Candidate> findAll();
-    String findStatusById(Integer statusID);
-    HashMap<Integer, Integer> getMarks(Integer candidateID);
-    HashMap<Integer, String> getRecommendations(Integer ID);
-    HashMap<Integer, String> getResponses(Integer ID);
-    int getInterviewDayDetailsById(Integer ID);
-    Candidate getCandidateByUserId(Integer userID);
+    String findStatusById(Integer statusId);
 
-    boolean insertCandidate(Candidate candidate);
+    Candidate findCandidateByUserId(Integer userId);
+
+    boolean saveCandidate(Candidate candidate);
 }
