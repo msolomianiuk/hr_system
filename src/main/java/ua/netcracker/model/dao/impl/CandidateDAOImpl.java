@@ -8,7 +8,6 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import ua.netcracker.model.dao.CandidateDAO;
-import ua.netcracker.model.dao.UserDAO;
 import ua.netcracker.model.entity.Candidate;
 import ua.netcracker.model.entity.Role;
 import ua.netcracker.model.entity.User;
@@ -16,7 +15,6 @@ import ua.netcracker.model.entity.User;
 import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -31,8 +29,7 @@ public class CandidateDAOImpl implements CandidateDAO {
 
     @Autowired
     private DataSource dataSource;
-    @Autowired
-    private UserDAO userDAO;
+
 
     @Override
     public Candidate findCandidateById(Integer candidateId) {
@@ -92,9 +89,10 @@ public class CandidateDAOImpl implements CandidateDAO {
 
     @Override
     public String findStatusById(Integer statusId) {
+        String status = null;
         try {
             JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-            final String status = jdbcTemplate.queryForObject(FIND_STATUS_BY_ID + statusId, new RowMapper<String>() {
+            status = jdbcTemplate.queryForObject(FIND_STATUS_BY_ID + statusId, new RowMapper<String>() {
                         @Override
                         public String mapRow(ResultSet rs, int rowNum) throws SQLException {
                             return rs.getString("value");
@@ -105,92 +103,15 @@ public class CandidateDAOImpl implements CandidateDAO {
             LOGGER.error(e.getStackTrace());
         }
 
-        return null;
+        return status;
     }
 
-    @Override
-    public HashMap<Integer, Integer> getMarks(Integer candidateID) {
-        HashMap<Integer, Integer> mark = new HashMap<>();
-        if (candidateID > 0) {
-            try {
-                JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-                String sql = "Select mark, id_interviewer from \"hr_system\".interview_result " +
-                        "Where candidate_id = " + candidateID;
-                List<Map<String, Object>> rows = jdbcTemplate.queryForList(sql);
-                for (Map row : rows) {
-                    mark.put((int) row.get("interviewer_id"), (int) row.get("mark"));
-                }
-            } catch (Exception e) {
-                LOGGER.debug(e.getStackTrace());
-                LOGGER.info(e.getMessage());
-            }
-        }
-        return mark;
-    }
-
-    @Override
-    public HashMap<Integer, String> getRecommendations(Integer ID) {
-        HashMap<Integer, String> recommendation = new HashMap<>();
-        if (ID > 0) {
-            try {
-                JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-                String sql = "Select r.value, i.interviewer_id from \"hr_system\".interview_result i " +
-                        "Inner JOIN \"hr_system\".recommendation r " +
-                        "ON i.recommendation_id = r.id Where i.candidate_id = " + ID;
-                List<Map<String, Object>> rows = jdbcTemplate.queryForList(sql);
-                for (Map row : rows) {
-                    recommendation.put((int) row.get("interviewer_id"), (String) row.get("value"));
-                }
-            } catch (Exception e) {
-                LOGGER.debug(e.getStackTrace());
-                LOGGER.info(e.getMessage());
-            }
-        }
-        return recommendation;
-    }
-
-    @Override
-    public HashMap<Integer, String> getResponses(Integer ID) {
-        HashMap<Integer, String> response = new HashMap<>();
-        if (ID > 0) {
-            JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-            String sql = "Select response from \"hr_system\".interview_result Where i.candidate_id = " + ID;
-            List<Map<String, Object>> rows = jdbcTemplate.queryForList(sql);
-            for (Map row : rows) {
-                response.put((int) row.get("interviewer_id"), (String) row.get("value"));
-            }
-        }
-        return response;
-    }
-
-    @Override
-    public int getInterviewDayDetailsById(Integer ID) {
-        if (ID > 0) {
-            try {
-                JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-                String sql = "Select interview_days_details from \"hr_system\".candidate Where id = " + ID;
-                Integer interviewDaysDetails = jdbcTemplate.queryForObject(sql, new RowMapper<Integer>() {
-                            @Override
-                            public Integer mapRow(ResultSet rs, int rowNum) throws SQLException {
-                                return rs.getInt("interview_days_details");
-                            }
-                        }
-                );
-                return interviewDaysDetails;
-            } catch (Exception e) {
-                LOGGER.debug(e.getStackTrace());
-                LOGGER.info(e.getMessage());
-            }
-        }
-        return 0;
-    }
-
-    public Candidate getCandidateByUserId(Integer userID) {
+    public Candidate findCandidateByUserId(Integer userId) {
         Candidate candidate = new Candidate();
-        if (userID > 0) {
+        if (userId > 0) {
             try {
                 JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-                String sql = "Select * from \"hr_system\".candidate Where user_id = " + userID;
+                String sql = "Select * from \"hr_system\".candidate Where user_id = " + userId;
                 List<Map<String, Object>> rows = jdbcTemplate.queryForList(sql);
                 for (Map row : rows) {
                     candidate.setId((int) row.get("id"));
@@ -207,7 +128,7 @@ public class CandidateDAOImpl implements CandidateDAO {
     }
 
 
-    public boolean insertCandidate(Candidate candidate) {
+    public boolean saveCandidate(Candidate candidate) {
         if (candidate != null) {
             try {
                 SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(dataSource).
