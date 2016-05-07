@@ -7,7 +7,7 @@ import java.util.Map;
  */
 public interface InterviewResultDAO extends DAO {
     Map<Integer, Integer> findMarks(Integer candidateId);
-    Map<Integer, String> getRecommendations(Integer candidateId);
-    Map<Integer, String> getResponses(Integer candidateId);
+    Map<Integer, String> findRecommendations(Integer candidateId);
+    Map<Integer, String> findComments(Integer candidateId);
     int getInterviewDayDetailsById(Integer candidateId);
 }

@@ -5,12 +5,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ua.netcracker.model.dao.AnswersDAO;
 import ua.netcracker.model.dao.CandidateDAO;
+import ua.netcracker.model.dao.InterviewResultDAO;
+import ua.netcracker.model.dao.QuestionDAO;
 import ua.netcracker.model.entity.Answer;
 import ua.netcracker.model.entity.Candidate;
 import ua.netcracker.model.service.CandidateService;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Alyona Bilous 05/05/2016
@@ -19,12 +22,14 @@ import java.util.List;
 public class CandidateServiceImpl implements CandidateService {
 
     private static final Logger LOGGER = Logger.getLogger(CandidateServiceImpl.class);
-
+    @Autowired
+    private QuestionDAO questionDAO;
     @Autowired
     private CandidateDAO candidateDAO;
     @Autowired
     private AnswersDAO answersDAO;
-
+    @Autowired
+    private InterviewResultDAO interviewResultDAO;
 
     @Override
     public Candidate getCandidateById(Integer id) {
@@ -32,15 +37,39 @@ public class CandidateServiceImpl implements CandidateService {
     }
 
     @Override
-    public List<Candidate> getAll() {
+    public Candidate getCandidateByUserId(Integer userId) {
+        return candidateDAO.findCandidateByUserId(userId);
+    }
+
+    @Override
+    public List<Candidate> getAllCandidates() {
         return candidateDAO.findAll();
     }
 
     @Override
-    public String getStatusById(Integer statusID) {
-        return candidateDAO.findStatusById(statusID);
+    public String getStatusById(Integer statusId) {
+        return candidateDAO.findStatusById(statusId);
     }
 
+    @Override
+    public Map<Integer, Integer> getMarks(Integer candidateId) {
+        return interviewResultDAO.findMarks(candidateId);
+    }
+
+    @Override
+    public Map<Integer, String> getRecommendations(Integer candidateId) {
+        return interviewResultDAO.findRecommendations(candidateId);
+    }
+
+    @Override
+    public Map<Integer, String> getComments(Integer candidateId) {
+        return interviewResultDAO.findComments(candidateId);
+    }
+
+    @Override
+    public int getInterviewDayDetailsById(Integer candidateId) {
+        return interviewResultDAO.getInterviewDayDetailsById(candidateId);
+    }
 
     @Override
     public Collection<Answer> getAllCandidateAnswers(Candidate candidate) {
@@ -49,7 +78,7 @@ public class CandidateServiceImpl implements CandidateService {
 
     @Override
     public boolean saveCandidate(Candidate candidate) {
-        return candidateDAO.insertCandidate(candidate);
+        return candidateDAO.saveCandidate(candidate);
     }
 
     @Override
