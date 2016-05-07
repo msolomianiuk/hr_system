@@ -7,6 +7,7 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@page session="true" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -15,6 +16,10 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <!-- Meta, title, CSS, favicons, etc. -->
     <meta charset="utf-8">
+    <sec:csrfMetaTags />
+    <meta name="_csrf" content="${_csrf.token}"/>
+    <!-- default header name is X-CSRF-TOKEN -->
+    <meta name="_csrf_header" content="${_csrf.headerName}"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -268,6 +273,37 @@
 
 
                             <div class="panel panel-success">
+                                <div class="panel-heading" role="button" data-toggle="collapse" href="#main-setting4"
+                                     aria-expanded="true" aria-controls="main-setting4">
+                                    <h3 class="panel-title">Anketa</h3>
+                                </div>
+                                <div class="panel-body" id="main-setting5">
+                                    <div id="Anketa">
+                                        <div class="col-md-12 col-lg-12 col-sm-12 col-xs-12">
+                                           <select id="YearAnket">
+                                               <option selected>Choise for wich Year you want see Anket</option>
+                                           </select>
+                                        </div>
+                                        <div class="col-md-12 col-lg-12 col-sm-12 col-xs-12">
+                                            <div id="LastYears">
+
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12 col-lg-12 col-sm-12 col-xs-12">
+                                                <div id="ThisYears">
+
+                                                </div>
+                                         </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 col-lg-12 col-sm-12 col-xs-12">
+                                        <button type="button" id="ButtonChangeAnketa" class="btn btn-success">Add Personal</button>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="panel panel-success">
                                 <div class="panel-heading" role="button" data-toggle="collapse" href="#main-setting3"
                                      aria-expanded="true"
                                      aria-controls="main-setting3">
@@ -314,12 +350,59 @@
                             <div class="panel panel-success">
                                 <div class="panel-heading" role="button" data-toggle="collapse" href="#main-setting4"
                                      aria-expanded="true" aria-controls="main-setting4">
-                                    <h3 class="panel-title">Main Setting</h3>
+                                    <h3 class="panel-title">Interview Days Details</h3>
                                 </div>
-                                <div class="panel-body" id="main-setting4">
-                                    Some Main Settings
+                                <div class="panel-body" id="Interview_Days_Details-setting">
+                                    <div class="col-md-4 col-lg-4 col-sm-12 col-xs-12">
+                                        <p>Select please day for interview</p>
+                                        <select id="DaysForInterview">
+                                            <option selected>Select Day</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4 col-lg-4 col-sm-12 col-xs-12">
+                                        <div class="form-group">
+                                            <label for="TimeStart">Time start interview:</label>
+                                            <input type="text" name="TimeStart" class="form-control"
+                                                   id="TimeStart" placeholder="Nothing detected">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="ForRoom">Для чего то тоже</label>
+                                            <input type="text" name="ForRoom" class="form-control"
+                                                   id="ForRoom" placeholder="Nothing detected">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="TimeEnd">Time end interview:</label>
+                                            <input type="text" name="TimeEnd" class="form-control"
+                                                   id="TimeEnd" placeholder="Nothing detected">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 col-lg-4 col-sm-12 col-xs-12">
+                                        <div class="form-group">
+                                            <label for="PersonalOne">Для чего то тоже</label>
+                                            <input type="text" name="PersonalOne" class="form-control"
+                                                   id="PersonalOne" placeholder="Nothing detected">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="PersonalTwo">Time end interview:</label>
+                                            <input type="text" name="PersonalTwo" class="form-control"
+                                                   id="PersonalTwo" placeholder="Nothing detected">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 col-lg-12 col-sm-12 col-xs-12">
+                                        <button type="button" id="AddInterviewDays" class="btn btn-success">Add Interview days details</button>
+                                    </div>
                                 </div>
                             </div>
+
+                        <div class="panel panel-success">
+                            <div class="panel-heading" role="button" data-toggle="collapse" href="#main-setting4"
+                                 aria-expanded="true" aria-controls="main-setting4">
+                                <h3 class="panel-title">Main Setting</h3>
+                            </div>
+                            <div class="panel-body" id="main-setting4">
+                                Some Main Settings
+                            </div>
+                        </div>
 
 
                         </div>

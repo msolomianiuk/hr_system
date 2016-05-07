@@ -4,10 +4,17 @@
 
 $(document).ready(function () {
 
+    location_origin = "http://localhost:8080/hr_system-1.0-SNAPSHOT"
+
+    var token = $("meta[name='_csrf']").attr("content");
+    var header = $("meta[name='_csrf_header']").attr("content");
+    $(document).ajaxSend(function(e, xhr, options) {
+        xhr.setRequestHeader(header, token);
+    });
 
     $.ajax({
-        url: "http://localhost:8080/hr_system-1.0-SNAPSHOT/getCurseId",
-        type: "GET",
+        url: location_origin+"/getCurseId",
+        type: "POST",
         dataType: "json",
         contentType: 'application/json',
         mimeType: 'application/json',
@@ -18,12 +25,9 @@ $(document).ready(function () {
     });
 
     $.ajax({
-        url: "http://localhost:8080/hr_system-1.0-SNAPSHOT/getQuantityQuestions",
+        url: location_origin +"/getQuantityQuestions",
         type: "GET",
-        //   contentType : "application/json",
-        //beforeSend: funcbefor,
         dataType: "json",
-        // data:{'id':id},
         contentType: 'application/json',
         mimeType: 'application/json',
         success: getQuantityQuestions,
@@ -44,8 +48,8 @@ $(document).ready(function () {
 
 
         $.ajax({
-            url: "http://localhost:8080/hr_system-1.0-SNAPSHOT/setQuestion",
-            type: "GET",
+            url: location_origin+"/setQuestion",
+            type: "POST",
             dataType: "json",
             data: {
                 'caption': caption,
@@ -78,9 +82,8 @@ $(document).ready(function () {
         var orderNumber = QuantityQuestions+1;
 
         $.ajax({
-            url: "http://localhost:8080/hr_system-1.0-SNAPSHOT/setQuestion",
-            type: "GET",
-            dataType: "json",
+            url: location_origin+"/setQuestion",
+            type: "POST",
             data: {
                 'caption': caption,
                 'curse_id': curse_id,
@@ -89,8 +92,7 @@ $(document).ready(function () {
                 'isMandatory': isMandatory,
                 'orderNumber': orderNumber
             },
-            contentType: 'application/json',
-            mimeType: 'application/json',
+            dataType: "json",
             success: setQuestionWithAdd,
             error: function (data) {
                 console.log(data);
@@ -101,7 +103,7 @@ $(document).ready(function () {
 
 
     $.ajax({
-        url: "http://localhost:8080/hr_system-1.0-SNAPSHOT/admin/up_setting",
+        url: location_origin+"/admin/up_setting",
         type: "GET",
         //   contentType : "application/json",
         //beforeSend: funcbefor,
@@ -115,7 +117,7 @@ $(document).ready(function () {
         }
     });
     $.ajax({
-        url: "http://localhost:8080/hr_system-1.0-SNAPSHOT/getTypeOfQuestions",
+        url: location_origin+"/getTypeOfQuestions",
         type: "GET",
         //   contentType : "application/json",
         //beforeSend: funcbefor,
@@ -140,7 +142,7 @@ $(document).ready(function () {
 
 
         $.ajax({
-            url: "http://localhost:8080/hr_system-1.0-SNAPSHOT/admin/admin_setting",
+            url: location_origin+"/admin/admin_setting",
             type: "GET",
             //   contentType : "application/json",
             //beforeSend: funcbefor,
@@ -190,7 +192,7 @@ $(document).ready(function () {
         }
 
         $.ajax({
-            url: "http://localhost:8080/hr_system-1.0-SNAPSHOT/new_personal",
+            url: location_origin+"/new_personal",
             type: "GET",
             //   contentType : "application/json",
             //beforeSend: funcbefor,
@@ -286,7 +288,6 @@ function getQuantityQuestions(data){
 
 function getCurseID(data){
     CurseID = data;
-    alert(CurseID);
 }
 
 function setQuestionWithAdd (data){
@@ -296,4 +297,6 @@ function setQuestionWithAdd (data){
 function setQuestionWithoutAdd (data){
     alert("Set with ADD Question");
 }
+
+
 
