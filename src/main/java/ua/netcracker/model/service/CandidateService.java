@@ -6,7 +6,6 @@ import ua.netcracker.model.entity.Candidate;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author Alyona Bilous 05/05/2016
@@ -33,9 +32,6 @@ public interface CandidateService {
 
     Collection<Answer> getAllCandidateAnswers(Candidate candidate);
 
-    Map<Integer, Object> convert(Collection<Answer> listAnswers);
-
-    Collection<Answer> convertBack(Map<Integer, Object> mapAnswers);
 
     boolean saveCandidate(Candidate candidate);
 

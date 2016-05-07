@@ -15,8 +15,10 @@ import org.springframework.web.bind.annotation.RestController;
 import ua.netcracker.model.entity.Answer;
 import ua.netcracker.model.entity.AnswerString;
 import ua.netcracker.model.entity.Candidate;
+import ua.netcracker.model.entity.Status;
 import ua.netcracker.model.securiry.UserAuthenticationDetails;
 import ua.netcracker.model.service.CandidateService;
+import ua.netcracker.model.service.CourseSettingService;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -33,6 +35,8 @@ public class AnswersRestController {
     private CandidateService candidateService;
     @Autowired
     private Candidate candidate;
+    @Autowired
+    private CourseSettingService courseSettingService;
 
     @RequestMapping(value = "/service/saveAnswers", method = RequestMethod.GET)
     public ResponseEntity<Candidate> setAnswers(@RequestParam String answersJsonString) {
@@ -52,17 +56,17 @@ public class AnswersRestController {
                 }
                 continue;
             }
-                Answer answer = new AnswerString();
-                answer.setQuestionId(Integer.valueOf(key.replace("question-", "")));
-                answer.setValue((String) obj.get(key));
-                listAnswers.add(answer);
+            Answer answer = new AnswerString();
+            answer.setQuestionId(Integer.valueOf(key.replace("question-", "")));
+            answer.setValue((String) obj.get(key));
+            listAnswers.add(answer);
 
         }
         candidate = getCurrentCandidate();
         if (candidate.getId() == 0) {
             candidate.setUserId(userId);
-            candidate.setStatusId(1);
-            candidate.setCourseId(1);
+            candidate.setStatusId(Status.NEW.getId());
+            candidate.setCourseId(courseSettingService.getLastSetting().getId());
             candidateService.saveCandidate(candidate);
             candidate = candidateService.getCandidateByUserID(userId);
         }
