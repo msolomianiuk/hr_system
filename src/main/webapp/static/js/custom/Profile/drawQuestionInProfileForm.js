@@ -22,6 +22,7 @@ function drawQuestionForm(questionsList) {
 
         }
         questionInput = $(".hidden ." + questionType + "-input-type").clone();
+        questionInput.attr('q-type', questionType + "-input-type");
         questionInput.find("label.caption").html(questionsList[index].caption);
         questionInput.find("label.caption").attr("for", "question-" + questionsList[index].id);
         questionInput.find("input").attr("name", "question-" + questionsList[index].id);
