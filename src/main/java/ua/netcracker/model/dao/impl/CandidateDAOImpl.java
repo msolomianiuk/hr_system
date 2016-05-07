@@ -15,12 +15,16 @@ import ua.netcracker.model.entity.User;
 import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
 @Repository("candidateDao")
 public class CandidateDAOImpl implements CandidateDAO {
     private static final Logger LOGGER = Logger.getLogger(CandidateDAOImpl.class);
+    private static final String FIND_INTERVIEW_DAYS_DETAILS_ID =
+            "Select interview_days_details from \"hr_system\".candidate where id = ";
+
     private static final String FIND_BY_ID = "select * from \"hr_system\".candidate WHERE id = ";
     private static final String FIND_ALL = "SELECT u.id , u.name , u.email, u.surname, u.patronymic " +
             "FROM \"hr_system\".users u JOIN \"hr_system\".role_users_maps rol ON rol.user_id = u.id WHERE rol.role_id=";
@@ -29,6 +33,26 @@ public class CandidateDAOImpl implements CandidateDAO {
 
     @Autowired
     private DataSource dataSource;
+
+    @Override
+    public int getInterviewDayDetailsById(Integer candidateId) {
+        Integer interviewDaysDetails = null;
+        try {
+            JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+            interviewDaysDetails = jdbcTemplate.queryForObject(FIND_INTERVIEW_DAYS_DETAILS_ID + candidateId,
+                    new RowMapper<Integer>() {
+                        @Override
+                        public Integer mapRow(ResultSet rs, int rowNum) throws SQLException {
+                            return rs.getInt("interview_days_details");
+                        }
+                    }
+            );
+        } catch (Exception e) {
+            LOGGER.debug(e.getStackTrace());
+            LOGGER.info(e.getMessage());
+        }
+        return interviewDaysDetails;
+    }
 
 
     @Override
@@ -61,7 +85,7 @@ public class CandidateDAOImpl implements CandidateDAO {
     }
 
     @Override
-    public List<Candidate> findAll() {
+    public Collection<Candidate> findAll() {
         List list = null;
         try {
             JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
