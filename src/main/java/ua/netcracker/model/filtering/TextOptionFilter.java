@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 /**
- * filter for questions with multiple options (checkbox)
+ * filter for questions with one or multiple text options (checkbox, combobox, text)
  */
 public class TextOptionFilter implements Filter{
 
