@@ -60,12 +60,12 @@ public class GetTypeOfQuestionsRestController {
         return new ResponseEntity(question, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/getCurseId", method = RequestMethod.GET)
-    public ResponseEntity<Integer> getCurseId() {
+    @RequestMapping(value = "/getCourseId", method = RequestMethod.GET)
+    public ResponseEntity<Integer> getCourseId() {
 
-        int curseID = questionServiceImpl.getCurseId();
+        int courseID = questionServiceImpl.getCourseId();
 
-        return new ResponseEntity(curseID, HttpStatus.OK);
+        return new ResponseEntity(courseID, HttpStatus.OK);
     }
 
 }

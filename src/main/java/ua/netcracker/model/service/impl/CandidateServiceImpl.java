@@ -5,13 +5,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ua.netcracker.model.dao.AnswersDAO;
 import ua.netcracker.model.dao.CandidateDAO;
-import ua.netcracker.model.dao.QuestionDAO;
 import ua.netcracker.model.entity.Answer;
 import ua.netcracker.model.entity.Candidate;
 import ua.netcracker.model.service.CandidateService;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -21,21 +19,16 @@ import java.util.List;
 public class CandidateServiceImpl implements CandidateService {
 
     private static final Logger LOGGER = Logger.getLogger(CandidateServiceImpl.class);
-    @Autowired
-    private QuestionDAO questionDAO;
+
     @Autowired
     private CandidateDAO candidateDAO;
     @Autowired
     private AnswersDAO answersDAO;
 
+
     @Override
     public Candidate getCandidateById(Integer id) {
         return candidateDAO.findCandidateById(id);
-    }
-
-    @Override
-    public Candidate getCandidateByUserId(Integer userId) {
-        return candidateDAO.getCandidateByUserId(userId);
     }
 
     @Override
@@ -44,29 +37,10 @@ public class CandidateServiceImpl implements CandidateService {
     }
 
     @Override
-    public String getStatusById(Integer statusId) {
-        return candidateDAO.findStatusById(statusId);
+    public String getStatusById(Integer statusID) {
+        return candidateDAO.findStatusById(statusID);
     }
 
-    @Override
-    public HashMap<Integer, Integer> getMarks(Integer candidateId) {
-        return candidateDAO.getMarks(candidateId);
-    }
-
-    @Override
-    public HashMap<Integer, String> getRecommendations(Integer id) {
-        return candidateDAO.getRecommendations(id);
-    }
-
-    @Override
-    public HashMap<Integer, String> getResponses(Integer id) {
-        return candidateDAO.getResponses(id);
-    }
-
-    @Override
-    public int getInterviewDayDetailsById(Integer id) {
-        return candidateDAO.getInterviewDayDetailsById(id);
-    }
 
     @Override
     public Collection<Answer> getAllCandidateAnswers(Candidate candidate) {

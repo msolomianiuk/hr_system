@@ -19,8 +19,8 @@ public class QuestionServiceImpl implements QuestionService {
     private QuestionDAOImpl questionDao;
 
     @Override
-    public Collection<Question> getAllMandatory() {
-        return questionDao.findAllMandatory();
+    public Collection<Question> getAllMandatory(int courseId) {
+        return questionDao.findAllMandatory(courseId);
     }
 
     @Override
@@ -54,8 +54,8 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public int getCurseId() {
-        return questionDao.findCurseId();
+    public int getCourseId() {
+        return questionDao.findCourseId();
     }
 
     @Override
