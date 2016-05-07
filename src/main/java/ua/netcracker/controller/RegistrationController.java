@@ -25,7 +25,7 @@ public class RegistrationController {
 
     @Autowired
     private RegistrationService registrationService;
-    
+
     @RequestMapping(value = "/registration", method = RequestMethod.GET)
     public String registerPage(ModelMap model,
                                @RequestParam(value = "error", required = false) String error,
