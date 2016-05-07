@@ -1,5 +1,6 @@
 package ua.netcracker.model.service.date;
 
+import org.apache.log4j.Logger;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
@@ -13,9 +14,18 @@ import java.time.LocalDate;
 @Scope("prototype")
 public class DateService {
 
+    private static final Logger LOGGER = Logger.getLogger(DateService.class);
+
     public LocalDate getDate(String s) {
-        String[] date = s.split(" ");
-        LocalDate localDate = LocalDate.of(Integer.valueOf(date[0]), Integer.valueOf(date[1]) - 1, Integer.valueOf(date[2]));
+        LocalDate localDate = null;
+
+        try {
+            String[] date = s.split(" ");
+            localDate = LocalDate.of(Integer.valueOf(date[0]), Integer.valueOf(date[1]), Integer.valueOf(date[2]));
+            return localDate;
+        } catch (Exception e){
+            LOGGER.error(e);
+        }
         return localDate;
     }
 
@@ -44,6 +54,9 @@ public class DateService {
         return dateIsValid;
     }
 
-//    public int get
+    public String [] getTime(String time){
+        String[] timePars = time.split(":");
+        return timePars;
+    }
 
 }

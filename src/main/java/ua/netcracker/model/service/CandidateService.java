@@ -1,6 +1,5 @@
 package ua.netcracker.model.service;
 
-import org.springframework.stereotype.Service;
 import ua.netcracker.model.entity.Candidate;
 
 import java.util.HashMap;
@@ -10,7 +9,6 @@ import java.util.Map;
 /**
  * @author Alyona Bilous 05/05/2016
  */
-@Service
 public interface CandidateService {
 
 

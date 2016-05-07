@@ -48,26 +48,99 @@ public class CourseSettingServiceImpl implements CourseSettingService {
                                           String interviewTimeForStudent,
                                           String studentForInterviewCount,
                                           String studentForCourseCount) {
+        return validDate(registrationStartDate, registrationEndDate,
+                interviewStartDate, interviewEndDate, courseStartDate,
+                interviewTimeForStudent, studentForInterviewCount, studentForCourseCount);
+    }
 
-        if (dateValidator(registrationStartDate)||dateValidator(registrationEndDate)||
-                dateValidator(interviewStartDate)||dateValidator(interviewEndDate)||
-                dateValidator(courseStartDate)) {
+    private CourseSetting validDate(String registrationStartDate, String registrationEndDate, String interviewStartDate, String interviewEndDate, String courseStartDate, String interviewTimeForStudent, String studentForInterviewCount, String studentForCourseCount) {
+        try {
+            if (dateValidator(registrationStartDate) && dateValidator(registrationEndDate) &&
+                    dateValidator(interviewStartDate) && dateValidator(interviewEndDate) &&
+                    dateValidator(courseStartDate)) {
+                if (interviewEndDate.equals(interviewStartDate) || registrationEndDate.equals(registrationStartDate) ||
+                        interviewEndDate.equals(registrationEndDate) || interviewStartDate.equals(registrationStartDate) ||
+                        interviewStartDate.equals(registrationStartDate) || interviewStartDate.equals(registrationEndDate) ||
+                        courseStartDate.equals(registrationStartDate) || courseStartDate.equals(registrationEndDate) ||
+                        courseStartDate.equals(interviewStartDate) || courseStartDate.equals(interviewEndDate)
+                        ) {
+                    return null;
+                } else {
+                    if (dateService.getDate(registrationEndDate).getYear() <
+                            dateService.getDate(registrationStartDate).getYear()) {
+                        return null;
+                    } else {
+                        if (dateService.getDate(interviewEndDate).getYear() <
+                                dateService.getDate(interviewStartDate).getYear() ||
+                                dateService.getDate(courseStartDate).getYear() <
+                                        dateService.getDate(interviewEndDate).getYear() ||
+                                dateService.getDate(interviewStartDate).getYear() <
+                                        dateService.getDate(registrationEndDate).getYear()
+                                ) {
+                            return null;
+                        } else {
+                            if (dateService.getDate(interviewEndDate).getYear() >
+                                    dateService.getDate(interviewStartDate).getYear() ||
+                                    dateService.getDate(courseStartDate).getYear() >
+                                            dateService.getDate(interviewEndDate).getYear()
+                                    ) {
+                                return getCourseSetting(registrationStartDate, registrationEndDate,
+                                        interviewStartDate, interviewEndDate,
+                                        courseStartDate, interviewTimeForStudent,
+                                        studentForInterviewCount, studentForCourseCount);
+                            } else {
+                                if (dateService.getDate(interviewEndDate).getMonthValue() <
+                                        dateService.getDate(interviewStartDate).getMonthValue() ||
+                                        dateService.getDate(registrationEndDate).getMonthValue() <
+                                                dateService.getDate(registrationStartDate).getMonthValue() ||
+                                        dateService.getDate(interviewStartDate).getMonthValue() <
+                                                dateService.getDate(registrationEndDate).getMonthValue() ||
+                                        dateService.getDate(courseStartDate).getMonthValue() <
+                                                dateService.getDate(interviewEndDate).getMonthValue()
+                                        ) {
+                                    return null;
+                                } else {
+                                    if (dateService.getDate(interviewEndDate).getDayOfMonth() <
+                                            dateService.getDate(interviewStartDate).getDayOfMonth() ||
+                                            dateService.getDate(registrationEndDate).getDayOfMonth() <
+                                                    dateService.getDate(registrationStartDate).getDayOfMonth() ||
+                                            dateService.getDate(courseStartDate).getDayOfMonth() <
+                                                    dateService.getDate(interviewEndDate).getDayOfMonth()
 
-            CourseSetting courseSetting = new CourseSetting();
-            courseSetting.setId(dateService.getCurrentYear() * 100 + dateService.getCurrentMonth());
-
-            courseSetting.setRegistrationStartDate(registrationStartDate);
-            courseSetting.setInterviewEndDate(interviewEndDate);
-            courseSetting.setInterviewStartDate(interviewStartDate);
-            courseSetting.setRegistrationEndDate(registrationEndDate);
-            courseSetting.setCourseStartDate(courseStartDate);
-
-            courseSetting.setInterviewTime(Integer.parseInt(interviewTimeForStudent));
-            courseSetting.setStudentCourseCount(Integer.parseInt(studentForCourseCount));
-            courseSetting.setStudentInterviewCount(Integer.parseInt(studentForInterviewCount));
-            return courseSetting;
+                                            ) {
+                                        return null;
+                                    } else {
+                                        return getCourseSetting(registrationStartDate, registrationEndDate,
+                                                interviewStartDate, interviewEndDate,
+                                                courseStartDate, interviewTimeForStudent,
+                                                studentForInterviewCount, studentForCourseCount);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (Exception e){
+            LOGGER.error(e);
         }
         return null;
+    }
+
+    private CourseSetting getCourseSetting(String registrationStartDate, String registrationEndDate, String interviewStartDate, String interviewEndDate, String courseStartDate, String interviewTimeForStudent, String studentForInterviewCount, String studentForCourseCount) {
+        CourseSetting courseSetting = new CourseSetting();
+        courseSetting.setId(dateService.getCurrentYear() * 100 + dateService.getCurrentMonth());
+
+        courseSetting.setRegistrationStartDate(registrationStartDate);
+        courseSetting.setInterviewEndDate(interviewEndDate);
+        courseSetting.setInterviewStartDate(interviewStartDate);
+        courseSetting.setRegistrationEndDate(registrationEndDate);
+        courseSetting.setCourseStartDate(courseStartDate);
+
+        courseSetting.setInterviewTime(Integer.parseInt(interviewTimeForStudent));
+        courseSetting.setStudentCourseCount(Integer.parseInt(studentForCourseCount));
+        courseSetting.setStudentInterviewCount(Integer.parseInt(studentForInterviewCount));
+        return courseSetting;
     }
 
     @Override
@@ -78,7 +151,7 @@ public class CourseSettingServiceImpl implements CourseSettingService {
     @Override
     public void saveOrUpdate(CourseSetting courseSetting) {
         if (findById(courseSetting.getId()) == null) {
-            courseSettingDAO.insert(courseSetting);
+            insert(courseSetting);
         } else {
             courseSettingDAO.update(courseSetting);
         }
@@ -94,7 +167,7 @@ public class CourseSettingServiceImpl implements CourseSettingService {
     }
 
     public boolean dateValidator(String date) {
-        String [] d = date.split(" ");
+        String[] d = date.split(" ");
         return dateService.isDateValid(d[0], d[1], d[2]);
     }
 
