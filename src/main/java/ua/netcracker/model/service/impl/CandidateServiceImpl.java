@@ -97,8 +97,7 @@ public class CandidateServiceImpl implements CandidateService {
     @Override
     public void saveOrUpdate(Candidate candidate) {
         try {
-            answersDAO.deleteAnswers(candidate.getId());
-            answersDAO.saveAll(candidate);
+            answersDAO.update(candidate);
         } catch (Exception e) {
             LOGGER.debug(e.getStackTrace());
             LOGGER.info(e.getMessage());
