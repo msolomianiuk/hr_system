@@ -38,7 +38,9 @@ public interface CandidateService {
 
     boolean saveCandidate(Candidate candidate);
 
-    void saveAnswers(Candidate candidate);
+    Candidate saveAnswers(String answersJsonString);
+
+    Candidate getCurrentCandidate();
 
     void deleteAnswers(Candidate candidate);
 
