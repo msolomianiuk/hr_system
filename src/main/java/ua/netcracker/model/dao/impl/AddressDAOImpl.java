@@ -28,7 +28,7 @@ public class AddressDAOImpl implements AddressDAO {
     private static final String REMOVE_SQL = "DELETE FROM \"hr_system\".address WHERE id=?";
     private static final String FIND_ALL_SQL = "SELECT id, address, room_capacity FROM \"hr_system\".address ORDER BY id";
     private static final String INSERT_SQL = "INSERT INTO \"hr_system\".address(address, room_capacity) VALUES (?, ?)";
-    private static final String FIND_SQL = "";
+    private static final String FIND_SQL = "SELECT id, address, room_capacity FROM \"hr_system\".address WHERE id = ?";
 
     @Autowired
     private DataSource dataSource;
@@ -38,7 +38,15 @@ public class AddressDAOImpl implements AddressDAO {
 
     @Override
     public Address find(int id) {
-        return null;
+        Address address = null;
+        address = jdbcTemplateFactory.getJdbcTemplate(dataSource).queryForObject(FIND_SQL,
+                new RowMapper<Address>() {
+                    public Address mapRow(ResultSet rs, int rowNum) throws SQLException {
+                        return createAddressWithResultSet(rs);
+                    }
+                },
+                id);
+        return address;
     }
 
     @Override
@@ -50,7 +58,7 @@ public class AddressDAOImpl implements AddressDAO {
 
     @Override
     public boolean remove(long id) {
-        return jdbcTemplateFactory.getJdbcTemplate(dataSource).update(REMOVE_SQL, id)>0;
+        return jdbcTemplateFactory.getJdbcTemplate(dataSource).update(REMOVE_SQL, id) > 0;
     }
 
     @Override
@@ -59,9 +67,9 @@ public class AddressDAOImpl implements AddressDAO {
     }
 
     @Override
-    public List<Address> findAll(){
+    public List<Address> findAll() {
         List<Address> addressList = null;
-         addressList = jdbcTemplateFactory.getJdbcTemplate(dataSource).query(FIND_ALL_SQL,
+        addressList = jdbcTemplateFactory.getJdbcTemplate(dataSource).query(FIND_ALL_SQL,
                 new RowMapper<Address>() {
                     public Address mapRow(ResultSet rs, int rowNum) throws SQLException {
                         return createAddressWithResultSet(rs);
@@ -83,7 +91,7 @@ public class AddressDAOImpl implements AddressDAO {
         return jdbcTemplateFactory.getJdbcTemplate(dataSource).update(UPDATE_SQL,
                 address.getAddress(),
                 address.getRoomCapacity(),
-                address.getId())>0;
+                address.getId()) > 0;
     }
 
 }
