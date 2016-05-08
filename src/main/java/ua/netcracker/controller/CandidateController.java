@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
 public class CandidateController {
-    private String webRootPath = "/static/images/";
+
     @RequestMapping(value = "/student", method = RequestMethod.GET)
     public String getProfilePage(Model model) {
         return "student";

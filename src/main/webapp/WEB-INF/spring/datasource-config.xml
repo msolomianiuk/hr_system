@@ -3,22 +3,15 @@
     Application context definition for NetCracker HR-System Datasource.
 -->
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:context="http://www.springframework.org/schema/context"
        xmlns:jee="http://www.springframework.org/schema/jee"
        xmlns="http://www.springframework.org/schema/beans"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
          http://www.springframework.org/schema/beans/spring-beans.xsd
-         http://www.springframework.org/schema/context
-         http://www.springframework.org/schema/context/spring-context.xsd
          http://www.springframework.org/schema/jee
          http://www.springframework.org/schema/jee/spring-jee.xsd
          ">
 
     <!-- ========================= DATASOURCE DEFINITION ========================= -->
-
-    <!-- Configurer that replaces ${...} placeholders with values from a properties file -->
-    <!-- (in this case, JDBC-related settings for the dataSource definition below) -->
-    <context:property-placeholder location="WEB-INF/spring/data-access.properties" system-properties-mode="OVERRIDE"/>
 
     <jee:jndi-lookup id="dataSource" jndi-name="jdbc/${jdbc.jndi_name}"
                      expected-type="javax.sql.DataSource"/>

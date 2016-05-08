@@ -11,7 +11,7 @@ import java.util.List;
  */
 @Service
 public interface QuestionService {
-    Collection<Question> getAllMandatory();
+    Collection<Question> getAllMandatory(int courseId);
 
     Collection<Question> getAll();
 
@@ -31,7 +31,7 @@ public interface QuestionService {
 
     public void setQuestion(Question question);
 
-    public int getCurseId();
+    public int getCourseId();
 
 
 }

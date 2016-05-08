@@ -38,9 +38,10 @@ public class GetTypeOfQuestionsRestController {
     }
 
     @RequestMapping(value = "/setQuestion" , method = RequestMethod.POST)
+    @ResponseBody
     public  ResponseEntity<Question> setQuestion(
-            @RequestParam  String caption,
             @RequestParam  int curse_id,
+            @RequestParam  String caption,
             @RequestParam  String typeValue,
             @RequestParam  List<String> additionValue,
             @RequestParam  boolean isMandatory,
@@ -63,19 +64,11 @@ public class GetTypeOfQuestionsRestController {
     }
 
 
-//    @RequestMapping(value = "/getCurseId", method = RequestMethod.POST)
-//    public @ResponseBody String getCurseId() {
-//
-//        int curseID = questionServiceImpl.getCurseId();
-//
-//        return String.valueOf(curseID);
-//    }
     @RequestMapping(value = "/getCurseId", method = RequestMethod.POST)
     public ResponseEntity<Integer> getCurseId() {
+        int courseID = questionServiceImpl.getCourseId();
 
-        int curseID = questionServiceImpl.getCurseId();
-
-        return new ResponseEntity(curseID, HttpStatus.OK);
+        return new ResponseEntity(courseID, HttpStatus.OK);
     }
 
 }

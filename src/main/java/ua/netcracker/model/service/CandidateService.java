@@ -1,42 +1,37 @@
 package ua.netcracker.model.service;
 
-import org.springframework.stereotype.Service;
+
 import ua.netcracker.model.entity.Answer;
 import ua.netcracker.model.entity.Candidate;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
  * @author Alyona Bilous 05/05/2016
  */
-@Service
+
 public interface CandidateService {
 
 
-    Candidate getCandidateByID(Integer id);
+    Candidate getCandidateById(Integer id);
 
-    Candidate getCandidateByUserID(Integer userID);
+    Candidate getCandidateByUserId(Integer userId);
 
-    List<Candidate> getAllProfiles();
+    Collection<Candidate> getAllCandidates();
 
-    String getStatusByID(Integer statusID);
+    String getStatusById(Integer statusId);
 
-    HashMap<Integer, Integer> getMarks(Integer candidateID);
+    Map<Integer, Integer> getMarks(Integer candidateId);
 
-    HashMap<Integer, String> getRecommendations(Integer id);
+    Map<Integer, String> getRecommendations(Integer id);
 
-    HashMap<Integer, String> getResponses(Integer id);
+    Map<Integer, String> getComments(Integer id);
 
-    int getInterviewDayDetailsByID(Integer id);
+    int getInterviewDayDetailsById(Integer id);
 
     Collection<Answer> getAllCandidateAnswers(Candidate candidate);
-
-    Map<Integer,Object> convert(Collection<Answer> listAnswers);
-
-    Collection<Answer> convertBack(Map<Integer, Object> mapAnswers);
 
     boolean saveCandidate(Candidate candidate);
 
@@ -45,4 +40,6 @@ public interface CandidateService {
     void deleteAnswers(Candidate candidate);
 
     void saveOrUpdate(Candidate candidate);
+
+    List<Candidate> getAnketOfCandidates();
 }

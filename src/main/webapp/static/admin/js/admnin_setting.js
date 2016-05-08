@@ -18,7 +18,7 @@ $(document).ready(function () {
         dataType: "json",
         contentType: 'application/json',
         mimeType: 'application/json',
-        success: getCurseID,
+        success: getCourseID,
         error: function (data) {
             console.log(data);
         }
@@ -41,7 +41,6 @@ $(document).ready(function () {
         var caption = $("input[name='Caption']").val();
         var curse_id = CurseID;
         var typeValue = $("#TypeOfQuestion").val();
-        //var additionValue = $(".VariantQuestion").val();
         var additionValue = null;
         var isMandatory = false;
         var orderNumber = QuantityQuestions+1;
@@ -50,7 +49,6 @@ $(document).ready(function () {
         $.ajax({
             url: location_origin+"/setQuestion",
             type: "POST",
-            dataType: "json",
             data: {
                 'caption': caption,
                 'curse_id': curse_id,
@@ -59,9 +57,8 @@ $(document).ready(function () {
                 'isMandatory': isMandatory,
                 'orderNumber': orderNumber
             },
-            contentType: 'application/json',
-            mimeType: 'application/json',
-            success: setQuestionWithoutAdd,
+            dataType: "json",
+            success: setQuestionWithAdd,
             error: function (data) {
                 console.log(data);
             }
@@ -176,7 +173,7 @@ $(document).ready(function () {
         var password_peronal = $("input[name='password_peronal']").val();
 
         if (role_personal == "Admin") {
-            Role_Id = ROLE_ADMIN;
+            Role_Id = "ROLE_ADMIN";
         }
         if (role_personal == "BA") {
             Role_Id = "ROLE_BA";
@@ -267,11 +264,11 @@ function getTypeOfQuestions(data){
         var a  = $(this).val();
 
 
-        if(a == "combobox" || a == "checkbox" || a == "textANDselect" ){
+        if(a == "Select" || a == "Checkboxes" || a == "Select or text" ){
             $('#ComboBox').css('display','block');
             $("#ButtonQuestion").attr('id','ButtonQuestionWithAdd');
 
-        }else if (a == "String" || a == "int") {
+        }else if (a == "Text" || a == "Number") {
             $("#ButtonQuestion").attr('id','ButtonQuestion');
             $('#ComboBox').css('display','none');
         }
@@ -286,7 +283,7 @@ function getQuantityQuestions(data){
 
 }
 
-function getCurseID(data){
+function getCourseID(data){
     CurseID = data;
 }
 

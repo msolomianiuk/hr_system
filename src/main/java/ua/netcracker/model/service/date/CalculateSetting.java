@@ -3,8 +3,8 @@ package ua.netcracker.model.service.date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ua.netcracker.model.entity.CourseSetting;
+import ua.netcracker.model.entity.InterviewDaysDetails;
 import ua.netcracker.model.service.impl.CourseSettingServiceImpl;
-import ua.netcracker.model.service.impl.InterviewDaysDetailsServiceImpl;
 
 import java.time.LocalDate;
 import java.time.Period;
@@ -20,63 +20,89 @@ public class CalculateSetting {
     private CourseSettingServiceImpl courseSettingService;
 
     @Autowired
-    private InterviewDaysDetailsServiceImpl interviewService;
-
-    @Autowired
     private DateService myDate;
 
-    public int getDay() {
+    private CourseSetting courseSetting;
 
-        CourseSetting courseSetting = courseSettingService.getLastSetting();
+    /**
+     * Method returns setting
+     * in current day
+     *
+     * @param interviewDaysDetails - current day
+     * @return quantity personal and quantity of students pier day
+     */
+    private int[] getSettingDay(InterviewDaysDetails interviewDaysDetails) {
 
-        LocalDate startInterviewDay = myDate.getDate(courseSetting.getInterviewStartDate());
-        LocalDate endInterviewDay = myDate.getDate(courseSetting.getInterviewEndDate());
-        LocalDate startRegistrationDay = myDate.getDate(courseSetting.getRegistrationStartDate());
-        LocalDate endRegistrationDay = myDate.getDate(courseSetting.getRegistrationEndDate());
-
-        int maxStudentForInterview = courseSetting.getStudentInterviewCount();
-        int maxStudentForCourse = courseSetting.getStudentCourseCount();
+        courseSetting = courseSettingService.getLastSetting();
 
         int timeForInterview = courseSetting.getInterviewTime();
 
+        // Start interview hour - timeInterview [0]
+        // End interview hour - timeInterview [2]
+        //
+        // Start interview min - timeInterview [1]
+        // End interview min - timeInterview [3]
 
-        /**
-         * Start interview hour - timeInterview [0]
-         * End interview hour - timeInterview [3]
-         *
-         * Start interview min - timeInterview [2]
-         * End interview min - timeInterview [4]
-         */
-        int [] timeInterview = {Integer.parseInt(myDate.getTime(interviewService.getStartTimeofInterview())[0]),
-                Integer.parseInt(myDate.getTime(interviewService.getStartTimeofInterview())[1]),
-                Integer.parseInt(myDate.getTime(interviewService.getEndTimeofInterview())[0]),
-                Integer.parseInt(myDate.getTime(interviewService.getEndTimeofInterview())[1])};
+        int interviewTime;
+        int[] timeInterview = {
+                Integer.parseInt(myDate.getTime(interviewDaysDetails.getStartTime())[0]),
+                Integer.parseInt(myDate.getTime(interviewDaysDetails.getStartTime())[1]),
+                Integer.parseInt(myDate.getTime(interviewDaysDetails.getEndTime())[2]),
+                Integer.parseInt(myDate.getTime(interviewDaysDetails.getEndTime())[3])};
 
-        int interviewTime=0;
-        if (timeInterview [4] < timeInterview [2]) {
-            interviewTime = timeInterview [2] + timeInterview [4];
+        if (timeInterview[0] == timeInterview[2] &&
+                timeInterview[0] == timeInterview[2]) {
+            interviewTime = 0;
         } else {
-            interviewTime = (timeInterview [3] - timeInterview [0]) * 60
-                    + timeInterview [2] - timeInterview [4];
+            if (timeInterview[0] == timeInterview[2]) {
+                interviewTime = timeInterview[1] + timeInterview[3];
+            } else {
+                if (timeInterview[3] < timeInterview[1]) {
+                    interviewTime = timeInterview[1] - timeInterview[3] +
+                            (timeInterview[2] - timeInterview[0] - 1) * 60;
+                } else {
+                    interviewTime = (timeInterview[3] - timeInterview[0]) * 60
+                            + timeInterview[2] - timeInterview[4];
+                }
+            }
         }
+
+        int quantityPersonal;
+
+        if (interviewTime == 0) {
+            quantityPersonal = 0;
+        } else {
+        // кількість персоналу на співбесіду
+            quantityPersonal = (int) Math.ceil(getStudent() / (interviewTime / timeForInterview));
+        }
+
+        int[] setting = {getStudent(), quantityPersonal};
+        return setting;
+    }
+
+    private int getStudent() {
+        courseSetting = courseSettingService.getLastSetting();
+
+        LocalDate startInterviewDay = myDate.getDate(courseSetting.getInterviewStartDate());
+        LocalDate endInterviewDay = myDate.getDate(courseSetting.getInterviewEndDate());
+
+
+        int maxStudentForInterview = courseSetting.getStudentInterviewCount();
+
         // кількість днів інтерв'ю -1
         Period period = startInterviewDay.until(endInterviewDay);
 
-        int studentFromDay = maxStudentForInterview/(period.getDays()+1);
+        // кількість студентів на день
+        return (int) Math.ceil(maxStudentForInterview / (period.getDays() + 1));
+    }
 
-//        int
 
-//        int st = 600;
-//
-//        int tr = 10;
-//
-//        int per = t*60/10;
-//
-//        int sInDay = 600/d;
-//
-//        int df = sInDay/per;
+    public int getPersonal(InterviewDaysDetails interviewDaysDetails) {
+        return getSettingDay(interviewDaysDetails)[1];
+    }
 
-        return 0;
+    public int quantityStudent(InterviewDaysDetails interviewDaysDetails) {
+        return getStudent();
     }
 
 }
