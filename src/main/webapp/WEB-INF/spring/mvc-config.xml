@@ -13,8 +13,27 @@
     <!-- Scan packages for the String components (@Component,@Repository, @Controller,@Service-->
     <!--<context:component-scan base-package="ua.netcracker"/>-->
 
+    <!--Method addResourceHandlers configures the ResourceHandler for static resources.
+   CSS, JavaScript, images etc are static resources your pages needs.Above configuration
+   says that all resource requests starting with /static/ will be served from /static/ folder under webapp.
+   In this example, we will put all the css files under /static/css inside webapp directory. Note that this method
+   is defined in WebMvcConfigurerAdapter so we needed to extend this class to override this method in order to
+   register our static resources.-->
+    <mvc:annotation-driven/>
+    <mvc:resources mapping="/static/**" location="/static/"/>
+    <mvc:default-servlet-handler/>
+
     <context:component-scan base-package="ua.netcracker.controller"/>
 
+    <bean id="multipartResolver"
+          class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+
+        <!-- Maximum file size: 10MB -->
+        <!-- 10MB = 1250000 Byte -->
+        <property name="maxUploadSize" value="1250000"/>
+
+    </bean>
+    
     <!-- Method viewResolver configures a view resolver to identify the real view.-->
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="viewClass"
@@ -23,14 +42,4 @@
         <property name="suffix" value=".jsp"/>
     </bean>
 
-
-    <!--Method addResourceHandlers configures the ResourceHandler for static resources.
-    CSS, JavaScript, images etc are static resources your pages needs.Above configuration
-    says that all resource requests starting with /static/ will be served from /static/ folder under webapp.
-    In this example, we will put all the css files under /static/css inside webapp directory. Note that this method
-    is defined in WebMvcConfigurerAdapter so we needed to extend this class to override this method in order to
-    register our static resources.-->
-    <mvc:annotation-driven/>
-    <mvc:resources mapping="/static/**" location="/static/"/>
-    <mvc:default-servlet-handler/>
 </beans>

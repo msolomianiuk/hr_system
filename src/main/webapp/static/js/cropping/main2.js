@@ -132,7 +132,7 @@ $(function () {
             $image.one('built.cropper', function () {
               URL.revokeObjectURL(blobURL); // Revoke when load complete
             }).cropper('reset', true).cropper('replace', blobURL);
-            $inputImage.val('');
+            /*$inputImage.val('');*/
           } else {
             showMessage('Please choose an image file.');
           }
@@ -154,6 +154,35 @@ $(function () {
 
     // Tooltips
     $('[data-toggle="tooltip"]').tooltip();
+
+
+    /*
+     $('#photoUpload').click(function() {
+
+     var img = new Image();
+     img.src = blobURL;
+     //$image.cropper('getData').toBlob(function (blob) {
+     var formData = new FormData();
+
+     formData.append('croppedImage', img);
+
+     $.ajax('/student/photo', {
+     method: "POST",
+     data: formData,
+     processData: false,
+     contentType: false,
+     success: function () {
+     console.log('Upload success');
+     },
+     error: function () {
+     console.log('Upload error');
+     }
+     });
+     //});
+     $( "#target" ).click();
+     });
+     */
+
 
   }());
 

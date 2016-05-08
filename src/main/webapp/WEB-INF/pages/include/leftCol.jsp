@@ -18,10 +18,10 @@
                 </c:set>
 
                 <c:if test="${photo eq 'null'}">
-                    <c:set var="photo" scope="page" value="static/images/user.png"/>
+                    <c:set var="photo" scope="page" value="anonymouse.png"/>
                 </c:if>
 
-                <img src="<c:url value="${photo}"/>" alt="..."
+                <img src="<c:url value="static/images/photo/${photo}"/>" alt="..."
                      class="img-circle profile_img">
             </div>
             <div class="profile_info">
