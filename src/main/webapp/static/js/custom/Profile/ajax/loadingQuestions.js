@@ -8,12 +8,6 @@ $(document).ready(function () {
         success: drawQuestionForm,
         error: function (data) {
             console.log(data);
-            setTimeout(function () { $('.loading').hide(); }, 1000);
-            new PNotify({
-                title: 'Some Problem',
-                text: 'There have been some problems!',
-                type: 'error'
-            });
         }
     });
 });

@@ -1,4 +1,4 @@
-$(document).ready(function () {
+function loadAnswers() {
     $.ajax({
         url: "http://localhost:8080/hr_system-1.0-SNAPSHOT/service/getAnswers",
         type: "GET",
@@ -10,4 +10,4 @@ $(document).ready(function () {
             console.log(data);
         }
     });
-});
+}

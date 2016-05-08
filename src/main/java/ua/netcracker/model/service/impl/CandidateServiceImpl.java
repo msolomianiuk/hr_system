@@ -12,7 +12,6 @@ import ua.netcracker.model.entity.Candidate;
 import ua.netcracker.model.service.CandidateService;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -46,7 +45,7 @@ public class CandidateServiceImpl implements CandidateService {
     }
 
     @Override
-    public List<Candidate> getAllCandidates() {
+    public Collection<Candidate> getAllCandidates() {
         return candidateDAO.findAll();
     }
 
@@ -72,7 +71,7 @@ public class CandidateServiceImpl implements CandidateService {
 
     @Override
     public int getInterviewDayDetailsById(Integer candidateId) {
-        return interviewResultDAO.getInterviewDayDetailsById(candidateId);
+        return candidateDAO.getInterviewDayDetailsById(candidateId);
     }
 
     @Override

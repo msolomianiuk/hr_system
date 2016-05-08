@@ -22,7 +22,7 @@ public class Candidate {
 
     private Collection<Answer> answers;
 
-    private InterviewResult interviewResult;
+    private Collection<InterviewResult> interviewResults;
 
     private User user;
 

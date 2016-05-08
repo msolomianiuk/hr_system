@@ -2,70 +2,54 @@ package ua.netcracker.model.entity;
 
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-import java.util.Map;
-
 /**
  * Created by Alex on 24.04.2016.
  */
 @Component
 public class InterviewResult {
 
-    private List<User> interviewers;
+    private Integer interviewerId;
 
-    private Map<Integer,Integer> marks;
 
-    private Map<Integer,String> responds;
+    private Integer mark;
 
-    private int daysDetailsId;
+    private String comment;
 
-    private Map<Integer,String> recommendations;
+    private String recommendation;
 
     public InterviewResult() {
 
     }
 
-    public void addInterviewer(User interviewer){
-        this.interviewers.add(interviewer);
+    public Integer getInterviewerId() {
+        return interviewerId;
     }
 
-    public List<User> getInterviewers() {
-        return interviewers;
+    public void setInterviewerId(Integer interviewerId) {
+        this.interviewerId = interviewerId;
     }
 
-    public void setInterviewers(List<User> interviewers) {
-        this.interviewers = interviewers;
+    public Integer getMark() {
+        return mark;
     }
 
-    public Map<Integer, Integer> getMarks() {
-        return marks;
+    public void setMark(Integer mark) {
+        this.mark = mark;
     }
 
-    public void setMarks(Map<Integer, Integer> marks) {
-        this.marks = marks;
+    public String getComment() {
+        return comment;
     }
 
-    public Map<Integer, String> getResponds() {
-        return responds;
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
-    public void setResponds(Map<Integer, String> responds) {
-        this.responds = responds;
+    public String getRecommendation() {
+        return recommendation;
     }
 
-    public int getDaysDetailsId() {
-        return daysDetailsId;
-    }
-
-    public void setDaysDetailsId(int daysDetailsId) {
-        this.daysDetailsId = daysDetailsId;
-    }
-
-    public Map<Integer, String> getRecommendations() {
-        return recommendations;
-    }
-
-    public void setRecommendations(Map<Integer, String> recommendations) {
-        this.recommendations = recommendations;
+    public void setRecommendation(String recommendation) {
+        this.recommendation = recommendation;
     }
 }
