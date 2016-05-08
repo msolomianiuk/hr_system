@@ -33,6 +33,11 @@ public class CandidateServiceImpl implements CandidateService {
     private int userId;
 
     @Override
+    public Collection<Candidate> getCandidateByStatus(String status) {
+        return candidateDAO.findCandidateByStatus(status);
+    }
+
+    @Override
     public void saveInterviewResult(Candidate candidate, InterviewResult interviewResult) {
 
     }

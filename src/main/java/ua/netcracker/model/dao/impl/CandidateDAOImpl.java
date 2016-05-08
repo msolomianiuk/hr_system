@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import ua.netcracker.model.dao.CandidateDAO;
 import ua.netcracker.model.entity.Candidate;
 import ua.netcracker.model.entity.Role;
+import ua.netcracker.model.entity.Status;
 import ua.netcracker.model.entity.User;
 
 import javax.sql.DataSource;
@@ -23,20 +24,45 @@ import java.util.Map;
 public class CandidateDAOImpl implements CandidateDAO {
     private static final Logger LOGGER = Logger.getLogger(CandidateDAOImpl.class);
     private static final String FIND_INTERVIEW_DAYS_DETAILS_ID =
-            "SELECT interview_days_details FROM \"hr_system\".candidate WHERE id = ";
-    private static final String FIND_BY_ID = "SELECT * FROM \"hr_system\".candidate WHERE id = ";
+            "SELECT interview_days_details FROM \"hr_system\".candidate WHERE id = ?";
+    private static final String FIND_BY_ID = "SELECT * FROM \"hr_system\".candidate WHERE id = ?";
     private static final String FIND_ALL = "SELECT u.id , u.name , u.email, u.surname, u.patronymic " +
-            "FROM \"hr_system\".users u JOIN \"hr_system\".role_users_maps rol ON rol.user_id = u.id WHERE rol.role_id=";
-    private static final String FIND_STATUS_BY_ID = "SELECT * FROM \"hr_system\".status WHERE id = ";
-    private static final String FIND_BY_USER_ID = "SELECT * FROM \"hr_system\".candidate WHERE user_id = ";
+            "FROM \"hr_system\".users u JOIN \"hr_system\".role_users_maps rol ON rol.user_id = u.id WHERE rol.role_id=?";
+    private static final String FIND_STATUS_BY_ID = "SELECT * FROM \"hr_system\".status WHERE id = ?";
+    private static final String FIND_BY_USER_ID = "SELECT * FROM \"hr_system\".candidate WHERE user_id = ?";
     private static final String UPDATE = "UPDATE \"hr_system\".candidate SET(status_id,interview_days_details_id)=(?,?) " +
             " WHERE id = ? ";
+    private static final String FIND_BY_STATUS = "SELECT * FROM \"hr_system\".candidate WHERE status_id = ";
     private User user;
 
     @Autowired
     private DataSource dataSource;
     private JdbcTemplate jdbcTemplate;
     private SimpleJdbcInsert simpleJdbcInsert;
+
+
+    @Override
+    public Collection<Candidate> findCandidateByStatus(String status) {
+        Collection<Candidate> listCandidate = null;
+        try {
+            jdbcTemplate = new JdbcTemplate(dataSource);
+            List<Map<String, Object>> rows = jdbcTemplate.
+                    queryForList(FIND_BY_STATUS +Status.valueOf(status).getId());
+            for(Map<String , Object> row : rows){
+                Candidate candidate = new Candidate();
+                candidate.setId((int)row.get("id"));
+                candidate.setUserId((int)row.get("user_id"));
+                candidate.setStatusId((int)row.get("status_id"));
+                candidate.setInterviewDaysDetailsId((int)row.get("interview_days_details_id"));
+                candidate.setCourseId((int)row.get("course_id"));
+                listCandidate.add(candidate);
+            }
+        } catch (Exception e) {
+            LOGGER.error("Error: " + e);
+        }
+
+        return listCandidate;
+    }
 
     @Override
     public int findInterviewDetailsByCandidateId(Integer candidateId) {

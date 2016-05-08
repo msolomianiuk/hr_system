@@ -5,7 +5,8 @@ import org.springframework.stereotype.Component;
 import java.util.Collection;
 
 /**
- * Created by Alex on 24.04.2016.
+ * Created by on 24.04.2016.
+ * @author Oleg
  */
 @Component
 public class Candidate {
