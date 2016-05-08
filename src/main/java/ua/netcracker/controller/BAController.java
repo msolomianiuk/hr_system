@@ -14,9 +14,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Controller
 public class BAController {
 
-    @RequestMapping(value = "/ba", method = RequestMethod.GET)
-    public String baMainPage(Model model) {
-
-        return "ba";
+    @RequestMapping(value = "ba/interview_page", method = RequestMethod.GET)
+    public String baMainPage() {
+        return "interviewPage";
     }
 }

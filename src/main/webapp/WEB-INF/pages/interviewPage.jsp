@@ -6,7 +6,7 @@
 <head>
     <!-- meta -->
     <%@ include file="include/links/linksMeta.jsp" %>
-    <title>Students List</title>
+    <title>Interview Page</title>
     <!-- bootstrap core -->
     <%@ include file="include/links/linksBootstrapCore.jsp" %>
     <!-- IE9 -->
@@ -33,7 +33,7 @@
             <!-- top tiles -->
             <div class="x_panel">
                 <div class="x_title">
-                    <h2> Students List </h2>
+                    <h2> Interview Page </h2>
                     <div class="clearfix"></div>
                 </div>
                 <div class="x_content">

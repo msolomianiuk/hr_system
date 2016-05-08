@@ -3,8 +3,10 @@ package ua.netcracker.model.service;
 
 import ua.netcracker.model.entity.Answer;
 import ua.netcracker.model.entity.Candidate;
+import ua.netcracker.model.entity.InterviewResult;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -12,8 +14,13 @@ import java.util.Map;
  */
 
 public interface CandidateService {
+    Collection<Candidate> getCandidateByStatus(String status);
+
+    //
+    void saveInterviewResult(Candidate candidate, InterviewResult interviewResult);
 
 
+//
     Candidate getCandidateById(Integer id);
 
     Candidate getCandidateByUserId(Integer userId);
@@ -34,9 +41,14 @@ public interface CandidateService {
 
     boolean saveCandidate(Candidate candidate);
 
-    void saveAnswers(Candidate candidate);
+    Candidate saveAnswers(String answersJsonString);
+
+    Candidate getCurrentCandidate();
 
     void deleteAnswers(Candidate candidate);
 
-    void saveOrUpdate(Candidate candidate);
+    List<Candidate> getAnketOfCandidates();
+
+    void saveOrUpdateAnswers(Candidate candidate);
+
 }

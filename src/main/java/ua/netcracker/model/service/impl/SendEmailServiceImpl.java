@@ -47,6 +47,7 @@ public class SendEmailServiceImpl implements SendEmailService {
         this.port = port;
     }
 
+    @Override
     public void sendLetterToEmails(String[] toEmails, String subject, String text) {
 
         Properties props = new Properties();

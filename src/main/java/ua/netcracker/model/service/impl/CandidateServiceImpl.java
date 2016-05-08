@@ -1,18 +1,24 @@
 package ua.netcracker.model.service.impl;
 
 import org.apache.log4j.Logger;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import ua.netcracker.model.dao.AnswersDAO;
 import ua.netcracker.model.dao.CandidateDAO;
 import ua.netcracker.model.dao.InterviewResultDAO;
-import ua.netcracker.model.dao.QuestionDAO;
 import ua.netcracker.model.entity.Answer;
 import ua.netcracker.model.entity.Candidate;
+import ua.netcracker.model.entity.InterviewResult;
+import ua.netcracker.model.entity.Status;
+import ua.netcracker.model.securiry.UserAuthenticationDetails;
 import ua.netcracker.model.service.CandidateService;
 
-import java.util.Collection;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author Alyona Bilous 05/05/2016
@@ -21,9 +27,17 @@ import java.util.Map;
 public class CandidateServiceImpl implements CandidateService {
 
     private static final Logger LOGGER = Logger.getLogger(CandidateServiceImpl.class);
+    private int userId;
 
-    @Autowired
-    private QuestionDAO questionDAO;
+    @Override
+    public Collection<Candidate> getCandidateByStatus(String status) {
+        return candidateDAO.findCandidateByStatus(status);
+    }
+
+    @Override
+    public void saveInterviewResult(Candidate candidate, InterviewResult interviewResult) {
+
+    }
 
     @Autowired
     private CandidateDAO candidateDAO;
@@ -36,12 +50,12 @@ public class CandidateServiceImpl implements CandidateService {
 
     @Override
     public Candidate getCandidateById(Integer id) {
-        return candidateDAO.findCandidateById(id);
+        return candidateDAO.findByCandidateId(id);
     }
 
     @Override
     public Candidate getCandidateByUserId(Integer userId) {
-        return candidateDAO.findCandidateByUserId(userId);
+        return candidateDAO.findByUserId(userId);
     }
 
     @Override
@@ -71,7 +85,7 @@ public class CandidateServiceImpl implements CandidateService {
 
     @Override
     public int getInterviewDayDetailsById(Integer candidateId) {
-        return candidateDAO.getInterviewDayDetailsById(candidateId);
+        return candidateDAO.findInterviewDetailsByCandidateId(candidateId);
     }
 
     @Override
@@ -84,9 +98,58 @@ public class CandidateServiceImpl implements CandidateService {
         return candidateDAO.saveCandidate(candidate);
     }
 
+    private Collection<Answer> parseJsonString(String answersJsonString) {
+        Collection<Answer> listAnswers = new ArrayList<>();
+        JSONObject obj = new JSONObject(answersJsonString);
+        Iterator<?> keys = obj.keys();
+        while (keys.hasNext()) {
+            String key = (String) keys.next();
+            if (obj.get(key) instanceof JSONArray) {
+                JSONArray array = (JSONArray) obj.get(key);
+                for (int i = 0; i < array.length(); i++) {
+                    Answer answer = new Answer();
+                    answer.setQuestionId(Integer.valueOf(key.replace("question-", "")));
+                    answer.setValue(array.getString(i));
+                    listAnswers.add(answer);
+                }
+                continue;
+            }
+            Answer answer = new Answer();
+            answer.setQuestionId(Integer.valueOf(key.replace("question-", "")));
+            answer.setValue((String) obj.get(key));
+            listAnswers.add(answer);
+        }
+        return listAnswers;
+    }
+
+    //refact
     @Override
-    public void saveAnswers(Candidate candidate) {
-        answersDAO.saveAll(candidate);
+    public Candidate saveAnswers(String answersJsonString) {
+        Collection<Answer> listAnswers = parseJsonString(answersJsonString);
+        Candidate candidate = getCurrentCandidate();
+        if (candidate.getId() == 0) {
+            candidate.setUserId(userId);
+            candidate.setStatusId(Status.NEW.getId());
+            candidate.setCourseId(1);
+            saveCandidate(candidate);
+            candidate = getCandidateById(userId);
+        }
+        candidate.setAnswers(listAnswers);
+        saveOrUpdateAnswers(candidate);
+        return candidate;
+    }
+
+    @Override
+    public Candidate getCurrentCandidate() {
+        userId = 0;
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (!(auth instanceof AnonymousAuthenticationToken)) {
+            UserAuthenticationDetails userDetails =
+                    (UserAuthenticationDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            userId = userDetails.getUserId();
+        }
+
+        return getCandidateByUserId(userId);
     }
 
     @Override
@@ -94,15 +157,18 @@ public class CandidateServiceImpl implements CandidateService {
         answersDAO.deleteAnswers(candidate.getId());
     }
 
+
     @Override
-    public void saveOrUpdate(Candidate candidate) {
+    public void saveOrUpdateAnswers(Candidate candidate) {
         try {
-            answersDAO.deleteAnswers(candidate.getId());
-            answersDAO.saveAll(candidate);
+            answersDAO.update(candidate);
         } catch (Exception e) {
-            LOGGER.debug(e.getStackTrace());
-            LOGGER.info(e.getMessage());
+            LOGGER.error("Error: " + e);
         }
+    }
+    @Override
+    public List<Candidate> getAnketOfCandidates() {
+        return candidateDAO.getAllAnketsCandidates();
     }
 }
 

@@ -4,10 +4,17 @@
 
 $(document).ready(function () {
 
+    location_origin = "http://localhost:8080/hr_system-1.0-SNAPSHOT"
+
+    var token = $("meta[name='_csrf']").attr("content");
+    var header = $("meta[name='_csrf_header']").attr("content");
+    $(document).ajaxSend(function(e, xhr, options) {
+        xhr.setRequestHeader(header, token);
+    });
 
     $.ajax({
-        url: "http://localhost:8080/hr_system-1.0-SNAPSHOT/getCourseId",
-        type: "GET",
+        url: location_origin+"/getCurseId",
+        type: "POST",
         dataType: "json",
         contentType: 'application/json',
         mimeType: 'application/json',
@@ -18,12 +25,9 @@ $(document).ready(function () {
     });
 
     $.ajax({
-        url: "http://localhost:8080/hr_system-1.0-SNAPSHOT/getQuantityQuestions",
+        url: location_origin +"/getQuantityQuestions",
         type: "GET",
-        //   contentType : "application/json",
-        //beforeSend: funcbefor,
         dataType: "json",
-        // data:{'id':id},
         contentType: 'application/json',
         mimeType: 'application/json',
         success: getQuantityQuestions,
@@ -37,16 +41,14 @@ $(document).ready(function () {
         var caption = $("input[name='Caption']").val();
         var curse_id = CurseID;
         var typeValue = $("#TypeOfQuestion").val();
-        //var additionValue = $(".VariantQuestion").val();
         var additionValue = null;
         var isMandatory = false;
         var orderNumber = QuantityQuestions+1;
 
 
         $.ajax({
-            url: "http://localhost:8080/hr_system-1.0-SNAPSHOT/setQuestion",
-            type: "GET",
-            dataType: "json",
+            url: location_origin+"/setQuestion",
+            type: "POST",
             data: {
                 'caption': caption,
                 'curse_id': curse_id,
@@ -55,9 +57,8 @@ $(document).ready(function () {
                 'isMandatory': isMandatory,
                 'orderNumber': orderNumber
             },
-            contentType: 'application/json',
-            mimeType: 'application/json',
-            success: setQuestionWithoutAdd,
+            dataType: "json",
+            success: setQuestionWithAdd,
             error: function (data) {
                 console.log(data);
             }
@@ -78,9 +79,8 @@ $(document).ready(function () {
         var orderNumber = QuantityQuestions+1;
 
         $.ajax({
-            url: "http://localhost:8080/hr_system-1.0-SNAPSHOT/setQuestion",
-            type: "GET",
-            dataType: "json",
+            url: location_origin+"/setQuestion",
+            type: "POST",
             data: {
                 'caption': caption,
                 'curse_id': curse_id,
@@ -89,8 +89,7 @@ $(document).ready(function () {
                 'isMandatory': isMandatory,
                 'orderNumber': orderNumber
             },
-            contentType: 'application/json',
-            mimeType: 'application/json',
+            dataType: "json",
             success: setQuestionWithAdd,
             error: function (data) {
                 console.log(data);
@@ -101,7 +100,7 @@ $(document).ready(function () {
 
 
     $.ajax({
-        url: "http://localhost:8080/hr_system-1.0-SNAPSHOT/admin/up_setting",
+        url: location_origin+"/admin/up_setting",
         type: "GET",
         //   contentType : "application/json",
         //beforeSend: funcbefor,
@@ -115,7 +114,7 @@ $(document).ready(function () {
         }
     });
     $.ajax({
-        url: "http://localhost:8080/hr_system-1.0-SNAPSHOT/getTypeOfQuestions",
+        url: location_origin+"/getTypeOfQuestions",
         type: "GET",
         //   contentType : "application/json",
         //beforeSend: funcbefor,
@@ -140,7 +139,7 @@ $(document).ready(function () {
 
 
         $.ajax({
-            url: "http://localhost:8080/hr_system-1.0-SNAPSHOT/admin/admin_setting",
+            url: location_origin+"/admin/admin_setting",
             type: "GET",
             //   contentType : "application/json",
             //beforeSend: funcbefor,
@@ -174,7 +173,7 @@ $(document).ready(function () {
         var password_peronal = $("input[name='password_peronal']").val();
 
         if (role_personal == "Admin") {
-            Role_Id = ROLE_ADMIN;
+            Role_Id = "ROLE_ADMIN";
         }
         if (role_personal == "BA") {
             Role_Id = "ROLE_BA";
@@ -190,7 +189,7 @@ $(document).ready(function () {
         }
 
         $.ajax({
-            url: "http://localhost:8080/hr_system-1.0-SNAPSHOT/new_personal",
+            url: location_origin+"/new_personal",
             type: "GET",
             //   contentType : "application/json",
             //beforeSend: funcbefor,
@@ -265,11 +264,11 @@ function getTypeOfQuestions(data){
         var a  = $(this).val();
 
 
-        if(a == "combobox" || a == "checkbox" || a == "textANDselect" ){
+        if(a == "Select" || a == "Checkboxes" || a == "Select or text" ){
             $('#ComboBox').css('display','block');
             $("#ButtonQuestion").attr('id','ButtonQuestionWithAdd');
 
-        }else if (a == "String" || a == "int") {
+        }else if (a == "Text" || a == "Number") {
             $("#ButtonQuestion").attr('id','ButtonQuestion');
             $('#ComboBox').css('display','none');
         }
@@ -286,7 +285,6 @@ function getQuantityQuestions(data){
 
 function getCourseID(data){
     CurseID = data;
-    alert(CurseID);
 }
 
 function setQuestionWithAdd (data){
@@ -296,4 +294,6 @@ function setQuestionWithAdd (data){
 function setQuestionWithoutAdd (data){
     alert("Set with ADD Question");
 }
+
+
 

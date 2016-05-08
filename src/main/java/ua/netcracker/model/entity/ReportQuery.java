@@ -10,6 +10,7 @@ public class ReportQuery {
     private int id;
     private String description;
     private String query;
+    private boolean isShow;
 
     public int getId() {
         return id;
@@ -33,6 +34,14 @@ public class ReportQuery {
 
     public void setQuery(String query) {
         this.query = query;
+    }
+
+    public boolean isShow() {
+        return isShow;
+    }
+
+    public void setShow(boolean isShow) {
+        this.isShow = isShow;
     }
 
     @Override

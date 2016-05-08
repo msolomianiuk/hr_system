@@ -4,18 +4,20 @@ package ua.netcracker.model.dao;
 import ua.netcracker.model.entity.Candidate;
 
 import java.util.Collection;
+import java.util.List;
 
 /**
  * Created by Alex on 26.04.2016.
  */
 public interface CandidateDAO extends DAO<Candidate> {
-    int getInterviewDayDetailsById(Integer candidateId);
+    int findInterviewDetailsByCandidateId(Integer candidateId);
 
-    Candidate findCandidateById(Integer candidateId);
+    Candidate findByCandidateId(Integer candidateId);
     Collection<Candidate> findAll();
     String findStatusById(Integer statusId);
-
-    Candidate findCandidateByUserId(Integer userId);
-
+    Collection<Candidate> findCandidateByStatus(String status);
+    Candidate findByUserId(Integer userId);
     boolean saveCandidate(Candidate candidate);
+
+    List<Candidate> getAllAnketsCandidates();
 }

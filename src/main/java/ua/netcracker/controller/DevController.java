@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Controller
 public class DevController {
 
-    @RequestMapping(value = "/dev", method = RequestMethod.GET)
-    public String devMainPage(Model model) {
-        return "dev";
+    @RequestMapping(value = "dev/interview_page", method = RequestMethod.GET)
+    public String devMainPage() {
+        return "interviewPage";
     }
 }

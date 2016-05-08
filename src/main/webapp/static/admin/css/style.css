@@ -16,3 +16,13 @@
     top:111px;
     left:500px;
 }
+
+.ModelViewDays{
+    width:400px;
+    height:400px;
+    background-color: #ffffff;
+    display:none;
+    position:fixed;
+    top:111px;
+    left:500px;
+}

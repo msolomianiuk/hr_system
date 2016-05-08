@@ -59,8 +59,13 @@ public class ReportServiceImpl implements ReportService {
     }
 
     @Override
-    public Collection<ReportQuery> getAllReports() {
+    public Collection<ReportQuery> getAllShowReports() {
 
+        return reportQueryDao.findAllByImportant(true);
+    }
+
+    @Override
+    public Collection<ReportQuery> getAllReports() {
         return reportQueryDao.findAll();
     }
 
@@ -68,10 +73,11 @@ public class ReportServiceImpl implements ReportService {
     public boolean manageReportQuery(ReportQuery reportQuery, String status) {
         switch (status) {
             case "delete":
-                reportQueryDao.remove(reportQuery);
+                reportQueryDao.updateImportance(reportQuery,false);
                 break;
             case "insert":
                 reportQueryDao.insert(reportQuery);
+                //reportQueryDao.updateImportance(reportQuery,true);
                 break;
             case "update":
                 reportQueryDao.update(reportQuery);

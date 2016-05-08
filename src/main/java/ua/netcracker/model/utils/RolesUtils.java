@@ -35,9 +35,9 @@ public class RolesUtils {
         } else if (isContains(roles, ROLE_HR)) {
             url = "/hr/students_list";
         } else if (isContains(roles, ROLE_BA)) {
-            url = "/ba";
+            url = "/ba/interview_page";
         } else if (isContains(roles, ROLE_DEV)) {
-            url = "/dev";
+            url = "/dev/interview_page";
         } else if (isContains(roles, ROLE_STUDENT)) {
             url = "/student";
         } else {
