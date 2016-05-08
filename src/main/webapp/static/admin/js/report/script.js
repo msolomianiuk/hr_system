@@ -7,24 +7,31 @@ $(document).ready(function () {
     var mainForm = $('.main_form');
     var textDescription = $('.text_description');
     var textQuery = $('.text_query');
+    var showTable = $('.show_table');
+    var saveListButtons = $('.save_buttons');
     var report;
 
-    $('.create_button').click(function () {
-        switchBlock(editField);
-        switchNone(mainForm);
+    var createButton = $('.create_button');
+    createButton.click(function () {
+        showElement(editField);
+        hideElement(mainForm);
+        hideElement(showTable);
         textDescription.val("");
         textQuery.val("");
         report = null;
     });
-    $('.update_button').click(function () {
-        switchBlock(editField);
-        switchNone(mainForm);
+    var updateButton = $('.update_button');
+    updateButton.click(function () {
+        showElement(editField);
+        hideElement(mainForm);
+        hideElement(showTable);
         report = getReportByRadio();
         textDescription.val(report.description);
         textQuery.val(report.query);
     });
-
-    $('.delete_button').click(function () {
+    var deleteButton = $('.delete_button');
+    deleteButton.click(function () {
+        hideElement(showTable);
         var index = getIndexByRadio();
         if (curData[index].status !== 'insert') {
             curData[index].status = 'delete';
@@ -36,17 +43,50 @@ $(document).ready(function () {
 
     $('.show_button').click(function () {
         var index = getIndexByRadio();
-
+        var query = curData[index].query.toLowerCase();
+        if (query.indexOf('drop') === -1 && query.indexOf('insert') === -1 && query.indexOf('update') === -1) {
+            $.ajax({
+                url: "http://localhost:8080/hr_system-1.0-SNAPSHOT/admin/service/createReport",
+                type: "GET",
+                dataType: "json",
+                data: {"query": curData[index].query},
+                contentType: 'application/json',
+                mimeType: 'application/json',
+                success: function (data) {
+                    // console.log(data);
+                    showReport(data);
+                    showElement(showTable);
+                },
+                error: function (data) {
+                    alert("ERROR: bad request");
+                    //console.log(data);
+                }
+            });
+        }else{
+            alert("ban words: drop, insert, update");
+        }
+    });
+    var showAllButton = $(".show_all_button");
+    showAllButton.click(function () {
+        hideElement(showTable);
+        showElement(saveListButtons);
+        disableButton(showAllButton);
+        disableButton(createButton);
+        disableButton(deleteButton);
+        isShowAll = true;
+        sendAjax();
         $.ajax({
-            url: "http://localhost:8080/hr_system-1.0-SNAPSHOT/admin/service/createReport",
+            url: "http://localhost:8080/hr_system-1.0-SNAPSHOT/admin/service/getAllReportQuery",
             type: "GET",
             dataType: "json",
-            data:{"query":curData[index].query},
             contentType: 'application/json',
             mimeType: 'application/json',
-            success:function (data){
-                console.log(data);
-                showReport(data);
+            success: function (data) {
+                curData = data;
+                for (var index in curData) {
+                    curData[index].status = "new";
+                }
+                generateDescriptionList(curData);
             },
             error: function (data) {
                 console.log(data);
@@ -56,8 +96,8 @@ $(document).ready(function () {
 
     $(".save_button").click(function () {
         if (textQuery.val() && textDescription.val()) {
-            switchNone(editField);
-            switchBlock(mainForm);
+            hideElement(editField);
+            showElement(mainForm);
             if (report !== null) {
                 var index = getIndexById(report.id);
                 curData[index].description = textDescription.val();
@@ -71,9 +111,10 @@ $(document).ready(function () {
                     id: maxID,
                     description: textDescription.val(),
                     query: textQuery.val(),
-                    status: 'insert'
+                    status: 'insert',
+                    show: true
                 }
-                if(curData == undefined){
+                if (curData == undefined) {
                     curData = [];
                 }
                 curData.push(temp);
@@ -84,33 +125,63 @@ $(document).ready(function () {
         }
     });
     $(".cancel_button").click(function () {
-        switchNone(editField);
-        switchBlock(mainForm);
+        hideElement(editField);
+        showElement(mainForm);
     });
-    $(window).on('beforeunload', function(){
+
+    $(".save_list_button").click(function () {
+        hideElement(saveListButtons);
+        enableButton(showAllButton);
+        enableButton(createButton);
+        enableButton(deleteButton);
+        checkChanges();
+        sendAjax();
+        isShowAll = false;
+    });
+
+    $(".cancel_list_button").click(function () {
+        hideElement(saveListButtons);
+        enableButton(showAllButton);
+        enableButton(createButton);
+        enableButton(deleteButton);
+        init();
+        isShowAll = false;
+    });
+    $(".export_button").click(function () {
+        var index = getIndexByRadio();
+        var now = new Date();
+        $("#table2excel").table2excel({
+            filename: curData[index].description + now.getFullYear()+':'+(now.getMonth()+1)+':'+now.getDate()
+        });
+
+    });
+    $(window).on('beforeunload', function () {
         sendAjax();
     });
 });
 
 var curData = [];
 var maxID = 0;
+var isShowAll = false;
 
 function init() {
     $.ajax({
         url: "http://localhost:8080/hr_system-1.0-SNAPSHOT/admin/service/getReportQuery",
         type: "GET",
         dataType: "json",
-        success:function (data){
-            curData = data;
-            for (var index in curData) {
-                curData[index].status = "new";
-            }
-            generateDescriptionList(curData);
-        },
+        success: ajaxSuccess,
         error: function (data) {
             console.log(data);
         }
     });
+}
+
+function ajaxSuccess(data) {
+    curData = data;
+    for (var index in curData) {
+        curData[index].status = "new";
+    }
+    generateDescriptionList(curData);
 }
 
 function generateDescriptionList(data) {
@@ -119,22 +190,28 @@ function generateDescriptionList(data) {
     var isExist = false;
     for (var index in data) {
         if (data[index].status !== 'delete') {
-            reportForm.append('<label><input type="radio" name = "description" class = "radio_button" value='
-            + data[index].id + ' hidden>' + data[index].description + '</label> <br>');
+            reportForm.append(createRow(data[index].id, data[index].description, data[index].show));
             isExist = true;
         }
-       // maxID = data[index].id > maxID ? data[index].id : maxID;
+        // maxID = data[index].id > maxID ? data[index].id : maxID;
     }
     $(".radio_button:first").prop("checked", true);
     if (!isExist || data.length == 0) {
-        switchNone($(".not_empty_form"));
+        hideElement($(".not_empty_form"));
         $(".immut_text").empty();
     } else {
         radioButtonsChange();
-        switchBlock($(".not_empty_form"));
+        showElement($(".not_empty_form"));
     }
 }
-
+function createRow(id, description, isShow) {
+    if (isShowAll)
+        return '<label><input type="radio" name = "description" class = "radio_button" value='
+            + id + ' hidden>' + description + '<input type="checkbox" name = "isShow" class = "checkbox" value='
+            + id + (isShow ? ' checked' : '') + '></label> <br>';
+    return '<label><input type="radio" name = "description" class = "radio_button" value='
+        + id + ' hidden>' + description + '</label> <br>';
+}
 function radioButtonsChange() {
     var radioButtons = $(".radio_button");
     showQuery(radioButtons);
@@ -142,20 +219,21 @@ function radioButtonsChange() {
         showQuery(radioButtons);
     });
 }
-function showReport(data){
+function showReport(data) {
     var report = $(".report");
     report.empty();
     var table = '';
-    for(var i in data){
+    for (var i in data) {
         table = table + '<tr>';
-        for(var j in data[i]){
-            table = table + '<td>'+data[i][j]+'</td>';
+        for (var j in data[i]) {
+            table = table + '<td>' + data[i][j] + '</td>';
         }
         table = table + '</tr>';
     }
     report.append(table);
 }
-function showQuery(radioButtons){
+function showQuery(radioButtons) {
+    hideElement($('.show_table'));
     var text = $(".immut_text");
     var radio = $("input:radio:checked");
     radioButtons.parent().css({
@@ -168,18 +246,18 @@ function showQuery(radioButtons){
     text.append(curData[getIndexById(radio.val())].query);
 }
 
-function sendAjax(){
-    for(var index in curData){
-        if(curData[index].status!=="new"){
+function sendAjax() {
+    for (var index in curData) {
+        if (curData[index].status !== "new") {
             $.ajax({
                 url: "http://localhost:8080/hr_system-1.0-SNAPSHOT/admin/service/setReportQuery",
                 type: "GET",
                 dataType: "json",
-                data:curData[index],
+                data: curData[index],
                 contentType: 'application/json',
                 mimeType: 'application/json',
-                success:function (data){
-                    console.log(data);
+                success: function (data) {
+                    init();
                 },
                 error: function (data) {
                     console.log(data);
@@ -187,7 +265,21 @@ function sendAjax(){
             });
         }
     }
+    init();
 }
+
+function checkChanges() {
+    var checkboxes = $('input[type=checkbox]');
+    $(checkboxes).each(function () {
+        var index = getIndexById($(this).val());
+        if ($(this).prop('checked') !== curData[index].show) {
+            curData[index].status = "update";
+            curData[index].show = !curData[index].show;
+        }
+    });
+    console.log(curData);
+}
+
 function getReportByRadio() {
     return curData[getIndexById($("input:radio:checked").val())];
 }
@@ -205,14 +297,22 @@ function getIndexByRadio() {
     return getIndexById(id);
 }
 
-function switchBlock(el) {
+function showElement(el) {
     el.css({
         'display': 'block'
     });
 }
 
-function switchNone(el) {
+function hideElement(el) {
     el.css({
         'display': 'none'
     });
+}
+
+function disableButton(but) {
+    but.prop("disabled", true);
+}
+
+function enableButton(but) {
+    but.prop("disabled", false);
 }

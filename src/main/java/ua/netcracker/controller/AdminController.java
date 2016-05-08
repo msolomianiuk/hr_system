@@ -31,6 +31,12 @@ public class AdminController {
     @Autowired
     private CandidateServiceImpl candidateService;
 
+    @Autowired
+    private EmailTemplateService emailTemplateService;
+
+    @Autowired
+    private ReportService reportService;
+
     @RequestMapping(value = "", method = RequestMethod.GET)
     public String mainPage() {
         return "admin";
@@ -131,13 +137,10 @@ public class AdminController {
     @RequestMapping(value = "/report", method = RequestMethod.GET)
     public String getReportPage(){return "report";}
 
-    @Autowired
-    private ReportService reportService;
-
     @RequestMapping(value = "/service/getReportQuery", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<Collection<ReportQuery>> getAllReports() {
-        Collection<ReportQuery> reports = reportService.getAllReports();
+    public ResponseEntity<Collection<ReportQuery>> getAllShowReports() {
+        Collection<ReportQuery> reports = reportService.getAllShowReports();
         if (reports.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
@@ -146,14 +149,16 @@ public class AdminController {
 
     @RequestMapping(value = "/service/setReportQuery", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<ReportQuery> setAllReports(@RequestParam String id,
+    public ResponseEntity<ReportQuery> setReport(@RequestParam String id,
                                                      @RequestParam String description,
                                                      @RequestParam String query,
+                                                     @RequestParam String show,
                                                      @RequestParam String status) {
         ReportQuery reportQuery = new ReportQuery();
+        reportQuery.setId(Integer.valueOf(id));
         reportQuery.setQuery(query);
         reportQuery.setDescription(description);
-        reportQuery.setId(Integer.valueOf(id));
+        reportQuery.setShow(Boolean.valueOf(show));
         if (reportService.manageReportQuery(reportQuery, status)) {
             return new ResponseEntity<>(reportQuery, HttpStatus.OK);
         }
@@ -170,8 +175,15 @@ public class AdminController {
         return new ResponseEntity<>(report, HttpStatus.OK);
     }
 
-    @Autowired
-    private EmailTemplateService emailTemplateService;
+    @RequestMapping(value = "/service/getAllReportQuery", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<Collection<ReportQuery>> getAllReports() {
+        Collection<ReportQuery> report = reportService.getAllReports();
+        if (report == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(report, HttpStatus.OK);
+    }
 
     @RequestMapping(value = "/service/getEmailTemplates", method = RequestMethod.GET)
     @ResponseBody

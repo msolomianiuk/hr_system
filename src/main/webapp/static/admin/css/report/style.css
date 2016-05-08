@@ -156,3 +156,11 @@ footer a:focus {
 .not_empty_form{
     display: none;
 }
+
+.show_table{
+    display:none;
+}
+
+.save_buttons{
+    display:none;
+}
