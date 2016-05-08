@@ -47,7 +47,7 @@ public class InterviewResultDAOImpl implements InterviewResultDAO {
                 interviewResult.setComment((String) row.get("comment"));
                 Recommendation[] recommendations = Recommendation.values();
                 for (Recommendation r : recommendations){
-                    if (r.getId() == row.get("recommendation_id")){
+                    if (r.getId() == (int) row.get("recommendation_id")){
                         interviewResult.setRecommendation(r.toString());
                     }
                 }
