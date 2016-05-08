@@ -72,7 +72,7 @@ public class AnswersRestController {
         }
 
         candidate.setAnswers(listAnswers);
-        candidateService.saveOrUpdate(candidate);
+        candidateService.saveOrUpdateAnswers(candidate);
         return ResponseEntity.ok(candidate);
     }
 

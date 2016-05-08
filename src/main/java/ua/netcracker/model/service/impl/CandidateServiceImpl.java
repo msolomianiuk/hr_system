@@ -6,9 +6,9 @@ import org.springframework.stereotype.Service;
 import ua.netcracker.model.dao.AnswersDAO;
 import ua.netcracker.model.dao.CandidateDAO;
 import ua.netcracker.model.dao.InterviewResultDAO;
-import ua.netcracker.model.dao.QuestionDAO;
 import ua.netcracker.model.entity.Answer;
 import ua.netcracker.model.entity.Candidate;
+import ua.netcracker.model.entity.InterviewResult;
 import ua.netcracker.model.service.CandidateService;
 
 import java.util.Collection;
@@ -22,8 +22,10 @@ public class CandidateServiceImpl implements CandidateService {
 
     private static final Logger LOGGER = Logger.getLogger(CandidateServiceImpl.class);
 
-    @Autowired
-    private QuestionDAO questionDAO;
+    @Override
+    public void saveInterviewResult(Candidate candidate, InterviewResult interviewResult) {
+
+    }
 
     @Autowired
     private CandidateDAO candidateDAO;
@@ -36,12 +38,12 @@ public class CandidateServiceImpl implements CandidateService {
 
     @Override
     public Candidate getCandidateById(Integer id) {
-        return candidateDAO.findCandidateById(id);
+        return candidateDAO.findByCandidateId(id);
     }
 
     @Override
     public Candidate getCandidateByUserId(Integer userId) {
-        return candidateDAO.findCandidateByUserId(userId);
+        return candidateDAO.findByUserId(userId);
     }
 
     @Override
@@ -71,7 +73,7 @@ public class CandidateServiceImpl implements CandidateService {
 
     @Override
     public int getInterviewDayDetailsById(Integer candidateId) {
-        return candidateDAO.getInterviewDayDetailsById(candidateId);
+        return candidateDAO.findInterviewDetailsByCandidateId(candidateId);
     }
 
     @Override
@@ -95,12 +97,11 @@ public class CandidateServiceImpl implements CandidateService {
     }
 
     @Override
-    public void saveOrUpdate(Candidate candidate) {
+    public void saveOrUpdateAnswers(Candidate candidate) {
         try {
             answersDAO.update(candidate);
         } catch (Exception e) {
-            LOGGER.debug(e.getStackTrace());
-            LOGGER.info(e.getMessage());
+            LOGGER.error("Error: " + e);
         }
     }
 }

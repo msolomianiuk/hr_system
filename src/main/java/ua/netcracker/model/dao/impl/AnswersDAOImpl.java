@@ -5,7 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import ua.netcracker.model.dao.AnswersDAO;
-import ua.netcracker.model.entity.*;
+import ua.netcracker.model.entity.Answer;
+import ua.netcracker.model.entity.Candidate;
 
 import javax.sql.DataSource;
 import java.util.ArrayList;
@@ -42,8 +43,7 @@ public class AnswersDAOImpl implements AnswersDAO {
                 answers.add(answer);
             }
         } catch (Exception e) {
-            LOGGER.debug(e.getStackTrace());
-            LOGGER.info(e.getMessage());
+            LOGGER.error("Error: " + e);
         }
         return answers;
 
@@ -57,7 +57,7 @@ public class AnswersDAOImpl implements AnswersDAO {
                 executeSaveAnswer(candidate.getId(), answer);
             }
         } catch (Exception e) {
-
+            LOGGER.error("Error: " + e);
         }
     }
 
@@ -67,8 +67,7 @@ public class AnswersDAOImpl implements AnswersDAO {
             JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
             jdbcTemplate.update(DELETE + candidateId);
         } catch (Exception e) {
-            LOGGER.debug(e.getStackTrace());
-            LOGGER.info(e.getMessage());
+            LOGGER.error("Error: " + e);
         }
 
     }
@@ -79,8 +78,7 @@ public class AnswersDAOImpl implements AnswersDAO {
             JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
             jdbcTemplate.update(INSERT, candidateId, answer.getQuestionId(), answer.getValue());
         } catch (Exception e) {
-            LOGGER.debug(e.getStackTrace());
-            LOGGER.info(e.getMessage());
+            LOGGER.error("Error: " + e);
         }
     }
 
@@ -114,8 +112,7 @@ public class AnswersDAOImpl implements AnswersDAO {
                 }
             }
         } catch (Exception e) {
-            LOGGER.debug(e.getStackTrace());
-            LOGGER.info(e.getMessage());
+            LOGGER.error("Error: " + e);
         }
         return false;
     }

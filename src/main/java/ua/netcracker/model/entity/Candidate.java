@@ -20,6 +20,8 @@ public class Candidate {
 
     private Status status;
 
+    private int interviewDaysDetailsId;
+
     private Collection<Answer> answers;
 
     private Collection<InterviewResult> interviewResults;
@@ -84,5 +86,13 @@ public class Candidate {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public int getInterviewDaysDetailsId() {
+        return interviewDaysDetailsId;
+    }
+
+    public void setInterviewDaysDetailsId(int interviewDaysDetailsId) {
+        this.interviewDaysDetailsId = interviewDaysDetailsId;
     }
 }

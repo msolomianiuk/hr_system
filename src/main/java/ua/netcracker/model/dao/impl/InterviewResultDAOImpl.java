@@ -17,10 +17,6 @@ import java.util.Map;
  */
 @Repository("InterviewResultDao")
 public class InterviewResultDAOImpl implements InterviewResultDAO {
-
-    @Autowired
-    private DataSource dataSource;
-
     private static final Logger LOGGER = Logger.getLogger(InterviewResultDAOImpl.class);
     private static final String FIND_MARK = "Select mark, id_interviewer from \"hr_system\".interview_result " +
             "where candidate_id = ";
@@ -30,6 +26,10 @@ public class InterviewResultDAOImpl implements InterviewResultDAO {
                     "on i.recommendation_id = r.id where i.candidate_id = ";
     private static final String FIND_COMMENT =
             "Select response from \"hr_system\".interview_result where i.candidate_id = ";
+
+
+    @Autowired
+    private DataSource dataSource;
 
     @Override
     public Map<Integer, Integer> findMarks(Integer candidateId) {
@@ -41,8 +41,7 @@ public class InterviewResultDAOImpl implements InterviewResultDAO {
                 mark.put((int) row.get("interviewer_id"), (int) row.get("mark"));
             }
         } catch (Exception e) {
-            LOGGER.debug(e.getStackTrace());
-            LOGGER.info(e.getMessage());
+            LOGGER.error("Error: " + e);
         }
 
         return mark;
@@ -59,8 +58,7 @@ public class InterviewResultDAOImpl implements InterviewResultDAO {
                 recommendations.put((int) row.get("interviewer_id"), (String) row.get("value"));
             }
         } catch (Exception e) {
-            LOGGER.debug(e.getStackTrace());
-            LOGGER.info(e.getMessage());
+            LOGGER.error("Error: " + e);
         }
         return recommendations;
     }
@@ -68,10 +66,14 @@ public class InterviewResultDAOImpl implements InterviewResultDAO {
     @Override
     public Map<Integer, String> findComments(Integer candidateId) {
         Map<Integer, String> comments = new HashMap<>();
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-        List<Map<String, Object>> rows = jdbcTemplate.queryForList(FIND_COMMENT + candidateId);
-        for (Map<String, Object> row : rows) {
-            comments.put((int) row.get("interviewer_id"), (String) row.get("value"));
+        try {
+            JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+            List<Map<String, Object>> rows = jdbcTemplate.queryForList(FIND_COMMENT + candidateId);
+            for (Map<String, Object> row : rows) {
+                comments.put((int) row.get("interviewer_id"), (String) row.get("value"));
+            }
+        } catch (Exception e) {
+            LOGGER.error("Error: " + e);
         }
         return comments;
     }
