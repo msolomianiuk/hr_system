@@ -1,6 +1,7 @@
 package ua.netcracker.model.service;
 
-import com.lowagie.text.Document;
+
+import com.itextpdf.text.Document;
 import ua.netcracker.model.entity.Candidate;
 
 public interface GeneratePDFService {

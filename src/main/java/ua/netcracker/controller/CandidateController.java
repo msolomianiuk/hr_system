@@ -73,6 +73,45 @@ public class CandidateController {
         return new ResponseEntity<Collection<Answer>>(answers, HttpStatus.OK);
     }
 
+//    @RequestMapping(value = "/service/getPDF", method = RequestMethod.GET)
+//    @ResponseBody
+//    public ResponseEntity<byte[]> getPDF() {
+//
+//        //TODO:
+//        //candidate = getCurrentCandidate();
+//
+//        //---------------------------------------------------------------------------------------
+//        Candidate exampleCandidate = new Candidate();
+//
+//        User exampleUser = new User();
+//        exampleUser.setName("Name");
+//        exampleUser.setSurname("Surname");
+//        exampleUser.setPatronymic("Patronymic");
+//        exampleUser.setImage("src/main/webapp/static/images/user.png");
+//        exampleCandidate.setUser(exampleUser);
+//
+//        Collection<Answer> exampleAnswers = new ArrayList<>();
+//        for (int i = 0; i < 10; i++) {
+//            Answer exampleAnswer = new Answer();
+//            exampleAnswer.setQuestionId(i);
+//            exampleAnswer.setValue("Answer"+i);
+//
+//            exampleAnswers.add(exampleAnswer);
+//        }
+//        exampleCandidate.setAnswers(exampleAnswers);
+//        //---------------------------------------------------------------------------------------
+//
+//        pdfService.generatePDF(exampleCandidate);
+//        byte[] content = pdfService.convertToBytes();
+//
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.setContentType(MediaType.parseMediaType("application/pdf"));
+//        String filename = "form.pdf";
+//        headers.setContentDispositionFormData(filename, filename);
+//        headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
+//
+//        return new ResponseEntity<>(content, headers, HttpStatus.OK);
+//    }
    /* @RequestMapping(value = "/student1", method = RequestMethod.POST)
     public String addImageFromForm(Candidate candidate, BindingResult bindingResult,
                                    @RequestParam(value = "image", required = false)
