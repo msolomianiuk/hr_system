@@ -148,6 +148,12 @@
                                                        value="Return to Interview Details"> </a>
                         </td>
                     </tr>
+                    <tr>
+                        <td>
+                            <input type="button" class='btn' id="ButtonAddress"
+                                                                  value="Test">
+                        </td>
+                    </tr>
                 </table>
             </form>
 
@@ -188,6 +194,22 @@
                 type: "GET",
                 dataType: "json",
                 data: {'id': id},
+                contentType: 'application/json',
+                mimeType: 'application/json',
+                success: funcForAjax,
+                error: function (data) {
+                    console.log(data);
+                }
+            });
+        });
+
+        $("#ButtonAddress").bind("click", function () {
+//            var id = $("input[name='id']").val();
+
+            $.ajax({
+                url: "http://localhost:8080/hr_system-1.0-SNAPSHOT/admin/address_getDateList",
+                dataType: "json",
+//                data: {'id': id},
                 contentType: 'application/json',
                 mimeType: 'application/json',
                 success: funcForAjax,

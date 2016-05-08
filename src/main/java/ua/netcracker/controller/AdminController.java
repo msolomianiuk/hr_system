@@ -18,9 +18,11 @@ import ua.netcracker.model.entity.EmailTemplate;
 import ua.netcracker.model.entity.ReportQuery;
 import ua.netcracker.model.service.EmailTemplateService;
 import ua.netcracker.model.service.ReportService;
+import ua.netcracker.model.service.date.DateService;
 import ua.netcracker.model.service.impl.CandidateServiceImpl;
 import ua.netcracker.model.service.impl.CourseSettingServiceImpl;
 
+import java.util.HashMap;
 import java.util.List;
 
 import java.util.Collection;
@@ -42,6 +44,9 @@ public class AdminController {
 
     @Autowired
     private CandidateServiceImpl candidateService;
+
+    @Autowired
+    private DateService dateService;
 
     @RequestMapping(value = "", method = RequestMethod.GET)
     public String mainPage() {
@@ -148,6 +153,16 @@ public class AdminController {
         return new ResponseEntity<List<InterviewDaysDetails>>(interview, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/address_getDateList", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<Map<String, String>> getDates() {
+        Map<String, String> date = dateService.mapDate();
+        if (date.isEmpty()) {
+            return new ResponseEntity<Map<String, String>>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<Map<String, String>>(date, HttpStatus.OK);
+    }
+
     @RequestMapping(value = "/interview_details_insert", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<InterviewDaysDetails> setInterviewDaysDetails(
@@ -244,6 +259,19 @@ public class AdminController {
         }
         return new ResponseEntity<List<Address>>(addressList, HttpStatus.OK);
     }
+
+    @RequestMapping(value = "/address_getAddress", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<Address> getAddress(
+            @RequestParam String id
+    ) {
+        Address address = addressService.findById(Integer.parseInt(id));
+        if (address==null) {
+            return new ResponseEntity<Address>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<Address>(address, HttpStatus.OK);
+    }
+
 
     @RequestMapping(value = "/address_insert", method = RequestMethod.GET)
     @ResponseBody

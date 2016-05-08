@@ -20,7 +20,7 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     public Address findById(int id) {
-        return null;
+        return addressDAO.find(id);
     }
 
     @Override

@@ -92,7 +92,7 @@ public class DateService {
     }
 
     public int getPeriod() {
-
+        courseSetting = courseSettingService.getLastSetting();
         LocalDate startInterviewDay = getDate(courseSetting.getInterviewStartDate());
         LocalDate endInterviewDay = getDate(courseSetting.getInterviewEndDate());
 
@@ -153,15 +153,16 @@ public class DateService {
 
     public Map<String, String> mapDate() {
 
-        CourseSetting course = courseSettingService.getLastSetting();
+        courseSetting= courseSettingService.getLastSetting();
 
         HashMap<String, String> date = new HashMap<>();
+
         int r = getPeriod();
 
-        String s = course.getInterviewStartDate();
+        String s = courseSetting.getInterviewStartDate();
 
         for (int i = 0; i < r; i++) {
-            date.put(String.valueOf(getDate(s).plusDays(i)), String.valueOf(course.getId()));
+            date.put(String.valueOf(getDate(s).plusDays(i)), String.valueOf(courseSetting.getId()));
         }
         return date;
     }
