@@ -29,6 +29,8 @@ public class CandidateDAOImpl implements CandidateDAO {
             "FROM \"hr_system\".users u JOIN \"hr_system\".role_users_maps rol ON rol.user_id = u.id WHERE rol.role_id=";
     private static final String FIND_STATUS_BY_ID = "SELECT * FROM \"hr_system\".status WHERE id = ";
     private static final String FIND_BY_USER_ID = "SELECT * FROM \"hr_system\".candidate WHERE user_id = ";
+    private static final String UPDATE = "UPDATE \"hr_system\".candidate SET(status_id,interview_days_details_id)=(?,?) " +
+            " WHERE id = ? ";
     private User user;
 
     @Autowired
@@ -196,8 +198,16 @@ public class CandidateDAOImpl implements CandidateDAO {
         return false;
     }
 
+
     @Override
-    public boolean update(Candidate entity) {
+    public boolean update(Candidate candidate) {
+        try {
+            jdbcTemplate = new JdbcTemplate(dataSource);
+            jdbcTemplate.update(UPDATE, candidate.getStatusId(), candidate.getInterviewDaysDetailsId(), candidate.getId());
+            return true;
+        } catch (Exception e) {
+            LOGGER.error("Error:" + e);
+        }
         return false;
     }
 
