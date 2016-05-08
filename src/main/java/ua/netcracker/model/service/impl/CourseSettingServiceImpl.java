@@ -66,62 +66,28 @@ public class CourseSettingServiceImpl implements CourseSettingService {
                         ) {
                     return null;
                 } else {
-                    if (dateService.getDate(registrationEndDate).getYear() <
-                            dateService.getDate(registrationStartDate).getYear()) {
-                        return null;
-                    } else {
-                        if (dateService.getDate(interviewEndDate).getYear() <
-                                dateService.getDate(interviewStartDate).getYear() ||
-                                dateService.getDate(courseStartDate).getYear() <
-                                        dateService.getDate(interviewEndDate).getYear() ||
-                                dateService.getDate(interviewStartDate).getYear() <
-                                        dateService.getDate(registrationEndDate).getYear()
-                                ) {
-                            return null;
-                        } else {
-                            if (dateService.getDate(interviewEndDate).getYear() >
-                                    dateService.getDate(interviewStartDate).getYear() ||
-                                    dateService.getDate(courseStartDate).getYear() >
-                                            dateService.getDate(interviewEndDate).getYear()
-                                    ) {
-                                return getCourseSetting(registrationStartDate, registrationEndDate,
-                                        interviewStartDate, interviewEndDate,
-                                        courseStartDate, interviewTimeForStudent,
-                                        studentForInterviewCount, studentForCourseCount);
-                            } else {
-                                if (dateService.getDate(interviewEndDate).getMonthValue() <
-                                        dateService.getDate(interviewStartDate).getMonthValue() ||
-                                        dateService.getDate(registrationEndDate).getMonthValue() <
-                                                dateService.getDate(registrationStartDate).getMonthValue() ||
-                                        dateService.getDate(interviewStartDate).getMonthValue() <
-                                                dateService.getDate(registrationEndDate).getMonthValue() ||
-                                        dateService.getDate(courseStartDate).getMonthValue() <
-                                                dateService.getDate(interviewEndDate).getMonthValue()
-                                        ) {
-                                    return null;
-                                } else {
-                                    if (dateService.getDate(interviewEndDate).getDayOfMonth() <
-                                            dateService.getDate(interviewStartDate).getDayOfMonth() ||
-                                            dateService.getDate(registrationEndDate).getDayOfMonth() <
-                                                    dateService.getDate(registrationStartDate).getDayOfMonth() ||
-                                            dateService.getDate(courseStartDate).getDayOfMonth() <
-                                                    dateService.getDate(interviewEndDate).getDayOfMonth()
+                    if (dateService.getDate(courseStartDate).isAfter(dateService.getDate(interviewEndDate)) &&
+                            dateService.getDate(courseStartDate).isAfter(dateService.getDate(interviewStartDate)) &&
+                            dateService.getDate(courseStartDate).isAfter(dateService.getDate(registrationEndDate)) &&
+                            dateService.getDate(courseStartDate).isAfter(dateService.getDate(registrationStartDate)) &&
 
-                                            ) {
-                                        return null;
-                                    } else {
-                                        return getCourseSetting(registrationStartDate, registrationEndDate,
-                                                interviewStartDate, interviewEndDate,
-                                                courseStartDate, interviewTimeForStudent,
-                                                studentForInterviewCount, studentForCourseCount);
-                                    }
-                                }
-                            }
-                        }
+                            dateService.getDate(interviewEndDate).isAfter(dateService.getDate(interviewStartDate)) &&
+                            dateService.getDate(interviewEndDate).isAfter(dateService.getDate(registrationEndDate)) &&
+                            dateService.getDate(interviewEndDate).isAfter(dateService.getDate(registrationStartDate)) &&
+
+                            dateService.getDate(interviewStartDate).isAfter(dateService.getDate(registrationEndDate)) &&
+                            dateService.getDate(interviewStartDate).isAfter(dateService.getDate(registrationStartDate)) &&
+
+                            dateService.getDate(registrationEndDate).isAfter(dateService.getDate(registrationStartDate))) {
+
+                        return getCourseSetting(registrationStartDate, registrationEndDate,
+                                interviewStartDate, interviewEndDate,
+                                courseStartDate, interviewTimeForStudent,
+                                studentForInterviewCount, studentForCourseCount);
                     }
                 }
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             LOGGER.error(e);
         }
         return null;

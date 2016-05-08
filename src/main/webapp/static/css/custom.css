@@ -5430,3 +5430,7 @@ ul.notifications {
 .logout i{
   margin: 3px 0px 3px 11px;
 }
+
+.profile{
+  height: 60px;
+}

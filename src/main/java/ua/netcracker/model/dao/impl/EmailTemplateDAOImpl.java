@@ -26,19 +26,19 @@ public class EmailTemplateDAOImpl implements EmailTemplateDAO {
     @Autowired
     private DataSource dataSource;
 
-    private static final String sqlFindAll = "SELECT * FROM \"hr_system\".letter_template;";
-    private static final String sqlFindById = "SELECT * FROM \"hr_system\".letter_template WHERE id = (?);";
-    private static final String sqlInsert = "INSERT INTO \"hr_system\".letter_template (description, template) VALUES (?, ?)";
-    private static final String sqlUpdate = "UPDATE \"hr_system\".letter_template SET description=?, template=? WHERE id = ?;";
-    private static final String sqlDelete = "DELETE FROM \"hr_system\".letter_template WHERE id = ?;";
-    private static final String sqlGetDescriptions = "SELECT description FROM \"hr_system\".letter_template;";
-    private static final String sqlGetEmailTemplateByDescription = "SELECT * FROM \"hr_system\".letter_template WHERE decription = (?);";
+    private static final String SQL_FIND_ALL = "SELECT * FROM \"hr_system\".letter_template;";
+    private static final String SQL_FIND_BY_ID = "SELECT * FROM \"hr_system\".letter_template WHERE id = (?);";
+    private static final String SQL_INSERT = "INSERT INTO \"hr_system\".letter_template (description, template) VALUES (?, ?)";
+    private static final String SQL_UPDATE = "UPDATE \"hr_system\".letter_template SET description=?, template=? WHERE id = (?);";
+    private static final String SQL_DELETE = "DELETE FROM \"hr_system\".letter_template WHERE id = (?);";
+    private static final String SQL_GET_DESCRIPTIONS = "SELECT description FROM \"hr_system\".letter_template;";
+    private static final String SQL_GET_EMAIL_TEMPLATE_BY_DESCRIPTION = "SELECT * FROM \"hr_system\".letter_template WHERE decription = (?);";
 
 
     @Override
     public Collection<EmailTemplate> findAll() {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-        List<Map<String, Object>> rows = jdbcTemplate.queryForList(sqlFindAll);
+        List<Map<String, Object>> rows = jdbcTemplate.queryForList(SQL_FIND_ALL);
         Collection<EmailTemplate> emailTemplates = new ArrayList<>();
         for (Map row : rows) {
             EmailTemplate emailTemplate = new EmailTemplate();
@@ -53,7 +53,7 @@ public class EmailTemplateDAOImpl implements EmailTemplateDAO {
     @Override
     public EmailTemplate find(int id) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-        EmailTemplate emailTemplate = jdbcTemplate.queryForObject(sqlFindById, new Object[]{id}, new RowMapper<EmailTemplate>() {
+        EmailTemplate emailTemplate = jdbcTemplate.queryForObject(SQL_FIND_BY_ID, new Object[]{id}, new RowMapper<EmailTemplate>() {
                     @Override
                     public EmailTemplate mapRow(ResultSet resultSet, int i) throws SQLException {
                         return getEmailTemplate(resultSet);
@@ -63,17 +63,6 @@ public class EmailTemplateDAOImpl implements EmailTemplateDAO {
         return emailTemplate;
     }
 
-    @Override
-    public boolean insert(Object entity) {
-        return false;
-    }
-
-    @Override
-    public boolean update(Object entity) {
-        return false;
-    }
-
-
     private EmailTemplate getEmailTemplate(ResultSet resultSet) throws SQLException {
         EmailTemplate emailTemplate = new EmailTemplate();
         emailTemplate.setId(resultSet.getInt("id"));
@@ -82,20 +71,20 @@ public class EmailTemplateDAOImpl implements EmailTemplateDAO {
         return emailTemplate;
     }
 
-
+    @Override
     public boolean insert(EmailTemplate emailTemplate) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-        jdbcTemplate.update(sqlInsert, new Object[]{emailTemplate.getDescription(),
+        jdbcTemplate.update(SQL_INSERT, new Object[]{emailTemplate.getDescription(),
                 emailTemplate.getTemplate()
         });
         return true;
 
     }
 
-
+    @Override
     public boolean update(EmailTemplate emailTemplate) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-        jdbcTemplate.update(sqlUpdate, new Object[]{emailTemplate.getDescription(),
+        jdbcTemplate.update(SQL_UPDATE, new Object[]{emailTemplate.getDescription(),
                 emailTemplate.getTemplate(), emailTemplate.getId()
         });
         return true;
@@ -104,7 +93,7 @@ public class EmailTemplateDAOImpl implements EmailTemplateDAO {
     @Override
     public boolean remove(EmailTemplate emailTemplate) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-        jdbcTemplate.update(sqlDelete, new Object[]{emailTemplate.getId()
+        jdbcTemplate.update(SQL_DELETE, new Object[]{emailTemplate.getId()
         });
         return true;
     }
@@ -113,7 +102,7 @@ public class EmailTemplateDAOImpl implements EmailTemplateDAO {
     public List<String> getDescriptions() {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
         List<String> descriptions = new ArrayList<>();
-        List<Map<String, Object>> rows = jdbcTemplate.queryForList(sqlGetDescriptions);
+        List<Map<String, Object>> rows = jdbcTemplate.queryForList(SQL_GET_DESCRIPTIONS);
         for (Map row : rows) {
             String description = (String) row.get("description");
             descriptions.add(description);
@@ -124,7 +113,7 @@ public class EmailTemplateDAOImpl implements EmailTemplateDAO {
     @Override
     public EmailTemplate getEmailTemplateByDescription(String description) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-        EmailTemplate emailTemplate = jdbcTemplate.queryForObject(sqlGetEmailTemplateByDescription, new Object[]{description}, new RowMapper<EmailTemplate>() {
+        EmailTemplate emailTemplate = jdbcTemplate.queryForObject(SQL_GET_EMAIL_TEMPLATE_BY_DESCRIPTION, new Object[]{description}, new RowMapper<EmailTemplate>() {
                     @Override
                     public EmailTemplate mapRow(ResultSet resultSet, int i) throws SQLException {
                         return getEmailTemplate(resultSet);

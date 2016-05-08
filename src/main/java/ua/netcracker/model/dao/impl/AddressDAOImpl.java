@@ -58,7 +58,7 @@ public class AddressDAOImpl implements AddressDAO {
 
     @Override
     public boolean remove(long id) {
-        return jdbcTemplateFactory.getJdbcTemplate(dataSource).update(REMOVE_SQL, id)>0;
+        return jdbcTemplateFactory.getJdbcTemplate(dataSource).update(REMOVE_SQL, id) > 0;
     }
 
     @Override
@@ -67,9 +67,9 @@ public class AddressDAOImpl implements AddressDAO {
     }
 
     @Override
-    public List<Address> findAll(){
+    public List<Address> findAll() {
         List<Address> addressList = null;
-         addressList = jdbcTemplateFactory.getJdbcTemplate(dataSource).query(FIND_ALL_SQL,
+        addressList = jdbcTemplateFactory.getJdbcTemplate(dataSource).query(FIND_ALL_SQL,
                 new RowMapper<Address>() {
                     public Address mapRow(ResultSet rs, int rowNum) throws SQLException {
                         return createAddressWithResultSet(rs);
@@ -91,7 +91,7 @@ public class AddressDAOImpl implements AddressDAO {
         return jdbcTemplateFactory.getJdbcTemplate(dataSource).update(UPDATE_SQL,
                 address.getAddress(),
                 address.getRoomCapacity(),
-                address.getId())>0;
+                address.getId()) > 0;
     }
 
 }

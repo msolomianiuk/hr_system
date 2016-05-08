@@ -24,6 +24,7 @@ import ua.netcracker.model.service.impl.CourseSettingServiceImpl;
 import java.util.List;
 
 import java.util.Collection;
+import java.util.Map;
 
 
 @Controller
@@ -41,6 +42,12 @@ public class AdminController {
 
     @Autowired
     private CandidateServiceImpl candidateService;
+
+    @Autowired
+    private EmailTemplateService emailTemplateService;
+
+    @Autowired
+    private ReportService reportService;
 
     @RequestMapping(value = "", method = RequestMethod.GET)
     public String mainPage() {
@@ -140,7 +147,7 @@ public class AdminController {
     @RequestMapping(value = "/interview_details_list", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<List<InterviewDaysDetails>> getAllInterviewDaysDetails() {
-        List<InterviewDaysDetails> interview = (List <InterviewDaysDetails>) interviewDaysDetailsService.findAll();
+        List<InterviewDaysDetails> interview = (List<InterviewDaysDetails>) interviewDaysDetailsService.findAll();
         if (interview.isEmpty()) {
             return new ResponseEntity<List<InterviewDaysDetails>>(HttpStatus.NO_CONTENT);
         }
@@ -153,10 +160,11 @@ public class AdminController {
             @RequestParam String date,
             @RequestParam String start_time,
             @RequestParam String end_time,
-            @RequestParam String address_id
+            @RequestParam String address_id,
+            @RequestParam String id
     ) {
         InterviewDaysDetails interviewDaysDetails = new InterviewDaysDetails();
-        interviewDaysDetails.setCourseId(1);
+        interviewDaysDetails.setCourseId(Integer.parseInt(id));
         interviewDaysDetails.setInterviewDate(date);
         interviewDaysDetails.setStartTime(start_time);
         interviewDaysDetails.setEndTime(end_time);
@@ -183,16 +191,21 @@ public class AdminController {
 
     @RequestMapping(value = "/interview_details_getTime", method = RequestMethod.GET)
     @ResponseBody
+    public ResponseEntity<List<Map<String, Object>>> getAllInterviewDetailsAddressList() {
+        return ResponseEntity.ok(interviewDaysDetailsService.findAllInterviewDetailsAddress());
+    }
+
+    @RequestMapping(value = "/getInterviewDetailsByDate", method = RequestMethod.GET)
+    @ResponseBody
     public ResponseEntity<InterviewDaysDetails> getInterviewDetailsByDate(
             @RequestParam String id
     ) {
-        InterviewDaysDetails interviewDaysDetails;
+        InterviewDaysDetails interviewDaysDetails = null;
         interviewDaysDetails = interviewDaysDetailsService.findById(interviewDaysDetailsService.getIdbyDate(id));
-//        String s = Integer.toString(interviewDaysDetailsService.getIdbyDate(id));
-        if (interviewDaysDetails == null) {
-            return ResponseEntity.accepted().body(interviewDaysDetails);
+        if (interviewDaysDetails != null) {
+            return ResponseEntity.ok(interviewDaysDetails);
         }
-        return ResponseEntity.ok(interviewDaysDetails);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @RequestMapping(value = "/interview_details_update", method = RequestMethod.GET)
@@ -222,14 +235,16 @@ public class AdminController {
     //---Controllers for Address---
 
     @RequestMapping(value = "/service/interviewDetails/address", method = RequestMethod.GET)
-    public String getAddressPage(){return "address";}
+    public String getAddressPage() {
+        return "address";
+    }
 
     //---REST Controllers for Address---
 
     @RequestMapping(value = "/address_list", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<List<Address>> getAllAddress() {
-        List<Address> addressList = (List <Address>) addressService.findAllSetting();
+        List<Address> addressList = (List<Address>) addressService.findAllSetting();
         if (addressList.isEmpty()) {
             return new ResponseEntity<List<Address>>(HttpStatus.NO_CONTENT);
         }
@@ -284,19 +299,21 @@ public class AdminController {
         }
         return ResponseEntity.ok(addressEntity);
     }
+
     @RequestMapping(value = "/template", method = RequestMethod.GET)
-    public String getEmailTemplatePage(){return "template";}
+    public String getEmailTemplatePage() {
+        return "template";
+    }
 
     @RequestMapping(value = "/report", method = RequestMethod.GET)
-    public String getReportPage(){return "report";}
-
-    @Autowired
-    private ReportService reportService;
+    public String getReportPage() {
+        return "report";
+    }
 
     @RequestMapping(value = "/service/getReportQuery", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<Collection<ReportQuery>> getAllReports() {
-        Collection<ReportQuery> reports = reportService.getAllReports();
+    public ResponseEntity<Collection<ReportQuery>> getAllShowReports() {
+        Collection<ReportQuery> reports = reportService.getAllShowReports();
         if (reports.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
@@ -305,14 +322,16 @@ public class AdminController {
 
     @RequestMapping(value = "/service/setReportQuery", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<ReportQuery> setAllReports(@RequestParam String id,
+    public ResponseEntity<ReportQuery> setReport(@RequestParam String id,
                                                      @RequestParam String description,
                                                      @RequestParam String query,
+                                                     @RequestParam String show,
                                                      @RequestParam String status) {
         ReportQuery reportQuery = new ReportQuery();
+        reportQuery.setId(Integer.valueOf(id));
         reportQuery.setQuery(query);
         reportQuery.setDescription(description);
-        reportQuery.setId(Integer.valueOf(id));
+        reportQuery.setShow(Boolean.valueOf(show));
         if (reportService.manageReportQuery(reportQuery, status)) {
             return new ResponseEntity<>(reportQuery, HttpStatus.OK);
         }
@@ -329,8 +348,15 @@ public class AdminController {
         return new ResponseEntity<>(report, HttpStatus.OK);
     }
 
-    @Autowired
-    private EmailTemplateService emailTemplateService;
+    @RequestMapping(value = "/service/getAllReportQuery", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<Collection<ReportQuery>> getAllReports() {
+        Collection<ReportQuery> report = reportService.getAllReports();
+        if (report == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(report, HttpStatus.OK);
+    }
 
     @RequestMapping(value = "/service/getEmailTemplates", method = RequestMethod.GET)
     @ResponseBody
@@ -352,7 +378,7 @@ public class AdminController {
         emailTemplate.setTemplate(template);
         emailTemplate.setDescription(description);
         emailTemplate.setId(Integer.valueOf(id));
-        if(emailTemplateService.manageEmailTemplate(emailTemplate,status)){
+        if (emailTemplateService.manageEmailTemplate(emailTemplate, status)) {
 
             return new ResponseEntity<>(HttpStatus.OK);
         }

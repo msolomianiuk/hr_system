@@ -10,6 +10,7 @@ import java.util.Collection;
  */
 public interface ReportService {
     Collection<Collection<String>> getReportByQuery(String sql);
+    Collection<ReportQuery> getAllShowReports();
     Collection<ReportQuery> getAllReports();
     boolean manageReportQuery(ReportQuery reportQuery, String status);
 }

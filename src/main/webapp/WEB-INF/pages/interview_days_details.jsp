@@ -194,7 +194,7 @@
             var id = $("input[name='id']").val();
 
             $.ajax({
-                url: "http://localhost:8080/hr_system-1.0-SNAPSHOT/admin/interview_details_getTime",
+                url: "http://localhost:8080/hr_system-1.0-SNAPSHOT/admin/getInterviewDetailsByDate",
                 type: "GET",
                 dataType: "json",
                 data: {'id':id},
@@ -212,12 +212,13 @@
             var start_time = $("input[name='start_time']").val();
             var end_time = $("input[name='end_time']").val();
             var address_id = $("input[name='address_id']").val();
+            var id = $("input[name='id']").val();
 
             $.ajax({
                 url: "http://localhost:8080/hr_system-1.0-SNAPSHOT/admin/interview_details_insert",
                 type: "GET",
                 dataType: "json",
-                data: {'date': date, 'start_time': start_time, 'end_time': end_time, 'address_id': address_id},
+                data: {'date': date, 'start_time': start_time, 'end_time': end_time, 'address_id': address_id, 'id':id},
                 contentType: 'application/json',
                 mimeType: 'application/json',
                 success: funcForAjax,
