@@ -21,14 +21,16 @@ import java.util.Arrays;
 public class RegistrationPersonalRestController {
 
     private User user;
+
     @Autowired
     private void setUser(User user) {
         this.user = user;
     }
 
     private UserDAO userDAO;
+
     @Autowired
-    private void setUserDao (UserDAO userDAO){
+    private void setUserDao(UserDAO userDAO) {
         this.userDAO = userDAO;
     }
 
@@ -44,18 +46,9 @@ public class RegistrationPersonalRestController {
         }
         return null;
     }
+
     public static Role getRoleByStr(String role) {
-        if (Role.ADMIN.toString().equals(role))
-            return Role.ADMIN;
-        if (Role.STUDENT.toString().equals(role))
-            return Role.STUDENT;
-        if (Role.HR.toString().equals(role))
-            return Role.HR;
-        if (Role.BA.toString().equals(role))
-            return Role.BA;
-        if (Role.DEV.toString().equals(role))
-            return Role.DEV;
-        return null;
+        return Role.valueOf(role);
     }
 
     @RequestMapping(value = "/new_personal", method = RequestMethod.GET)
@@ -74,7 +67,7 @@ public class RegistrationPersonalRestController {
         user.setPatronymic(patronymic_peronal);
         user.setPassword(sha256Password(password_peronal));
         user.setEmail(email_peronal);
-        user.setRoles( new ArrayList<>(Arrays.asList(getRoleByStr(Role_Id))));
+        user.setRoles(new ArrayList<>(Arrays.asList(getRoleByStr(Role_Id))));
 
         userDAO.insert(user);
 

@@ -6,9 +6,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
+import ua.netcracker.model.entity.CourseSetting;
 import ua.netcracker.model.entity.User;
+import ua.netcracker.model.service.CourseSettingService;
 import ua.netcracker.model.service.RegistrationService;
+import ua.netcracker.model.service.date.DateService;
 
+import java.time.LocalDate;
 
 /**
  * Class for processing registration requests
@@ -27,14 +31,14 @@ public class RegistrationController {
                                @RequestParam(value = "error", required = false) String error,
                                @RequestParam(value = "success", required = false) String success) {
 
-        if (error != null) {
-            model.addAttribute("error", "Registration error");
-        } else if (success != null) {
-            model.addAttribute("success", "You have successfully signed up ...");
-        } else {
-            User user = new User();
-            model.addAttribute("user", user);
-        }
+            if (error != null) {
+                model.addAttribute("error", "Registration error");
+            } else if (success != null) {
+                model.addAttribute("success", "You have successfully signed up ...");
+            } else {
+                User user = new User();
+                model.addAttribute("user", user);
+            }
 
         return "registration";
     }

@@ -1,0 +1,30 @@
+.NewVariant {
+    display: inline-block;
+    width: 49%;
+}
+
+.plus{
+    font-size: 1.8em;
+    vertical-align: top;
+    width: 3%;
+    text-align: center;
+    height: 100%;
+    margin-top: 22px;
+}
+.minus{
+    font-size: 1.8em;
+    vertical-align: top;
+    width: 3%;
+    text-align: center;
+    height: 100%;
+    margin-top: 22px;
+}
+
+.TypeOfQuestionNew{
+    margin-top: 22px;
+}
+
+#ComboBox{
+    display:none;
+}
+

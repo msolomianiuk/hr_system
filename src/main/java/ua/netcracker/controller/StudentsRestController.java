@@ -3,7 +3,6 @@ package ua.netcracker.controller;
 /**
  * Created by Серый on 02.05.2016.
  */
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,13 +19,13 @@ import java.util.List;
 public class StudentsRestController {
 
     @Autowired
-    private CandidateService candidate;
+    private CandidateService candidateService;
 
 
     @RequestMapping(value = "/getStudents", method = RequestMethod.GET)
     public ResponseEntity<List<Candidate>> listAllStudents() {
 
-        List<Candidate> students = candidate.getAllProfiles();
+        List<Candidate> students = (List<Candidate>)candidateService.getAllCandidates();
 
         if(students.isEmpty()){
             return new ResponseEntity<List<Candidate>>(HttpStatus.NO_CONTENT);

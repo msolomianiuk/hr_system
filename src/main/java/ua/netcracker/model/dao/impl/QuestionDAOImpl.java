@@ -21,28 +21,29 @@ import java.util.Map;
 
 @Repository("questionDao")
 public class QuestionDAOImpl implements QuestionDAO {
+
     private static final Logger LOGGER = Logger.getLogger(QuestionDAOImpl.class);
 
     private static final String SELECT_ALL = "SELECT qcp.order_number, q.*,t.value ,qcp.course_id " +
             "FROM \"hr_system\".question_course_maps qcp " +
             "INNER JOIN \"hr_system\".question q ON qcp.question_id = q.id " +
             "Inner join \"hr_system\".type t ON q.type_id = t.id " +
-            "Order by qcp.order_number";;
+            "Order by qcp.order_number";
 
     private static final String SELECT_ALL_MANDATORY = "SELECT qcp.order_number, q.*,t.value ,qcp.course_id " +
             "FROM \"hr_system\".question_course_maps qcp " +
             "INNER JOIN \"hr_system\".question q ON qcp.question_id = q.id " +
             "INNER JOIN \"hr_system\".type t ON q.type_id = t.id " +
-            "WHERE q.is_mandatory = true " +
-            "Order by qcp.order_number";
+            "WHERE q.is_mandatory = true AND qcp.course_id = ";
 
-    private static final String SELECT_TYPE_ID = "Select id from \"hr_system\".type WHERE value = '";
+
+    private static final String SELECT_TYPE_ID = "Select id from \"hr_system\".type WHERE value = ?";
 
     private static final String FIND_BY_ID = "SELECT qcp.order_number, q.*,t.value ,qcp.course_id " +
             "FROM \"hr_system\".question_course_maps qcp " +
             "INNER JOIN \"hr_system\".question q ON qcp.question_id = q.id " +
             "Inner join \"hr_system\".type t ON q.type_id = t.id " +
-            "WHERE q.id = ";
+            "WHERE q.id = ? ";
 
     private static final String UPDATE_QUESTION = "UPDATE \"hr_system\".question SET caption = ?, type_id = ?, is_mandatory = ? " +
             "WHERE id = ?;";
@@ -50,12 +51,17 @@ public class QuestionDAOImpl implements QuestionDAO {
     private static final String UPDATE_QUESTION_COURSE_MAPS = "UPDATE \"hr_system\".question_course_maps SET course_id = ?, " +
             "order_number = ?, Where question_id = ?;";
 
+    private static final String LAST_ID_QUESTION = "SELECT id from \"hr_system\".question order by id desc limit 1";
+    private static final String COURSE_ID = "SELECT id FROM \"hr_system\".course_setting order by id desc limit 1";
+
     @Autowired
     private DataSource dataSource;
+
 
     @Override
     public Collection<Question> findQuestions(String sql) {
         try {
+
             JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
             List<Question> questions = new ArrayList<Question>();
             List<Map<String, Object>> rows = jdbcTemplate.queryForList(sql);
@@ -83,8 +89,8 @@ public class QuestionDAOImpl implements QuestionDAO {
     }
 
     @Override
-    public Collection<Question> findAllMandatory() {
-        return findQuestions(SELECT_ALL_MANDATORY);
+    public Collection<Question> findAllMandatory(int courseId) {
+        return findQuestions(SELECT_ALL_MANDATORY + courseId + " Order by qcp.order_number");
     }
 
 
@@ -92,7 +98,7 @@ public class QuestionDAOImpl implements QuestionDAO {
         try {
             JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 
-            Question question = jdbcTemplate.queryForObject(FIND_BY_ID + id, new RowMapper<Question>() {
+            Question question = jdbcTemplate.queryForObject(FIND_BY_ID, new Object[]{id}, new RowMapper<Question>() {
                         @Override
                         public Question mapRow(ResultSet resultSet, int i) throws SQLException {
                             Question question = new Question();
@@ -114,14 +120,12 @@ public class QuestionDAOImpl implements QuestionDAO {
         return null;
     }
 
-
-    @Override
     public int findTypeIdByValue(String value) {
         try {
             int id = 0;
             String sql = "Select id from \"hr_system\".type WHERE value = '" + value + "'";
             JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-            List<Map<String, Object>> rows = jdbcTemplate.queryForList(SELECT_TYPE_ID + value + "'");
+            List<Map<String, Object>> rows = jdbcTemplate.queryForList(SELECT_TYPE_ID, value);
             for (Map row : rows) {
                 id = (int) row.get("id");
             }
@@ -131,6 +135,7 @@ public class QuestionDAOImpl implements QuestionDAO {
         }
         return 0;
     }
+
 
     @Override
     public boolean insert(Question question) {
@@ -147,7 +152,6 @@ public class QuestionDAOImpl implements QuestionDAO {
             if (key != null) {
                 question.setId(key.intValue());
             }
-
             simpleJdbcInsert = new SimpleJdbcInsert(dataSource)
                     .withTableName("\"hr_system\".question_course_maps")
                     .usingColumns("question_id", "course_id", "order_number");
@@ -175,11 +179,12 @@ public class QuestionDAOImpl implements QuestionDAO {
         return false;
     }
 
-
     @Override
+    //Not checked
     public boolean update(Question question) {
         try {
             JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+
             jdbcTemplate.update(UPDATE_QUESTION, question.getCaption(), findTypeIdByValue(question.getType()), question.isMandatory(),
                     question.getId());
 
@@ -196,12 +201,15 @@ public class QuestionDAOImpl implements QuestionDAO {
                     insertParameter.addValue("question_id", question.getId());
                     insertParameter.addValue("value", question.getAnswerVariants().get(i));
                     simpleJdbcInsert.execute(insertParameter);
+
                 }
             }
             return true;
+
         } catch (Exception e) {
             LOGGER.error(e);
         }
+
         return false;
     }
 
@@ -234,5 +242,60 @@ public class QuestionDAOImpl implements QuestionDAO {
             LOGGER.error(e);
         }
         return null;
+    }
+
+    @Override
+    public List<Question> findType() {
+
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+
+        String sql = "SELECT value FROM \"hr_system\".type";
+
+        List<Question> questionType = jdbcTemplate.query(sql, new RowMapper<Question>() {
+            @Override
+            public Question mapRow(ResultSet resultSet, int i) throws SQLException {
+                Question question = new Question();
+
+                question.setType(resultSet.getString("value"));
+
+                return question;
+            }
+        });
+        return questionType;
+    }
+
+    @Override
+    public int findQuantityQuestions() {
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+
+        int question = jdbcTemplate.queryForObject(LAST_ID_QUESTION, new RowMapper<Integer>() {
+            @Override
+            public Integer mapRow(ResultSet resultSet, int i) throws SQLException {
+
+                int quantityQuestions = resultSet.getInt("id");
+
+                return quantityQuestions;
+            }
+        });
+        return question;
+    }
+
+    @Override
+    public int findCourseId() {
+
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+
+        int courseId = jdbcTemplate.queryForObject(COURSE_ID, new RowMapper<Integer>() {
+
+            @Override
+            public Integer mapRow(ResultSet resultSet, int i) throws SQLException {
+
+                int courseID = resultSet.getInt("id");
+
+                return courseID;
+            }
+        });
+
+        return courseId;
     }
 }

@@ -1,22 +1,17 @@
 package ua.netcracker.controller;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import ua.netcracker.model.entity.Answer;
 import ua.netcracker.model.entity.Candidate;
-import ua.netcracker.model.securiry.UserAuthenticationDetails;
 import ua.netcracker.model.service.CandidateService;
 
-import java.util.*;
+import java.util.List;
 
 /**
  * Created by ksenzod on 02.05.16.
@@ -24,73 +19,25 @@ import java.util.*;
 
 @RestController
 public class AnswersRestController {
-    private Integer userId;
+
     @Autowired
     private CandidateService candidateService;
-    @Autowired
-    private Candidate candidate;
+
 
     @RequestMapping(value = "/service/saveAnswers", method = RequestMethod.GET)
-    public ResponseEntity<Candidate> setAnswers(@RequestParam String answersJsonString){
-        Map<Integer, Object> data = new HashMap<>();
-        JSONObject obj = new JSONObject(answersJsonString);
-
-        Iterator<?> keys = obj.keys();
-        while( keys.hasNext() ) {
-            String key = (String)keys.next();
-            if ( obj.get(key) instanceof JSONArray ) {
-                JSONArray array = (JSONArray) obj.get(key);
-                List<String> answersList = new ArrayList<>();
-                for (int i = 0; i < array.length(); i++) {
-                    String value = array.getString(i);
-                    answersList.add(value);
-                }
-                data.put(Integer.valueOf(key.replace("question-","")), answersList);
-                continue;
-            }
-            String value = (String)obj.get(key);
-            data.put(Integer.valueOf(key.replace("question-","")), value);
-        }
-
-                candidate = getCurrentCandidate();
-
-        if( candidate.getID() == 0 ){
-            candidate.setUserID(userId);
-            candidate.setStatusID(1);
-            candidate.setCourseID(1);
-            candidate.setInterviewDaysDetails(1);
-            candidateService.saveCandidate(candidate);
-            candidate = candidateService.getCandidateByUserID(userId);
-        }
-
-        candidate.setAnswers(data);
-        candidateService.saveOrUpdate(candidate);
-
-        return ResponseEntity.ok(candidate);
+    public ResponseEntity<Candidate> setAnswers(@RequestParam String answersJsonString) {
+        return ResponseEntity.ok(candidateService.saveAnswers(answersJsonString));
     }
 
-    private Candidate getCurrentCandidate(){
-        userId = 0;
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (!(auth instanceof AnonymousAuthenticationToken)) {
-            UserAuthenticationDetails userDetails =
-                    (UserAuthenticationDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            userId = userDetails.getUserId();
-        }
-
-        return candidateService.getCandidateByUserID(userId);
-    }
 
     @RequestMapping(value = "/service/getAnswers", method = RequestMethod.GET)
-    public ResponseEntity<Map<Integer, String>> getAnswers(
-
-    ){
-
-        Map<Integer, String> answers = candidateService.getAllCandidateAnswers(candidate);
-        if(answers.isEmpty()){
-            return new ResponseEntity<Map<Integer, String>>(HttpStatus.NO_CONTENT);
+    public ResponseEntity<List> getAnswers() {
+        List<Answer> answers = (List<Answer>) candidateService.
+                getAllCandidateAnswers(candidateService.getCurrentCandidate());
+        if (answers.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        return new ResponseEntity<Map<Integer, String>>(answers, HttpStatus.OK);
+        return new ResponseEntity<List>(answers, HttpStatus.OK);
     }
 
 //    @RequestMapping(value = "/service/getPDF", method = RequestMethod.GET)

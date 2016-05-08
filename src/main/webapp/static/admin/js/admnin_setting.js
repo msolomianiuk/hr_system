@@ -3,10 +3,102 @@
  */
 
 $(document).ready(function () {
-    $('.selectpicker').selectpicker({
-        style: 'btn-info',
-        size: 4
+
+
+    $.ajax({
+        url: "http://localhost:8080/hr_system-1.0-SNAPSHOT/getCourseId",
+        type: "GET",
+        dataType: "json",
+        contentType: 'application/json',
+        mimeType: 'application/json',
+        success: getCourseID,
+        error: function (data) {
+            console.log(data);
+        }
     });
+
+    $.ajax({
+        url: "http://localhost:8080/hr_system-1.0-SNAPSHOT/getQuantityQuestions",
+        type: "GET",
+        //   contentType : "application/json",
+        //beforeSend: funcbefor,
+        dataType: "json",
+        // data:{'id':id},
+        contentType: 'application/json',
+        mimeType: 'application/json',
+        success: getQuantityQuestions,
+        error: function (data) {
+            console.log(data);
+        }
+    });
+
+    $(document).on("click","#ButtonQuestion",function(){
+
+        var caption = $("input[name='Caption']").val();
+        var curse_id = CurseID;
+        var typeValue = $("#TypeOfQuestion").val();
+        //var additionValue = $(".VariantQuestion").val();
+        var additionValue = null;
+        var isMandatory = false;
+        var orderNumber = QuantityQuestions+1;
+
+
+        $.ajax({
+            url: "http://localhost:8080/hr_system-1.0-SNAPSHOT/setQuestion",
+            type: "GET",
+            dataType: "json",
+            data: {
+                'caption': caption,
+                'curse_id': curse_id,
+                'typeValue': typeValue,
+                'additionValue': additionValue,
+                'isMandatory': isMandatory,
+                'orderNumber': orderNumber
+            },
+            contentType: 'application/json',
+            mimeType: 'application/json',
+            success: setQuestionWithoutAdd,
+            error: function (data) {
+                console.log(data);
+            }
+        });
+
+    });
+    $(document).on("click","#ButtonQuestionWithAdd",function(){
+
+        var caption = $("input[name='Caption']").val();
+        var curse_id = CurseID;
+        var typeValue = $("#TypeOfQuestion").val();
+        var additionValueNoAjax = [];
+        $( ".VariantQuestion" ).each(function(index) {
+            additionValueNoAjax[index]= $( this ).val();
+        });
+        var additionValue = JSON.stringify(additionValueNoAjax);
+        var isMandatory = false;
+        var orderNumber = QuantityQuestions+1;
+
+        $.ajax({
+            url: "http://localhost:8080/hr_system-1.0-SNAPSHOT/setQuestion",
+            type: "GET",
+            dataType: "json",
+            data: {
+                'caption': caption,
+                'curse_id': curse_id,
+                'typeValue': typeValue,
+                'additionValue': additionValue,
+                'isMandatory': isMandatory,
+                'orderNumber': orderNumber
+            },
+            contentType: 'application/json',
+            mimeType: 'application/json',
+            success: setQuestionWithAdd,
+            error: function (data) {
+                console.log(data);
+            }
+        });
+
+    });
+
 
     $.ajax({
         url: "http://localhost:8080/hr_system-1.0-SNAPSHOT/admin/up_setting",
@@ -22,7 +114,20 @@ $(document).ready(function () {
             console.log(data);
         }
     });
-
+    $.ajax({
+        url: "http://localhost:8080/hr_system-1.0-SNAPSHOT/getTypeOfQuestions",
+        type: "GET",
+        //   contentType : "application/json",
+        //beforeSend: funcbefor,
+        dataType: "json",
+        // data:{'id':id},
+        contentType: 'application/json',
+        mimeType: 'application/json',
+        success: getTypeOfQuestions,
+        error: function (data) {
+            console.log(data);
+        }
+    });
     $("#ButtonIn").bind("click", function () {
         var registration_start_date = $("input[name='registration_start_date']").val();
         var registration_end_date = $("input[name='registration_end_date']").val();
@@ -108,6 +213,19 @@ $(document).ready(function () {
 
 
     });
+    $('body').on("click",".plus",function(){
+        $("#HowToAdd").append('<div>'+
+        '<div class="form-group NewVariant">'+
+        '<span>Possible answers to the question:</span>'+
+        '<input type="text" name="VariantQuestion" class="VariantQuestion form-control">'+
+        '</div>'+
+        '<span class="glyphicon glyphicon-plus-sign plus"></span>'+
+        '<span class="glyphicon glyphicon-minus-sign minus newminus"></span>'+
+        '</div>');
+    });
+    $('body').on("click",".newminus",function(){
+        $(this).parent().remove();
+    });
 
 });
 
@@ -135,3 +253,47 @@ function setPersonal(data) {
     alert("HelloNewPersonal");
     personalData = data;
 }
+
+function getTypeOfQuestions(data){
+    newDateType = data;
+    for (var index in data){
+        $("#TypeOfQuestion").append('<option>'+data[index].type+'</option>');
+    }
+
+    $('body').on('change', '#TypeOfQuestion', function(){
+
+        var a  = $(this).val();
+
+
+        if(a == "combobox" || a == "checkbox" || a == "textANDselect" ){
+            $('#ComboBox').css('display','block');
+            $("#ButtonQuestion").attr('id','ButtonQuestionWithAdd');
+
+        }else if (a == "String" || a == "int") {
+            $("#ButtonQuestion").attr('id','ButtonQuestion');
+            $('#ComboBox').css('display','none');
+        }
+
+    });
+
+
+}
+
+function getQuantityQuestions(data){
+    QuantityQuestions = data;
+
+}
+
+function getCourseID(data){
+    CurseID = data;
+    alert(CurseID);
+}
+
+function setQuestionWithAdd (data){
+    alert("Set with ADD Question");
+}
+
+function setQuestionWithoutAdd (data){
+    alert("Set with ADD Question");
+}
+

@@ -36,12 +36,9 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     protected void handle(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
             throws IOException {
         String targetUrl = determineTargetUrl(authentication);
-
         if (response.isCommitted()) {
-            System.out.println("Can't redirect");
             return;
         }
-
         redirectStrategy.sendRedirect(request, response, targetUrl);
     }
 
@@ -51,9 +48,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
      */
     protected String determineTargetUrl(Authentication authentication) {
         String url;
-
         url = RolesUtils.getUrlByRoles(authentication.getAuthorities());
-
         return url;
     }
 
