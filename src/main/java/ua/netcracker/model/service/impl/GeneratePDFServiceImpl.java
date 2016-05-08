@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import ua.netcracker.model.entity.Answer;
 import ua.netcracker.model.entity.Candidate;
 import ua.netcracker.model.entity.Question;
+import ua.netcracker.model.service.CourseSettingService;
 import ua.netcracker.model.service.GeneratePDFService;
 import ua.netcracker.model.service.QuestionService;
 
@@ -18,10 +19,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Service("pdf service")
 public class GeneratePDFServiceImpl implements GeneratePDFService{
@@ -31,6 +29,8 @@ public class GeneratePDFServiceImpl implements GeneratePDFService{
 
     @Autowired
     private QuestionService questionService;
+    @Autowired
+    private CourseSettingService courseSettingService;
 
     @Override
     public Document generatePDF(Candidate candidate) {
@@ -69,20 +69,16 @@ public class GeneratePDFServiceImpl implements GeneratePDFService{
 
             document.add(table);
 
-//            TODO:
-//            get questions caption and answer
-//            map = getQuestionCaptionAndAnswers;
-
             document.add(new Paragraph());
 
             Map<String,String> answersWithQuestionsCaptions
                     = getQuestionCaptionAndAnswers(candidate.getAnswers());
 
-            for (Answer answer : candidate.getAnswers()) {
-                Paragraph paragraphQuestion = new Paragraph(new Phrase(String.valueOf(answer.getQuestionId())));
+            for (Map.Entry<String, String> entry : answersWithQuestionsCaptions.entrySet()) {
+                Paragraph paragraphQuestion = new Paragraph(new Phrase(String.valueOf(entry.getKey())));
                 document.add(paragraphQuestion);
 
-                Paragraph paragraphAnswer = new Paragraph(new Phrase(String.valueOf(answer.getValue()) + "\n\n"));
+                Paragraph paragraphAnswer = new Paragraph(new Phrase(String.valueOf(entry.getValue()) + "\n\n"));
                 document.add(paragraphAnswer);
             }
 
@@ -94,8 +90,16 @@ public class GeneratePDFServiceImpl implements GeneratePDFService{
         return document;
     }
 
-    private Map getQuestionCaptionAndAnswers(Collection<Answer> answers){
-        Map<String,String> answersWithQuestionsCaptions = new HashMap<>();
+    private Map getQuestionCaptionAndAnswers(Collection<Answer> candidateAnswers){
+        Map<String,String> answersWithQuestionsCaptions = new LinkedHashMap<>();
+        //Collection doesn't have method get!!!
+        ArrayList<Answer> answers = (ArrayList<Answer>) candidateAnswers;
+        ArrayList<Question> questions = (ArrayList<Question>)
+                questionService.getAllMandatory(courseSettingService.getLastSetting().getId());
+
+        for (int i = 0; i < questions.size(); i++) {
+            answersWithQuestionsCaptions.put(questions.get(i).getCaption(),answers.get(i).getValue());
+        }
         return answersWithQuestionsCaptions;
     }
 

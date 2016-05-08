@@ -1,7 +1,9 @@
 package ua.netcracker.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,10 +14,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import ua.netcracker.model.entity.Answer;
 import ua.netcracker.model.entity.Candidate;
 import ua.netcracker.model.entity.Question;
+import ua.netcracker.model.entity.User;
 import ua.netcracker.model.service.CandidateService;
 import ua.netcracker.model.service.CourseSettingService;
+import ua.netcracker.model.service.GeneratePDFService;
 import ua.netcracker.model.service.QuestionService;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -29,6 +34,8 @@ public class CandidateController {
     private CourseSettingService courseSettingService;
     @Autowired
     private CandidateService candidateService;
+    @Autowired
+    private GeneratePDFService pdfService;
 
     @RequestMapping(value = "/student", method = RequestMethod.GET)
     public String getProfilePage(Model model) {
@@ -88,4 +95,44 @@ public class CandidateController {
         }
         return "student";
     }*/
+   @RequestMapping(value = "/service/getPDF", method = RequestMethod.GET)
+   @ResponseBody
+   public ResponseEntity<byte[]> getPDF() {
+
+       //---------------------------------------------------------------------------------------
+       Candidate exampleCandidate = new Candidate();
+
+       User exampleUser = new User();
+       exampleUser.setName("Name");
+       exampleUser.setSurname("Surname");
+       exampleUser.setPatronymic("Patronymic");
+       exampleUser.setImage("src/main/webapp/static/images/user.png");
+       exampleCandidate.setUser(exampleUser);
+
+       Collection<Answer> exampleAnswers = new ArrayList<>();
+       for (int i = 0; i < questionService.getAllMandatory(courseSettingService.getLastSetting().getId()).size(); i++) {
+           Answer exampleAnswer = new Answer();
+           exampleAnswer.setQuestionId(i);
+           exampleAnswer.setValue("Answer"+i);
+
+           exampleAnswers.add(exampleAnswer);
+       }
+       exampleCandidate.setAnswers(exampleAnswers);
+       //---------------------------------------------------------------------------------------
+
+       pdfService.generatePDF(exampleCandidate);
+
+       //TODO
+       //pdfService.generatePDF(candidateService.getCurrentCandidate());
+
+       byte[] content = pdfService.convertToBytes();
+
+       HttpHeaders headers = new HttpHeaders();
+       headers.setContentType(MediaType.parseMediaType("application/pdf"));
+       String filename = "form.pdf";
+       headers.setContentDispositionFormData(filename, filename);
+       headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
+
+       return new ResponseEntity<>(content, headers, HttpStatus.OK);
+   }
 }
