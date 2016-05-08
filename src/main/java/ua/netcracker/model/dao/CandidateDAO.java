@@ -14,7 +14,7 @@ public interface CandidateDAO extends DAO<Candidate> {
     Candidate findByCandidateId(Integer candidateId);
     Collection<Candidate> findAll();
     String findStatusById(Integer statusId);
-
+    Collection<Candidate> findCandidateByStatus(String status);
     Candidate findByUserId(Integer userId);
     boolean saveCandidate(Candidate candidate);
 }

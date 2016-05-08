@@ -13,7 +13,9 @@ import java.util.Map;
  */
 
 public interface CandidateService {
-//
+    Collection<Candidate> getCandidateByStatus(String status);
+
+    //
     void saveInterviewResult(Candidate candidate, InterviewResult interviewResult);
 
 
