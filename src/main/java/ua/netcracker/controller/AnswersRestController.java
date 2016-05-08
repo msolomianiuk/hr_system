@@ -61,18 +61,18 @@ public class AnswersRestController {
             listAnswers.add(answer);
 
         }
-        candidate = getCurrentCandidate();
+
+        candidate =  getCurrentCandidate();
         if (candidate.getId() == 0) {
             candidate.setUserId(userId);
             candidate.setStatusId(Status.NEW.getId());
-            candidate.setCourseId(courseSettingService.getLastSetting().getId());
+            candidate.setCourseId(1);
             candidateService.saveCandidate(candidate);
             candidate = candidateService.getCandidateById(userId);
         }
 
         candidate.setAnswers(listAnswers);
         candidateService.saveOrUpdate(candidate);
-
         return ResponseEntity.ok(candidate);
     }
 
@@ -85,7 +85,7 @@ public class AnswersRestController {
             userId = userDetails.getUserId();
         }
 
-        return candidateService.getCandidateById(userId);
+        return candidateService.getCandidateByUserId(userId);
     }
 
     @RequestMapping(value = "/service/getAnswers", method = RequestMethod.GET)
