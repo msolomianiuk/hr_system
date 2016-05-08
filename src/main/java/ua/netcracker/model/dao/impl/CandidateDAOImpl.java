@@ -24,12 +24,12 @@ import java.util.Map;
 public class CandidateDAOImpl implements CandidateDAO {
     private static final Logger LOGGER = Logger.getLogger(CandidateDAOImpl.class);
     private static final String FIND_INTERVIEW_DAYS_DETAILS_ID =
-            "SELECT interview_days_details FROM \"hr_system\".candidate WHERE id = ?";
-    private static final String FIND_BY_ID = "SELECT * FROM \"hr_system\".candidate WHERE id = ?";
+            "SELECT interview_days_details FROM \"hr_system\".candidate WHERE id = ";
+    private static final String FIND_BY_ID = "SELECT * FROM \"hr_system\".candidate WHERE id = ";
     private static final String FIND_ALL = "SELECT u.id , u.name , u.email, u.surname, u.patronymic " +
-            "FROM \"hr_system\".users u JOIN \"hr_system\".role_users_maps rol ON rol.user_id = u.id WHERE rol.role_id=?";
-    private static final String FIND_STATUS_BY_ID = "SELECT * FROM \"hr_system\".status WHERE id = ?";
-    private static final String FIND_BY_USER_ID = "SELECT * FROM \"hr_system\".candidate WHERE user_id = ?";
+            "FROM \"hr_system\".users u JOIN \"hr_system\".role_users_maps rol ON rol.user_id = u.id WHERE rol.role_id=";
+    private static final String FIND_STATUS_BY_ID = "SELECT * FROM \"hr_system\".status WHERE id = ";
+    private static final String FIND_BY_USER_ID = "SELECT * FROM \"hr_system\".candidate WHERE user_id = ";
     private static final String UPDATE = "UPDATE \"hr_system\".candidate SET(status_id,interview_days_details_id)=(?,?) " +
             " WHERE id = ? ";
     private static final String FIND_BY_STATUS = "SELECT * FROM \"hr_system\".candidate WHERE status_id = ";
