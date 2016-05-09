@@ -25,9 +25,9 @@ public class UploadImageController {
         if (!image.isEmpty() && image.getContentType().equals("image/jpeg")) {
             userService.saveUserPhoto(image);
         } else {
-            model.addAttribute("uploadPhotoError", "Error ");
+            model.addAttribute("uploadPhotoError");
         }
-        return "redirect:/student";
+        return "redirect:/";
     }
 
 }
