@@ -49,13 +49,13 @@
                         <li><a data-toggle="modal" data-target="#upload-image"><i class="fa fa-upload"></i> Load Image</a></li>
                     </sec:authorize>
                     <sec:authorize access="hasAnyRole('ROLE_STUDENT')">
-                        <li><a data-toggle="modal" id="get-pdf"><i class="fa fa-file-pdf-o"></i> Print PDF</a></li>
+                        <li><a href="<c:url value="/service/getPDF"/>"><i class="fa fa-file-pdf-o"></i> Print PDF</a></li>
                     </sec:authorize>
                     <sec:authorize access="hasAnyRole('ROLE_HR')">
-                        <li><a href="<c:url value="/hr/students_list"/>"><i class="fa fa-file-pdf-o"></i>Students List</a></li>
+                        <li><a href="<c:url value="/hr/students_list"/>"><i class="fa fa-list"></i>Students List</a></li>
                     </sec:authorize>
                     <sec:authorize access="hasAnyRole('ROLE_HR', 'ROLE_BA', 'ROLE_DEV')">
-                        <li><a href="<c:url value="/${roleAddres}/interview_page"/>"><i class="fa fa-file-pdf-o"></i>Interview Page</a></li>
+                        <li><a href="<c:url value="/${roleAddres}/interview_page"/>"><i class="fa fa-comments-o"></i>Interview Page</a></li>
                     </sec:authorize>
                         <li><a href="<c:url value="/logout"/>"><i class="fa fa-sign-out"></i> Logout </a></li>
                 </ul>
