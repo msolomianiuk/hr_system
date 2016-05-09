@@ -57,9 +57,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             User user = new User(email, sha256Password(password), name, surname, patronymic,
                     new ArrayList<>(Arrays.asList(Role.ROLE_STUDENT)));
             if (userDao.insert(user)) {
-                //TODO:
-                //get EmailTemplate and paste it
-                sendEmailServiceImpl.sendLetterToEmails(new String[]{user.getEmail()}, "You successfully registered", "You successfully registered on site");
+                sendEmailServiceImpl.sendEmailAboutSuccessfulRegistration(new String[]{user.getEmail()});
                 Candidate candidate = new Candidate();
                 candidate.setUserId(userDao.findByEmail(email).getId());
                 candidate.setStatusId(Status.New.getId());
