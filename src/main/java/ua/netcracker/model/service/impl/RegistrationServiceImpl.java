@@ -62,7 +62,7 @@ public class RegistrationServiceImpl implements RegistrationService {
                 sendEmailServiceImpl.sendLetterToEmails(new String[]{user.getEmail()}, "You successfully registered", "You successfully registered on site");
                 Candidate candidate = new Candidate();
                 candidate.setUserId(userDao.findByEmail(email).getId());
-                candidate.setStatusId(Status.NEW.getId());
+                candidate.setStatusId(Status.New.getId());
                 candidate.setCourseId(1);
                 return candidateService.saveCandidate(candidate);
             }
