@@ -3,6 +3,7 @@ package ua.netcracker.model.service.impl;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -13,33 +14,30 @@ import ua.netcracker.model.entity.User;
 import ua.netcracker.model.securiry.UserAuthenticationDetails;
 import ua.netcracker.model.service.UserService;
 
-import javax.servlet.ServletContext;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by Legion on 05.05.2016.
  * Modified by Bersik
  */
 @Service("user service")
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService {
     private static final Logger LOGGER = Logger.getLogger(UserServiceImpl.class);
-    private static final String PHOTO_PATH = "static/images/photo/";
 
     @Autowired
     private UserDAO userDao;
 
+    @Value("${userPhotoFolder}")
     private String absolutePath;
-
-    @Autowired
-    public void setAbsolutePath(ServletContext servletContext) {
-        this.absolutePath = servletContext.getRealPath("/") + PHOTO_PATH;
-    }
 
     public List<User> getAllPersonal(Integer id) {
         return userDao.getAllPersonalById(id);
     }
+
+
     @Override
     public boolean saveUserPhoto(MultipartFile image) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -49,13 +47,20 @@ public class UserServiceImpl implements UserService{
 
             User user = userDao.findByEmail(userDetails.getUsername());
 
-            String fileName = user.getId() + ".jpg";
-            String fullPath = absolutePath + fileName;
-            try {
-                File file = new File(fullPath);
-                if (file.exists())
-                    file.delete();
+            if (!new File(absolutePath + user.getImage()).delete()) {
+                LOGGER.info("Cannot remove file " + absolutePath + user.getImage());
+            }
 
+            String fileName;
+            String fullPath;
+            File file;
+            do {
+                fileName = generateUUID() + ".jpg";
+                fullPath = absolutePath + fileName;
+                file = new File(fullPath);
+            } while (file.exists());
+
+            try {
                 FileUtils.writeByteArrayToFile(file, image.getBytes());
                 user.setImage(fileName);
                 userDao.update(user);
@@ -68,5 +73,10 @@ public class UserServiceImpl implements UserService{
         }
         LOGGER.error("Error load UserAuthenticationDetails");
         return false;
+    }
+
+    private String generateUUID() {
+        UUID id = UUID.randomUUID();
+        return String.valueOf(id);
     }
 }

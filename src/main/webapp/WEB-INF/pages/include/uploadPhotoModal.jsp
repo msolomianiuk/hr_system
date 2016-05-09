@@ -41,7 +41,7 @@
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                     <form method="post"
                           enctype="multipart/form-data"
-                          action="<c:url value="/student/photo" />?${_csrf.parameterName}=${_csrf.token}"
+                          action="<c:url value="/upload/photo" />?${_csrf.parameterName}=${_csrf.token}"
                           style="display: inline;">
                         <input class="sr-only" id="inputImage" name="inputImage" type="file" accept="image/jpeg">
                         <input type="submit" class="btn btn-primary" value="Save changes">

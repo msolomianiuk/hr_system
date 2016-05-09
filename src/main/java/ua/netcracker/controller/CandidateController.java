@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
 import ua.netcracker.model.entity.Answer;
 import ua.netcracker.model.entity.Candidate;
 import ua.netcracker.model.entity.Question;
@@ -32,22 +31,10 @@ public class CandidateController {
     private CandidateService candidateService;
     @Autowired
     private GeneratePDFService pdfService;
-    @Autowired
-    private UserService userService;
 
     @RequestMapping(value = "/student", method = RequestMethod.GET)
     public String getProfilePage(Model model) {
         return "student";
-    }
-
-    @RequestMapping(value = "/student/photo", method = RequestMethod.POST)
-    public String addPersonFromForm(Model model, @RequestParam(value = "inputImage", required = false) MultipartFile image) {
-        if (!image.isEmpty() && image.getContentType().equals("image/jpeg")) {
-            userService.saveUserPhoto(image);
-        } else {
-            model.addAttribute("uploadPhotoError", "Error ");
-        }
-        return "redirect:/student";
     }
 
     @RequestMapping(value = "/service/getAllMandatoryQuestions", method = RequestMethod.GET)
