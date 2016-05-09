@@ -3,12 +3,9 @@ package ua.netcracker.model.filtering;
 import ua.netcracker.model.entity.Answer;
 import ua.netcracker.model.entity.Candidate;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
+import java.util.*;
 
-public class OrderedNumberFilter implements Filter{
+public class OrderedFilter implements Filter{
 
     private int q_id;
 
@@ -17,31 +14,30 @@ public class OrderedNumberFilter implements Filter{
      */
     private boolean ascendingOrder;
 
-    public OrderedNumberFilter(int q_id, boolean ascendingOrder) {
-        this.q_id = q_id;
-        this.ascendingOrder = ascendingOrder;
+    public OrderedFilter() {
     }
 
     @Override
-    public ArrayList<Candidate> filter(ArrayList<Candidate> list) {
+    public ArrayList<Candidate> filter(List<Candidate> list) {
+
         Collections.sort(list, new Comparator<Candidate>() {
             @Override
             public int compare(Candidate o1, Candidate o2) {
-                int answer1 = 0;
-                int answer2 = 0;
+                String answer1 = "";
+                String answer2 = "";
                 Collection<Answer> answers = o1.getAnswers();
                 for (Answer answer : answers) {
                     if (answer.getQuestionId().equals(q_id)) {
-                        answer1 = Integer.parseInt(answer.getValue());
+                        answer1 = answer.getValue();
                     }
                 }
                 answers = o2.getAnswers();
                 for (Answer answer : answers) {
                     if (answer.getQuestionId().equals(q_id)) {
-                        answer2 = Integer.parseInt(answer.getValue());
+                        answer2 = answer.getValue();
                     }
                 }
-                return answer1 - answer2;
+                return answer1.compareTo(answer2);
             }
         });
 
@@ -49,9 +45,8 @@ public class OrderedNumberFilter implements Filter{
             Collections.reverse(list);
         }
 
-        return list;
+        return (ArrayList<Candidate>) list;
     }
-
 
     public int getQ_id() {
         return q_id;
