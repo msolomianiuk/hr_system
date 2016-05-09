@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import ua.netcracker.model.dao.UserDAO;
 import ua.netcracker.model.entity.Candidate;
 import ua.netcracker.model.entity.Question;
@@ -32,6 +33,15 @@ public class HRController {
     private CandidateService candidateService;
     @Autowired
     private UserDAO userDAO;
+
+    @RequestMapping(value = "hr/getStudent", method = RequestMethod.GET)
+    public ResponseEntity<Candidate> getCandidate(@RequestParam int id) {
+        Candidate candidate = candidateService.getCandidateById(id);
+        if (candidate == null) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(candidate, HttpStatus.OK);
+    }
 
     @RequestMapping(value = "hr/students_list", method = RequestMethod.GET)
     public String hrMainPage() {
@@ -60,8 +70,6 @@ public class HRController {
         }
         return new ResponseEntity<Collection<Question>>(listQuestion, HttpStatus.OK);
     }
-
-
 
 
 }

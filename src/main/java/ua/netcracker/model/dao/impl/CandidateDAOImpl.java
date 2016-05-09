@@ -24,14 +24,14 @@ import java.util.Map;
 public class CandidateDAOImpl implements CandidateDAO {
     private static final Logger LOGGER = Logger.getLogger(CandidateDAOImpl.class);
     private static final String FIND_INTERVIEW_DAYS_DETAILS_ID =
-            "SELECT interview_days_details FROM \"hr_system\".candidate WHERE id = ";
+            "SELECT interview_days_details FROM \"hr_system\".candidate WHERE id = ?";
     private static final String FIND_BY_ID = "SELECT * FROM \"hr_system\".candidate WHERE id = ";
-    private static final String FIND_ALL = "SELECT * FROM \"hr_system\".candidate ";
+    private static final String FIND_ALL = "SELECT * FROM \"hr_system\".candidate";
     private static final String FIND_STATUS_BY_ID = "SELECT * FROM \"hr_system\".status WHERE id = ?";
-    private static final String FIND_BY_USER_ID = "SELECT * FROM \"hr_system\".candidate WHERE user_id = ";
+    private static final String FIND_BY_USER_ID = "SELECT * FROM \"hr_system\".candidate WHERE user_id = ?";
     private static final String UPDATE = "UPDATE \"hr_system\".candidate SET(status_id,interview_days_details_id)=(?,?) " +
             " WHERE id = ? ";
-    private static final String FIND_BY_STATUS = "SELECT * FROM \"hr_system\".candidate WHERE status_id = ";
+    private static final String FIND_BY_STATUS = "SELECT * FROM \"hr_system\".candidate WHERE status_id =?";
     private User user;
 
     @Autowired
@@ -46,7 +46,7 @@ public class CandidateDAOImpl implements CandidateDAO {
         try {
             jdbcTemplate = new JdbcTemplate(dataSource);
             List<Map<String, Object>> rows = jdbcTemplate.
-                    queryForList(FIND_BY_STATUS + Status.valueOf(status).getId());
+                    queryForList(FIND_BY_STATUS, Status.valueOf(status).getId());
             for (Map<String, Object> row : rows) {
                 Candidate candidate = new Candidate();
                 candidate.setId((int) row.get("id"));
@@ -68,7 +68,7 @@ public class CandidateDAOImpl implements CandidateDAO {
         int interviewDaysDetails = 0;
         try {
             jdbcTemplate = new JdbcTemplate(dataSource);
-            interviewDaysDetails = jdbcTemplate.queryForObject(FIND_INTERVIEW_DAYS_DETAILS_ID + candidateId,
+            interviewDaysDetails = jdbcTemplate.queryForObject(FIND_INTERVIEW_DAYS_DETAILS_ID,
                     new RowMapper<Integer>() {
                         @Override
                         public Integer mapRow(ResultSet rs, int rowNum) {
@@ -81,8 +81,7 @@ public class CandidateDAOImpl implements CandidateDAO {
                             }
                             return details;
                         }
-                    }
-            );
+                    }, candidateId);
         } catch (Exception e) {
             LOGGER.error("Error: " + e);
         }
@@ -150,7 +149,7 @@ public class CandidateDAOImpl implements CandidateDAO {
 
         try {
             jdbcTemplate = new JdbcTemplate(dataSource);
-            List<Map<String, Object>> rows = jdbcTemplate.queryForList(FIND_BY_USER_ID + userId);
+            List<Map<String, Object>> rows = jdbcTemplate.queryForList(FIND_BY_USER_ID, userId);
             for (Map row : rows) {
                 candidate.setId((int) row.get("id"));
                 candidate.setUserId((int) row.get("user_Id"));

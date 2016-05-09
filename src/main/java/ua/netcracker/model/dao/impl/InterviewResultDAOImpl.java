@@ -19,15 +19,15 @@ import java.util.*;
 public class InterviewResultDAOImpl implements InterviewResultDAO {
     private static final Logger LOGGER = Logger.getLogger(InterviewResultDAOImpl.class);
     private static final String FIND_MARK = "Select mark, interviewer_id from \"hr_system\".interview_result " +
-            "where candidate_id = ";
+            "where candidate_id =?";
     private static final String FIND_RECOMMENDATION =
             "Select r.value, i.interviewer_id from \"hr_system\".interview_result i " +
                     "inner join \"hr_system\".recommendation r " +
-                    "on i.recommendation_id = r.id where i.candidate_id = ";
+                    "on i.recommendation_id = r.id where i.candidate_id =?";
     private static final String FIND_COMMENT =
-            "Select response from \"hr_system\".interview_result where i.candidate_id = ";
+            "Select response from \"hr_system\".interview_result where i.candidate_id = ?";
     private static final String FIND_ALL = "Select interviewer_id, mark, comment, recommendation_id" +
-            "from \"hr_system\".interview_result where candidate_id = ";
+            "from \"hr_system\".interview_result where candidate_id = ?";
     private static final String CREATE = "Insert into \"hr_system\".interview_result " +
             "(interviewer_id, candidate_id, mark, comment, recommendation_id) values (?, ?, ?, ?, ?)";
     private static final String UPDATE = "UPDATE \"hr_system\".interview_result SET " +
@@ -37,23 +37,23 @@ public class InterviewResultDAOImpl implements InterviewResultDAO {
     @Override
     public Collection<InterviewResult> findResultsByCandidateId(Integer candidateId) {
         List<InterviewResult> results = new ArrayList<>();
-        try{
+        try {
             JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-            List<Map<String, Object>> rows = jdbcTemplate.queryForList(FIND_ALL + candidateId);
-            for (Map<String, Object> row : rows){
+            List<Map<String, Object>> rows = jdbcTemplate.queryForList(FIND_ALL, candidateId);
+            for (Map<String, Object> row : rows) {
                 InterviewResult interviewResult = new InterviewResult();
-                interviewResult.setInterviewerId((int)row.get("interviewer_id"));
-                interviewResult.setMark((int)row.get("mark"));
+                interviewResult.setInterviewerId((int) row.get("interviewer_id"));
+                interviewResult.setMark((int) row.get("mark"));
                 interviewResult.setComment((String) row.get("comment"));
                 Recommendation[] recommendations = Recommendation.values();
-                for (Recommendation r : recommendations){
-                    if (r.getId() == (int) row.get("recommendation_id")){
+                for (Recommendation r : recommendations) {
+                    if (r.getId() == (int) row.get("recommendation_id")) {
                         interviewResult.setRecommendation(r.toString());
                     }
                 }
             }
 
-        } catch (Exception e){
+        } catch (Exception e) {
             LOGGER.error("Error: " + e);
         }
 
@@ -69,7 +69,7 @@ public class InterviewResultDAOImpl implements InterviewResultDAO {
         Map<Integer, Integer> mark = new HashMap<>();
         try {
             JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-            List<Map<String, Object>> rows = jdbcTemplate.queryForList(FIND_MARK + candidateId);
+            List<Map<String, Object>> rows = jdbcTemplate.queryForList(FIND_MARK, candidateId);
             for (Map<String, Object> row : rows) {
                 mark.put((int) row.get("interviewer_id"), (int) row.get("mark"));
             }
@@ -86,7 +86,7 @@ public class InterviewResultDAOImpl implements InterviewResultDAO {
 
         try {
             JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-            List<Map<String, Object>> rows = jdbcTemplate.queryForList(FIND_RECOMMENDATION + candidateId);
+            List<Map<String, Object>> rows = jdbcTemplate.queryForList(FIND_RECOMMENDATION, candidateId);
             for (Map<String, Object> row : rows) {
                 recommendations.put((int) row.get("interviewer_id"), (String) row.get("value"));
             }
@@ -101,7 +101,7 @@ public class InterviewResultDAOImpl implements InterviewResultDAO {
         Map<Integer, String> comments = new HashMap<>();
         try {
             JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-            List<Map<String, Object>> rows = jdbcTemplate.queryForList(FIND_COMMENT + candidateId);
+            List<Map<String, Object>> rows = jdbcTemplate.queryForList(FIND_COMMENT, candidateId);
             for (Map<String, Object> row : rows) {
                 comments.put((int) row.get("interviewer_id"), (String) row.get("value"));
             }

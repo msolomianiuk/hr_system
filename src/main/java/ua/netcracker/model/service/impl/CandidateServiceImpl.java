@@ -59,7 +59,10 @@ public class CandidateServiceImpl implements CandidateService {
 
     @Override
     public Candidate getCandidateById(Integer id) {
-        return candidateDAO.findByCandidateId(id);
+        Candidate candidate = candidateDAO.findByCandidateId(id);
+        candidate.setUser(userDAO.find(candidate.getUserId()));
+        candidate.setAnswers(answersDAO.findAll(candidate.getId()));
+        return candidate;
     }
 
     @Override
