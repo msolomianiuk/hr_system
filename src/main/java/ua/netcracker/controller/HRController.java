@@ -23,6 +23,7 @@ import java.util.Collection;
  */
 @Controller
 public class HRController {
+
     @Autowired
     private QuestionService questionService;
     @Autowired
@@ -43,8 +44,8 @@ public class HRController {
     }
 
     @RequestMapping(value = "hr/getStudentList", method = RequestMethod.GET)
-    public ResponseEntity<Collection<Candidate>> getAllCandidates() {
-        Collection<Candidate> listCandidates = candidateService.getAllCandidates();
+    public ResponseEntity<Collection<Candidate>> getCandidates() {
+        Collection<Candidate> listCandidates = candidateService.getAllCandidatesIsView();
         if (listCandidates.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
@@ -59,6 +60,8 @@ public class HRController {
         }
         return new ResponseEntity<Collection<Question>>(listQuestion, HttpStatus.OK);
     }
+
+
 
 
 }

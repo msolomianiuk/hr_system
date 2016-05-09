@@ -1,10 +1,7 @@
 package ua.netcracker.model.service;
 
 
-import ua.netcracker.model.entity.Answer;
-import ua.netcracker.model.entity.Candidate;
-import ua.netcracker.model.entity.InterviewResult;
-import ua.netcracker.model.entity.Status;
+import ua.netcracker.model.entity.*;
 
 import java.util.Collection;
 import java.util.Map;
@@ -19,7 +16,9 @@ public interface CandidateService {
     //
     void saveInterviewResult(Candidate candidate, InterviewResult interviewResult);
 
+    Collection<Candidate> getAllCandidatesIsView();
 
+    Collection<Answer> getAnswersIsView(Candidate candidate, Collection<Question> listQuestions);
     //
     Candidate getCandidateById(Integer id);
 

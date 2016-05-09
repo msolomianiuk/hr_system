@@ -12,12 +12,11 @@ import ua.netcracker.model.dao.AnswersDAO;
 import ua.netcracker.model.dao.CandidateDAO;
 import ua.netcracker.model.dao.InterviewResultDAO;
 import ua.netcracker.model.dao.UserDAO;
-import ua.netcracker.model.entity.Answer;
-import ua.netcracker.model.entity.Candidate;
-import ua.netcracker.model.entity.InterviewResult;
-import ua.netcracker.model.entity.Status;
+import ua.netcracker.model.entity.*;
 import ua.netcracker.model.securiry.UserAuthenticationDetails;
 import ua.netcracker.model.service.CandidateService;
+import ua.netcracker.model.service.CourseSettingService;
+import ua.netcracker.model.service.QuestionService;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -33,6 +32,7 @@ public class CandidateServiceImpl implements CandidateService {
     private static final Logger LOGGER = Logger.getLogger(CandidateServiceImpl.class);
     private int userId;
 
+
     @Override
     public Collection<Candidate> getCandidateByStatus(String status) {
         return candidateDAO.findCandidateByStatus(status);
@@ -44,10 +44,13 @@ public class CandidateServiceImpl implements CandidateService {
     }
 
     @Autowired
+    private QuestionService questionService;
+    @Autowired
     private UserDAO userDAO;
     @Autowired
     private CandidateDAO candidateDAO;
-
+    @Autowired
+    private CourseSettingService courseSettingService;
     @Autowired
     private AnswersDAO answersDAO;
 
@@ -183,6 +186,23 @@ public class CandidateServiceImpl implements CandidateService {
         return listCandidates;
     }
 
+    @Override
+    public Collection<Candidate> getAllCandidatesIsView() {
+        Collection<Candidate> listCandidates = new ArrayList<>();
+        for (Candidate candidate : getAllCandidates()) {
+            Collection<Answer> listAnswers = answersDAO.findAllIsView(candidate, questionService.
+                    getAllIsView(courseSettingService.getLastSetting().getId()));
 
+            candidate.setAnswers(listAnswers);
+            listCandidates.add(candidate);
+
+        }
+        return listCandidates;
+    }
+
+    @Override
+    public Collection<Answer> getAnswersIsView(Candidate candidate, Collection<Question> listQuestions) {
+        return answersDAO.findAllIsView(candidate, listQuestions);
+    }
 }
 
