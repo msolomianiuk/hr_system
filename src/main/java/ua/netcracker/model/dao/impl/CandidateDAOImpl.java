@@ -9,13 +9,13 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import ua.netcracker.model.dao.CandidateDAO;
 import ua.netcracker.model.entity.Candidate;
-import ua.netcracker.model.entity.Role;
 import ua.netcracker.model.entity.Status;
 import ua.netcracker.model.entity.User;
 
 import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -26,9 +26,8 @@ public class CandidateDAOImpl implements CandidateDAO {
     private static final String FIND_INTERVIEW_DAYS_DETAILS_ID =
             "SELECT interview_days_details FROM \"hr_system\".candidate WHERE id = ";
     private static final String FIND_BY_ID = "SELECT * FROM \"hr_system\".candidate WHERE id = ";
-    private static final String FIND_ALL = "SELECT u.id , u.name , u.email, u.surname, u.patronymic " +
-            "FROM \"hr_system\".users u JOIN \"hr_system\".role_users_maps rol ON rol.user_id = u.id WHERE rol.role_id=";
-    private static final String FIND_STATUS_BY_ID = "SELECT * FROM \"hr_system\".status WHERE id = ";
+    private static final String FIND_ALL = "SELECT * FROM \"hr_system\".candidate ";
+    private static final String FIND_STATUS_BY_ID = "SELECT * FROM \"hr_system\".status WHERE id = ?";
     private static final String FIND_BY_USER_ID = "SELECT * FROM \"hr_system\".candidate WHERE user_id = ";
     private static final String UPDATE = "UPDATE \"hr_system\".candidate SET(status_id,interview_days_details_id)=(?,?) " +
             " WHERE id = ? ";
@@ -47,14 +46,14 @@ public class CandidateDAOImpl implements CandidateDAO {
         try {
             jdbcTemplate = new JdbcTemplate(dataSource);
             List<Map<String, Object>> rows = jdbcTemplate.
-                    queryForList(FIND_BY_STATUS +Status.valueOf(status).getId());
-            for(Map<String , Object> row : rows){
+                    queryForList(FIND_BY_STATUS + Status.valueOf(status).getId());
+            for (Map<String, Object> row : rows) {
                 Candidate candidate = new Candidate();
-                candidate.setId((int)row.get("id"));
-                candidate.setUserId((int)row.get("user_id"));
-                candidate.setStatusId((int)row.get("status_id"));
-                candidate.setInterviewDaysDetailsId((int)row.get("interview_days_details_id"));
-                candidate.setCourseId((int)row.get("course_id"));
+                candidate.setId((int) row.get("id"));
+                candidate.setUserId((int) row.get("user_id"));
+                candidate.setStatusId((int) row.get("status_id"));
+                candidate.setInterviewDaysDetailsId((int) row.get("interview_days_details_id"));
+                candidate.setCourseId((int) row.get("course_id"));
                 listCandidate.add(candidate);
             }
         } catch (Exception e) {
@@ -120,59 +119,30 @@ public class CandidateDAOImpl implements CandidateDAO {
 
     }
 
-    @Override
-    public Collection<Candidate> findAll() {
-        Collection<Candidate> list = null;
-        try {
-            jdbcTemplate = new JdbcTemplate(dataSource);
-            list = jdbcTemplate.query(FIND_ALL + Role.ROLE_STUDENT.getId(),
-                    new RowMapper<Candidate>() {
-
-                        @Override
-                        public Candidate mapRow(ResultSet rs, int rowNumber) {
-                            Candidate candidate = new Candidate();
-                            try {
-                                user = new User();
-                                user.setName(rs.getString("name"));
-                                user.setEmail(rs.getString("email"));
-                                candidate.setUser(user);
-                            } catch (SQLException e) {
-                                LOGGER.info("SQLState: " + e.getSQLState() + " Message: " + e.getMessage());
-                                LOGGER.debug(e.getStackTrace(), e);
-                            }
-                            return candidate;
-                        }
-                    });
-        } catch (Exception e) {
-            LOGGER.error("Error: " + e);
-        }
-        return list;
-    }
-
 
     @Override
-    public String findStatusById(Integer statusId) {
-        String status = null;
+    public Status findStatusById(Integer statusId) {
+        String value = null;
         try {
             jdbcTemplate = new JdbcTemplate(dataSource);
-            status = jdbcTemplate.queryForObject(FIND_STATUS_BY_ID + statusId, new RowMapper<String>() {
+            value = jdbcTemplate.queryForObject(FIND_STATUS_BY_ID, new RowMapper<String>() {
                         @Override
                         public String mapRow(ResultSet rs, int rowNum) {
-                            String status = null;
+                            String value = null;
                             try {
-                                rs.getString("value");
+                                value = rs.getString("value");
                             } catch (SQLException e) {
                                 LOGGER.info("SQLState: " + e.getSQLState() + " Message: " + e.getMessage());
                                 LOGGER.debug(e.getStackTrace(), e);
                             }
-                            return status;
+                            return value;
                         }
-                    }
+                    }, statusId
             );
         } catch (Exception e) {
             LOGGER.error("Error: " + e);
         }
-        return status;
+        return Status.valueOf(value);
     }
 
     public Candidate findByUserId(Integer userId) {
@@ -237,33 +207,21 @@ public class CandidateDAOImpl implements CandidateDAO {
         return false;
     }
 
+
     @Override
-    public List<Candidate> getAllAnketsCandidates() {
-
-
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-
-        String sql = "SELECT u.name , u.surname, u.patronymic , u.email, can.id\n" +
-                "FROM \"hr_system\".users u\n" +
-                "JOIN \"hr_system\".candidate can ON can.user_id = u.id";
-
-        List<Candidate> listOfCandidate = jdbcTemplate.query(sql, new RowMapper<Candidate>() {
-
-            @Override
-            public Candidate mapRow(ResultSet rs, int rowNumber) throws SQLException {
-                Candidate candidate = new Candidate();
-                User user = new User();
-                candidate.setId(rs.getInt("id"));
-                user.setName(rs.getString("name"));
-                user.setEmail(rs.getString("email"));
-                user.setSurname(rs.getString("surname"));
-                user.setPatronymic(rs.getString("patronymic"));
-
-                candidate.setUser(user);
-                return candidate;
-            }
-
-        });
-        return listOfCandidate;
+    public Collection<Candidate> findAll() {
+        jdbcTemplate = new JdbcTemplate(dataSource);
+        Collection<Candidate> listCandidates = new ArrayList<>();
+        Collection<Map<String, Object>> rows = jdbcTemplate.queryForList(FIND_ALL);
+        for (Map<String, Object> row : rows) {
+            Candidate candidate = new Candidate();
+            candidate.setId((int) row.get("id"));
+            candidate.setUserId((int) row.get("user_id"));
+            candidate.setStatusId((int) row.get("status_id"));
+            candidate.setStatus(findStatusById(candidate.getStatusId()));
+            candidate.setCourseId((int) row.get("course_id"));
+            listCandidates.add(candidate);
+        }
+        return listCandidates;
     }
 }

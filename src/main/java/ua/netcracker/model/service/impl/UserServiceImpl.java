@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import ua.netcracker.model.dao.UserDAO;
 import ua.netcracker.model.entity.User;
 import ua.netcracker.model.securiry.UserAuthenticationDetails;
+import ua.netcracker.model.service.UserService;
 
 import javax.servlet.ServletContext;
 import java.io.File;
@@ -22,7 +23,7 @@ import java.util.List;
  * Modified by Bersik
  */
 @Service("user service")
-public class UserServiceImpl {
+public class UserServiceImpl implements UserService{
     private static final Logger LOGGER = Logger.getLogger(UserServiceImpl.class);
     private static final String PHOTO_PATH = "static/images/photo/";
 
@@ -39,7 +40,7 @@ public class UserServiceImpl {
     public List<User> getAllPersonal(Integer id) {
         return userDao.getAllPersonalById(id);
     }
-
+    @Override
     public boolean saveUserPhoto(MultipartFile image) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (!(auth instanceof AnonymousAuthenticationToken)) {

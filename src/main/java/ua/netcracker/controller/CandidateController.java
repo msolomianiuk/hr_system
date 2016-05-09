@@ -15,14 +15,8 @@ import org.springframework.web.multipart.MultipartFile;
 import ua.netcracker.model.entity.Answer;
 import ua.netcracker.model.entity.Candidate;
 import ua.netcracker.model.entity.Question;
-import ua.netcracker.model.entity.User;
-import ua.netcracker.model.service.CandidateService;
-import ua.netcracker.model.service.CourseSettingService;
-import ua.netcracker.model.service.GeneratePDFService;
-import ua.netcracker.model.service.QuestionService;
-import ua.netcracker.model.service.impl.UserServiceImpl;
+import ua.netcracker.model.service.*;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -39,7 +33,7 @@ public class CandidateController {
     @Autowired
     private GeneratePDFService pdfService;
     @Autowired
-    private UserServiceImpl userService;
+    private UserService userService;
 
     @RequestMapping(value = "/student", method = RequestMethod.GET)
     public String getProfilePage(Model model) {
@@ -47,11 +41,11 @@ public class CandidateController {
     }
 
     @RequestMapping(value = "/student/photo", method = RequestMethod.POST)
-    public String addPersonFromForm(Model model,@RequestParam(value = "inputImage",required = false) MultipartFile image) {
+    public String addPersonFromForm(Model model, @RequestParam(value = "inputImage", required = false) MultipartFile image) {
         if (!image.isEmpty() && image.getContentType().equals("image/jpeg")) {
             userService.saveUserPhoto(image);
-        } else{
-            model.addAttribute("uploadPhotoError","Error ");
+        } else {
+            model.addAttribute("uploadPhotoError", "Error ");
         }
         return "redirect:/student";
     }
@@ -86,105 +80,26 @@ public class CandidateController {
         return new ResponseEntity<Collection<Answer>>(answers, HttpStatus.OK);
     }
 
-//    @RequestMapping(value = "/service/getPDF", method = RequestMethod.GET)
-//    @ResponseBody
-//    public ResponseEntity<byte[]> getPDF() {
-//
-//        //TODO:
-//        //candidate = getCurrentCandidate();
-//
-//        //---------------------------------------------------------------------------------------
-//        Candidate exampleCandidate = new Candidate();
-//
-//        User exampleUser = new User();
-//        exampleUser.setName("Name");
-//        exampleUser.setSurname("Surname");
-//        exampleUser.setPatronymic("Patronymic");
-//        exampleUser.setImage("src/main/webapp/static/images/user.png");
-//        exampleCandidate.setUser(exampleUser);
-//
-//        Collection<Answer> exampleAnswers = new ArrayList<>();
-//        for (int i = 0; i < 10; i++) {
-//            Answer exampleAnswer = new Answer();
-//            exampleAnswer.setQuestionId(i);
-//            exampleAnswer.setValue("Answer"+i);
-//
-//            exampleAnswers.add(exampleAnswer);
-//        }
-//        exampleCandidate.setAnswers(exampleAnswers);
-//        //---------------------------------------------------------------------------------------
-//
-//        pdfService.generatePDF(exampleCandidate);
-//        byte[] content = pdfService.convertToBytes();
-//
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.setContentType(MediaType.parseMediaType("application/pdf"));
-//        String filename = "form.pdf";
-//        headers.setContentDispositionFormData(filename, filename);
-//        headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
-//
-//        return new ResponseEntity<>(content, headers, HttpStatus.OK);
-//    }
-   /* @RequestMapping(value = "/student1", method = RequestMethod.POST)
-    public String addImageFromForm(Candidate candidate, BindingResult bindingResult,
-                                   @RequestParam(value = "image", required = false)
-                                   MultipartFile image){
-        if(bindingResult.hasErrors()){
-            return "student";
-        }
-        try{
-            if(!image.isEmpty()) {
-                try {
-                    File file = new File(webRootPath + candidate.getId());
-                    FileUtils.writeByteArrayToFile(file, image.getBytes());
-                } catch (IOException e) {
-                    throw new IOException("Unable to save image", e);
-                }
-            }
-        }catch (IOException e){
-            bindingResult.reject(e.getMessage());
-            return "student";
-        }
-        return "student";
-    }*/
-   @RequestMapping(value = "/service/getPDF", method = RequestMethod.GET)
-   @ResponseBody
-   public ResponseEntity<byte[]> getPDF() {
+    @RequestMapping(value = "/service/getPDF", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<byte[]> getPDF() {
 
-       //---------------------------------------------------------------------------------------
-       Candidate exampleCandidate = new Candidate();
+        Collection<Answer> exampleAnswers = candidateService.getAllCandidateAnswers(candidateService.getCurrentCandidate());
 
-       User exampleUser = new User();
-       exampleUser.setName("Name");
-       exampleUser.setSurname("Surname");
-       exampleUser.setPatronymic("Patronymic");
-       exampleUser.setImage("src/main/webapp/static/images/user.png");
-       exampleCandidate.setUser(exampleUser);
 
-       Collection<Answer> exampleAnswers = new ArrayList<>();
-       for (int i = 0; i < questionService.getAllMandatory(courseSettingService.getLastSetting().getId()).size(); i++) {
-           Answer exampleAnswer = new Answer();
-           exampleAnswer.setQuestionId(i);
-           exampleAnswer.setValue("Answer"+i);
+        pdfService.generatePDF(candidateService.getCurrentCandidate());
 
-           exampleAnswers.add(exampleAnswer);
-       }
-       exampleCandidate.setAnswers(exampleAnswers);
-       //---------------------------------------------------------------------------------------
+        //TODO
+        //pdfService.generatePDF(candidateService.getCurrentCandidate());
 
-       pdfService.generatePDF(exampleCandidate);
+        byte[] content = pdfService.convertToBytes();
 
-       //TODO
-       //pdfService.generatePDF(candidateService.getCurrentCandidate());
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.parseMediaType("application/pdf"));
+        String filename = "form.pdf";
+        headers.setContentDispositionFormData(filename, filename);
+        headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
 
-       byte[] content = pdfService.convertToBytes();
-
-       HttpHeaders headers = new HttpHeaders();
-       headers.setContentType(MediaType.parseMediaType("application/pdf"));
-       String filename = "form.pdf";
-       headers.setContentDispositionFormData(filename, filename);
-       headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
-
-       return new ResponseEntity<>(content, headers, HttpStatus.OK);
-   }
+        return new ResponseEntity<>(content, headers, HttpStatus.OK);
+    }
 }

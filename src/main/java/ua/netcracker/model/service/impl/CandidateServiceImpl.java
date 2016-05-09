@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import ua.netcracker.model.dao.AnswersDAO;
 import ua.netcracker.model.dao.CandidateDAO;
 import ua.netcracker.model.dao.InterviewResultDAO;
+import ua.netcracker.model.dao.UserDAO;
 import ua.netcracker.model.entity.Answer;
 import ua.netcracker.model.entity.Candidate;
 import ua.netcracker.model.entity.InterviewResult;
@@ -18,7 +19,10 @@ import ua.netcracker.model.entity.Status;
 import ua.netcracker.model.securiry.UserAuthenticationDetails;
 import ua.netcracker.model.service.CandidateService;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * @author Alyona Bilous 05/05/2016
@@ -40,6 +44,8 @@ public class CandidateServiceImpl implements CandidateService {
     }
 
     @Autowired
+    private UserDAO userDAO;
+    @Autowired
     private CandidateDAO candidateDAO;
 
     @Autowired
@@ -58,13 +64,9 @@ public class CandidateServiceImpl implements CandidateService {
         return candidateDAO.findByUserId(userId);
     }
 
-    @Override
-    public Collection<Candidate> getAllCandidates() {
-        return candidateDAO.findAll();
-    }
 
     @Override
-    public String getStatusById(Integer statusId) {
+    public Status getStatusById(Integer statusId) {
         return candidateDAO.findStatusById(statusId);
     }
 
@@ -122,13 +124,13 @@ public class CandidateServiceImpl implements CandidateService {
         return listAnswers;
     }
 
-    //refact
     @Override
     public Candidate saveAnswers(String answersJsonString) {
         Collection<Answer> listAnswers = parseJsonString(answersJsonString);
         Candidate candidate = getCurrentCandidate();
         if (candidate.getId() == 0) {
             candidate.setUserId(userId);
+            candidate.setUser(userDAO.find(candidate.getUserId()));
             candidate.setStatusId(Status.NEW.getId());
             candidate.setCourseId(1);
             saveCandidate(candidate);
@@ -166,9 +168,21 @@ public class CandidateServiceImpl implements CandidateService {
             LOGGER.error("Error: " + e);
         }
     }
+
     @Override
-    public List<Candidate> getAnketOfCandidates() {
-        return candidateDAO.getAllAnketsCandidates();
+    public Collection<Candidate> getAllCandidates() {
+        Collection<Candidate> listCandidates = candidateDAO.findAll();
+        for (Candidate candidate : listCandidates) {
+            if (candidate.getUser() == null) {
+                candidate.setUser(userDAO.find(candidate.getUserId()));
+            }
+            if (candidate.getAnswers() == null) {
+                candidate.setAnswers(answersDAO.findAll(candidate.getId()));
+            }
+        }
+        return listCandidates;
     }
+
+
 }
 

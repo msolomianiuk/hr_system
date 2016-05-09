@@ -17,6 +17,8 @@ public interface QuestionService {
 
     Question get(int id);
 
+    Collection<Question> getAllIsView(int courseId);
+
     boolean save(Question question);
 
     boolean update(Question question);

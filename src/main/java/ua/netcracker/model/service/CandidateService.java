@@ -4,9 +4,9 @@ package ua.netcracker.model.service;
 import ua.netcracker.model.entity.Answer;
 import ua.netcracker.model.entity.Candidate;
 import ua.netcracker.model.entity.InterviewResult;
+import ua.netcracker.model.entity.Status;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -20,14 +20,14 @@ public interface CandidateService {
     void saveInterviewResult(Candidate candidate, InterviewResult interviewResult);
 
 
-//
+    //
     Candidate getCandidateById(Integer id);
 
     Candidate getCandidateByUserId(Integer userId);
 
     Collection<Candidate> getAllCandidates();
 
-    String getStatusById(Integer statusId);
+    Status getStatusById(Integer statusId);
 
     Map<Integer, Integer> getMarks(Integer candidateId);
 
@@ -46,8 +46,6 @@ public interface CandidateService {
     Candidate getCurrentCandidate();
 
     void deleteAnswers(Candidate candidate);
-
-    List<Candidate> getAnketOfCandidates();
 
     void saveOrUpdateAnswers(Candidate candidate);
 
