@@ -297,8 +297,9 @@ public class QuestionDAOImpl implements QuestionDAO {
     @Override
     public int findCourseId() {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+        int courseId = 0;
         try {
-            int courseId = jdbcTemplate.queryForObject(COURSE_ID, new RowMapper<Integer>() {
+            courseId = jdbcTemplate.queryForObject(COURSE_ID, new RowMapper<Integer>() {
 
                 @Override
                 public Integer mapRow(ResultSet resultSet, int i) throws SQLException {
@@ -309,6 +310,6 @@ public class QuestionDAOImpl implements QuestionDAO {
         } catch (Exception e) {
             LOGGER.error(e);
         }
-        return 1;
+        return courseId;
     }
 }
