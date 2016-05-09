@@ -280,8 +280,9 @@ public class QuestionDAOImpl implements QuestionDAO {
     @Override
     public int findQuantityQuestions() {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+        int question = 0;
         try {
-            int question = jdbcTemplate.queryForObject(LAST_ID_QUESTION, new RowMapper<Integer>() {
+             question = jdbcTemplate.queryForObject(LAST_ID_QUESTION, new RowMapper<Integer>() {
                 @Override
                 public Integer mapRow(ResultSet resultSet, int i) throws SQLException {
                     int quantityQuestions = resultSet.getInt("id");
@@ -291,7 +292,7 @@ public class QuestionDAOImpl implements QuestionDAO {
         } catch (Exception e) {
             LOGGER.error(e);
         }
-        return 1;
+        return question;
     }
 
     @Override
