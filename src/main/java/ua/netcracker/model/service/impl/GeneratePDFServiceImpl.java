@@ -31,11 +31,8 @@ public class GeneratePDFServiceImpl implements GeneratePDFService {
 
     private static final Logger LOGGER = Logger.getLogger(GeneratePDFServiceImpl.class);
     private static final String NAME_PDF = "form.pdf";
-    private static final String URL = "localhost:8080/hr_system-1.0-SNAPSHOT/static/images/netcracker.png";
     @Value("${userPhotoFolder}")
     private String absolutePath;
-    @Value("/static/")
-    private String imagePath;
     @Autowired
     private QuestionService questionService;
     @Autowired
