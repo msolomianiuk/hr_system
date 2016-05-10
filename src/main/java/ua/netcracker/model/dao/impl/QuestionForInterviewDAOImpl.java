@@ -27,7 +27,7 @@ public class QuestionForInterviewDAOImpl implements QuestionForInterviewDAO {
 
     private static final String SELECT_QUESTION = "SELECT * FROM \"hr_system\".interview_question WHERE id = ?";
     private static final String SELECT_ALL_SUBJECT = "SELECT id,name FROM \"hr_system\".subject";
-    private static final String SELECT_ALL_SUBJECT_BY_ROLE = "SELECT * FROM \"hr_system\".subject WHERE role_id =  ?";
+    private static final String SELECT_ALL_SUBJECT_QUESTION = "SELECT * FROM \"hr_system\".subject";
     private static final String SELECT_ALL_BY_SUBJECT = "SELECT id,question FROM \"hr_system\".interview_question WHERE subject_id = ?";
     private static final String UPDATE_SUBJECT = "UPDATE \"hr_system\".subject SET (role_id,name)=(?,?) WHERE id =?";
     private static final String UPDATE_QUESTION = "UPDATE \"hr_system\".interview_question SET (subject_id,question)=(?,?) WHERE id =?";
@@ -38,11 +38,6 @@ public class QuestionForInterviewDAOImpl implements QuestionForInterviewDAO {
     @Autowired
     private DataSource dataSource;
 
-    @Override
-    public Collection findAll() {
-
-        return null;
-    }
 
     @Override
     public QuestionForInterview find(int id) {
@@ -67,6 +62,7 @@ public class QuestionForInterviewDAOImpl implements QuestionForInterviewDAO {
     }
 
     @Override
+
     public boolean insert(QuestionForInterview questionForInterview) {
         try {
             SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(dataSource)
@@ -115,11 +111,11 @@ public class QuestionForInterviewDAOImpl implements QuestionForInterviewDAO {
     }
 
     @Override
-    public Collection findAll(int roleId) {
+    public Collection findAll() {
         try {
             List<SubjectQuestionForInterview> subjectAll = new ArrayList<SubjectQuestionForInterview>();
             JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-            List<Map<String, Object>> rows = jdbcTemplate.queryForList(SELECT_ALL_SUBJECT_BY_ROLE, roleId);
+            List<Map<String, Object>> rows = jdbcTemplate.queryForList(SELECT_ALL_SUBJECT_QUESTION);
             for (Map row : rows) {
                 SubjectQuestionForInterview subjects = new SubjectQuestionForInterview();
                 subjects.setId((int) row.get("id"));

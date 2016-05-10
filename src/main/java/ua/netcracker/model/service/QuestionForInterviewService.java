@@ -11,7 +11,7 @@ import java.util.Collection;
  */
 @Service
 public interface QuestionForInterviewService {
-    Collection getAllSubjectAndQuestionByRole(int roleId);
+    Collection getAllSubjectAndQuestion();
 
     QuestionForInterview get(int id);
 

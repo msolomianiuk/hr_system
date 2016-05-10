@@ -22,6 +22,11 @@ public class QuestionForInterview {
     public QuestionForInterview() {
     }
 
+    public QuestionForInterview(String value, int subjectId) {
+        this.value = value;
+        this.subjectId = subjectId;
+    }
+
     public int getId() {
         return id;
     }

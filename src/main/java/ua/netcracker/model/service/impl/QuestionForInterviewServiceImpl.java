@@ -17,7 +17,7 @@ public class QuestionForInterviewServiceImpl implements QuestionForInterviewServ
     @Autowired
     QuestionForInterviewDAO questionForInterviewDAO;
     @Override
-    public Collection getAllSubjectAndQuestionByRole(int roleId) {
+    public Collection getAllSubjectAndQuestion(int roleId) {
         return questionForInterviewDAO.findAll(roleId);
     }
 

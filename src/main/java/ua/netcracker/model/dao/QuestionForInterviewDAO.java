@@ -14,8 +14,6 @@ public interface QuestionForInterviewDAO extends DAO<QuestionForInterview> {
 
     Collection findAllQuestionBySubject(int subjectId);
 
-
-    Collection findAll(int roleId);
     Collection findAllSubject();
 
     boolean insertSubject(SubjectQuestionForInterview subject);
