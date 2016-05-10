@@ -42,7 +42,7 @@ $(document).ready(function () {
         var curse_id = CurseID;
         var typeValue = $("#TypeOfQuestion").val();
         var additionValue = null;
-        var isMandatory = false;
+        var isMandatory = false;//
         var orderNumber = QuantityQuestions+1;
 
 
@@ -190,9 +190,7 @@ $(document).ready(function () {
 
         $.ajax({
             url: location_origin+"/new_personal",
-            type: "GET",
-            //   contentType : "application/json",
-            //beforeSend: funcbefor,
+            type: "POST",
             dataType: "json",
             data: {
                 'name_peronal': name_peronal,
@@ -202,8 +200,6 @@ $(document).ready(function () {
                 'Role_Id': Role_Id,
                 'password_peronal': password_peronal
             },
-            contentType: 'application/json',
-            mimeType: 'application/json',
             success: setPersonal,
             error: function (data) {
                 console.log(data);

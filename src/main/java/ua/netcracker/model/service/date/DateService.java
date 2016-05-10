@@ -19,7 +19,6 @@ import java.util.List;
  * Created by Legion on 03.05.2016.
  */
 @Service
-@Scope("prototype")
 public class DateService {
 
     @Autowired
@@ -208,5 +207,10 @@ public class DateService {
         }
 
     }
-
+    public int getPeriodDate(CourseSetting courseSetting) {
+        LocalDate startInterviewDay = getDate(courseSetting.getInterviewStartDate());
+        LocalDate endInterviewDay = getDate(courseSetting.getInterviewEndDate());
+        Period period = startInterviewDay.until(endInterviewDay);
+        return period.getDays()+1;
+    }
 }

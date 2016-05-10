@@ -51,7 +51,7 @@ public class RegistrationPersonalRestController {
         return Role.valueOf(role);
     }
 
-    @RequestMapping(value = "/new_personal", method = RequestMethod.GET)
+    @RequestMapping(value = "/new_personal", method = RequestMethod.POST)
     public ResponseEntity<User> setNewPersonal(
             @RequestParam String Role_Id,
             @RequestParam String name_peronal,
