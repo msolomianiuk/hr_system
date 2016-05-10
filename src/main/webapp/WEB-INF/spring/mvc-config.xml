@@ -13,7 +13,7 @@
     <!-- Scan packages for the String components (@Component,@Repository, @Controller,@Service-->
     <!--<context:component-scan base-package="ua.netcracker"/>-->
 
-    <context:property-placeholder location="WEB-INF/properties/application.properties" />
+    <context:property-placeholder location="WEB-INF/properties/application.properties"/>
 
     <!--Method addResourceHandlers configures the ResourceHandler for static resources.
    CSS, JavaScript, images etc are static resources your pages needs.Above configuration
@@ -24,6 +24,7 @@
     <mvc:annotation-driven/>
     <mvc:resources mapping="/static/**" location="/static/"/>
     <mvc:resources mapping="/user/photos/**" location="file:/${userPhotoFolder}"/>
+    <mvc:resources mapping="/static/images/**" location="file:/${pdfImage}"/>
     <mvc:default-servlet-handler/>
 
     <context:component-scan base-package="ua.netcracker.controller"/>
@@ -40,7 +41,7 @@
     <!--<bean id="uploadDirResource" class="org.springframework.core.io.FileSystemResource">
         <constructor-arg value="${userPhotoFolder}"/>
     </bean>-->
-    
+
     <!-- Method viewResolver configures a view resolver to identify the real view.-->
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="viewClass"
