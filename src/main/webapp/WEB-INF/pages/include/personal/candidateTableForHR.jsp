@@ -1,4 +1,4 @@
-<table class="table table-striped table-bordered clicked-tr candidate-list-table">
+<table id="candidates-list" class="table table-striped table-bordered clicked-tr candidate-list-table">
     <thead>
     <tr>
         <th>ID</th>
