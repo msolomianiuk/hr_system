@@ -8,24 +8,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import ua.netcracker.model.entity.Address;
-import ua.netcracker.model.entity.Candidate;
-import ua.netcracker.model.entity.CourseSetting;
-import ua.netcracker.model.entity.InterviewDaysDetails;
+import ua.netcracker.model.entity.*;
 import ua.netcracker.model.service.AddressService;
-import ua.netcracker.model.service.InterviewDaysDetailsService;
-import ua.netcracker.model.entity.EmailTemplate;
-import ua.netcracker.model.entity.ReportQuery;
 import ua.netcracker.model.service.EmailTemplateService;
+import ua.netcracker.model.service.InterviewDaysDetailsService;
 import ua.netcracker.model.service.ReportService;
 import ua.netcracker.model.service.date.DateService;
 import ua.netcracker.model.service.impl.CandidateServiceImpl;
 import ua.netcracker.model.service.impl.CourseSettingServiceImpl;
 
-import java.util.HashMap;
-import java.util.List;
+
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 
@@ -47,6 +42,7 @@ public class AdminController {
 
     @Autowired
     private DateService dateService;
+
 
     @Autowired
     private EmailTemplateService emailTemplateService;
@@ -124,17 +120,41 @@ public class AdminController {
         return ResponseEntity.ok(courseSetting);
     }
 
+
     @RequestMapping(value = "/up_setting", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<CourseSetting> getSetting() {
         return ResponseEntity.ok(courseSettingService.getLastSetting());
     }
 
+    @RequestMapping(value = "/answer_candidate", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<Collection<Answer>> answerCandidate(
+            @RequestParam String id
+    ) {
+        Collection<Answer> answers =
+                candidateService.getAllCandidateAnswers(
+                        candidateService.getCandidateById(Integer.parseInt(id)));
+        if (answers.isEmpty()) {
+            return (ResponseEntity<Collection<Answer>>) ResponseEntity.badRequest();
+        }
+        return ResponseEntity.ok(answers);
+    }
+
+    @RequestMapping(value = "/registration_period", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<String> period() {
+
+        return ResponseEntity.ok(dateService.registrationPeriod());
+    }
+
+
     @RequestMapping(value = "/get_candidate", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<Candidate> setCandidate(
             @RequestParam String id
     ) {
+
         Candidate candidate = candidateService.getCandidateById(Integer.parseInt(id));
 
         return ResponseEntity.ok(candidate);

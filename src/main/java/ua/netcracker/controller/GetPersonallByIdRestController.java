@@ -18,6 +18,10 @@ import java.util.List;
 @RestController
 public class GetPersonallByIdRestController {
 
+
+    //ЮЗАЙТЕ СЕРВІС!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
+    //|
+    //|
     @Autowired
     private UserDAOImpl userDao;
 

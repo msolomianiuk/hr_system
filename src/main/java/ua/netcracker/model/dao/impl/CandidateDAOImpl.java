@@ -218,8 +218,9 @@ public class CandidateDAOImpl implements CandidateDAO {
         return findCandidates(FIND_ALL);
     }
 
-    private Collection<Candidate> findCandidates(String sql){
-        try{
+    private Collection<Candidate> findCandidates(String sql) {
+        try {
+            jdbcTemplate = new JdbcTemplate(dataSource);
             Collection<Candidate> listCandidates = new ArrayList<>();
             Collection<Map<String, Object>> rows = jdbcTemplate.queryForList(sql);
             for (Map<String, Object> row : rows) {
@@ -232,9 +233,10 @@ public class CandidateDAOImpl implements CandidateDAO {
                 listCandidates.add(candidate);
             }
             return listCandidates;
-        }catch (Exception e){
+        } catch (Exception e) {
             LOGGER.error("Error:" + e);
         }
         return null;
+
     }
 }

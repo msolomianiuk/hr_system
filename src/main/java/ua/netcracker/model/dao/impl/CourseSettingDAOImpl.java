@@ -9,7 +9,6 @@ import org.springframework.stereotype.Repository;
 import ua.netcracker.model.dao.CourseSettingDAO;
 import ua.netcracker.model.entity.CourseSetting;
 
-import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
@@ -44,15 +43,12 @@ public class CourseSettingDAOImpl implements CourseSettingDAO<CourseSetting> {
     static final Logger LOGGER = Logger.getLogger(CourseSettingDAOImpl.class);
 
     @Autowired()
-    private DataSource dataSource;
-
     private JdbcTemplate jdbcTemplate;
 
     @Override
     public Collection<CourseSetting> findAll() {
 
         Collection<CourseSetting> allSetting = null;
-        jdbcTemplate = new JdbcTemplate(dataSource);
 
         try {
             allSetting = jdbcTemplate.query(SELECT_ALL, new RowMapper<CourseSetting>() {
@@ -72,10 +68,9 @@ public class CourseSettingDAOImpl implements CourseSettingDAO<CourseSetting> {
     public CourseSetting find(int id) {
 
         CourseSetting courseSetting = null;
-        jdbcTemplate = new JdbcTemplate(dataSource);
 
         try {
-            courseSetting = jdbcTemplate.queryForObject(FIND_BY_ID + id, new RowMapper<CourseSetting>() {
+            courseSetting = jdbcTemplate.queryForObject(FIND_BY_ID+ id, new RowMapper<CourseSetting>() {
                         @Override
                         public CourseSetting mapRow(ResultSet resultSet, int i) throws SQLException {
                             return getSetting(resultSet);
@@ -91,7 +86,6 @@ public class CourseSettingDAOImpl implements CourseSettingDAO<CourseSetting> {
     @Override
     public CourseSetting getLastSetting() {
 
-        jdbcTemplate = new JdbcTemplate(dataSource);
 
         CourseSetting courseSetting = jdbcTemplate.queryForObject(LAST_SETTING, new RowMapper<CourseSetting>() {
             @Override
@@ -105,8 +99,6 @@ public class CourseSettingDAOImpl implements CourseSettingDAO<CourseSetting> {
 
     @Override
     public boolean insert(CourseSetting courseSetting) {
-
-        jdbcTemplate = new JdbcTemplate(dataSource);
 
         try {
             jdbcTemplate.update(INSERT,
@@ -130,7 +122,7 @@ public class CourseSettingDAOImpl implements CourseSettingDAO<CourseSetting> {
     @Override
     public boolean update(CourseSetting courseSetting) {
 
-        jdbcTemplate = new JdbcTemplate(dataSource);
+
         try {
             jdbcTemplate.update(UPDATE,
                     courseSetting.getStudentInterviewCount(),

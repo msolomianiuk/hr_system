@@ -5476,3 +5476,18 @@ a.add-question-link i, button.add-subject-link i{
 .candidate-details h3{
   text-align: center;
 }
+
+button.filters-button{
+  padding: 0px;
+  border-radius: 50px;
+}
+
+#candidates-list_filter > label{
+  width: 100%;
+}
+
+#candidates-list_filter > label > input{
+  border-radius: 50px;
+  width: 100%;
+  margin-left: 0;
+}

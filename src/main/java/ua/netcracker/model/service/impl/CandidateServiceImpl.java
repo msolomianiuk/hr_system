@@ -108,7 +108,7 @@ public class CandidateServiceImpl implements CandidateService {
 
     @Override
     public boolean updateCandidate(Candidate candidate) {
-        return candidateDAO.update(candidate);
+        return false;
     }
 
     private Collection<Answer> parseJsonString(String answersJsonString) {

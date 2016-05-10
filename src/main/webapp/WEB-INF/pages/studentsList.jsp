@@ -12,6 +12,7 @@
     <!-- IE9 -->
     <%@ include file="include/links/linksForIE9JS.jsp" %>
 
+    <link href="<c:url value="/static/js/datatables/jquery.dataTables.min.css"/>" rel="stylesheet" type="text/css" />
 </head>
 <body class="nav-md">
 <div class="modals">
@@ -38,8 +39,6 @@
                     <div class="clearfix"></div>
                 </div>
                 <div class="x_content">
-                    <%@ include file="include/personal/searchField.jsp"%>
-                    
                     <%@ include file="include/personal/filters.jsp"%>
 
                     <%@ include file="include/personal/candidateTableForHR.jsp"%>
@@ -59,6 +58,10 @@
 <!-- js for PNotify -->
 <%@ include file="include/links/linksPNotify.jsp" %>
 
+<script src="<c:url value="/static/js/datatables/jquery.dataTables.min.js"/>"></script>
+<script src="<c:url value="/static/js/datatables/dataTables.bootstrap.js"/>"></script>
+<script src="<c:url value="/static/js/datatables/dataTables.buttons.min.js"/>"></script>
+<script src="<c:url value="/static/js/datatables/buttons.bootstrap.min.js"/>"></script>
 
 
 <script src="<c:url value="/static/js/custom/Personal/ajax/loadQuestions.js"/>"></script>
