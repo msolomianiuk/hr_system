@@ -1,20 +1,13 @@
 package ua.netcracker.model.filtering;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import ua.netcracker.model.entity.Candidate;
-import ua.netcracker.model.service.CandidateService;
 
 import java.util.ArrayList;
 
 /**
  * Main filter - to run and apply all chosen filters
  */
-@Service
 public class Filterer {
-
-    @Autowired
-    CandidateService candidateService;
 
     private ArrayList<Filter> filters;
     private ArrayList<Candidate> list;
@@ -28,7 +21,7 @@ public class Filterer {
 
     public ArrayList<Candidate> filter() {
         if (list == null || list.isEmpty()) {
-            list = (ArrayList<Candidate>) candidateService.getAllCandidates();
+            return new ArrayList<>();
         }
         for (Filter filter : filters) {
             list = filter.filter(list);

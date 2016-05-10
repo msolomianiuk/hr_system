@@ -5,6 +5,7 @@ import ua.netcracker.model.entity.InterviewDaysDetails;
 import javax.naming.NamingException;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by MaXim on 05.05.2016.
@@ -19,4 +20,5 @@ public interface InterviewDaysDetailsService {
     public String getEndTimeofInterview(int id);
     public String getDateofInterview(int id);
     public int getIdbyDate(String date);
+    public List<Map<String, Object>> findAllInterviewDetailsAddress();
 }

@@ -92,7 +92,7 @@ public class DateService {
         return (int) Math.ceil(maxStudentForInterview / (getPeriod()));
     }
 
-    private int getPeriod() {
+    public int getPeriod() {
         courseSetting = courseSettingService.getLastSetting();
         LocalDate startInterviewDay = getDate(courseSetting.getInterviewStartDate());
         LocalDate endInterviewDay = getDate(courseSetting.getInterviewEndDate());
@@ -157,6 +157,7 @@ public class DateService {
         courseSetting = courseSettingService.getLastSetting();
 
         List<DateEntity> date = new ArrayList<>();
+
         int r = getPeriod();
 
         String s = courseSetting.getInterviewStartDate();
@@ -165,6 +166,7 @@ public class DateService {
             DateEntity dateEntity = new DateEntity();
             dateEntity.setInterviewDay(String.valueOf(getDate(s).plusDays(i)));
             date.add(dateEntity);
+
         }
         return date;
     }

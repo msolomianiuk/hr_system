@@ -5,7 +5,8 @@ import org.springframework.stereotype.Component;
 import java.util.Collection;
 
 /**
- * Created by Alex on 24.04.2016.
+ * Created by on 24.04.2016.
+ * @author Oleg
  */
 @Component
 public class Candidate {
@@ -19,6 +20,8 @@ public class Candidate {
     private int statusId;
 
     private Status status;
+
+    private int interviewDaysDetailsId;
 
     private Collection<Answer> answers;
 
@@ -84,5 +87,13 @@ public class Candidate {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public int getInterviewDaysDetailsId() {
+        return interviewDaysDetailsId;
+    }
+
+    public void setInterviewDaysDetailsId(int interviewDaysDetailsId) {
+        this.interviewDaysDetailsId = interviewDaysDetailsId;
     }
 }

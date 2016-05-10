@@ -32,7 +32,7 @@ public class MainController {
             UserAuthenticationDetails userDetails =
                     (UserAuthenticationDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             String url = RolesUtils.getUrlByRoles(userDetails.getAuthorities());
-            return "redirect:/" + url;
+            return "redirect:" + url;
         }
         return "index";
     }

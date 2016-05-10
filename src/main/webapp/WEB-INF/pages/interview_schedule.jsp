@@ -2,7 +2,7 @@
   Created by IntelliJ IDEA.
   User: Серый
   Date: 29.04.2016
-  Time: 21:47
+  Time: 23:55
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -18,24 +18,37 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>interview_schedule</title>
+  <title>Settings </title>
 
   <!-- Bootstrap core CSS -->
 
   <link href="<c:url value="/static/admin/css/bootstrap.min.css"/>" rel="stylesheet">
+
   <link href="<c:url value="/static/admin/fonts/css/font-awesome.min.css"/>" rel="stylesheet">
   <link href="<c:url value="/static/admin/css/animate.min.css"/>" rel="stylesheet">
-
+  <link href="<c:url value="/static/admin/css/adminSetting.css"/>" rel="stylesheet">
+  <link href="<c:url value="/static/admin/css/style.css"/>" rel="stylesheet">
   <!-- Custom styling plus plugins -->
   <link href="<c:url value="/static/admin/css/custom.css"/>" rel="stylesheet">
-  <link href="<c:url value="/static/admin/css/icheck/flat/green.css"/>" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="<c:url value="/static/admin/css/maps/jquery-jvectormap-2.0.3.css"/>"/>
+  <link href="<c:url value="/static/admin/css/icheck/flat/green.css"/>" rel="stylesheet"/>
+  <link href="<c:url value="/static/admin/css/floatexamples.css"/>" rel="stylesheet" type="text/css"/>
+  <link href="<c:url value="/static/admin/css/selectSettings.css"/>" rel="stylesheet" type="text/css"/>
 
-  <link href="<c:url value="/static/admin/css/calendar/fullcalendar.css"/>" rel="stylesheet">
-  <link href="<c:url value="/static/admin/css/calendar/fullcalendar.print.css"/>" rel="stylesheet" media="print">
+  <link href="<c:url value="/static/admin/js/datatables/jquery.dataTables.min.css"/>" rel="stylesheet"
+        type="text/css"/>
+  <link href="<c:url value="/static/admin/js/datatables/buttons.bootstrap.min.css"/>" rel="stylesheet"
+        type="text/css"/>
+  <link href="<c:url value="/static/admin/js/datatables/fixedHeader.bootstrap.min.css"/>" rel="stylesheet"
+        type="text/css"/>
+  <link href="<c:url value="/static/admin/js/datatables/responsive.bootstrap.min.css"/>" rel="stylesheet"
+        type="text/css"/>
+  <link href="<c:url value="/static/admin/js/datatables/scroller.bootstrap.min.css"/>" rel="stylesheet"
+        type="text/css"/>
+
 
   <script src="<c:url value="/static/admin/js/jquery.min.js"/>"></script>
-
-
+  <script src="<c:url value="/static/admin/js/nprogress.js"/>"></script>
 
 </head>
 
@@ -58,16 +71,18 @@
         <!-- menu prile quick info -->
         <div class="profile">
           <div class="profile_pic">
-            <img src="<c:url value="/static/admin/images/img.jpg"/>" alt="..." class="img-circle profile_img">
+            <img src="<c:url value="/static/admin/images/img.jpg"/>" alt="..."
+                 class="img-circle profile_img">
           </div>
           <div class="profile_info">
             <span>Welcome,</span>
+
             <h2>Vasya Pupkin</h2>
           </div>
         </div>
         <!-- /menu prile quick info -->
 
-        <br />
+        <br/>
 
         <!-- sidebar menu -->
         <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
@@ -101,12 +116,13 @@
 
           <ul class="nav navbar-nav navbar-right">
             <li class="">
-              <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+              <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown"
+                 aria-expanded="false">
                 <img src="<c:url value="/static/admin/images/img.jpg"/>" alt="">John Doe
                 <span class=" fa fa-angle-down"></span>
               </a>
               <ul class="dropdown-menu dropdown-usermenu animated fadeInDown pull-right">
-                <li><a href="javascript:;">  Profile</a>
+                <li><a href="javascript:;"> Profile</a>
                 </li>
                 <li>
                   <a href="javascript:;">
@@ -128,155 +144,151 @@
     </div>
     <!-- /top navigation -->
 
-
-    <!-- page content -->
+    <!— page content —>
     <div class="right_col" role="main">
-      <div class="">
+      <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+          <div class="x_panel">
+            <div class="x_title">
+              <h2> System Setting </h2>
 
-        <div class="page-title">
-          <div class="title_left">
-            <h3>
-              Interview Schedule
-              <small>
+              <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+              <p class="text-muted font-13 m-b-30">
+              </p>
 
-              </small>
-            </h3>
-          </div>
 
-          <div class="title_right">
-            <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
-              <div class="input-group">
-                <input type="text" class="form-control" placeholder="Search for...">
-                  <span class="input-group-btn">
-                                            <button class="btn btn-default" type="button">Go!</button>
-                                        </span>
+              <div class="panel panel-success">
+                <div class="panel-heading" role="button" data-toggle="collapse" href="#main-setting1"
+                     aria-expanded="true" aria-controls="main-setting1">
+                  <h3 class="panel-title">Add new address for interview</h3>
+                </div>
+                <div class="panel-body" id="main-setting1">
+
+                  <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                    <div class="form-group">
+                      <label for="AddressAdd">Address interview</label>
+                      <input type="text" name="AddressAdd" class="form-control"
+                             id="AddressAdd" placeholder="Nothing detected">
+                    </div>
+                  </div>
+                  <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                    <div class="form-group">
+                      <label for="RoomCapacity">Room Capacity:</label>
+                      <input type="text" name="RoomCapacity" class="form-control"
+                             id="RoomCapacity" placeholder="Nothing detected">
+                    </div>
+                  </div>
+                  <div class="col-md-12 col-lg-12 col-sm-12 col-xs-12">
+                    <button type="button" id="AddAddress" class="btn btn-success">Add Address Interview days details</button>
+                  </div>
+                  <table id="datatable" class="table table-striped table-bordered clicked-tr">
+                    <thead>
+                    <tr>
+                      <th>Address</th>
+                      <th>RoomCapacity</th>
+                    </tr>
+                    </thead>
+                    <tbody id="TableAddress">
+
+                    </tbody>
+                  </table>
+                </div>
+
               </div>
             </div>
-          </div>
-        </div>
-        <div class="clearfix"></div>
 
-        <div class="row">
-          <div class="col-md-12">
-            <div class="x_panel">
-              <div class="x_title">
-                <!-- <h2>Calender Events <small>Sessions</small></h2> -->
-                <ul class="nav navbar-right panel_toolbox">
-                  <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-                  </li>
-                  <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
-                    <ul class="dropdown-menu" role="menu">
-                      <li><a href="#">Settings 1</a>
-                      </li>
-                      <li><a href="#">Settings 2</a>
-                      </li>
-                    </ul>
-                  </li>
-                  <li><a class="close-link"><i class="fa fa-close"></i></a>
-                  </li>
-                </ul>
-                <div class="clearfix"></div>
+
+            <div class="panel panel-success">
+              <div class="panel-heading" role="button" data-toggle="collapse" href="#main-setting4"
+                   aria-expanded="true" aria-controls="main-setting4">
+                <h3 class="panel-title">Interview Days Details</h3>
               </div>
-              <div class="x_content">
-
-                <div id='calendar'></div>
-
+              <div class="panel-body" id="Interview_Days_Details-setting">
+                <div class="col-md-4 col-lg-4 col-sm-12 col-xs-12">
+                  <p>Select please day for interview</p>
+                  <select id="DaysForInterview">
+                    <option selected>Select Day</option>
+                  </select>
+                </div>
+                <div class="col-md-4 col-lg-4 col-sm-12 col-xs-12">
+                  <div class="form-group">
+                    <label for="TimeStart">Time start interview:</label>
+                    <input type="text" name="TimeStart" class="form-control"
+                           id="TimeStart" placeholder="Nothing detected">
+                  </div>
+                  <div class="form-group">
+                    <label for="ForRoom">Для чего то тоже</label>
+                    <input type="text" name="ForRoom" class="form-control"
+                           id="ForRoom" placeholder="Nothing detected">
+                  </div>
+                  <div class="form-group">
+                    <label for="TimeEnd">Time end interview:</label>
+                    <input type="text" name="TimeEnd" class="form-control"
+                           id="TimeEnd" placeholder="Nothing detected">
+                  </div>
+                </div>
+                <div class="col-md-4 col-lg-4 col-sm-12 col-xs-12">
+                  <div class="form-group">
+                    <label for="PersonalOne">Для чего то тоже</label>
+                    <input type="text" name="PersonalOne" class="form-control"
+                           id="PersonalOne" placeholder="Nothing detected">
+                  </div>
+                  <div class="form-group">
+                    <label for="PersonalTwo">Time end interview:</label>
+                    <input type="text" name="PersonalTwo" class="form-control"
+                           id="PersonalTwo" placeholder="Nothing detected">
+                  </div>
+                </div>
+                <div class="col-md-12 col-lg-12 col-sm-12 col-xs-12">
+                  <button type="button" id="AddInterviewDays" class="btn btn-success">Add Interview days details</button>
+                </div>
               </div>
             </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- footer content -->
-      <footer>
-        <div class="copyright-info">
-          <p class="pull-right">Gentelella - Bootstrap Admin Template by <a href="https://colorlib.com">Colorlib</a>
-          </p>
-        </div>
-        <div class="clearfix"></div>
-      </footer>
-      <!-- /footer content -->
-
-    </div>
 
 
-    <!-- Start Calender modal -->
-    <div id="CalenderModalNew" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
+          <div class="panel panel-success">
+            <div class="panel-heading" role="button" data-toggle="collapse" href="#main-setting3"
+                 aria-expanded="true"
+                 aria-controls="main-setting3">
+              <h3 class="panel-title">Create Question</h3>
+            </div>
+            <div class="panel-body" id="main-setting3">
 
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-            <h4 class="modal-title" id="myModalLabel">New Calender Entry</h4>
-          </div>
-          <div class="modal-body">
-            <div id="testmodal" style="padding: 5px 20px;">
-              <form id="antoform" class="form-horizontal calender" role="form">
-                <div class="form-group">
-                  <label class="col-sm-3 control-label">Title</label>
-                  <div class="col-sm-9">
-                    <input type="text" class="form-control" id="title" name="title">
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label class="col-sm-3 control-label">Description</label>
-                  <div class="col-sm-9">
-                    <textarea class="form-control" style="height:55px;" id="descr" name="descr"></textarea>
-                  </div>
-                </div>
-              </form>
             </div>
           </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default antoclose" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary antosubmit">Save changes</button>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div id="CalenderModalEdit" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
 
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-            <h4 class="modal-title" id="myModalLabel2">Edit Calender Entry</h4>
-          </div>
-          <div class="modal-body">
 
-            <div id="testmodal2" style="padding: 5px 20px;">
-              <form id="antoform2" class="form-horizontal calender" role="form">
-                <div class="form-group">
-                  <label class="col-sm-3 control-label">Title</label>
-                  <div class="col-sm-9">
-                    <input type="text" class="form-control" id="title2" name="title2">
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label class="col-sm-3 control-label">Description</label>
-                  <div class="col-sm-9">
-                    <textarea class="form-control" style="height:55px;" id="descr2" name="descr"></textarea>
-                  </div>
-                </div>
-
-              </form>
+          <div class="panel panel-success">
+            <div class="panel-heading" role="button" data-toggle="collapse" href="#main-setting4"
+                 aria-expanded="true" aria-controls="main-setting4">
+              <h3 class="panel-title">Main Setting</h3>
+            </div>
+            <div class="panel-body" id="main-setting4">
+              Some Main Settings
             </div>
           </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default antoclose2" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary antosubmit2">Save changes</button>
-          </div>
+
+
         </div>
       </div>
     </div>
-
-    <div id="fc_create" data-toggle="modal" data-target="#CalenderModalNew"></div>
-    <div id="fc_edit" data-toggle="modal" data-target="#CalenderModalEdit"></div>
-
-    <!-- End Calender modal -->
-    <!-- /page content -->
   </div>
+  <!-- footer content -->
+
+  <footer>
+    <div class="copyright-info">
+      <p class="pull-right">Gentelella - Bootstrap Admin Template by <a href="https://colorlib.com">Colorlib</a>
+      </p>
+    </div>
+    <div class="clearfix"></div>
+  </footer>
+  <!-- /footer content -->
+</div>
+<!-- /page content -->
+
+</div>
 
 </div>
 
@@ -286,24 +298,60 @@
   <div class="clearfix"></div>
   <div id="notif-group" class="tabbed_notifications"></div>
 </div>
-
+<div id="hider"></div>
+<div class="ModelViewDays"></div>
 <script src="<c:url value="/static/admin/js/bootstrap.min.js"/>"></script>
-
-<script src="<c:url value="/static/admin/js/nprogress.js"/>"></script>
 
 <!-- bootstrap progress js -->
 <script src="<c:url value="/static/admin/js/progressbar/bootstrap-progressbar.min.js"/>"></script>
 <script src="<c:url value="/static/admin/js/nicescroll/jquery.nicescroll.min.js"/>"></script>
+<script src="<c:url value="/static/admin/js/interviewAjax.js"/>"></script>
+<script src="<c:url value="/static/admin/js/selectSetting.js"/>"></script>
+<script src="<c:url value="/static/admin/js/SelectQuery.js"/>"></script>
+
+
+
+
 <!-- icheck -->
 <script src="<c:url value="/static/admin/js/icheck/icheck.min.js"/>"></script>
 
 <script src="<c:url value="/static/admin/js/custom.js"/>"></script>
 
-<script src="<c:url value="/static/admin/js/moment/moment.min.js"/>"></script>
-<script src="<c:url value="/static/admin/js/calendar/fullcalendar.min.js"/>"></script>
+
+<!-- Datatables -->
+<!-- <script src="js/datatables/js/jquery.dataTables.js"></script>
+<script src="js/datatables/tools/js/dataTables.tableTools.js"></script> -->
+
+<!-- Datatables-->
+<script src="<c:url value="/static/admin/js/datatables/jquery.dataTables.min.js"/>"></script>
+<script src="<c:url value="/static/admin/js/datatables/dataTables.bootstrap.js"/>"></script>
+<script src="<c:url value="/static/admin/js/datatables/dataTables.buttons.min.js"/>"></script>
+<script src="<c:url value="/static/admin/js/datatables/buttons.bootstrap.min.js"/>"></script>
+<script src="<c:url value="/static/admin/js/datatables/jszip.min.js"/>"></script>
+<script src="<c:url value="/static/admin/js/datatables/pdfmake.min.js"/>"></script>
+<script src="<c:url value="/static/admin/js/datatables/vfs_fonts.js"/>"></script>
+<script src="<c:url value="/static/admin/js/datatables/buttons.html5.min.js"/>"></script>
+<script src="<c:url value="/static/admin/js/datatables/buttons.print.min.js"/>"></script>
+<script src="<c:url value="/static/admin/js/datatables/dataTables.fixedHeader.min.js"/>"></script>
+<script src="<c:url value="/static/admin/js/datatables/dataTables.keyTable.min.js"/>"></script>
+<script src="<c:url value="/static/admin/js/datatables/dataTables.responsive.min.js"/>"></script>
+<script src="<c:url value="/static/admin/js/datatables/responsive.bootstrap.min.js"/>"></script>
+<script src="<c:url value="/static/admin/js/datatables/dataTables.scroller.min.js"/>"></script>
+
+
 <!-- pace -->
 <script src="<c:url value="/static/admin/js/pace/pace.min.js"/>"></script>
-<script src="<c:url value="/static/admin/js/InterviewSchedule.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/static/admin/js/AdminSettings.js"/>"></script>
+<!-- /datepicker -->
+<!-- /footer content -->
 </body>
 
 </html>
+
+
+
+
+
+
+
+

@@ -6,19 +6,21 @@ package ua.netcracker.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ua.netcracker.model.entity.Question;
 import ua.netcracker.model.service.impl.QuestionServiceImpl;
 
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
-@RestController
+@Controller
 public class GetTypeOfQuestionsRestController {
 
     @Autowired
     private QuestionServiceImpl questionServiceImpl;
-
+    @ResponseBody
     @RequestMapping(value = "/getTypeOfQuestions", method = RequestMethod.GET)
     public ResponseEntity<List<Question>> typeAllQuestions() {
 
@@ -26,7 +28,7 @@ public class GetTypeOfQuestionsRestController {
 
         return new ResponseEntity(questions, HttpStatus.OK);
     }
-
+    @ResponseBody
     @RequestMapping(value = "/getQuantityQuestions", method = RequestMethod.GET)
     public ResponseEntity<Integer> getQuantityQuestions() {
 
@@ -35,14 +37,15 @@ public class GetTypeOfQuestionsRestController {
         return new ResponseEntity(QuantityQuestions, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/setQuestion", method = RequestMethod.GET)
-    public ResponseEntity<Question> setQuestion(
-            @RequestParam String caption,
-            @RequestParam int curse_id,
-            @RequestParam String typeValue,
-            @RequestParam List<String> additionValue,
-            @RequestParam boolean isMandatory,
-            @RequestParam int orderNumber
+    @RequestMapping(value = "/setQuestion" , method = RequestMethod.POST)
+    @ResponseBody
+    public  ResponseEntity<Question> setQuestion(
+            @RequestParam  int curse_id,
+            @RequestParam  String caption,
+            @RequestParam  String typeValue,
+            @RequestParam  List<String> additionValue,
+            @RequestParam  boolean isMandatory,
+            @RequestParam  int orderNumber
     ) {
 
 
@@ -60,9 +63,9 @@ public class GetTypeOfQuestionsRestController {
         return new ResponseEntity(question, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/getCourseId", method = RequestMethod.GET)
-    public ResponseEntity<Integer> getCourseId() {
 
+    @RequestMapping(value = "/getCurseId", method = RequestMethod.POST)
+    public ResponseEntity<Integer> getCurseId() {
         int courseID = questionServiceImpl.getCourseId();
 
         return new ResponseEntity(courseID, HttpStatus.OK);

@@ -2,6 +2,7 @@ package ua.netcracker.model.service.impl;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 import ua.netcracker.model.dao.InterviewDaysDetailsDAO;
 import ua.netcracker.model.dao.impl.InterviewDaysDetailsDAOImpl;
@@ -16,6 +17,7 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +29,10 @@ import java.util.Map;
 public class InterviewDaysDetailsServiceImpl implements InterviewDaysDetailsService {
     static final Logger LOGGER = Logger.getLogger(InterviewDaysDetailsServiceImpl.class);
 
+    private static final String INTERVIEW_DETAILS_ADDRESS_SQL = "SELECT hr_system.interview_days_details.id, date, start_time, end_time, hr_system.address.address, hr_system.address.room_capacity" +
+            " FROM hr_system.interview_days_details" +
+            " LEFT JOIN hr_system.address" +
+            " ON hr_system.interview_days_details.address_id=hr_system.address.id";
     @Autowired
     InterviewDaysDetailsDAO interviewDaysDetailsDAO;
 
@@ -89,5 +95,9 @@ public class InterviewDaysDetailsServiceImpl implements InterviewDaysDetailsServ
         String sql = "SELECT id FROM hr_system.interview_days_details WHERE date = " + "\'" + date + "\'";
         int id = (Integer) jdbcTemplateFactory.getJdbcTemplate(dataSource).queryForObject(sql, Integer.class);
         return id;
+    }
+
+    public List<Map<String, Object>> findAllInterviewDetailsAddress() {
+            return jdbcTemplateFactory.getJdbcTemplate(dataSource).queryForList(INTERVIEW_DETAILS_ADDRESS_SQL);
     }
 }
