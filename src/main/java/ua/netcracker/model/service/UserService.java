@@ -11,7 +11,7 @@ public interface UserService {
 
     boolean saveUserPhoto(MultipartFile image);
 
-    boolean updateUserRoles(User user, Role role);
+    boolean addUserRole(User user, Role role);
 
     User get(int id);
 }
