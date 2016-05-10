@@ -29,22 +29,22 @@ public class InterviewDaysDetailsDAOImpl implements InterviewDaysDetailsDAO {
     @Autowired
     private DataSource dataSource;
 
-    private static final String UPDATE_SQL = "UPDATE hr_system.interview_days_details SET date=?, start_time=?, end_time=?, address_id=? WHERE id = ?";
+    private static final String UPDATE_SQL = "UPDATE hr_system.interview_days_details SET start_time=?, end_time=?, address_id=?, count_students=?, count_personal=? WHERE id = ?";
     private static final String REMOVE_SQL = "DELETE FROM \"hr_system\".interview_days_details WHERE id=?";
     private static final String FIND_ALL_SQL = "SELECT id, course_id, date, start_time, end_time, address_id FROM \"hr_system\".interview_days_details ORDER BY id";
     private static final String FIND_SQL = "SELECT id, course_id, date, start_time, end_time, address_id FROM \"hr_system\".interview_days_details WHERE id = ?";
-    private static final String INSERT_SQL = "INSERT INTO \"hr_system\".interview_days_details(course_id, date, start_time, end_time, address_id) VALUES (?, ?, ?, ?, ?);";
-
+    private static final String INSERT_SQL = "INSERT INTO \"hr_system\".interview_days_details(course_id, date, start_time, end_time, address_id, count_students, count_personal) VALUES (?, ?, ?, ?, ?, ?, ?);";
+    private static final String INSERT_DATE_SQL = "INSERT INTO \"hr_system\".interview_days_details(course_id, date) VALUES (?, ?);";
 
     @Override
     public InterviewDaysDetails find(int id) {
         InterviewDaysDetails interviewDaysDetails = null;
         interviewDaysDetails = jdbcTemplateFactory.getJdbcTemplate(dataSource).queryForObject(FIND_SQL,
                 new RowMapper<InterviewDaysDetails>() {
-                            public InterviewDaysDetails mapRow(ResultSet rs, int rowNum) throws SQLException {
-                                return createInterviewWithResultSet(rs);
-                            }
-                        },
+                    public InterviewDaysDetails mapRow(ResultSet rs, int rowNum) throws SQLException {
+                        return createInterviewWithResultSet(rs);
+                    }
+                },
                 id);
         return interviewDaysDetails;
     }
@@ -56,26 +56,40 @@ public class InterviewDaysDetailsDAOImpl implements InterviewDaysDetailsDAO {
                 interviewDaysDetails.getInterviewDate(),
                 interviewDaysDetails.getStartTime(),
                 interviewDaysDetails.getEndTime(),
-                interviewDaysDetails.getAddressId()) > 0;
+                interviewDaysDetails.getAddressId(),
+                interviewDaysDetails.getCountStudents(),
+                interviewDaysDetails.getCountPersonal()
+        ) > 0;
+    }
+
+    @Override
+    public boolean remove(int id) {
+        return jdbcTemplateFactory.getJdbcTemplate(dataSource).update(REMOVE_SQL, id) > 0;
     }
 
     @Override
     public boolean update(InterviewDaysDetails interviewDaysDetails) {
         try {
             return jdbcTemplateFactory.getJdbcTemplate(dataSource).update(UPDATE_SQL,
-                    interviewDaysDetails.getInterviewDate(),
                     interviewDaysDetails.getStartTime(),
                     interviewDaysDetails.getEndTime(),
                     interviewDaysDetails.getAddressId(),
-                    interviewDaysDetails.getId()) > 0;
+                    interviewDaysDetails.getCountStudents(),
+                    interviewDaysDetails.getCountPersonal(),
+                    interviewDaysDetails.getId()
+            ) > 0;
         } catch (Exception e){
             LOGGER.error(e);
             return false;
         }
     }
 
-    public boolean remove(int id) {
-        return jdbcTemplateFactory.getJdbcTemplate(dataSource).update(REMOVE_SQL, id) > 0;
+    @Override
+    public boolean insertDate(InterviewDaysDetails interviewDaysDetails) {
+        return jdbcTemplateFactory.getJdbcTemplate(dataSource).update(INSERT_DATE_SQL,
+                interviewDaysDetails.getCourseId(),
+                interviewDaysDetails.getInterviewDate()
+        ) > 0;
     }
 
     @Override

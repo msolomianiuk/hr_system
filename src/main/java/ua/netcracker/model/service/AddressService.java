@@ -6,5 +6,7 @@ import ua.netcracker.model.entity.Address;
  * Created by MaXim on 06.05.2016.
  */
 public interface AddressService extends EntityService<Address> {
-    public void insert(Address address);
+    void insert(Address address);
+
+    Address findByAddress(String address);
 }

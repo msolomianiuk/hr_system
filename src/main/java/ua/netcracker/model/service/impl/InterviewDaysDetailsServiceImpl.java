@@ -6,9 +6,11 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 import ua.netcracker.model.dao.InterviewDaysDetailsDAO;
 import ua.netcracker.model.dao.impl.InterviewDaysDetailsDAOImpl;
+import ua.netcracker.model.entity.CourseSetting;
 import ua.netcracker.model.entity.InterviewDaysDetails;
 import ua.netcracker.model.service.InterviewDaysDetailsService;
 import ua.netcracker.model.service.ReportService;
+import ua.netcracker.model.service.date.DateService;
 import ua.netcracker.model.utils.JdbcTemplateFactory;
 
 import javax.naming.InitialContext;
@@ -29,10 +31,13 @@ import java.util.Map;
 public class InterviewDaysDetailsServiceImpl implements InterviewDaysDetailsService {
     static final Logger LOGGER = Logger.getLogger(InterviewDaysDetailsServiceImpl.class);
 
-    private static final String INTERVIEW_DETAILS_ADDRESS_SQL = "SELECT hr_system.interview_days_details.id, date, start_time, end_time, hr_system.address.address, hr_system.address.room_capacity" +
-            " FROM hr_system.interview_days_details" +
-            " LEFT JOIN hr_system.address" +
-            " ON hr_system.interview_days_details.address_id=hr_system.address.id";
+    private static final String INTERVIEW_DETAILS_ADDRESS_SQL =
+            "SELECT hr_system.interview_days_details.id, date, start_time, end_time, hr_system.address.address, hr_system.address.room_capacity, count_students, count_personal" +
+                    " FROM hr_system.interview_days_details" +
+                    " LEFT JOIN hr_system.address" +
+                    " ON hr_system.interview_days_details.address_id=hr_system.address.id";
+    private static final String REMOVE_SQL_BY_COURSE_ID = "DELETE FROM \"hr_system\".interview_days_details WHERE course_id = ?";
+
     @Autowired
     InterviewDaysDetailsDAO interviewDaysDetailsDAO;
 
@@ -44,6 +49,10 @@ public class InterviewDaysDetailsServiceImpl implements InterviewDaysDetailsServ
 
     @Autowired
     private DataSource dataSource;
+
+    @Autowired
+    DateService dateService;
+
 
     InterviewDaysDetails interviewDaysDetails;
 
@@ -76,6 +85,27 @@ public class InterviewDaysDetailsServiceImpl implements InterviewDaysDetailsServ
         interviewDaysDetailsDAO.remove(id);
     }
 
+    public void removeByCourseId(int course_id) {
+        jdbcTemplateFactory.getJdbcTemplate(dataSource).update(REMOVE_SQL_BY_COURSE_ID, course_id);
+    }
+
+    @Override
+    public void addDate(InterviewDaysDetails interviewDaysDetails){
+        interviewDaysDetailsDAO.insertDate(interviewDaysDetails);
+    }
+
+    public void addDateList(CourseSetting courseSetting){
+        InterviewDaysDetails interviewDaysDetails = new InterviewDaysDetails();
+        int period = dateService.getPeriodDate(courseSetting);
+        String currDate = courseSetting.getInterviewStartDate();
+        interviewDaysDetails.setCourseId(courseSetting.getId());
+        interviewDaysDetails.setInterviewDate(currDate);
+        for (int i = 0; i < period ; i++) {
+            interviewDaysDetails.setInterviewDate(String.valueOf(dateService.getDate(currDate).plusDays(i)));
+            addDate(interviewDaysDetails);
+        }
+    }
+
     @Override
     public String getStartTimeofInterview(int id) {
         return interviewDaysDetailsDAO.find(id).getStartTime();
@@ -98,6 +128,6 @@ public class InterviewDaysDetailsServiceImpl implements InterviewDaysDetailsServ
     }
 
     public List<Map<String, Object>> findAllInterviewDetailsAddress() {
-            return jdbcTemplateFactory.getJdbcTemplate(dataSource).queryForList(INTERVIEW_DETAILS_ADDRESS_SQL);
+        return jdbcTemplateFactory.getJdbcTemplate(dataSource).queryForList(INTERVIEW_DETAILS_ADDRESS_SQL);
     }
 }

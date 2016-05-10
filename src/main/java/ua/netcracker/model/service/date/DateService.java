@@ -10,6 +10,7 @@ import ua.netcracker.model.service.impl.CourseSettingServiceImpl;
 
 import java.time.DateTimeException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.HashMap;
 import java.util.Map;
@@ -51,23 +52,23 @@ public class DateService {
         int[] timeInterview = {
                 Integer.parseInt(getTime(interviewDaysDetails.getStartTime())[0]),
                 Integer.parseInt(getTime(interviewDaysDetails.getStartTime())[1]),
-                Integer.parseInt(getTime(interviewDaysDetails.getEndTime())[2]),
-                Integer.parseInt(getTime(interviewDaysDetails.getEndTime())[3])};
-
+                Integer.parseInt(getTime(interviewDaysDetails.getEndTime())[0]),
+                Integer.parseInt(getTime(interviewDaysDetails.getEndTime())[1])};
         if (timeInterview[0] == timeInterview[2] &&
-                timeInterview[0] == timeInterview[2]) {
+                timeInterview[1] == timeInterview[3]) {
             interviewTime = 0;
         } else {
             if (timeInterview[0] == timeInterview[2]) {
                 interviewTime = timeInterview[1] + timeInterview[3];
             } else {
-                if (timeInterview[3] < timeInterview[1]) {
-                    interviewTime = timeInterview[1] - timeInterview[3] +
-                            (timeInterview[2] - timeInterview[0] - 1) * 60;
-                } else {
-                    interviewTime = (timeInterview[3] - timeInterview[0]) * 60
-                            + timeInterview[2] - timeInterview[4];
-                }
+                interviewTime=((timeInterview[2]-timeInterview[0])*60)+(timeInterview[1]+timeInterview[3]);
+//                if (timeInterview[3] < timeInterview[1]) {
+//                    interviewTime = timeInterview[1] - timeInterview[3] +
+//                            (timeInterview[2] - timeInterview[0] - 1) * 60;
+//                } else {
+//                    interviewTime = (timeInterview[3] - timeInterview[0]) * 60
+//                            + timeInterview[2] - timeInterview[4];
+//                }
             }
         }
 
@@ -88,7 +89,7 @@ public class DateService {
 
         int maxStudentForInterview = courseSetting.getStudentInterviewCount();
 
-        return (int) Math.ceil(maxStudentForInterview / (getPeriod()));
+        return (int) Math.ceil(maxStudentForInterview / (getPeriodDate(courseSetting)));
     }
 
     public int getPeriod() {
@@ -96,6 +97,13 @@ public class DateService {
         LocalDate startInterviewDay = getDate(courseSetting.getInterviewStartDate());
         LocalDate endInterviewDay = getDate(courseSetting.getInterviewEndDate());
 
+        Period period = startInterviewDay.until(endInterviewDay);
+        return period.getDays()+1;
+    }
+
+    public int getPeriodDate(CourseSetting courseSetting) {
+        LocalDate startInterviewDay = getDate(courseSetting.getInterviewStartDate());
+        LocalDate endInterviewDay = getDate(courseSetting.getInterviewEndDate());
         Period period = startInterviewDay.until(endInterviewDay);
         return period.getDays()+1;
     }

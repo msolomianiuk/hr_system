@@ -6,5 +6,7 @@ import ua.netcracker.model.entity.InterviewDaysDetails;
  * Created by MaXim on 01.05.2016.
  */
 public interface InterviewDaysDetailsDAO extends DAO<InterviewDaysDetails> {
-    public boolean remove(int id);
+    boolean remove(int id);
+
+    boolean insertDate(InterviewDaysDetails interviewDaysDetails);
 }

@@ -24,6 +24,10 @@ public class InterviewDaysDetails {
 
     private int addressId;
 
+    private int countStudents;
+
+    private int countPersonal;
+
     public InterviewDaysDetails() {}
 
     public InterviewDaysDetails(int id, int courseId, String interviewDate, String startTime, String endTime, int addressId) {
@@ -99,16 +103,24 @@ public class InterviewDaysDetails {
         this.addressId = addressId;
     }
 
+    public int getCountStudents() { return countStudents; }
+
+    public void setCountStudents(int countStudents) { this.countStudents = countStudents; }
+
+    public int getCountPersonal() { return countPersonal; }
+
+    public void setCountPersonal(int countPersonal) { this.countPersonal = countPersonal; }
 
     @Override
     public String toString() {
         return "InterviewDaysDetails{" +
-                "id=" + id +
-                ", courseId=" + courseId +
-                ", interviewDate='" + interviewDate + '\'' +
-                ", startTime='" + startTime + '\'' +
-                ", endTime='" + endTime + '\'' +
+                "countPersonal=" + countPersonal +
+                ", countStudents=" + countStudents +
                 ", addressId=" + addressId +
+                ", endTime='" + endTime + '\'' +
+                ", startTime='" + startTime + '\'' +
+                ", interviewDate='" + interviewDate + '\'' +
+                ", courseId=" + courseId +
                 '}';
     }
 }

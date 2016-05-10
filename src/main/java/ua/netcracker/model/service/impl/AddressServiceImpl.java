@@ -14,13 +14,18 @@ import java.util.List;
  */
 @Service("address service")
 public class AddressServiceImpl implements AddressService {
-
+    private static final String FIND_SQL = "SELECT id, address, room_capacity FROM \"hr_system\".address WHERE address = ?";
     @Autowired
     AddressDAO addressDAO;
 
     @Override
     public Address findById(int id) {
         return addressDAO.find(id);
+    }
+
+    @Override
+    public Address findByAddress(String address) {
+        return addressDAO.findByAdrress(address);
     }
 
     @Override
@@ -37,6 +42,7 @@ public class AddressServiceImpl implements AddressService {
     public void delete(long id) {
         addressDAO.remove(id);
     }
+
     @Override
     public void insert(Address address){
         addressDAO.insert(address);

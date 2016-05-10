@@ -29,12 +29,14 @@ public class AddressDAOImpl implements AddressDAO {
     private static final String FIND_ALL_SQL = "SELECT id, address, room_capacity FROM \"hr_system\".address ORDER BY id";
     private static final String INSERT_SQL = "INSERT INTO \"hr_system\".address(address, room_capacity) VALUES (?, ?)";
     private static final String FIND_SQL = "SELECT id, address, room_capacity FROM \"hr_system\".address WHERE id = ?";
+    private static final String FIND_ADDRESS_SQL = "SELECT id, address, room_capacity FROM \"hr_system\".address WHERE address = ?";
 
     @Autowired
     private DataSource dataSource;
 
     @Autowired
     private JdbcTemplateFactory jdbcTemplateFactory;
+
 
     @Override
     public Address find(int id) {
@@ -62,8 +64,24 @@ public class AddressDAOImpl implements AddressDAO {
     }
 
     @Override
-    public boolean remove(Address address) {
-        return false;
+    public boolean update(Address address) {
+        return jdbcTemplateFactory.getJdbcTemplate(dataSource).update(UPDATE_SQL,
+                address.getAddress(),
+                address.getRoomCapacity(),
+                address.getId()) > 0;
+    }
+
+    @Override
+    public Address findByAdrress(String addressName) {
+        Address address = null;
+        address = jdbcTemplateFactory.getJdbcTemplate(dataSource).queryForObject(FIND_ADDRESS_SQL,
+                new RowMapper<Address>() {
+                    public Address mapRow(ResultSet rs, int rowNum) throws SQLException {
+                        return createAddressWithResultSet(rs);
+                    }
+                },
+                addressName);
+        return address;
     }
 
     @Override
@@ -78,6 +96,7 @@ public class AddressDAOImpl implements AddressDAO {
         return addressList;
     }
 
+
     private Address createAddressWithResultSet(ResultSet rs) throws SQLException {
         Address address = new Address();
         address.setId(rs.getInt("id"));
@@ -86,12 +105,5 @@ public class AddressDAOImpl implements AddressDAO {
         return address;
     }
 
-    @Override
-    public boolean update(Address address) {
-        return jdbcTemplateFactory.getJdbcTemplate(dataSource).update(UPDATE_SQL,
-                address.getAddress(),
-                address.getRoomCapacity(),
-                address.getId()) > 0;
-    }
 
 }

@@ -1,5 +1,6 @@
 package ua.netcracker.model.service;
 
+import ua.netcracker.model.entity.CourseSetting;
 import ua.netcracker.model.entity.InterviewDaysDetails;
 
 import javax.naming.NamingException;
@@ -11,14 +12,29 @@ import java.util.Map;
  * Created by MaXim on 05.05.2016.
  */
 public interface InterviewDaysDetailsService {
-    public InterviewDaysDetails findById(int id);
-    public List<InterviewDaysDetails> findAll();
-    public boolean add(InterviewDaysDetails interviewDaysDetails);
-    public void update(InterviewDaysDetails interviewDaysDetails);
-    public void remove(int id);
-    public String getStartTimeofInterview(int id);
-    public String getEndTimeofInterview(int id);
-    public String getDateofInterview(int id);
-    public int getIdbyDate(String date);
-    public List<Map<String, Object>> findAllInterviewDetailsAddress();
+    InterviewDaysDetails findById(int id);
+
+    List<InterviewDaysDetails> findAll();
+
+    boolean add(InterviewDaysDetails interviewDaysDetails);
+
+    void addDate(InterviewDaysDetails interviewDaysDetails);
+
+    void addDateList(CourseSetting courseSetting);
+
+    void update(InterviewDaysDetails interviewDaysDetails);
+
+    void removeByCourseId(int course_id);
+
+    void remove(int id);
+
+    String getStartTimeofInterview(int id);
+
+    String getEndTimeofInterview(int id);
+
+    String getDateofInterview(int id);
+
+    int getIdbyDate(String date);
+
+    List<Map<String, Object>> findAllInterviewDetailsAddress();
 }
