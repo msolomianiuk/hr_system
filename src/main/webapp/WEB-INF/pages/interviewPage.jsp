@@ -14,6 +14,7 @@
 
 </head>
 <body class="nav-md">
+<%@ include file="include/personal/questionsOnInterview.jsp"%>
 <div class="modals">
     <!-- Modal -->
     <%@ include file="include/uploadPhotoModal.jsp" %>
@@ -37,7 +38,9 @@
                     <div class="clearfix"></div>
                 </div>
                 <div class="x_content">
-
+                    <%@ include file="include/personal/searchField.jsp"%>
+                    <%@ include file="include/personal/candidateDetails.jsp"%>
+                    <%@ include file="include/personal/interviewResultForm.jsp"%>
                 </div>
             </div>
             <!-- footer content -->
@@ -53,5 +56,16 @@
 <%@ include file="include/links/linksCustomCSSAndJS.jsp" %>
 <!-- js for PNotify -->
 <%@ include file="include/links/linksPNotify.jsp" %>
+
+
+
+
+
+<script src="<c:url value="/static/js/custom/Personal/ajax/loadQuestions.js"/>"></script>
+<script src="<c:url value="/static/js/custom/Personal/triggerForCandidateDetailsInterview.js"/>"></script>
+<script src="<c:url value="/static/js/custom/Personal/drawCandidateDetails.js"/>"></script>
+<script src="<c:url value="/static/js/custom/Personal/ajax/loadCandidateById.js"/>"></script>
+
+
 </body>
 </html>

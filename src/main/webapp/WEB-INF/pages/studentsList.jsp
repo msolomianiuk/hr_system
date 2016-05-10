@@ -17,6 +17,7 @@
 <div class="modals">
     <!-- Modal -->
     <%@ include file="include/uploadPhotoModal.jsp" %>
+    <%@ include file="include/personal/modalCandidateDetails.jsp"%>
 </div>
 
 <%@ include file="include/loadingSpinner.jsp" %>
@@ -37,7 +38,11 @@
                     <div class="clearfix"></div>
                 </div>
                 <div class="x_content">
+                    <%@ include file="include/personal/searchField.jsp"%>
+                    
+                    <%@ include file="include/personal/filters.jsp"%>
 
+                    <%@ include file="include/personal/candidateTableForHR.jsp"%>
                 </div>
             </div>
             <!-- footer content -->
@@ -53,5 +58,17 @@
 <%@ include file="include/links/linksCustomCSSAndJS.jsp" %>
 <!-- js for PNotify -->
 <%@ include file="include/links/linksPNotify.jsp" %>
+
+
+
+<script src="<c:url value="/static/js/custom/Personal/ajax/loadQuestions.js"/>"></script>
+<script src="<c:url value="/static/js/custom/Personal/drawCandidateDetails.js"/>"></script>
+<script src="<c:url value="/static/js/custom/Personal/ajax/loadCandidateById.js"/>"></script>
+<script src="<c:url value="/static/js/custom/Personal/triggerForCandidateDetailsModal.js"/>"></script>
+<script src="<c:url value="/static/js/custom/Personal/addInTableQuestions.js"/>"></script>
+<script src="<c:url value="/static/js/custom/Personal/addInTableCandidats.js"/>"></script>
+<script src="<c:url value="/static/js/custom/Personal/ajax/loadQuestionsView.js"/>"></script>
+<script src="<c:url value="/static/js/custom/Personal/ajax/loadCandidatsList.js"/>"></script>
+
 </body>
 </html>

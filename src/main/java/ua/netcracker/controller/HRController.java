@@ -34,7 +34,7 @@ public class HRController {
     @Autowired
     private UserDAO userDAO;
 
-    @RequestMapping(value = "hr/getStudent", method = RequestMethod.GET)
+    @RequestMapping(value = "hr/service/getCandidateById", method = RequestMethod.GET)
     public ResponseEntity<Candidate> getCandidate(@RequestParam int id) {
         Candidate candidate = candidateService.getCandidateById(id);
         if (candidate == null) {
@@ -53,8 +53,8 @@ public class HRController {
         return "interviewPage";
     }
 
-    @RequestMapping(value = "hr/getStudentList", method = RequestMethod.GET)
-    public ResponseEntity<Collection<Candidate>> getCandidates() {
+    @RequestMapping(value = "hr/service/getCandidatsList", method = RequestMethod.GET)
+    public ResponseEntity<Collection<Candidate>> getCandidatesList() {
         Collection<Candidate> listCandidates = candidateService.getAllCandidatesIsView();
         if (listCandidates.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -62,8 +62,8 @@ public class HRController {
         return new ResponseEntity<Collection<Candidate>>(listCandidates, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "hr/getQuestionList", method = RequestMethod.GET)
-    public ResponseEntity<Collection<Question>> getAllQuestion() {
+    @RequestMapping(value = "hr/service/getQuestionViewList", method = RequestMethod.GET)
+    public ResponseEntity<Collection<Question>> getAllQuestionView() {
         Collection<Question> listQuestion = questionService.getAllIsView(courseSettingService.getLastSetting().getId());
         if (listQuestion.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
