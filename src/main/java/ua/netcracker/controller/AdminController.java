@@ -9,15 +9,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import ua.netcracker.model.entity.*;
-import ua.netcracker.model.service.AddressService;
-import ua.netcracker.model.service.EmailTemplateService;
-import ua.netcracker.model.service.InterviewDaysDetailsService;
-import ua.netcracker.model.service.ReportService;
+import ua.netcracker.model.service.*;
 import ua.netcracker.model.service.date.DateService;
 import ua.netcracker.model.service.impl.CandidateServiceImpl;
 import ua.netcracker.model.service.impl.CourseSettingServiceImpl;
-
-
 
 import java.util.Collection;
 import java.util.List;
@@ -43,6 +38,8 @@ public class AdminController {
     @Autowired
     private DateService dateService;
 
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private EmailTemplateService emailTemplateService;
@@ -58,6 +55,22 @@ public class AdminController {
     @RequestMapping(value = "/candidate", method = RequestMethod.GET)
     public String mainPageStudentsList() {
         return "candidate";
+    }
+
+    @RequestMapping(value = "/candidate/update_status")
+    public void updateCandidateStatus(@RequestParam Integer candidateID, @RequestParam String status) {
+
+        Candidate candidate = candidateService.getCandidateById(candidateID);
+        candidate.setStatus(Status.valueOf(status));
+        candidateService.updateCandidate(candidate);
+    }
+
+    @RequestMapping(value = "/add_role")
+    public void addUserRole(@RequestParam Integer userID, @RequestParam String role) {
+
+        User user = userService.get(userID);
+
+        userService.addUserRole(user, Role.valueOf(role));
     }
 
     @RequestMapping(value = "/interview_schedule", method = RequestMethod.GET)
@@ -179,15 +192,15 @@ public class AdminController {
         return new ResponseEntity<List<InterviewDaysDetails>>(interview, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/address_getDateList", method = RequestMethod.GET)
-    @ResponseBody
-    public ResponseEntity<Map<String, String>> getDates() {
-        Map<String, String> date = dateService.mapDate();
-        if (date.isEmpty()) {
-            return new ResponseEntity<Map<String, String>>(HttpStatus.NO_CONTENT);
-        }
-        return new ResponseEntity<Map<String, String>>(date, HttpStatus.OK);
-    }
+//    @RequestMapping(value = "/address_getDateList", method = RequestMethod.GET)
+//    @ResponseBody
+//    public ResponseEntity<Map<String, String>> getDates() {
+//        Map<String, String> date = dateService.mapDate();
+//        if (date.isEmpty()) {
+//            return new ResponseEntity<Map<String, String>>(HttpStatus.NO_CONTENT);
+//        }
+//        return new ResponseEntity<Map<String, String>>(date, HttpStatus.OK);
+//    }
 
     @RequestMapping(value = "/interview_details_insert", method = RequestMethod.GET)
     @ResponseBody
@@ -292,7 +305,7 @@ public class AdminController {
             @RequestParam String id
     ) {
         Address address = addressService.findById(Integer.parseInt(id));
-        if (address==null) {
+        if (address == null) {
             return new ResponseEntity<Address>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<Address>(address, HttpStatus.OK);
@@ -371,10 +384,10 @@ public class AdminController {
     @RequestMapping(value = "/service/setReportQuery", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<ReportQuery> setReport(@RequestParam String id,
-                                                     @RequestParam String description,
-                                                     @RequestParam String query,
-                                                     @RequestParam String show,
-                                                     @RequestParam String status) {
+                                                 @RequestParam String description,
+                                                 @RequestParam String query,
+                                                 @RequestParam String show,
+                                                 @RequestParam String status) {
         ReportQuery reportQuery = new ReportQuery();
         reportQuery.setId(Integer.valueOf(id));
         reportQuery.setQuery(query);
