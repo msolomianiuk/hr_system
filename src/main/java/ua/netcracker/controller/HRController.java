@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import ua.netcracker.model.dao.UserDAO;
 import ua.netcracker.model.entity.Candidate;
 import ua.netcracker.model.entity.Question;
@@ -35,6 +36,7 @@ public class HRController {
     private UserDAO userDAO;
 
     @RequestMapping(value = "hr/service/getCandidateById", method = RequestMethod.GET)
+    @ResponseBody
     public ResponseEntity<Candidate> getCandidate(@RequestParam int id) {
         Candidate candidate = candidateService.getCandidateById(id);
         if (candidate == null) {
@@ -54,6 +56,7 @@ public class HRController {
     }
 
     @RequestMapping(value = "hr/service/getCandidatsList", method = RequestMethod.GET)
+    @ResponseBody
     public ResponseEntity<Collection<Candidate>> getCandidatesList() {
         Collection<Candidate> listCandidates = candidateService.getAllCandidatesIsView();
         if (listCandidates.isEmpty()) {
@@ -63,6 +66,7 @@ public class HRController {
     }
 
     @RequestMapping(value = "hr/service/getQuestionViewList", method = RequestMethod.GET)
+    @ResponseBody
     public ResponseEntity<Collection<Question>> getAllQuestionView() {
         Collection<Question> listQuestion = questionService.getAllIsView(courseSettingService.getLastSetting().getId());
         if (listQuestion.isEmpty()) {
