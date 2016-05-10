@@ -182,7 +182,7 @@ public class CandidateServiceImpl implements CandidateService {
 
     @Override
     public Collection<Candidate> getAllCandidates() {
-        Collection<Candidate> listCandidates = candidateDAO.findAll();
+        Collection<Candidate> listCandidates = candidateDAO.findAllByCourse(courseSettingService.getLastSetting().getId());
         for (Candidate candidate : listCandidates) {
             if (candidate.getUser() == null) {
                 candidate.setUser(userDAO.find(candidate.getUserId()));
@@ -206,6 +206,11 @@ public class CandidateServiceImpl implements CandidateService {
 
         }
         return listCandidates;
+    }
+
+    @Override
+    public Collection<Candidate> getAllByCourse(Integer courseId) {
+        return candidateDAO.findAllByCourse(courseId);
     }
 
     @Override

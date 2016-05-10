@@ -18,6 +18,8 @@ public interface CandidateService {
 
     Collection<Candidate> getAllCandidatesIsView();
 
+    Collection<Candidate> getAllByCourse(Integer courseId);
+
     Collection<Answer> getAnswersIsView(Candidate candidate, Collection<Question> listQuestions);
     //
     Candidate getCandidateById(Integer id);

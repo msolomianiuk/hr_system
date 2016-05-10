@@ -27,6 +27,7 @@ public class CandidateDAOImpl implements CandidateDAO {
             "SELECT interview_days_details FROM \"hr_system\".candidate WHERE id = ?";
     private static final String FIND_BY_ID = "SELECT * FROM \"hr_system\".candidate WHERE id = ";
     private static final String FIND_ALL = "SELECT * FROM \"hr_system\".candidate";
+    private static final String FIND_ALL_BY_COURSE = "SELECT * FROM \"hr_system\".candidate WHERE course_id = ";
     private static final String FIND_STATUS_BY_ID = "SELECT * FROM \"hr_system\".status WHERE id = ?";
     private static final String FIND_BY_USER_ID = "SELECT * FROM \"hr_system\".candidate WHERE user_id = ?";
     private static final String UPDATE = "UPDATE \"hr_system\".candidate SET(status_id,interview_days_details_id)=(?,?) " +
@@ -163,6 +164,11 @@ public class CandidateDAOImpl implements CandidateDAO {
         return candidate;
     }
 
+    @Override
+    public Collection<Candidate> findAllByCourse(Integer courseId) {
+        return findCandidates(FIND_ALL_BY_COURSE + courseId);
+    }
+
 
     public boolean saveCandidate(Candidate candidate) {
         try {
@@ -209,18 +215,26 @@ public class CandidateDAOImpl implements CandidateDAO {
 
     @Override
     public Collection<Candidate> findAll() {
-        jdbcTemplate = new JdbcTemplate(dataSource);
-        Collection<Candidate> listCandidates = new ArrayList<>();
-        Collection<Map<String, Object>> rows = jdbcTemplate.queryForList(FIND_ALL);
-        for (Map<String, Object> row : rows) {
-            Candidate candidate = new Candidate();
-            candidate.setId((int) row.get("id"));
-            candidate.setUserId((int) row.get("user_id"));
-            candidate.setStatusId((int) row.get("status_id"));
-            candidate.setStatus(findStatusById(candidate.getStatusId()));
-            candidate.setCourseId((int) row.get("course_id"));
-            listCandidates.add(candidate);
+        return findCandidates(FIND_ALL);
+    }
+
+    private Collection<Candidate> findCandidates(String sql){
+        try{
+            Collection<Candidate> listCandidates = new ArrayList<>();
+            Collection<Map<String, Object>> rows = jdbcTemplate.queryForList(sql);
+            for (Map<String, Object> row : rows) {
+                Candidate candidate = new Candidate();
+                candidate.setId((int) row.get("id"));
+                candidate.setUserId((int) row.get("user_id"));
+                candidate.setStatusId((int) row.get("status_id"));
+                candidate.setStatus(findStatusById(candidate.getStatusId()));
+                candidate.setCourseId((int) row.get("course_id"));
+                listCandidates.add(candidate);
+            }
+            return listCandidates;
+        }catch (Exception e){
+            LOGGER.error("Error:" + e);
         }
-        return listCandidates;
+        return null;
     }
 }
