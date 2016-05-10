@@ -16,6 +16,7 @@ import ua.netcracker.model.service.CourseSettingService;
 import ua.netcracker.model.service.QuestionService;
 
 import java.util.Collection;
+import java.util.Map;
 
 /**
  * Class for processing requests related to hr
@@ -75,5 +76,14 @@ public class HRController {
         return new ResponseEntity<Collection<Question>>(listQuestion, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "hr/service/getAllStatus", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<Map<Integer, String>> getAllStatus(){
+        Map<Integer, String> listStatus = candidateService.getAllStatus();
+        if (listStatus.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<Map<Integer, String>>(listStatus, HttpStatus.OK);
+    }
 
 }

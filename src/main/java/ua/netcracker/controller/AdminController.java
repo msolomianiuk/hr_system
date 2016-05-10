@@ -285,8 +285,8 @@ public class AdminController {
         interviewDaysDetails.setStartTime(start_time);
         interviewDaysDetails.setEndTime(end_time);
         interviewDaysDetails.setAddressId(addressService.findByAddress(address_id).getId());
-        interviewDaysDetails.setCountStudents(dateService.quantityStudent(interviewDaysDetails));
-        interviewDaysDetails.setCountPersonal(dateService.getPersonal(interviewDaysDetails));
+        interviewDaysDetails.setCountStudents(10);
+        interviewDaysDetails.setCountPersonal(10);
         interviewDaysDetailsService.update(interviewDaysDetails);
         if (interviewDaysDetails == null) {
             return ResponseEntity.accepted().body(interviewDaysDetails);

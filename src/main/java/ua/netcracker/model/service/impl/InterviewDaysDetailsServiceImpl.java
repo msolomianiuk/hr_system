@@ -39,7 +39,7 @@ public class InterviewDaysDetailsServiceImpl implements InterviewDaysDetailsServ
     private static final String REMOVE_SQL_BY_COURSE_ID = "DELETE FROM \"hr_system\".interview_days_details WHERE course_id = ?";
 
     @Autowired
-    InterviewDaysDetailsDAO interviewDaysDetailsDAO;
+    private InterviewDaysDetailsDAO interviewDaysDetailsDAO;
 
     @Autowired
     private JdbcTemplateFactory jdbcTemplateFactory;
@@ -51,8 +51,7 @@ public class InterviewDaysDetailsServiceImpl implements InterviewDaysDetailsServ
     private DataSource dataSource;
 
     @Autowired
-    DateService dateService;
-
+    private DateService dateService;
 
     InterviewDaysDetails interviewDaysDetails;
 

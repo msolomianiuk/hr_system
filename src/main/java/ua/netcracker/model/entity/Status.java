@@ -1,5 +1,8 @@
 package ua.netcracker.model.entity;
 
+import java.util.Arrays;
+import java.util.Collection;
+
 /**
  * Created by Nikita on 28.04.2016.
  */
@@ -28,4 +31,5 @@ public enum Status {
     public String toString() {
         return status;
     }
+
 }
