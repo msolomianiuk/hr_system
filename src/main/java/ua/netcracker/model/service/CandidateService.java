@@ -52,4 +52,6 @@ public interface CandidateService {
 
     void saveOrUpdateAnswers(Candidate candidate);
 
+    Map<Integer, String> getAllStatus();
+
 }

@@ -15,10 +15,7 @@ import ua.netcracker.model.entity.User;
 import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Repository("candidateDao")
 public class CandidateDAOImpl implements CandidateDAO {
@@ -33,6 +30,7 @@ public class CandidateDAOImpl implements CandidateDAO {
     private static final String UPDATE = "UPDATE \"hr_system\".candidate SET(status_id,interview_days_details_id)=(?,?) " +
             " WHERE id = ? ";
     private static final String FIND_BY_STATUS = "SELECT * FROM \"hr_system\".candidate WHERE status_id =?";
+    private static final String FIND_ALL_STATUS = "SELECT * FROM \"hr_system\".status";
     private User user;
 
     @Autowired
@@ -187,6 +185,21 @@ public class CandidateDAOImpl implements CandidateDAO {
         }
 
         return false;
+    }
+
+    @Override
+    public Map<Integer, String> findAllStatus() {
+        Map<Integer, String> status = new HashMap<>();
+        jdbcTemplate = new JdbcTemplate(dataSource);
+        try{
+            List<Map<String, Object>> rows = jdbcTemplate.queryForList(FIND_ALL_STATUS);
+            for (Map row : rows) {
+                status.put((int)row.get("id"), row.get("value").toString());
+            }
+        }catch (Exception e){
+            LOGGER.error("Error: " + e);
+        }
+        return status;
     }
 
     @Override

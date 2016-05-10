@@ -18,10 +18,7 @@ import ua.netcracker.model.service.CandidateService;
 import ua.netcracker.model.service.CourseSettingService;
 import ua.netcracker.model.service.QuestionService;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author Alyona Bilous 05/05/2016
@@ -178,6 +175,17 @@ public class CandidateServiceImpl implements CandidateService {
         } catch (Exception e) {
             LOGGER.error("Error: " + e);
         }
+    }
+
+    @Override
+    public Map<Integer, String> getAllStatus() {
+        Map<Integer, String> status = new HashMap<>();
+        try{
+            status = candidateDAO.findAllStatus();
+        }catch (Exception e){
+            LOGGER.error("Error: " + e);
+        }
+        return status;
     }
 
     @Override

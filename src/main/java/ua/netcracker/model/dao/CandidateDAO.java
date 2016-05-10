@@ -5,6 +5,7 @@ import ua.netcracker.model.entity.Candidate;
 import ua.netcracker.model.entity.Status;
 
 import java.util.Collection;
+import java.util.Map;
 
 /**
  * Created by Alex on 26.04.2016.
@@ -25,5 +26,7 @@ public interface CandidateDAO extends DAO<Candidate> {
     Collection<Candidate> findAllByCourse(Integer courseId);
 
     boolean saveCandidate(Candidate candidate);
+
+    Map<Integer, String> findAllStatus();
 
 }
