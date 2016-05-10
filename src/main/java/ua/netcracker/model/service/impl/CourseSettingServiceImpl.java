@@ -119,12 +119,16 @@ public class CourseSettingServiceImpl implements CourseSettingService {
         if (findById(courseSetting.getId()) == null) {
             insert(courseSetting);
         } else {
-            courseSettingDAO.update(courseSetting);
+            update(courseSetting);
         }
     }
 
-    public boolean insert(CourseSetting courseSetting) {
-        return courseSettingDAO.insert(courseSetting) == true ? true : false;
+    private void insert(CourseSetting courseSetting) {
+        courseSettingDAO.insert(courseSetting);
+    }
+
+    private void update (CourseSetting courseSetting){
+        courseSettingDAO.update(courseSetting);
     }
 
     @Override
@@ -133,7 +137,7 @@ public class CourseSettingServiceImpl implements CourseSettingService {
     }
 
     public boolean dateValidator(String date) {
-        String[] d = date.split(" ");
+        String[] d = date.split("-");
         return dateService.isDateValid(d[0], d[1], d[2]);
     }
 

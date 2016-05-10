@@ -8,22 +8,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import ua.netcracker.model.entity.Address;
-import ua.netcracker.model.entity.Candidate;
-import ua.netcracker.model.entity.CourseSetting;
-import ua.netcracker.model.entity.InterviewDaysDetails;
+import ua.netcracker.model.entity.*;
 import ua.netcracker.model.service.AddressService;
-import ua.netcracker.model.service.InterviewDaysDetailsService;
-import ua.netcracker.model.entity.EmailTemplate;
-import ua.netcracker.model.entity.ReportQuery;
 import ua.netcracker.model.service.EmailTemplateService;
+import ua.netcracker.model.service.InterviewDaysDetailsService;
 import ua.netcracker.model.service.ReportService;
+import ua.netcracker.model.service.date.DateService;
 import ua.netcracker.model.service.impl.CandidateServiceImpl;
 import ua.netcracker.model.service.impl.CourseSettingServiceImpl;
 
-import java.util.List;
-
 import java.util.Collection;
+import java.util.List;
 
 
 @Controller
@@ -34,6 +29,9 @@ public class AdminController {
     private AddressService addressService;
 
     @Autowired
+    private EmailTemplateService emailTemplateService;
+
+    @Autowired
     private InterviewDaysDetailsService interviewDaysDetailsService;
 
     @Autowired
@@ -41,6 +39,9 @@ public class AdminController {
 
     @Autowired
     private CandidateServiceImpl candidateService;
+
+    @Autowired
+    private DateService dateService;
 
     @RequestMapping(value = "", method = RequestMethod.GET)
     public String mainPage() {
@@ -112,17 +113,41 @@ public class AdminController {
         return ResponseEntity.ok(courseSetting);
     }
 
+
     @RequestMapping(value = "/up_setting", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<CourseSetting> getSetting() {
         return ResponseEntity.ok(courseSettingService.getLastSetting());
     }
 
+    @RequestMapping(value = "/answer_candidate", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<Collection<Answer>> answerCandidate(
+            @RequestParam String id
+    ) {
+        Collection<Answer> answers =
+                candidateService.getAllCandidateAnswers(
+                        candidateService.getCandidateById(Integer.parseInt(id)));
+        if (answers.isEmpty()) {
+            return (ResponseEntity<Collection<Answer>>) ResponseEntity.badRequest();
+        }
+        return ResponseEntity.ok(answers);
+    }
+
+    @RequestMapping(value = "/registration_period", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<String> period() {
+
+        return ResponseEntity.ok(dateService.registrationPeriod());
+    }
+
+
     @RequestMapping(value = "/get_candidate", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<Candidate> setCandidate(
             @RequestParam String id
     ) {
+
         Candidate candidate = candidateService.getCandidateById(Integer.parseInt(id));
 
         return ResponseEntity.ok(candidate);
@@ -140,7 +165,7 @@ public class AdminController {
     @RequestMapping(value = "/interview_details_list", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<List<InterviewDaysDetails>> getAllInterviewDaysDetails() {
-        List<InterviewDaysDetails> interview = (List <InterviewDaysDetails>) interviewDaysDetailsService.findAll();
+        List<InterviewDaysDetails> interview = (List<InterviewDaysDetails>) interviewDaysDetailsService.findAll();
         if (interview.isEmpty()) {
             return new ResponseEntity<List<InterviewDaysDetails>>(HttpStatus.NO_CONTENT);
         }
@@ -222,14 +247,16 @@ public class AdminController {
     //---Controllers for Address---
 
     @RequestMapping(value = "/service/interviewDetails/address", method = RequestMethod.GET)
-    public String getAddressPage(){return "address";}
+    public String getAddressPage() {
+        return "address";
+    }
 
     //---REST Controllers for Address---
 
     @RequestMapping(value = "/address_list", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<List<Address>> getAllAddress() {
-        List<Address> addressList = (List <Address>) addressService.findAllSetting();
+        List<Address> addressList = (List<Address>) addressService.findAllSetting();
         if (addressList.isEmpty()) {
             return new ResponseEntity<List<Address>>(HttpStatus.NO_CONTENT);
         }
@@ -284,11 +311,16 @@ public class AdminController {
         }
         return ResponseEntity.ok(addressEntity);
     }
+
     @RequestMapping(value = "/template", method = RequestMethod.GET)
-    public String getEmailTemplatePage(){return "template";}
+    public String getEmailTemplatePage() {
+        return "template";
+    }
 
     @RequestMapping(value = "/report", method = RequestMethod.GET)
-    public String getReportPage(){return "report";}
+    public String getReportPage() {
+        return "report";
+    }
 
     @Autowired
     private ReportService reportService;
@@ -329,9 +361,6 @@ public class AdminController {
         return new ResponseEntity<>(report, HttpStatus.OK);
     }
 
-    @Autowired
-    private EmailTemplateService emailTemplateService;
-
     @RequestMapping(value = "/service/getEmailTemplates", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<Collection<EmailTemplate>> getAllEmailTemplates() {
@@ -352,7 +381,7 @@ public class AdminController {
         emailTemplate.setTemplate(template);
         emailTemplate.setDescription(description);
         emailTemplate.setId(Integer.valueOf(id));
-        if(emailTemplateService.manageEmailTemplate(emailTemplate,status)){
+        if (emailTemplateService.manageEmailTemplate(emailTemplate, status)) {
 
             return new ResponseEntity<>(HttpStatus.OK);
         }
