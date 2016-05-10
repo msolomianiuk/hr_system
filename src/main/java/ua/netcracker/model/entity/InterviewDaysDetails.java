@@ -39,20 +39,15 @@ public class InterviewDaysDetails {
         this.addressId = addressId;
     }
 
-    public InterviewDaysDetails(int courseId, String interviewDate, String startTime, String endTime, int addressId) {
+    public InterviewDaysDetails(int id, int courseId, String interviewDate, String startTime, String endTime, int addressId, int countStudents, int countPersonal) {
+        this.id = id;
         this.courseId = courseId;
         this.interviewDate = interviewDate;
         this.startTime = startTime;
         this.endTime = endTime;
         this.addressId = addressId;
-    }
-
-    public InterviewDaysDetails(int id, String interviewDate, String startTime, int addressId, String endTime) {
-        this.id = id;
-        this.interviewDate = interviewDate;
-        this.startTime = startTime;
-        this.addressId = addressId;
-        this.endTime = endTime;
+        this.countStudents = countStudents;
+        this.countPersonal = countPersonal;
     }
 
     public int getId() {

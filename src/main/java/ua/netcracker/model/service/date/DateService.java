@@ -19,7 +19,6 @@ import java.util.List;
  * Created by Legion on 03.05.2016.
  */
 @Service
-@Scope("prototype")
 public class DateService {
 
     @Autowired
@@ -89,7 +88,7 @@ public class DateService {
 
         int maxStudentForInterview = courseSetting.getStudentInterviewCount();
 
-        return (int) Math.ceil(maxStudentForInterview / (getPeriod()));
+        return (int) Math.ceil(maxStudentForInterview / (getPeriodDate(courseSetting)));
     }
 
     public int getPeriod() {
@@ -99,6 +98,13 @@ public class DateService {
 
         Period period = startInterviewDay.until(endInterviewDay);
         return period.getDays() + 1;
+    }
+
+    public int getPeriodDate(CourseSetting courseSetting) {
+        LocalDate startInterviewDay = getDate(courseSetting.getInterviewStartDate());
+        LocalDate endInterviewDay = getDate(courseSetting.getInterviewEndDate());
+        Period period = startInterviewDay.until(endInterviewDay);
+        return period.getDays()+1;
     }
 
     public int getPersonal(InterviewDaysDetails interviewDaysDetails) {
