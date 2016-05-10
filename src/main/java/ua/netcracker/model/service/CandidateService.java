@@ -40,6 +40,8 @@ public interface CandidateService {
 
     boolean saveCandidate(Candidate candidate);
 
+    boolean updateCandidate(Candidate candidate);
+
     Candidate saveAnswers(String answersJsonString);
 
     Candidate getCurrentCandidate();

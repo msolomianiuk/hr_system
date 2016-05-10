@@ -106,6 +106,7 @@ public class CandidateServiceImpl implements CandidateService {
         return candidateDAO.saveCandidate(candidate);
     }
 
+    @Override
     public boolean updateCandidate(Candidate candidate) {
         return candidateDAO.update(candidate);
     }
