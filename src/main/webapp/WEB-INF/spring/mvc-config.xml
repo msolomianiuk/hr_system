@@ -24,7 +24,6 @@
     <mvc:annotation-driven/>
     <mvc:resources mapping="/static/**" location="/static/"/>
     <mvc:resources mapping="/user/photos/**" location="file:/${userPhotoFolder}"/>
-    <mvc:resources mapping="/static/images/**" location="file:/${pdfImage}"/>
     <mvc:default-servlet-handler/>
 
     <context:component-scan base-package="ua.netcracker.controller"/>
