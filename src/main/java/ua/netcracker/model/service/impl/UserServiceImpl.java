@@ -85,6 +85,11 @@ public class UserServiceImpl implements UserService {
         return userDao.insertUserRoles(user);
     }
 
+    @Override
+    public User get(int id) {
+        return userDao.find(id);
+    }
+
     private String generateUUID() {
         UUID id = UUID.randomUUID();
         return String.valueOf(id);
