@@ -15,7 +15,7 @@ public class InterviewResult {
 
     private String comment;
 
-    private String recommendation;
+    private Recommendation recommendation;
 
     public InterviewResult() {
 
@@ -45,11 +45,11 @@ public class InterviewResult {
         this.comment = comment;
     }
 
-    public String getRecommendation() {
+    public Recommendation getRecommendation() {
         return recommendation;
     }
 
-    public void setRecommendation(String recommendation) {
+    public void setRecommendation(Recommendation recommendation) {
         this.recommendation = recommendation;
     }
 }
