@@ -48,7 +48,7 @@ public class InterviewResultDAOImpl implements InterviewResultDAO {
                 Recommendation[] recommendations = Recommendation.values();
                 for (Recommendation r : recommendations) {
                     if (r.getId() == (int) row.get("recommendation_id")) {
-                        interviewResult.setRecommendation(r.toString());
+                        interviewResult.setRecommendation(r);
                     }
                 }
             }
@@ -117,7 +117,7 @@ public class InterviewResultDAOImpl implements InterviewResultDAO {
             JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
             jdbcTemplate.update(CREATE, interviewResult.getInterviewerId(), candidate_id,
                     interviewResult.getMark(), interviewResult.getComment(),
-                    Recommendation.valueOf(interviewResult.getRecommendation()).getId());
+                    interviewResult.getRecommendation().getId());
             return true;
         } catch (Exception e) {
             LOGGER.error("Error:" + e);
@@ -130,7 +130,7 @@ public class InterviewResultDAOImpl implements InterviewResultDAO {
         try {
             JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
             jdbcTemplate.update(UPDATE, interviewResult.getMark(), interviewResult.getComment(),
-                    Recommendation.valueOf(interviewResult.getRecommendation()).getId(),
+                    interviewResult.getRecommendation().getId(),
                     interviewResult.getInterviewerId(), candidate_id);
             return true;
         } catch (Exception e) {
