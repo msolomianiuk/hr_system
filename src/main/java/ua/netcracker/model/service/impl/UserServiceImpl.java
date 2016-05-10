@@ -10,12 +10,14 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ua.netcracker.model.dao.UserDAO;
+import ua.netcracker.model.entity.Role;
 import ua.netcracker.model.entity.User;
 import ua.netcracker.model.securiry.UserAuthenticationDetails;
 import ua.netcracker.model.service.UserService;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
@@ -73,6 +75,14 @@ public class UserServiceImpl implements UserService {
         }
         LOGGER.error("Error load UserAuthenticationDetails");
         return false;
+    }
+
+    @Override
+    public boolean updateUserRoles(User user, Role role) {
+        Collection<Role> roles = user.getRoles();
+        roles.add(role);
+        user.setRoles((List<Role>) roles);
+        return userDao.insertUserRoles(user);
     }
 
     private String generateUUID() {
