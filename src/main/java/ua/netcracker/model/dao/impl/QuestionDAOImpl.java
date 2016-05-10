@@ -35,6 +35,11 @@ public class QuestionDAOImpl implements QuestionDAO {
             "INNER JOIN \"hr_system\".question q ON qcp.question_id = q.id " +
             "INNER JOIN \"hr_system\".type t ON q.type_id = t.id " +
             "WHERE q.is_mandatory = true AND qcp.course_id = ";
+    private static final String SELECT_ALL_MANDATORY_IS_VIEW = "SELECT qcp.order_number, q.*,t.value ,qcp.course_id " +
+            "FROM \"hr_system\".question_course_maps qcp " +
+            "INNER JOIN \"hr_system\".question q ON qcp.question_id = q.id " +
+            "INNER JOIN \"hr_system\".type t ON q.type_id = t.id " +
+            "WHERE q.is_mandatory = true AND q.is_view = true AND qcp.course_id = ";
 
 
     private static final String SELECT_TYPE_ID = "SELECT id FROM \"hr_system\".type WHERE value = ?";
@@ -100,6 +105,11 @@ public class QuestionDAOImpl implements QuestionDAO {
     @Override
     public Collection<Question> findAllMandatory(int courseId) {
         return findQuestions(SELECT_ALL_MANDATORY + courseId + " Order by qcp.order_number");
+    }
+
+    @Override
+    public Collection<Question> findAllMandatoryAndView(int courseId) {
+        return findQuestions(SELECT_ALL_MANDATORY_IS_VIEW + courseId + " Order by qcp.order_number");
     }
 
 
@@ -261,7 +271,7 @@ public class QuestionDAOImpl implements QuestionDAO {
                 }
             });
             return questionType;
-        }catch (Exception e){
+        } catch (Exception e) {
             LOGGER.error(e);
         }
         return null;
@@ -270,25 +280,27 @@ public class QuestionDAOImpl implements QuestionDAO {
     @Override
     public int findQuantityQuestions() {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+        int question = 0;
         try {
-            int question = jdbcTemplate.queryForObject(LAST_ID_QUESTION, new RowMapper<Integer>() {
+             question = jdbcTemplate.queryForObject(LAST_ID_QUESTION, new RowMapper<Integer>() {
                 @Override
                 public Integer mapRow(ResultSet resultSet, int i) throws SQLException {
                     int quantityQuestions = resultSet.getInt("id");
                     return quantityQuestions;
                 }
             });
-        }catch (Exception e){
+        } catch (Exception e) {
             LOGGER.error(e);
         }
-        return 1;
+        return question;
     }
 
     @Override
     public int findCourseId() {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+        int courseId = 0;
         try {
-            int courseId = jdbcTemplate.queryForObject(COURSE_ID, new RowMapper<Integer>() {
+            courseId = jdbcTemplate.queryForObject(COURSE_ID, new RowMapper<Integer>() {
 
                 @Override
                 public Integer mapRow(ResultSet resultSet, int i) throws SQLException {
@@ -296,9 +308,9 @@ public class QuestionDAOImpl implements QuestionDAO {
                     return courseID;
                 }
             });
-        }catch (Exception e){
+        } catch (Exception e) {
             LOGGER.error(e);
         }
-        return 1;
+        return courseId;
     }
 }

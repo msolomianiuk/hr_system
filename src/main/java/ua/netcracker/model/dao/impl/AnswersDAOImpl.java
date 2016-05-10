@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import ua.netcracker.model.dao.AnswersDAO;
 import ua.netcracker.model.entity.Answer;
 import ua.netcracker.model.entity.Candidate;
+import ua.netcracker.model.entity.Question;
 
 import javax.sql.DataSource;
 import java.util.ArrayList;
@@ -20,10 +21,12 @@ import java.util.Map;
 @Repository("answersDAO")
 public class AnswersDAOImpl implements AnswersDAO {
     private static final Logger LOGGER = Logger.getLogger(AnswersDAOImpl.class);
-    private static final String FIND_ALL_BY_ID = "SELECT * FROM \"hr_system\".candidate_answer WHERE candidate_id =";
+    private static final String FIND_ALL_BY_ID = "SELECT * FROM \"hr_system\".candidate_answer WHERE candidate_id =?";
+    private static final String FIND_ALL_BY_QUESTION_ID =
+            "SELECT * FROM \"hr_system\".candidate_answer WHERE candidate_id = ? AND question_id = ?";
     private static final String INSERT =
             "INSERT INTO \"hr_system\".candidate_answer(candidate_id, question_id, value) VALUES(?,?,?)";
-    private static final String DELETE = "DELETE FROM \"hr_system\".candidate_answer WHERE candidate_id = ";
+    private static final String DELETE = "DELETE FROM \"hr_system\".candidate_answer WHERE candidate_id =?";
     private static final String UPDATE = "UPDATE \"hr_system\".candidate_answer SET value=? WHERE question_id =? AND " +
             " candidate_id = ?";
 
@@ -35,18 +38,49 @@ public class AnswersDAOImpl implements AnswersDAO {
         Collection<Answer> answers = new ArrayList<>();
         try {
             JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-            List<Map<String, Object>> rows = jdbcTemplate.queryForList(FIND_ALL_BY_ID + candidateId);
+            List<Map<String, Object>> rows = jdbcTemplate.queryForList(FIND_ALL_BY_ID, candidateId);
             for (Map<String, Object> row : rows) {
-                Answer answer = new Answer();
-                answer.setQuestionId((int) row.get("question_id"));
-                answer.setValue((String) row.get("value"));
+                Answer answer = createAnswer(row);
                 answers.add(answer);
+
             }
         } catch (Exception e) {
             LOGGER.error("Error: " + e);
         }
         return answers;
 
+    }
+
+    private Answer createAnswer(Map<String, Object> row) {
+        Answer answer = new Answer();
+        if (row.get("value") != null) {
+            answer.setQuestionId((int) row.get("question_id"));
+            answer.setValue((String) row.get("value"));
+        } else {
+            answer.setValue(null);
+        }
+        return answer;
+    }
+
+    @Override
+    public Collection<Answer> findAllIsView(Candidate candidate, Collection<Question> listQuestions) {
+        Collection<Answer> answers = new ArrayList<>();
+        if (candidate.getAnswers() != null) {
+            try {
+                JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+                for (Question question : listQuestions) {
+                    Collection<Map<String, Object>> rows = jdbcTemplate.queryForList(FIND_ALL_BY_QUESTION_ID,
+                            candidate.getId(), question.getId());
+                    for (Map<String, Object> row : rows) {
+                        Answer answer = createAnswer(row);
+                        answers.add(answer);
+                    }
+                }
+            } catch (Exception e) {
+                LOGGER.error("Error: " + e);
+            }
+        }
+        return answers;
     }
 
 
@@ -65,7 +99,7 @@ public class AnswersDAOImpl implements AnswersDAO {
     public void deleteAnswers(int candidateId) {
         try {
             JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-            jdbcTemplate.update(DELETE + candidateId);
+            jdbcTemplate.update(DELETE, candidateId);
         } catch (Exception e) {
             LOGGER.error("Error: " + e);
         }

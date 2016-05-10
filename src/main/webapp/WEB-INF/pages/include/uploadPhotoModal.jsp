@@ -2,7 +2,8 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title" id="myModalLabel">Upload image</h4>
             </div>
             <div class="modal-body">
@@ -18,23 +19,38 @@
                         </div>
                         <div class="btn-group">
                             <label class="btn btn-primary btn-upload" for="inputImage"
-                                   title="Upload image file">
-                                <form method="post" modelAttribute="spitter"
+                                   title="Upload im--age file">
+                                <!--<form method="post" modelAttribute="spitter"
                                       enctype="multipart/form-data">
-                                    <input class="sr-only" id="inputImage" name="image" type="file" accept="image/*">
-                                    <span class="docs-tooltip" data-toggle="tooltip" title="Import image with Blob URLs">
+                                    input class="sr-only" id="inputImage" name="image" type="file" accept="image/*">-->
+                                    <span class="docs-tooltip" data-toggle="tooltip"
+                                          title="Import image with Blob URLs">
                                         <span class="fa fa-upload"></span>
                                         <span>Upload Photo</span>
                                     </span>
-                                </form>
+                                <!--</form>-->
+
                             </label>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <form method="post"
+                          enctype="multipart/form-data"
+                          action="<c:url value="/upload/photo" />?${_csrf.parameterName}=${_csrf.token}"
+                          style="display: inline;">
+                        <input class="sr-only" id="inputImage" name="inputImage" type="file" accept="image/jpeg">
+                        <input type="submit" class="btn btn-primary" value="Save changes">
+
+                    </form>
+                </div>
+
+
+                <!--<button id="photoUpload" type="button" class="btn btn-primary">Save changes</button>-->
             </div>
         </div>
     </div>

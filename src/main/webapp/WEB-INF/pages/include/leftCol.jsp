@@ -17,16 +17,22 @@
                     <sec:authentication property="principal.user.image"/>
                 </c:set>
 
-                <c:if test="${photo eq 'null'}">
-                    <c:set var="photo" scope="page" value="static/images/user.png"/>
-                </c:if>
+                <c:choose>
+                    <c:when test="${photo eq 'null'}">
+                        <c:set var="photo" scope="page" value="static/images/anonymouse.png"/>
+                    </c:when>
+                    <c:otherwise>
+                        <c:set var="photo" scope="page" value="/user/photos/${photo}"/>
+                    </c:otherwise>
+                </c:choose>
 
                 <img src="<c:url value="${photo}"/>" alt="..."
                      class="img-circle profile_img">
             </div>
             <div class="profile_info">
                 <span>Welcome,</span>
-                <h2><sec:authentication property="principal.name"/>&nbsp;<sec:authentication property="principal.surname"/></h2>
+                <h2><sec:authentication property="principal.name"/>&nbsp;<sec:authentication
+                        property="principal.surname"/></h2>
             </div>
         </div>
         <!-- /menu prile quick info -->
@@ -46,18 +52,22 @@
             <div class="menu_section">
                 <ul class="nav side-menu">
                     <sec:authorize access="hasAnyRole('ROLE_STUDENT')">
-                        <li><a data-toggle="modal" data-target="#upload-image"><i class="fa fa-upload"></i> Load Image</a></li>
+                        <li><a data-toggle="modal" data-target="#upload-image"><i class="fa fa-upload"></i> Load
+                            Image</a></li>
                     </sec:authorize>
                     <sec:authorize access="hasAnyRole('ROLE_STUDENT')">
-                        <li><a data-toggle="modal" id="get-pdf"><i class="fa fa-file-pdf-o"></i> Print PDF</a></li>
+                        <li><a href="<c:url value="/service/getPDF"/>"><i class="fa fa-file-pdf-o"></i> Print PDF</a>
+                        </li>
                     </sec:authorize>
                     <sec:authorize access="hasAnyRole('ROLE_HR')">
-                        <li><a href="<c:url value="/hr/students_list"/>"><i class="fa fa-file-pdf-o"></i>Students List</a></li>
+                        <li><a href="<c:url value="/hr/students_list"/>"><i class="fa fa-list"></i>Students List</a>
+                        </li>
                     </sec:authorize>
                     <sec:authorize access="hasAnyRole('ROLE_HR', 'ROLE_BA', 'ROLE_DEV')">
-                        <li><a href="<c:url value="/${roleAddres}/interview_page"/>"><i class="fa fa-file-pdf-o"></i>Interview Page</a></li>
+                        <li><a href="<c:url value="/${roleAddres}/interview_page"/>"><i class="fa fa-comments-o"></i>Interview
+                            Page</a></li>
                     </sec:authorize>
-                        <li><a href="<c:url value="/logout"/>"><i class="fa fa-sign-out"></i> Logout </a></li>
+                    <li><a href="<c:url value="/logout"/>"><i class="fa fa-sign-out"></i> Logout </a></li>
                 </ul>
             </div>
         </div>

@@ -11,14 +11,17 @@ import org.springframework.stereotype.Service;
 import ua.netcracker.model.dao.AnswersDAO;
 import ua.netcracker.model.dao.CandidateDAO;
 import ua.netcracker.model.dao.InterviewResultDAO;
-import ua.netcracker.model.entity.Answer;
-import ua.netcracker.model.entity.Candidate;
-import ua.netcracker.model.entity.InterviewResult;
-import ua.netcracker.model.entity.Status;
+import ua.netcracker.model.dao.UserDAO;
+import ua.netcracker.model.entity.*;
 import ua.netcracker.model.securiry.UserAuthenticationDetails;
 import ua.netcracker.model.service.CandidateService;
+import ua.netcracker.model.service.CourseSettingService;
+import ua.netcracker.model.service.QuestionService;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * @author Alyona Bilous 05/05/2016
@@ -28,6 +31,7 @@ public class CandidateServiceImpl implements CandidateService {
 
     private static final Logger LOGGER = Logger.getLogger(CandidateServiceImpl.class);
     private int userId;
+
 
     @Override
     public Collection<Candidate> getCandidateByStatus(String status) {
@@ -40,8 +44,13 @@ public class CandidateServiceImpl implements CandidateService {
     }
 
     @Autowired
+    private QuestionService questionService;
+    @Autowired
+    private UserDAO userDAO;
+    @Autowired
     private CandidateDAO candidateDAO;
-
+    @Autowired
+    private CourseSettingService courseSettingService;
     @Autowired
     private AnswersDAO answersDAO;
 
@@ -50,7 +59,10 @@ public class CandidateServiceImpl implements CandidateService {
 
     @Override
     public Candidate getCandidateById(Integer id) {
-        return candidateDAO.findByCandidateId(id);
+        Candidate candidate = candidateDAO.findByCandidateId(id);
+        candidate.setUser(userDAO.find(candidate.getUserId()));
+        candidate.setAnswers(answersDAO.findAll(candidate.getId()));
+        return candidate;
     }
 
     @Override
@@ -58,13 +70,9 @@ public class CandidateServiceImpl implements CandidateService {
         return candidateDAO.findByUserId(userId);
     }
 
-    @Override
-    public Collection<Candidate> getAllCandidates() {
-        return candidateDAO.findAll();
-    }
 
     @Override
-    public String getStatusById(Integer statusId) {
+    public Status getStatusById(Integer statusId) {
         return candidateDAO.findStatusById(statusId);
     }
 
@@ -98,6 +106,11 @@ public class CandidateServiceImpl implements CandidateService {
         return candidateDAO.saveCandidate(candidate);
     }
 
+    @Override
+    public boolean updateCandidate(Candidate candidate) {
+        return false;
+    }
+
     private Collection<Answer> parseJsonString(String answersJsonString) {
         Collection<Answer> listAnswers = new ArrayList<>();
         JSONObject obj = new JSONObject(answersJsonString);
@@ -122,14 +135,14 @@ public class CandidateServiceImpl implements CandidateService {
         return listAnswers;
     }
 
-    //refact
     @Override
     public Candidate saveAnswers(String answersJsonString) {
         Collection<Answer> listAnswers = parseJsonString(answersJsonString);
         Candidate candidate = getCurrentCandidate();
         if (candidate.getId() == 0) {
             candidate.setUserId(userId);
-            candidate.setStatusId(Status.NEW.getId());
+            candidate.setUser(userDAO.find(candidate.getUserId()));
+            candidate.setStatusId(Status.New.getId());
             candidate.setCourseId(1);
             saveCandidate(candidate);
             candidate = getCandidateById(userId);
@@ -166,9 +179,43 @@ public class CandidateServiceImpl implements CandidateService {
             LOGGER.error("Error: " + e);
         }
     }
+
     @Override
-    public List<Candidate> getAnketOfCandidates() {
-        return candidateDAO.getAllAnketsCandidates();
+    public Collection<Candidate> getAllCandidates() {
+        Collection<Candidate> listCandidates = candidateDAO.findAllByCourse(courseSettingService.getLastSetting().getId());
+        for (Candidate candidate : listCandidates) {
+            if (candidate.getUser() == null) {
+                candidate.setUser(userDAO.find(candidate.getUserId()));
+            }
+            if (candidate.getAnswers() == null) {
+                candidate.setAnswers(answersDAO.findAll(candidate.getId()));
+            }
+        }
+        return listCandidates;
+    }
+
+    @Override
+    public Collection<Candidate> getAllCandidatesIsView() {
+        Collection<Candidate> listCandidates = new ArrayList<>();
+        for (Candidate candidate : getAllCandidates()) {
+            Collection<Answer> listAnswers = answersDAO.findAllIsView(candidate, questionService.
+                    getAllIsView(courseSettingService.getLastSetting().getId()));
+
+            candidate.setAnswers(listAnswers);
+            listCandidates.add(candidate);
+
+        }
+        return listCandidates;
+    }
+
+    @Override
+    public Collection<Candidate> getAllByCourse(Integer courseId) {
+        return candidateDAO.findAllByCourse(courseId);
+    }
+
+    @Override
+    public Collection<Answer> getAnswersIsView(Candidate candidate, Collection<Question> listQuestions) {
+        return answersDAO.findAllIsView(candidate, listQuestions);
     }
 }
 

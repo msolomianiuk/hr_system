@@ -1946,7 +1946,7 @@ span.section {
   border-radius: 0;
   width: 100%;
 }
-.form-horizontal .control-label {
+.form-horizontal {
   padding-top: 8px
 }
 .form-control:focus {
@@ -5433,4 +5433,61 @@ ul.notifications {
 
 .profile{
   height: 60px;
+}
+
+.question-interview-button.btn {
+  border-radius: 50px;
+  position: fixed;
+  bottom: 60px;
+  right: 40px;
+  z-index: 1000;
+  opacity: 0.4;
+}
+
+.question-interview-button.btn:hover{
+  opacity: 0.9;
+}
+
+.question-edit{
+  display: inline-block;
+}
+
+ul.question-list > li{
+  opacity: 0.7;
+}
+
+ul.question-list > li:hover{
+  opacity: 1;
+}
+
+ul.question-list > li a, a.add-question-link{
+  cursor: pointer;
+  padding: 0 5px;
+}
+
+a.add-question-link i, button.add-subject-link i{
+  padding: 0 5px;
+}
+
+.candidate-details img{
+  width: 100%;
+}
+
+.candidate-details h3{
+  text-align: center;
+}
+
+button.filters-button{
+  padding: 0px;
+  border-radius: 50px;
+}
+
+#candidates-list_filter > label{
+  width: 100%;
+}
+
+#candidates-list_filter > label > input{
+  border-radius: 50px;
+  width: 100%;
+  margin-left: 0;
 }

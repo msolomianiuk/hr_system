@@ -10,10 +10,10 @@ import ua.netcracker.model.service.impl.CourseSettingServiceImpl;
 
 import java.time.DateTimeException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.Period;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
+
 
 /**
  * Created by Legion on 03.05.2016.
@@ -54,21 +54,21 @@ public class DateService {
                 Integer.parseInt(getTime(interviewDaysDetails.getStartTime())[1]),
                 Integer.parseInt(getTime(interviewDaysDetails.getEndTime())[0]),
                 Integer.parseInt(getTime(interviewDaysDetails.getEndTime())[1])};
+
         if (timeInterview[0] == timeInterview[2] &&
-                timeInterview[1] == timeInterview[3]) {
+                timeInterview[0] == timeInterview[2]) {
             interviewTime = 0;
         } else {
             if (timeInterview[0] == timeInterview[2]) {
                 interviewTime = timeInterview[1] + timeInterview[3];
             } else {
-                interviewTime=((timeInterview[2]-timeInterview[0])*60)+(timeInterview[1]+timeInterview[3]);
-//                if (timeInterview[3] < timeInterview[1]) {
-//                    interviewTime = timeInterview[1] - timeInterview[3] +
-//                            (timeInterview[2] - timeInterview[0] - 1) * 60;
-//                } else {
-//                    interviewTime = (timeInterview[3] - timeInterview[0]) * 60
-//                            + timeInterview[2] - timeInterview[4];
-//                }
+                if (timeInterview[3] < timeInterview[1]) {
+                    interviewTime = timeInterview[1] - timeInterview[3] +
+                            (timeInterview[2] - timeInterview[0] - 1) * 60;
+                } else {
+                    interviewTime = (timeInterview[2] - timeInterview[0]) * 60
+                            + timeInterview[3] - timeInterview[1];
+                }
             }
         }
 
@@ -89,7 +89,7 @@ public class DateService {
 
         int maxStudentForInterview = courseSetting.getStudentInterviewCount();
 
-        return (int) Math.ceil(maxStudentForInterview / (getPeriodDate(courseSetting)));
+        return (int) Math.ceil(maxStudentForInterview / (getPeriod()));
     }
 
     public int getPeriod() {
@@ -98,14 +98,7 @@ public class DateService {
         LocalDate endInterviewDay = getDate(courseSetting.getInterviewEndDate());
 
         Period period = startInterviewDay.until(endInterviewDay);
-        return period.getDays()+1;
-    }
-
-    public int getPeriodDate(CourseSetting courseSetting) {
-        LocalDate startInterviewDay = getDate(courseSetting.getInterviewStartDate());
-        LocalDate endInterviewDay = getDate(courseSetting.getInterviewEndDate());
-        Period period = startInterviewDay.until(endInterviewDay);
-        return period.getDays()+1;
+        return period.getDays() + 1;
     }
 
     public int getPersonal(InterviewDaysDetails interviewDaysDetails) {
@@ -120,7 +113,7 @@ public class DateService {
         LocalDate localDate = null;
 
         try {
-            String[] date = s.split(" ");
+            String[] date = s.split("-");
             localDate = LocalDate.of(Integer.valueOf(date[0]), Integer.valueOf(date[1]), Integer.valueOf(date[2]));
             return localDate;
         } catch (Exception e) {
@@ -159,20 +152,61 @@ public class DateService {
         return timePars;
     }
 
-    public Map<String, String> mapDate() {
+    public List<DateEntity> listDate() {
 
-        courseSetting= courseSettingService.getLastSetting();
+        courseSetting = courseSettingService.getLastSetting();
 
-        HashMap<String, String> date = new HashMap<>();
+        List<DateEntity> date = new ArrayList<>();
 
         int r = getPeriod();
 
         String s = courseSetting.getInterviewStartDate();
 
         for (int i = 0; i < r; i++) {
-            date.put(String.valueOf(getDate(s).plusDays(i)), String.valueOf(courseSetting.getId()));
+            DateEntity dateEntity = new DateEntity();
+            dateEntity.setInterviewDay(String.valueOf(getDate(s).plusDays(i)));
+            date.add(dateEntity);
+
         }
         return date;
+    }
+
+    public String registrationPeriod() {
+        courseSetting = courseSettingService.getLastSetting();
+        LocalDate startRegistationDay = getDate(courseSetting.getRegistrationStartDate());
+        LocalDate endRegistationDay = getDate(courseSetting.getRegistrationEndDate());
+        if (LocalDate.now().equals(startRegistationDay) || LocalDate.now().equals(endRegistationDay)) {
+            if (LocalDate.now().isAfter(startRegistationDay) || LocalDate.now().isBefore(endRegistationDay)) {
+                return "open";
+            }
+        }
+        return "close";
+    }
+
+    private class DateEntity {
+        private String interviewDay;
+
+        public String getInterviewDay() {
+            return interviewDay;
+        }
+
+        public void setInterviewDay(String interviewDay) {
+            this.interviewDay = interviewDay;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            DateEntity that = (DateEntity) o;
+
+            if (interviewDay != null ? !interviewDay.equals(that.interviewDay) : that.interviewDay != null)
+                return false;
+
+            return true;
+        }
+
     }
 
 }

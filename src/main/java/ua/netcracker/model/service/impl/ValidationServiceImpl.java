@@ -1,5 +1,6 @@
 package ua.netcracker.model.service.impl;
 
+import org.apache.log4j.Logger;
 import ua.netcracker.model.service.ValidationService;
 
 import java.util.regex.Matcher;
@@ -12,15 +13,21 @@ import java.util.regex.Pattern;
  */
 public class ValidationServiceImpl implements ValidationService {
 
+    private static final Logger LOGGER = Logger.getLogger(ValidationServiceImpl.class);
+
     private Pattern emailPattern;
     private Pattern namePattern;
     private Pattern passwordPattern;
 
     public ValidationServiceImpl(String emailRegexp,String nameRegexp,
                                  String passwordRegexp) {
-        emailPattern = Pattern.compile(emailRegexp);
-        namePattern= Pattern.compile(nameRegexp);
-        passwordPattern = Pattern.compile(passwordRegexp);
+        emailPattern = compile(emailRegexp);
+        namePattern= compile(nameRegexp);
+        passwordPattern = compile(passwordRegexp);
+    }
+
+    private Pattern compile(String regexp){
+        return Pattern.compile(regexp,Pattern.UNICODE_CHARACTER_CLASS);
     }
 
     @Override

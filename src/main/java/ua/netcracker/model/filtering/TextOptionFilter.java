@@ -5,6 +5,7 @@ import ua.netcracker.model.entity.Candidate;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * filter for questions with one or multiple text options (checkbox, combobox, text)
@@ -15,14 +16,20 @@ public class TextOptionFilter implements Filter{
 
     private ArrayList<String> stringAnswers;
 
+    public TextOptionFilter() {
+    }
+
     public TextOptionFilter(int q_id, ArrayList<String> stringAnswers) {
         this.q_id = q_id;
         this.stringAnswers = stringAnswers;
     }
 
-    @Override
-    public ArrayList<Candidate> filter(ArrayList<Candidate> list) {
+    public void addOptionToAnswers(String option) {
+        stringAnswers.add(option);
+    }
 
+    @Override
+    public ArrayList<Candidate> filter(List<Candidate> list) {
         if (stringAnswers.size() == 1) {
             String value = stringAnswers.get(0);
             ArrayList<Candidate> result = new ArrayList<>();
@@ -42,7 +49,9 @@ public class TextOptionFilter implements Filter{
         ArrayList<Candidate> result = new ArrayList<>();
         for (Candidate candidate : list) {
             Collection<Answer> allAnswers = candidate.getAnswers();
-            ArrayList<Answer> neededAnswers = new ArrayList<>();
+            ArrayList<Answer> neededAnswers = new ArrayList<>(); //answers to check if
+            // they are the same as specified in filter
+
             ArrayList<String> specifiedAnswers = stringAnswers;
             for (Answer answer : allAnswers) {
                 if (answer.getQuestionId() == q_id) {

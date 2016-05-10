@@ -4,9 +4,9 @@ package ua.netcracker.model.entity;
  * Created by Nikita on 28.04.2016.
  */
 public enum Status {
-    NEW(1, "NEW"), READY(2, "READY"), INTERVIEW(3, "INTERVIEW"), NO_INTERVIEW(4, "NO INTERVIEW"), INTERVIEW_DATED(5, "INTERVIEW_DATED"),
-    INTERVIEW_IN_PROCESS(6, "INTERVIEW_IN_PROCESS"), INTERVIEW_PASSED(7, "INTERVIEW_PASSED"), JOB_ACCEPTED(8, "JOB_ACCEPTED"),
-    TRAINEE_ACCEPTED(8, "TRAINEE_ACCEPTED"), REJECTED(9, "REJECTED");
+    New(1, "New"), Ready(2, "Ready"), Interview(3, "Interview"), No_interview(4, "No_interview"), Interview_dated(5, "Interview_dated"),
+    Interview_process(6, "Interview_process"), Interviews_passed(7, "Interviews_passed"), Trainee_accepted(8, "Trainee_accepted"),
+    Rejected(9, "Rejected"), Job_accepted(10, "Job_accepted");
 
     int id;
     String status;
