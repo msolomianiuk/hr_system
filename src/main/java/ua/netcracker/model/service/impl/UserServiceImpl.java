@@ -78,7 +78,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean addUserRole(User user, Role role) {
+    public boolean addUserRole(User user, Role role){
+        userDao.removeUserRoles(user.getId());
         Collection<Role> roles = user.getRoles();
         roles.add(role);
         user.setRoles((List<Role>) roles);
