@@ -106,6 +106,10 @@ public class CandidateServiceImpl implements CandidateService {
         return candidateDAO.saveCandidate(candidate);
     }
 
+    public boolean updateCandidate(Candidate candidate) {
+        return candidateDAO.update(candidate);
+    }
+
     private Collection<Answer> parseJsonString(String answersJsonString) {
         Collection<Answer> listAnswers = new ArrayList<>();
         JSONObject obj = new JSONObject(answersJsonString);
