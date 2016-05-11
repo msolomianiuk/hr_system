@@ -6,6 +6,12 @@
 <head>
     <!-- meta -->
     <%@ include file="include/links/linksMeta.jsp" %>
+    <sec:csrfMetaTags />
+    <meta name="_csrf" content="${_csrf.token}"/>
+    <!-- default header name is X-CSRF-TOKEN -->
+    <meta name="_csrf_header" content="${_csrf.headerName}"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Profile - </title>
     <!-- bootstrap core -->
     <%@ include file="include/links/linksBootstrapCore.jsp" %>
@@ -14,6 +20,13 @@
 
 </head>
 <body class="nav-md">
+<script>
+    var token = $("meta[name='_csrf']").attr("content");
+    var header = $("meta[name='_csrf_header']").attr("content");
+    $(document).ajaxSend(function(e, xhr, options) {
+        xhr.setRequestHeader(header, token);
+    });
+</script>
 <div class="modals">
     <!-- Modal -->
     <%@ include file="include/uploadPhotoModal.jsp" %>
