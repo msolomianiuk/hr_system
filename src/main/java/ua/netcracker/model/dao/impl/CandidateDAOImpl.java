@@ -31,6 +31,8 @@ public class CandidateDAOImpl implements CandidateDAO {
             " WHERE id = ? ";
     private static final String FIND_BY_STATUS = "SELECT * FROM \"hr_system\".candidate WHERE status_id =?";
     private static final String FIND_ALL_STATUS = "SELECT * FROM \"hr_system\".status";
+    private static final String UPDATE_STATUS = "UPDATE \"hr_system\".candidate SET status_id=(?)" +
+            "WHERE id=?";
     private User user;
 
     @Autowired
@@ -200,6 +202,19 @@ public class CandidateDAOImpl implements CandidateDAO {
             LOGGER.error("Error: " + e);
         }
         return status;
+    }
+
+    @Override
+    public boolean updateCandidateStatus(Integer candidateID, Integer newStatusID) {
+        try {
+            jdbcTemplate = new JdbcTemplate(dataSource);
+            jdbcTemplate.update(UPDATE_STATUS, newStatusID, candidateID);
+            return true;
+        } catch (Exception e) {
+            LOGGER.error("Error:" + e);
+        }
+        return false;
+
     }
 
     @Override

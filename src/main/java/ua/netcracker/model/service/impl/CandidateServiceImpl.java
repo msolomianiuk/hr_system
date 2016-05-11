@@ -189,6 +189,11 @@ public class CandidateServiceImpl implements CandidateService {
     }
 
     @Override
+    public boolean updateCandidateStatus(Integer candidateID, Integer newStatusID) {
+        return candidateDAO.updateCandidateStatus(candidateID, newStatusID);
+    }
+
+    @Override
     public Collection<Candidate> getAllCandidates() {
         Collection<Candidate> listCandidates = candidateDAO.findAllByCourse(courseSettingService.getLastSetting().getId());
         for (Candidate candidate : listCandidates) {

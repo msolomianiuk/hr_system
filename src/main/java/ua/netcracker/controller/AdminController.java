@@ -60,9 +60,12 @@ public class AdminController {
     @RequestMapping(value = "/candidate/update_status")
     public void updateCandidateStatus(@RequestParam Integer candidateID, @RequestParam String status) {
 
-        Candidate candidate = candidateService.getCandidateById(candidateID);
-        candidate.setStatus(Status.valueOf(status));
-        candidateService.updateCandidate(candidate);
+        //problem with Candidate updating (ERROR: insert or update on table "candidate" violates foreign key constraint "candidate_interview_days_details_id_fkey")
+//        Candidate candidate = candidateService.getCandidateById(candidateID);
+//        candidate.setStatus(Status.valueOf(status));
+//        candidateService.updateCandidate(candidate);
+
+        candidateService.updateCandidateStatus(candidateID, Status.valueOf(status).getId());
     }
 
     @RequestMapping(value = "/add_role")

@@ -54,4 +54,6 @@ public interface CandidateService {
 
     Map<Integer, String> getAllStatus();
 
+    boolean updateCandidateStatus(Integer candidateID, Integer newStatusID);
+
 }
