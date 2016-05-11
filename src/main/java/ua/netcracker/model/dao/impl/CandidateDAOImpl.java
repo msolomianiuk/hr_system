@@ -193,12 +193,12 @@ public class CandidateDAOImpl implements CandidateDAO {
     public Map<Integer, String> findAllStatus() {
         Map<Integer, String> status = new HashMap<>();
         jdbcTemplate = new JdbcTemplate(dataSource);
-        try{
+        try {
             List<Map<String, Object>> rows = jdbcTemplate.queryForList(FIND_ALL_STATUS);
             for (Map row : rows) {
-                status.put((int)row.get("id"), row.get("value").toString());
+                status.put((int) row.get("id"), row.get("value").toString());
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             LOGGER.error("Error: " + e);
         }
         return status;
@@ -247,9 +247,9 @@ public class CandidateDAOImpl implements CandidateDAO {
     }
 
     private Collection<Candidate> findCandidates(String sql) {
+        Collection<Candidate> listCandidates = new ArrayList<>();
         try {
             jdbcTemplate = new JdbcTemplate(dataSource);
-            Collection<Candidate> listCandidates = new ArrayList<>();
             Collection<Map<String, Object>> rows = jdbcTemplate.queryForList(sql);
             for (Map<String, Object> row : rows) {
                 Candidate candidate = new Candidate();
@@ -260,11 +260,11 @@ public class CandidateDAOImpl implements CandidateDAO {
                 candidate.setCourseId((int) row.get("course_id"));
                 listCandidates.add(candidate);
             }
-            return listCandidates;
         } catch (Exception e) {
             LOGGER.error("Error:" + e);
         }
-        return null;
+
+        return listCandidates;
 
     }
 }
