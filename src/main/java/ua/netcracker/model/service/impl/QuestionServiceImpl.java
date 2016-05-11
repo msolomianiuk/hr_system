@@ -79,7 +79,7 @@ public class QuestionServiceImpl implements QuestionService {
     public List<String> parseListJson(List<String> list) {
         List<String> parseList = new ArrayList<String>();
         for (int i = 0; i < list.size(); i++) {
-            parseList.add(list.get(i).replaceAll("[ \" \\]\\[  ]", ""));
+            parseList.add(list.get(i).replaceAll("[\"\\]\\[]", ""));
         }
 
         return parseList;

@@ -4,12 +4,9 @@
 $(document).ready(function () {
 
     $.ajax({
-        url: "http://localhost:8080/hr_system-1.0-SNAPSHOT/personal_list",
+        url: "http://31.131.25.42:8080/hr_system-1.0-SNAPSHOT/personal_list",
         type: "GET",
-        //   contentType : "application/json",
-        //beforeSend: funcbefor,
         dataType: "json",
-        // data:{'id':id},
         contentType: 'application/json',
         mimeType: 'application/json',
         success: funcForAjax,
@@ -25,7 +22,7 @@ function funcForAjax(data) {
     dataNewIn = data;
     for (var indexba in data["BA"]) {
         baIndex = data["BA"][indexba];
-        $("#TableBA").append('<tr>' +
+        $("#TableBA").append('<tr user_id="'+ baIndex.id +'">' +
         '<td>' + baIndex.name + '</td>' +
         '<td>' + baIndex.surname + '</td>' +
         '<td>' + baIndex.patronymic + '</td>' +
@@ -34,7 +31,7 @@ function funcForAjax(data) {
     }
     for (var indexhr in data["HR"]) {
         hrIndex = data["HR"][indexhr];
-        $("#TableHR").append('<tr>' +
+        $("#TableHR").append('<tr user_id="'+ hrIndex.id +'">' +
         '<td>' + hrIndex.name + '</td>' +
         '<td>' + hrIndex.surname + '</td>' +
         '<td>' + hrIndex.patronymic + '</td>' +
@@ -43,7 +40,7 @@ function funcForAjax(data) {
     }
     for (var indexdev in data["DEV"]) {
         devIndex = data["DEV"][indexdev];
-        $("#TableDEV").append('<tr>' +
+        $("#TableDEV").append('<tr user_id="'+ devIndex.id +'">' +
         '<td>' + devIndex.name + '</td>' +
         '<td>' + devIndex.surname + '</td>' +
         '<td>' + devIndex.patronymic + '</td>' +

@@ -9,7 +9,7 @@ import java.util.Collection;
  * @author Oleg
  */
 @Component
-public class Candidate {
+public class Candidate implements Comparable<Candidate> {
 
     private int id;
 
@@ -95,5 +95,9 @@ public class Candidate {
 
     public void setInterviewDaysDetailsId(int interviewDaysDetailsId) {
         this.interviewDaysDetailsId = interviewDaysDetailsId;
+    }
+    public int compareTo(Candidate c) {
+        int result = this.user.getName().compareTo(c.user.getName());
+        return result;
     }
 }

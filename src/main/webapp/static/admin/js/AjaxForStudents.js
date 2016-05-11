@@ -10,7 +10,7 @@ $(document).ready(function() {
         id  = parseInt(($(this).attr("candidate_id")));
 
         $.ajax({
-            url: "http://localhost:8080/hr_system-1.0-SNAPSHOT/admin/get_candidate",
+            url: "http://31.131.25.42:8080/hr_system-1.0-SNAPSHOT/admin/answer_candidate",
             type: "GET",
             //   contentType : "application/json",
             //beforeSend: funcbefor,
@@ -27,13 +27,12 @@ $(document).ready(function() {
     });
 
 
+
+
     $.ajax({
-        url: "http://localhost:8080/hr_system-1.0-SNAPSHOT/getStudents",
+        url: "http://31.131.25.42:8080/hr_system-1.0-SNAPSHOT/getStudents",
         type: "GET",
-        //   contentType : "application/json",
-        //beforeSend: funcbefor,
         dataType: "json",
-        // data:{'id':id},
         contentType: 'application/json',
         mimeType: 'application/json',
         success: funcForStudents,
@@ -41,6 +40,9 @@ $(document).ready(function() {
             console.log(data);
         }
     });
+
+
+
 
 });
 
@@ -55,15 +57,16 @@ function funcForStudents (data){
         '<td>'+studentIndex.user.patronymic+'</td>' +
         '<td>'+studentIndex.user.email+'</td>' +
         '</tr>');
-    }
-    $(".win").mousedown(function(){return false});
 
-    function toggleHider(){
-        $("#hider").toggle();
     }
 
-    $(".win").click(toggleHider);
-    $("#hider").click(toggleHider);
+    $('#StudentTable').dataTable({
+        "oLanguage": {
+            "sSearch": "_INPUT_" //search
+        }
+    });
+
+
 
     $("#hider").click(function(){
         $(".ModelViewStudent").css('display','none');
@@ -72,16 +75,48 @@ function funcForStudents (data){
     $(".getModalStudent").click(function(){
         if( $(".ModelViewStudent").css('display') == 'none' ){
             $(".ModelViewStudent").css('display','block');
+            $('#hider').css('display','block');
         } else{
             $(".ModelViewStudent").css('display','none');
+            $('#hider').css('display','none');
         }
     });
 }
 
 function funcForAnketOfStudents (data){
+
+
+    $("#hider").css('display','block');
+    $(".ModelViewStudent").css('display','block');
+
     dataInNewAll = data;
     alert("U get Anket");
     $(".ModelViewStudent").empty();
-    $(".ModelViewStudent").append('<p>'+data.userId+'</p>');
+
+
+    $(".ModelViewStudent").append('<h2 style="text-align: center!important;">Anketa</h2>');
+
+    for (var index in data) {
+
+        index_first = data[[index]];
+
+
+        $(".ModelViewStudent").css('text-align','left');
+
+        for(var index_in in index_first)
+        {
+            index_second = index_first[index_in];
+
+
+
+            $(".ModelViewStudent").append('<div class="form-group">'+
+                                            '<h5>'+ index_second[2]+ " " +'<br>'+"Answer :" +index_second[1] +' <h5>'+
+                                            '<div style="margin-top:20px;"></div>'+
+                                          '</div>');
+
+        }
+
+
+    }
 
 }

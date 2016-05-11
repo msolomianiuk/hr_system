@@ -2,32 +2,33 @@ package ua.netcracker.model.service.impl;
 
 
 import org.springframework.beans.support.PagedListHolder;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
+import ua.netcracker.model.entity.Candidate;
 
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by Legion on 08.05.2016.
  */
 @Service
-@Scope("prototype")
 public class Pagination {
 
-    private PagedListHolder pagedListHolder = new PagedListHolder();
-    private List pageList=null;
+    public List paginationList(List entity, String nextPage, PagedListHolder pagedListHolder) {
 
-    public List paginationList(List entity, int size, String nextPage) {
 
-        pageList = entity;
+        ArrayList list = (ArrayList) entity;
 
-        if (Integer.valueOf(size) == 0) {
-            size = 10;
-        }
+        Comparator<Candidate> comp = new Comparator<Candidate>() {
+            @Override
+            public int compare(Candidate p1, Candidate p2) {
+                return p1.getUser().getName().compareTo(p2.getUser().getName());
+            }
+        };
 
-        pagedListHolder.setPageSize(size);
-        pagedListHolder.setSource(pageList);
+        Collections.sort(list, comp);
 
+        pagedListHolder.setSource(list);
+        pagedListHolder.getSort();
         if (nextPage.equals("next")) {
             pagedListHolder.nextPage();
         } else if (nextPage.equals("previous")) {

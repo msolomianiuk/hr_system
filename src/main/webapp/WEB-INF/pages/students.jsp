@@ -199,7 +199,7 @@
                                 </div>
                             </div>
                             </p>
-                            <table id="datatable" class="table table-striped table-bordered clicked-tr">
+                            <table id="StudentTable" class="table table-striped table-bordered clicked-tr">
                                 <thead>
                                 <tr>
                                     <th>Name</th>
@@ -254,25 +254,18 @@
 <script src="<c:url value="/static/admin/js/custom.js"/>"></script>
 
 
-<!-- Datatables -->
-<!-- <script src="js/datatables/js/jquery.dataTables.js"></script>
-<script src="js/datatables/tools/js/dataTables.tableTools.js"></script> -->
+
 
 <!-- Datatables-->
-<%--<script src="<c:url value="/static/admin/js/datatables/jquery.dataTables.min.js"/>"></script>
-<script src="<c:url value="/static/admin/js/datatables/dataTables.bootstrap.js"/>"></script>
-<script src="<c:url value="/static/admin/js/datatables/dataTables.buttons.min.js"/>"></script>
-<script src="<c:url value="/static/admin/js/datatables/buttons.bootstrap.min.js"/>"></script>--%>
 <script src="<c:url value="/static/admin/js/datatables/jszip.min.js"/>"></script>
 <script src="<c:url value="/static/admin/js/datatables/pdfmake.min.js"/>"></script>
 <script src="<c:url value="/static/admin/js/datatables/vfs_fonts.js"/>"></script>
 <script src="<c:url value="/static/admin/js/datatables/buttons.html5.min.js"/>"></script>
 <script src="<c:url value="/static/admin/js/datatables/buttons.print.min.js"/>"></script>
-<%--<script src="<c:url value="/static/admin/js/datatables/dataTables.fixedHeader.min.js"/>"></script>
-<script src="<c:url value="/static/admin/js/datatables/dataTables.keyTable.min.js"/>"></script>
-<script src="<c:url value="/static/admin/js/datatables/dataTables.responsive.min.js"/>"></script>
-<script src="<c:url value="/static/admin/js/datatables/responsive.bootstrap.min.js"/>"></script>
-<script src="<c:url value="/static/admin/js/datatables/dataTables.scroller.min.js"/>"></script>--%>
+<script src="<c:url value="/static/js/datatables/jquery.dataTables.min.js"/>"></script>
+<script src="<c:url value="/static/js/datatables/dataTables.bootstrap.js"/>"></script>
+<script src="<c:url value="/static/js/datatables/dataTables.buttons.min.js"/>"></script>
+<script src="<c:url value="/static/js/datatables/buttons.bootstrap.min.js"/>"></script>
 
 
 <!-- pace -->

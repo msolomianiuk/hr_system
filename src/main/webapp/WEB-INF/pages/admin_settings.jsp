@@ -38,6 +38,7 @@
     <link href="<c:url value="/static/admin/css/icheck/flat/green.css"/>" rel="stylesheet"/>
     <link href="<c:url value="/static/admin/css/floatexamples.css"/>" rel="stylesheet" type="text/css"/>
     <link href="<c:url value="/static/admin/css/selectSettings.css"/>" rel="stylesheet" type="text/css"/>
+    <link href="<c:url value="/static/admin/css/style.css"/>" rel="stylesheet">
 
     <link href="<c:url value="/static/admin/js/datatables/jquery.dataTables.min.css"/>" rel="stylesheet"
           type="text/css"/>
@@ -81,7 +82,7 @@
                     <div class="profile_info">
                         <span>Welcome,</span>
 
-                        <h2>Vasya Pupkin</h2>
+                        <h2><sec:authentication property="principal.name"/></h2>
                     </div>
                 </div>
                 <!-- /menu prile quick info -->
@@ -279,26 +280,18 @@
                                 </div>
                                 <div class="panel-body" id="main-setting5">
                                     <div id="Anketa">
-                                        <div class="col-md-12 col-lg-12 col-sm-12 col-xs-12">
-                                           <select id="YearAnket">
-                                               <option selected>Choise for wich Year you want see Anket</option>
-                                           </select>
-                                        </div>
-                                        <div class="col-md-12 col-lg-12 col-sm-12 col-xs-12">
-                                            <div id="LastYears">
-
+                                        <h1>Anketa</h1>
+                                        <div class="x_content">
+                                            <div class="candidate-profile row">
+                                                <%@ include file="include/profile/profileForm.jsp" %>
+                                            </div>
+                                            <div class="hidden">
+                                                <%@ include file="include/profile/question/questionsFieldsTemplate.jsp" %>
                                             </div>
                                         </div>
-                                        <div class="col-md-12 col-lg-12 col-sm-12 col-xs-12">
-                                                <div id="ThisYears">
+                                    </div>
+                                    </div>
 
-                                                </div>
-                                         </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-12 col-lg-12 col-sm-12 col-xs-12">
-                                        <button type="button" id="ButtonChangeAnketa" class="btn btn-success">Add Personal</button>
-                                    </div>
                                 </div>
                             </div>
 
@@ -352,10 +345,23 @@
                         <div class="panel panel-success">
                             <div class="panel-heading" role="button" data-toggle="collapse" href="#main-setting4"
                                  aria-expanded="true" aria-controls="main-setting4">
-                                <h3 class="panel-title">Main Setting</h3>
+                                <h3 class="panel-title">Edit Question parametres</h3>
                             </div>
                             <div class="panel-body" id="main-setting4">
-                                Some Main Settings
+                                <div class="col-md-12 col-lg-12 col-sm-12 col-xs-12">
+                                    <table id="dataTableForQuestion" class="table table-striped table-bordered clicked-tr">
+                                        <thead>
+                                        <tr>
+                                            <th>Caption</th>
+                                            <th>Type</th>
+                                            <th>Is Mandatory</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="TableQuestionFull">
+
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
 
@@ -380,7 +386,8 @@
     </div>
 
 </div>
-
+<div id="hider"></div>
+<div class="ModelViewDays"></div>
 <div id="custom_notifications" class="custom-notifications dsp_none">
     <ul class="list-unstyled notifications clearfix" data-tabbed_notifications="notif-group">
     </ul>
@@ -425,6 +432,12 @@
 <script src="<c:url value="/static/admin/js/datatables/dataTables.responsive.min.js"/>"></script>
 <script src="<c:url value="/static/admin/js/datatables/responsive.bootstrap.min.js"/>"></script>
 <script src="<c:url value="/static/admin/js/datatables/dataTables.scroller.min.js"/>"></script>
+<script src="<c:url value="/static/js/custom/Profile/drawQuestionInProfileForm.js" />"></script>
+<script src="<c:url value="/static/js/custom/Profile/insertAnswersInCandidateForm.js"/>"></script>
+<script src="<c:url value="/static/js/custom/Profile/ajax/loadingQuestions.js" />"></script>
+<script src="<c:url value="/static/js/custom/Profile/ajax/loadingAnswers.js" />"></script>
+
+
 
 
 <!-- pace -->

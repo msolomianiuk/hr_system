@@ -5,6 +5,7 @@ package ua.netcracker.controller;
  */
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.support.PagedListHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,7 +16,10 @@ import ua.netcracker.model.entity.Answer;
 import ua.netcracker.model.entity.Candidate;
 import ua.netcracker.model.filtering.SimpleFilter;
 import ua.netcracker.model.service.CandidateService;
+import ua.netcracker.model.service.impl.Pagination;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 
@@ -24,6 +28,9 @@ public class StudentsRestController {
 
     @Autowired
     private CandidateService candidateService;
+
+    @Autowired
+    private Pagination pagination;
 
 
     @RequestMapping(value = "/getStudents", method = RequestMethod.GET)
@@ -38,6 +45,7 @@ public class StudentsRestController {
         }
         return new ResponseEntity<List<Candidate>>(students, HttpStatus.OK);
     }
+
 
     @RequestMapping(value = "/getStudents/filter")
     public ResponseEntity<List<Candidate>> filterStudents(@RequestParam List<Answer> list) {

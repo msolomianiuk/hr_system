@@ -11,9 +11,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import ua.netcracker.model.entity.*;
 import ua.netcracker.model.service.*;
 import ua.netcracker.model.service.date.DateService;
+import ua.netcracker.model.service.impl.AnswerServiceImpl;
 import ua.netcracker.model.service.impl.CandidateServiceImpl;
 import ua.netcracker.model.service.impl.CourseSettingServiceImpl;
+import ua.netcracker.model.service.impl.QuestionServiceImpl;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +25,9 @@ import java.util.Map;
 @Controller
 @RequestMapping(value = "/admin", method = RequestMethod.GET)
 public class AdminController {
+
+    @Autowired
+    private QuestionServiceImpl questionService;
 
     @Autowired
     private AddressService addressService;
@@ -46,6 +52,9 @@ public class AdminController {
 
     @Autowired
     private ReportService reportService;
+
+    @Autowired
+    private AnswerServiceImpl answerService;
 
     @RequestMapping(value = "", method = RequestMethod.GET)
     public String mainPage() {
@@ -143,35 +152,32 @@ public class AdminController {
 
     @RequestMapping(value = "/answer_candidate", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<Collection<Answer>> answerCandidate(
+    public ResponseEntity<Collection> answerCandidate(
             @RequestParam String id
     ) {
-        Collection<Answer> answers =
-                candidateService.getAllCandidateAnswers(
-                        candidateService.getCandidateById(Integer.parseInt(id)));
-        if (answers.isEmpty()) {
-            return (ResponseEntity<Collection<Answer>>) ResponseEntity.badRequest();
-        }
-        return ResponseEntity.ok(answers);
+        Collection candidate = answerService.getAnswerCandidate(Integer.parseInt(id));
+
+        Collection collection = new ArrayList();
+        collection.add(candidate);
+        return ResponseEntity.ok(collection);
     }
 
-    @RequestMapping(value = "/registration_period", method = RequestMethod.GET)
-    @ResponseBody
-    public ResponseEntity<String> period() {
 
-        return ResponseEntity.ok(dateService.registrationPeriod());
-    }
 
 
     @RequestMapping(value = "/get_candidate", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<Candidate> setCandidate(
+    public ResponseEntity<Collection> setCandidate(
             @RequestParam String id
     ) {
 
-        Candidate candidate = candidateService.getCandidateById(Integer.parseInt(id));
+        Collection candidate = answerService.getAnswerCandidate(Integer.parseInt(id));
 
-        return ResponseEntity.ok(candidate);
+        Collection collection = new ArrayList();
+        collection.add(candidate);
+
+        return ResponseEntity.ok(collection);
+
     }
 
     //---Controllers for InterviewDaysDetails---
@@ -458,5 +464,24 @@ public class AdminController {
             return new ResponseEntity<>(HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+    @RequestMapping(value = "/get_list", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<Collection<Question>> getAllQuestion (@RequestParam String id){
+        Collection<Question> collection =  questionService.getAllIsView(Integer.parseInt(id));
+        if (collection.isEmpty()){
+            return (ResponseEntity<Collection<Question>>) ResponseEntity.EMPTY;
+        }
+        return ResponseEntity.ok(collection);
+    }
+
+    @RequestMapping(value = "/get_question", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<Question> getQuestion (@RequestParam String id){
+        Question question =  questionService.get(Integer.parseInt(id));
+        if (question==null){
+            return (ResponseEntity<Question>) ResponseEntity.EMPTY;
+        }
+        return ResponseEntity.ok(question);
     }
 }

@@ -63,7 +63,7 @@
                                 </a>
                             </center>
                         </div>
-                        <div class="form-bottom">
+                        <div class="form-bottom" id="Registration">
                             <center>
                                 <a href="<c:url value='/registration' />">
                                     <button type="submit" class="btn">Registration!</button>
@@ -84,8 +84,9 @@
 <%@ include file="include/footer.jsp" %>
 
 <!-- Javascript -->
-<script src="<c:url value="/static/js/jquery.min.js"/>"/>
-<script src="<c:url value="/static/js/bootstrap.min.js"/>"/>
-</body>
 
+</body>
+    <script src="<c:url value="/static/admin/js/jquery.min.js"/>"></script>
+    <script src="<c:url value="/static/admin/js/bootstrap.min.js"/>"></script>
+    <script src="<c:url value="/static/admin/js/ajaxForIndex.js"/>"></script>
 </html>
