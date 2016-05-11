@@ -14,7 +14,7 @@ import java.util.List;
  */
 @Service("address service")
 public class AddressServiceImpl implements AddressService {
-    private static final String FIND_SQL = "SELECT id, address, room_capacity FROM \"hr_system\".address WHERE address = ?";
+
     @Autowired
     AddressDAO addressDAO;
 

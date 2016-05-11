@@ -1,11 +1,13 @@
 $(document).ready(function () {
     $.ajax({
-        url: baseUrl + "/service/getAllMandatoryQuestions",
+        url: baseUrl + "/service/getAllQuestionForInterview",
         type: "GET",
         dataType: "json",
         contentType: 'application/json',
         mimeType: 'application/json',
-        success: drawQuestionForm,
+        success: function(data) {
+            drawQuestionsForInterview(data);
+        },
         error: function (data) {
             console.log(data);
         }

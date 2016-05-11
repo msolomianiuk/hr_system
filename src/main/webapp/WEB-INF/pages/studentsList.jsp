@@ -7,6 +7,7 @@
     <!-- meta -->
     <%@ include file="include/links/linksMeta.jsp" %>
     <title>Students List</title>
+    <script src="<c:url value="/static/js/custom/baseUrl.js"/>"></script>
     <!-- bootstrap core -->
     <%@ include file="include/links/linksBootstrapCore.jsp" %>
     <!-- IE9 -->
@@ -29,7 +30,10 @@
 
         <!-- top menu -->
         <%@ include file="include/topNavigation.jsp" %>
-
+        <div class="statusSelector hidden">
+            <select class="form-control">
+            </select>
+        </div>
         <!-- page content -->
         <div class="right_col" role="main">
             <!-- top tiles -->
@@ -39,8 +43,6 @@
                     <div class="clearfix"></div>
                 </div>
                 <div class="x_content">
-                    <%@ include file="include/personal/filters.jsp"%>
-
                     <%@ include file="include/personal/candidateTableForHR.jsp"%>
                 </div>
             </div>
@@ -57,6 +59,8 @@
 <%@ include file="include/links/linksCustomCSSAndJS.jsp" %>
 <!-- js for PNotify -->
 <%@ include file="include/links/linksPNotify.jsp" %>
+
+<script src="<c:url value="/static/js/custom/Personal/loaderStart.js"/>"></script>
 
 <script src="<c:url value="/static/js/datatables/jquery.dataTables.min.js"/>"></script>
 <script src="<c:url value="/static/js/datatables/dataTables.bootstrap.js"/>"></script>

@@ -4,6 +4,9 @@ import org.apache.log4j.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.mail.MailException;
+import org.springframework.mail.MailSender;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
 import ua.netcracker.model.dao.EmailTemplateDAO;
 import ua.netcracker.model.dao.UserDAO;
@@ -22,14 +25,6 @@ public class SendEmailServiceImpl implements SendEmailService {
 
     private static final Logger LOGGER = Logger.getLogger(SendEmailServiceImpl.class);
 
-    private String email;
-    private String password;
-
-    private String auth;
-    private String starttls;
-    private String host;
-    private String port;
-
     @Autowired
     private EmailTemplateDAO emailTemplateDAO;
     @Autowired
@@ -41,61 +36,31 @@ public class SendEmailServiceImpl implements SendEmailService {
     @Autowired
     private CandidateService candidateService;
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public void setAuth(String auth) {
-        this.auth = auth;
-    }
-
-    public void setStarttls(String starttls) {
-        this.starttls = starttls;
-    }
-
-    public void setHost(String host) {
-        this.host = host;
-    }
-
-    public void setPort(String port) {
-        this.port = port;
-    }
+    @Autowired
+    private MailSender mailSender;
+    @Autowired
+    private SimpleMailMessage templateMessage;
 
     @Override
     public void sendLetterToEmails(String[] toEmails, String subject, String text) {
-
-        Properties props = new Properties();
-        props.put("mail.smtp.auth", auth);
-        props.put("mail.smtp.starttls.enable", starttls);
-        props.put("mail.smtp.host", host);
-        props.put("mail.smtp.port", port);
-
-        Session session = Session.getInstance(props,
-                new javax.mail.Authenticator() {
-                    protected PasswordAuthentication getPasswordAuthentication() {
-                        return new PasswordAuthentication(email, password);
-                    }
-                });
+        SimpleMailMessage message = new SimpleMailMessage(templateMessage);
+        message.setSubject(subject);
+        message.setText(text);
+        message.setBcc(toEmails);
         try {
-            Message message = new MimeMessage(session);
-            message.setFrom(new InternetAddress(email));
-            InternetAddress[] addressTo = new InternetAddress[toEmails.length];
-            for (int i = 0; i < toEmails.length; i++) {
-                addressTo[i] = new InternetAddress(toEmails[i]);
-            }
-            message.setRecipients(Message.RecipientType.BCC, addressTo);
-            message.setSubject(subject);
-            message.setContent(text, "text/html; charset=UTF-8");
-            Transport.send(message);
-        } catch (MessagingException e) {
-            LOGGER.debug(e.getStackTrace());
-            LOGGER.info(e.getMessage());
+            mailSender.send(message);
+
+        } catch (MailException mailException) {
+            LOGGER.debug(mailException.getStackTrace());
+            LOGGER.info(mailException.getMessage());
         }
     }
+
+    @Override
+    public void sendLetterToEmails(String toEmail, String subject, String text) {
+        sendLetterToEmails(new String[]{toEmail},subject,text);
+    }
+
 
     @Override
     public void sendEmailAboutSuccessfulRegistration(String[] toEmails) {
@@ -187,7 +152,7 @@ public class SendEmailServiceImpl implements SendEmailService {
         sendLetterToEmails(administratorsEmails, "CRITICAL ERROR ON SITE HRSYSTEM!!!", textError);
     }
 
-    private String[] getEmailsByRole(Role role){
+    private String[] getEmailsByRole(Role role) {
         List<User> users = userDAO.getAllPersonalById(role.getId());
         String[] usersEmails = new String[users.size()];
         for (int i = 0; i < users.size(); i++) {
@@ -196,7 +161,7 @@ public class SendEmailServiceImpl implements SendEmailService {
         return usersEmails;
     }
 
-    private String[] getEmailsByCandidateStatus(Status status){
+    private String[] getEmailsByCandidateStatus(Status status) {
         List<Candidate> candidates = (List<Candidate>) candidateService.getCandidateByStatus(status.toString());
         String[] candidatesEmails = new String[candidates.size()];
         for (int i = 0; i < candidates.size(); i++) {

@@ -17,9 +17,9 @@ public interface QuestionForInterviewService {
 
     Collection getAllSubject();
 
-    boolean setQuestion(QuestionForInterview questionForInterview);
+    boolean setQuestion(Integer subjectId, String questionValue);
 
-    boolean updateQuestion(QuestionForInterview questionForInterview);
+    boolean updateQuestion(Integer questionId, String questionValue, Integer subjectId);
 
     Collection getAllQuestionBySubject(int subjectId);
 
@@ -27,7 +27,9 @@ public interface QuestionForInterviewService {
 
     boolean removeSubject(SubjectQuestionForInterview subject);
 
-    boolean remove(QuestionForInterview questionForInterview);
+    boolean remove(Integer questionId);
 
     boolean updateSubject(SubjectQuestionForInterview subject);
+
+    Integer getLastQuestionId();
 }

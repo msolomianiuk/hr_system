@@ -87,13 +87,12 @@ public class AddressDAOImpl implements AddressDAO {
     @Override
     public List<Address> findAll() {
         List<Address> addressList = null;
-        addressList = jdbcTemplateFactory.getJdbcTemplate(dataSource).query(FIND_ALL_SQL,
+        return addressList = jdbcTemplateFactory.getJdbcTemplate(dataSource).query(FIND_ALL_SQL,
                 new RowMapper<Address>() {
                     public Address mapRow(ResultSet rs, int rowNum) throws SQLException {
                         return createAddressWithResultSet(rs);
                     }
                 });
-        return addressList;
     }
 
 

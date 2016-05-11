@@ -35,7 +35,8 @@ public class InterviewDaysDetailsServiceImpl implements InterviewDaysDetailsServ
             "SELECT hr_system.interview_days_details.id, date, start_time, end_time, hr_system.address.address, hr_system.address.room_capacity, count_students, count_personal" +
                     " FROM hr_system.interview_days_details" +
                     " LEFT JOIN hr_system.address" +
-                    " ON hr_system.interview_days_details.address_id=hr_system.address.id";
+                    " ON hr_system.interview_days_details.address_id=hr_system.address.id" +
+                    " ORDER BY hr_system.interview_days_details.id ";
     private static final String REMOVE_SQL_BY_COURSE_ID = "DELETE FROM \"hr_system\".interview_days_details WHERE course_id = ?";
 
     @Autowired

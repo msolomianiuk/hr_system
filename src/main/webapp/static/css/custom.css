@@ -5491,3 +5491,11 @@ button.filters-button{
   width: 100%;
   margin-left: 0;
 }
+
+#add-question textarea{
+  margin-bottom: 10px;
+}
+
+.profile_img{
+  cursor: pointer;
+}

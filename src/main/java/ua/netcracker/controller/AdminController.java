@@ -69,9 +69,12 @@ public class AdminController {
     @RequestMapping(value = "/candidate/update_status")
     public void updateCandidateStatus(@RequestParam Integer candidateID, @RequestParam String status) {
 
-        Candidate candidate = candidateService.getCandidateById(candidateID);
-        candidate.setStatus(Status.valueOf(status));
-        candidateService.updateCandidate(candidate);
+        //problem with Candidate updating (ERROR: insert or update on table "candidate" violates foreign key constraint "candidate_interview_days_details_id_fkey")
+//        Candidate candidate = candidateService.getCandidateById(candidateID);
+//        candidate.setStatus(Status.valueOf(status));
+//        candidateService.updateCandidate(candidate);
+
+        candidateService.updateCandidateStatus(candidateID, Status.valueOf(status).getId());
     }
 
     @RequestMapping(value = "/add_role")
@@ -180,72 +183,6 @@ public class AdminController {
 
     }
 
-    //---Controllers for InterviewDaysDetails---
-
-    @RequestMapping(value = "/service/interviewDetails", method = RequestMethod.GET)
-    public String getInterviewDaysDetailsPage() {
-        return "interview_days_details";
-    }
-
-    //---REST Controllers for InterviewDaysDetails---
-
-    @RequestMapping(value = "/interview_details_list", method = RequestMethod.GET)
-    @ResponseBody
-    public ResponseEntity<List<InterviewDaysDetails>> getAllInterviewDaysDetails() {
-        List<InterviewDaysDetails> interview = (List<InterviewDaysDetails>) interviewDaysDetailsService.findAll();
-        if (interview.isEmpty()) {
-            return new ResponseEntity<List<InterviewDaysDetails>>(HttpStatus.NO_CONTENT);
-        }
-        return new ResponseEntity<List<InterviewDaysDetails>>(interview, HttpStatus.OK);
-    }
-
-//    @RequestMapping(value = "/address_getDateList", method = RequestMethod.GET)
-//    @ResponseBody
-//    public ResponseEntity<Map<String, String>> getDates() {
-//        Map<String, String> date = dateService.mapDate();
-//        if (date.isEmpty()) {
-//            return new ResponseEntity<Map<String, String>>(HttpStatus.NO_CONTENT);
-//        }
-//        return new ResponseEntity<Map<String, String>>(date, HttpStatus.OK);
-//    }
-
-    @RequestMapping(value = "/interview_details_insert", method = RequestMethod.GET)
-    @ResponseBody
-    public ResponseEntity<InterviewDaysDetails> setInterviewDaysDetails(
-            @RequestParam String date,
-            @RequestParam String start_time,
-            @RequestParam String end_time,
-            @RequestParam String address_id,
-            @RequestParam String id
-    ) {
-        InterviewDaysDetails interviewDaysDetails = new InterviewDaysDetails();
-        interviewDaysDetails.setCourseId(Integer.parseInt(id));
-        interviewDaysDetails.setInterviewDate(date);
-        interviewDaysDetails.setStartTime(start_time);
-        interviewDaysDetails.setEndTime(end_time);
-        interviewDaysDetails.setAddressId(Integer.parseInt(address_id));
-        interviewDaysDetails.setCountStudents(dateService.quantityStudent(interviewDaysDetails));
-        interviewDaysDetails.setCountPersonal(dateService.getPersonal(interviewDaysDetails));
-        interviewDaysDetailsService.add(interviewDaysDetails);
-        if (interviewDaysDetails == null) {
-            return ResponseEntity.accepted().body(interviewDaysDetails);
-        }
-        return ResponseEntity.ok(interviewDaysDetails);
-    }
-
-    @RequestMapping(value = "/interview_details_delete", method = RequestMethod.GET)
-    @ResponseBody
-    public ResponseEntity<InterviewDaysDetails> removeInterviewDaysDetails(
-            @RequestParam String id
-    ) {
-        InterviewDaysDetails interviewDaysDetails = new InterviewDaysDetails();
-        interviewDaysDetailsService.remove(Integer.parseInt(id));
-        if (interviewDaysDetails == null) {
-            return ResponseEntity.accepted().body(interviewDaysDetails);
-        }
-        return ResponseEntity.ok(interviewDaysDetails);
-    }
-
     @RequestMapping(value = "/getInterviewDetailsAddressList", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<List<Map<String, Object>>> getInterviewDetailsAddressList() {
@@ -291,20 +228,13 @@ public class AdminController {
         interviewDaysDetails.setStartTime(start_time);
         interviewDaysDetails.setEndTime(end_time);
         interviewDaysDetails.setAddressId(addressService.findByAddress(address_id).getId());
-        interviewDaysDetails.setCountStudents(10);
-        interviewDaysDetails.setCountPersonal(10);
+        interviewDaysDetails.setCountStudents(dateService.quantityStudent(interviewDaysDetails));
+        interviewDaysDetails.setCountPersonal(dateService.getPersonal(interviewDaysDetails));
         interviewDaysDetailsService.update(interviewDaysDetails);
         if (interviewDaysDetails == null) {
             return ResponseEntity.accepted().body(interviewDaysDetails);
         }
         return ResponseEntity.ok(interviewDaysDetails);
-    }
-
-    //---Controllers for Address---
-
-    @RequestMapping(value = "/service/interviewDetails/address", method = RequestMethod.GET)
-    public String getAddressPage() {
-        return "address";
     }
 
     //---REST Controllers for Address---
@@ -331,7 +261,6 @@ public class AdminController {
         return new ResponseEntity<Address>(address, HttpStatus.OK);
     }
 
-
     @RequestMapping(value = "/address_insert", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<Address> setAddress(
@@ -342,20 +271,6 @@ public class AdminController {
         addressEntity.setAddress(address);
         addressEntity.setRoomCapacity(Integer.parseInt(roomCapacity));
         addressService.insert(addressEntity);
-        if (addressEntity == null) {
-            return ResponseEntity.accepted().body(addressEntity);
-        }
-        return ResponseEntity.ok(addressEntity);
-    }
-
-    @RequestMapping(value = "/address_delete", method = RequestMethod.GET)
-    @ResponseBody
-    public ResponseEntity<Address> removeAddress(
-            @RequestParam String id
-    ) {
-        Address addressEntity = new Address();
-        addressEntity.setId(Integer.parseInt(id));
-        addressService.delete(addressEntity.getId());
         if (addressEntity == null) {
             return ResponseEntity.accepted().body(addressEntity);
         }
