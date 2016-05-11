@@ -12,7 +12,6 @@ import ua.netcracker.model.entity.QuestionForInterview;
 import ua.netcracker.model.service.QuestionForInterviewService;
 
 import java.util.Collection;
-import java.util.List;
 
 @Controller
 public class QuestionForInterviewController {
@@ -36,7 +35,7 @@ public class QuestionForInterviewController {
                                @RequestParam String questionValue
     ){
         questionForInterviewService.setQuestion(subjectId, questionValue);
-        return 174;
+        return questionForInterviewService.getLastQuestionId();
     }
 
     @RequestMapping(value = "/service/editQuestion", method = RequestMethod.GET)

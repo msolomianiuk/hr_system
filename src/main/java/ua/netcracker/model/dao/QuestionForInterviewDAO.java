@@ -24,5 +24,7 @@ public interface QuestionForInterviewDAO extends DAO<QuestionForInterview> {
 
     boolean updateSubject(SubjectQuestionForInterview subjectQuestionForInterview);
 
+    Integer findLastQuestionId();
+
 
 }

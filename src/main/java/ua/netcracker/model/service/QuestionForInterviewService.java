@@ -30,4 +30,6 @@ public interface QuestionForInterviewService {
     boolean remove(Integer questionId);
 
     boolean updateSubject(SubjectQuestionForInterview subject);
+
+    Integer getLastQuestionId();
 }
