@@ -5495,3 +5495,11 @@ button.filters-button{
 #add-question textarea{
   margin-bottom: 10px;
 }
+
+.top_nav, .left_col {
+  z-index: 20140629;
+}
+
+.profile_img{
+  cursor: pointer;
+}

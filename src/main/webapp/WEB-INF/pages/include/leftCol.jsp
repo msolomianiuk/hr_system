@@ -26,7 +26,7 @@
                     </c:otherwise>
                 </c:choose>
 
-                <img src="<c:url value="${photo}"/>" alt="..."
+                <img data-toggle="modal" data-target="#upload-image" src="<c:url value="${photo}"/>" alt="..."
                      class="img-circle profile_img">
             </div>
             <div class="profile_info">
