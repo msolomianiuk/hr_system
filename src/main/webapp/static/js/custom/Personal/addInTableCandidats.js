@@ -34,6 +34,7 @@ function addInTableCandidates(candidates){
             }
         }
     );
+
     $('#candidates-list').dataTable({
         "oLanguage": {
             "sSearch": "_INPUT_" //search
@@ -41,4 +42,6 @@ function addInTableCandidates(candidates){
     });
     // $('#candidates-list_filter label').html($('#candidates-list_filter label').html().replace('Search:',''));
     $('#candidates-list_filter label input').attr('placeholder', 'Search for...');
+    $('.loading').css('display', 'none');
+
 }

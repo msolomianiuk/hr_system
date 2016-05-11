@@ -82,7 +82,7 @@ public class QuestionForInterviewDAOImpl implements QuestionForInterviewDAO {
     public boolean update(QuestionForInterview questionForInterview) {
         try {
             JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-            jdbcTemplate.update(UPDATE_QUESTION, questionForInterview.getSubjectId(), questionForInterview.getValue());
+            jdbcTemplate.update(UPDATE_QUESTION, questionForInterview.getSubjectId(), questionForInterview.getValue(), questionForInterview.getId() );
             return true;
         } catch (Exception e) {
             LOGGER.error("Error: " + e);

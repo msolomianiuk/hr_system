@@ -58,6 +58,8 @@
 <!-- js for PNotify -->
 <%@ include file="include/links/linksPNotify.jsp" %>
 
+<script src="<c:url value="/static/js/custom/Personal/loaderStart.js"/>"></script>
+
 <script src="<c:url value="/static/js/datatables/jquery.dataTables.min.js"/>"></script>
 <script src="<c:url value="/static/js/datatables/dataTables.bootstrap.js"/>"></script>
 <script src="<c:url value="/static/js/datatables/dataTables.buttons.min.js"/>"></script>

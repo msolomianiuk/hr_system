@@ -17,9 +17,9 @@ public interface QuestionForInterviewService {
 
     Collection getAllSubject();
 
-    boolean setQuestion(QuestionForInterview questionForInterview);
+    boolean setQuestion(Integer subjectId, String questionValue);
 
-    boolean updateQuestion(QuestionForInterview questionForInterview);
+    boolean updateQuestion(Integer questionId, String questionValue, Integer subjectId);
 
     Collection getAllQuestionBySubject(int subjectId);
 

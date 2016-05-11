@@ -9,7 +9,7 @@ $("button#save").on("click", function () {
             setTimeout(function () { $('.loading').hide(); }, 1000);
             new PNotify({
                 title: 'Saved answer',
-                text: 'Your answers was successfully saved!',
+                text: 'Your answers was successfully saved!</br>Page will update in several seconds.',
                 type: 'success'
             });
             setTimeout(function () {location.reload(); }, 3000);
