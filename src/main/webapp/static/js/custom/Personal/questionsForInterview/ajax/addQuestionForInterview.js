@@ -3,7 +3,7 @@ function initSaveQuestion() {
         var questionValue = $("#add-question textarea").val();
         var subjectId = $('#add-question select').val();
         $.ajax({
-            url: "http://localhost:8080/hr_system-1.0-SNAPSHOT/service/addQuestion",
+            url: baseUrl + "/service/addQuestion",
             type: "GET",
             dataType: "json",
             data: {

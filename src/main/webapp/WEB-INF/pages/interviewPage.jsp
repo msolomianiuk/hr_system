@@ -7,6 +7,8 @@
     <!-- meta -->
     <%@ include file="include/links/linksMeta.jsp" %>
     <title>Interview Page</title>
+
+    <script src="<c:url value="/static/js/custom/baseUrl.js"/>"></script>
     <!-- bootstrap core -->
     <%@ include file="include/links/linksBootstrapCore.jsp" %>
     <!-- IE9 -->

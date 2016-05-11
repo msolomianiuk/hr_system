@@ -3,7 +3,7 @@ function initDeleteQuestion() {
         var questionId = $("#delete-question .question-id-div").attr('question-id');
         console.log(questionId);
         $.ajax({
-            url: "http://localhost:8080/hr_system-1.0-SNAPSHOT/service/deleteQuestion",
+            url: baseUrl + "/service/deleteQuestion",
             type: "GET",
             dataType: "json",
             data: {

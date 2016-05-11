@@ -1,7 +1,7 @@
 $("button#save").on("click", function () {
     $('.loading').attr('style', 'display: flex');
     $.ajax({
-        url: "http://localhost:8080/hr_system-1.0-SNAPSHOT/service/saveAnswers",
+        url: baseUrl + "/service/saveAnswers",
         type: "POST",
         data: {'answersJsonString': JSON.stringify($('.candidate-profile form').serializeObject())},
         dataType: "json",

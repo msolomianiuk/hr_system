@@ -13,7 +13,10 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Profile - </title>
+
+    <script src="<c:url value="/static/js/custom/baseUrl.js"/>"></script>
     <!-- bootstrap core -->
+
     <%@ include file="include/links/linksBootstrapCore.jsp" %>
     <!-- IE9 -->
     <%@ include file="include/links/linksForIE9JS.jsp" %>

@@ -6,7 +6,7 @@ function initEditQuestion() {
         var object = $('#questions-for-interview ul.question-list li[question-id="'+questionId+'"] .question-text');
         console.log("ololololo");
         $.ajax({
-            url: "http://localhost:8080/hr_system-1.0-SNAPSHOT/service/editQuestion",
+            url: baseUrl + "/service/editQuestion",
             type: "GET",
             dataType: "json",
             data: {
