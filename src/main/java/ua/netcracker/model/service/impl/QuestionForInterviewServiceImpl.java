@@ -69,8 +69,8 @@ public class QuestionForInterviewServiceImpl implements QuestionForInterviewServ
     }
 
     @Override
-    public boolean remove(QuestionForInterview questionForInterview) {
-        return questionForInterviewDAO.delete(questionForInterview);
+    public boolean remove(Integer questionId) {
+        return questionForInterviewDAO.delete(questionId);
     }
 
     @Override

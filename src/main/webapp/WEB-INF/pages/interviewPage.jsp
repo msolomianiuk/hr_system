@@ -68,6 +68,8 @@
 <script src="<c:url value="/static/js/custom/Personal/questionsForInterview/addQuestionModal.js"/>"></script>
 <script src="<c:url value="/static/js/custom/Personal/questionsForInterview/ajax/editQuestionForInterview.js"/>"></script>
 <script src="<c:url value="/static/js/custom/Personal/questionsForInterview/editQuestionModal.js"/>"></script>
+<script src="<c:url value="/static/js/custom/Personal/questionsForInterview/ajax/deleteQuestionForInterview.js"/>"></script>
+<script src="<c:url value="/static/js/custom/Personal/questionsForInterview/deleteQuestionModal.js"/>"></script>
 <script src="<c:url value="/static/js/custom/Personal/questionsForInterview/drawQuestionsForInterview.js"/>"></script>
 <script src="<c:url value="/static/js/custom/Personal/questionsForInterview/ajax/loadingQuestionsForInterview.js"/>"></script>
 

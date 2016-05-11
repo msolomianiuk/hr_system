@@ -32,7 +32,7 @@ public class QuestionForInterviewController {
 
     @RequestMapping(value = "/service/addQuestion", method = RequestMethod.GET)
     @ResponseBody
-    public Integer addQuestion(@RequestParam int subjectId,
+    public Integer addQuestion(@RequestParam Integer subjectId,
                                @RequestParam String questionValue
     ){
         questionForInterviewService.setQuestion(subjectId, questionValue);
@@ -41,11 +41,16 @@ public class QuestionForInterviewController {
 
     @RequestMapping(value = "/service/editQuestion", method = RequestMethod.GET)
     @ResponseBody
-    public Boolean editQuestion(@RequestParam int questionId,
+    public Boolean editQuestion(@RequestParam Integer questionId,
                                @RequestParam String questionValue,
-                               @RequestParam int subjectId
+                               @RequestParam Integer subjectId
     ){
         return questionForInterviewService.updateQuestion(questionId, questionValue, subjectId);
-//        return 172;
+    }
+
+    @RequestMapping(value = "/service/deleteQuestion", method = RequestMethod.GET)
+    @ResponseBody
+    public Boolean deleteQuestion(@RequestParam Integer questionId){
+        return questionForInterviewService.remove(questionId);
     }
 }

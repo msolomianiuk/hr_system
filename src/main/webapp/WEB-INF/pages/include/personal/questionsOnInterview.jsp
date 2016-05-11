@@ -40,8 +40,8 @@
                         <span class="question-text"></span>
                         <div class="question-edit pull-right"><a data-toggle="modal" data-target="#edit-question"
                                                                  class="edit-question-link"><i
-                                class="fa fa-pencil"></i></a><a data-toggle="modal"
-                                                                data-target="#delete-question"><i
+                                class="fa fa-pencil"></i></a><a data-toggle="modal" data-target="#delete-question"
+                                                                class="delete-question-link"><i
                                 class="fa fa-remove"></i></a></div>
                     </li>
                 </div>
@@ -166,13 +166,14 @@
                 <h4 class="modal-title" id="delete-questionLabel">Delete Question</h4>
             </div>
             <div class="modal-body">
+                <div class="hidden question-id-div" question-id=""></div>
                 Are you sure you want to DELETE question "
                 <span class="question-text"></span>
                 "?
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
-                <button type="button" class="btn btn-primary">Yes</button>
+                <button type="button" class="btn btn-danger delete-question-button" data-dismiss="modal">Yes</button>
             </div>
         </div>
     </div>

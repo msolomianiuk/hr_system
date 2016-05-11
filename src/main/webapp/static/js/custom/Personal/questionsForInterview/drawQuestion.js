@@ -15,4 +15,10 @@ function drawQuestionEdit(questionId, subjectId, questionValue, object) {
         drawQuestion(questionId, subjectId, questionValue);
     }
     $('#edit-question').modal('hide');
+    
+}
+
+function removeQuestion(questionId) {
+    var questionObject = $('#questions-for-interview ul.question-list li[question-id="'+questionId+'"]');
+    questionObject.remove();
 }

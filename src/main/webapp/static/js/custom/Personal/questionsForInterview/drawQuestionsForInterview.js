@@ -36,4 +36,5 @@ function drawQuestionsForInterview(subjects) {
     }
     initAddQuestionLink();
     initEditQuestionLink();
+    initDeleteQuestionLink();
 }

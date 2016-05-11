@@ -182,10 +182,10 @@ public class QuestionForInterviewDAOImpl implements QuestionForInterviewDAO {
     }
 
     @Override
-    public boolean delete(QuestionForInterview questionForInterview) {
+    public boolean delete(Integer questionId) {
         try {
             JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-            jdbcTemplate.update(DELETE_QUESTION, questionForInterview.getId());
+            jdbcTemplate.update(DELETE_QUESTION, questionId);
             return true;
         } catch (Exception e) {
             LOGGER.error(e);

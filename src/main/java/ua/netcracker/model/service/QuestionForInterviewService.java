@@ -27,7 +27,7 @@ public interface QuestionForInterviewService {
 
     boolean removeSubject(SubjectQuestionForInterview subject);
 
-    boolean remove(QuestionForInterview questionForInterview);
+    boolean remove(Integer questionId);
 
     boolean updateSubject(SubjectQuestionForInterview subject);
 }
