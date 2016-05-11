@@ -45,10 +45,6 @@
                                 class="fa fa-remove"></i></a></div>
                     </li>
                 </div>
-
-                <button type="button" data-toggle="modal" data-target="#add-subject"
-                        class="btn btn-success add-subject-link"><i
-                        class="fa fa-plus-circle"></i><span>Add Subject</span></button>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
