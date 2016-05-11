@@ -29,7 +29,6 @@
     <dependencies>
 
 
-
         <dependency>
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
@@ -110,6 +109,18 @@
             <groupId>commons-fileupload</groupId>
             <artifactId>commons-fileupload</artifactId>
             <version>1.3.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context-support</artifactId>
+            <version>4.2.2.RELEASE</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.sun.mail</groupId>
+            <artifactId>javax.mail</artifactId>
+            <version>1.5.4</version>
         </dependency>
 
     </dependencies>
