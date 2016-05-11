@@ -77,4 +77,9 @@ public class QuestionForInterviewServiceImpl implements QuestionForInterviewServ
     public boolean updateSubject(SubjectQuestionForInterview subject) {
         return questionForInterviewDAO.updateSubject(subject);
     }
+
+    @Override
+    public Integer getLastQuestionId() {
+        return questionForInterviewDAO.findLastQuestionId();
+    }
 }
