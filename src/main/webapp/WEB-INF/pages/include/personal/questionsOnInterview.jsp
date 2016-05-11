@@ -150,7 +150,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary add-question-button">Edit</button>
+                <button type="button" class="btn btn-primary edit-question-button">Edit</button>
             </div>
         </div>
     </div>

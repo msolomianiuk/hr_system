@@ -6,6 +6,8 @@ function initEditQuestionLink() {
         $('#edit-question .subject-list option[value="' + sublectId + '"]').attr('selected', 'selected');
         $('#edit-question textarea[name="questionValue"]').val(questionValue);
         $('#edit-question form').attr( 'question-id',questionId);
+        console.log(questionValue);
     });
+    
     initEditQuestion();
 }

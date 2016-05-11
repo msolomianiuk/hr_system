@@ -39,7 +39,6 @@
                     <div class="clearfix"></div>
                 </div>
                 <div class="x_content">
-
                     <%@ include file="include/personal/candidateTableForHR.jsp"%>
                 </div>
             </div>
