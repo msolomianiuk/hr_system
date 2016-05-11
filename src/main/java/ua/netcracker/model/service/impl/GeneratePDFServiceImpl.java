@@ -99,8 +99,9 @@ public class GeneratePDFServiceImpl implements GeneratePDFService {
         document.add(table);
         image.scaleAbsoluteHeight(70);
         image.setAbsolutePosition(0, image.getAbsoluteY());
+        document.add(new Paragraph("    "));
         document.add(image);
-        document.add(new Paragraph(""));
+        document.add(new Paragraph("    "));
         document.add(tableQuestionAndTitle);
     }
 
