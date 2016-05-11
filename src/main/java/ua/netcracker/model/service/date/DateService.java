@@ -214,10 +214,4 @@ public class DateService {
         }
 
     }
-//    public int getPeriodDate(CourseSetting courseSetting) {
-//        LocalDate startInterviewDay = getDate(courseSetting.getInterviewStartDate());
-//        LocalDate endInterviewDay = getDate(courseSetting.getInterviewEndDate());
-//        Period period = startInterviewDay.until(endInterviewDay);
-//        return period.getDays()+1;
-//    }
 }
