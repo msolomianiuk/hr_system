@@ -70,17 +70,8 @@ public class CandidateController {
     @RequestMapping(value = "/service/getPDF", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<byte[]> getPDF() {
-
-        Collection<Answer> exampleAnswers = candidateService.getAllCandidateAnswers(candidateService.getCurrentCandidate());
-
-
         pdfService.generatePDF(candidateService.getCurrentCandidate());
-
-        //TODO
-        //pdfService.generatePDF(candidateService.getCurrentCandidate());
-
         byte[] content = pdfService.convertToBytes();
-
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.parseMediaType("application/pdf"));
         String filename = "form.pdf";
