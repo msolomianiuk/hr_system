@@ -172,6 +172,16 @@ public class CandidateServiceImpl implements CandidateService {
     }
 
     @Override
+    public Collection<Candidate> getAllMarkedByCurrentInterviewer(User user) {
+       try {
+           Collection<Candidate> listCandidates = candidateDAO.getAllMarked(user);
+       }catch (Exception e){
+           LOGGER.error("Error " + e);
+       }
+        return null;
+    }
+
+    @Override
     public Collection<Candidate> getAllCandidates() {
         Collection<Candidate> listCandidates = candidateDAO.findAllByCourse(courseSettingService.getLastSetting().getId());
         for (Candidate candidate : listCandidates) {

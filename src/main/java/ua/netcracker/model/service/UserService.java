@@ -14,4 +14,6 @@ public interface UserService {
     boolean addUserRole(User user, Role role);
 
     User get(int id);
+
+    User getAuthorizedUser();
 }

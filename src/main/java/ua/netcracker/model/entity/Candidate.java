@@ -17,6 +17,8 @@ public class Candidate implements Comparable<Candidate> {
 
     private int courseId;
 
+
+
     private int statusId;
 
     private Status status;
@@ -91,6 +93,10 @@ public class Candidate implements Comparable<Candidate> {
 
     public int getInterviewDaysDetailsId() {
         return interviewDaysDetailsId;
+    }
+
+    public void setInterviewResults(Collection<InterviewResult> interviewResults) {
+        this.interviewResults = interviewResults;
     }
 
     public void setInterviewDaysDetailsId(int interviewDaysDetailsId) {

@@ -8,7 +8,9 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import ua.netcracker.model.dao.CandidateDAO;
+import ua.netcracker.model.dao.InterviewResultDAO;
 import ua.netcracker.model.entity.Candidate;
+import ua.netcracker.model.entity.InterviewResult;
 import ua.netcracker.model.entity.Status;
 import ua.netcracker.model.entity.User;
 
@@ -33,12 +35,21 @@ public class CandidateDAOImpl implements CandidateDAO {
     private static final String FIND_ALL_STATUS = "SELECT * FROM \"hr_system\".status";
     private static final String UPDATE_STATUS = "UPDATE \"hr_system\".candidate SET status_id=(?)" +
             "WHERE id=?";
+
+    private static final String FIND_ALL_MARKED_BY_CURRENT_INTERVIEWER =
+            "SELECT c.id, c.status_id, ir.mark, ir.comment, ir.recommendation_id\n" +
+                    "FROM \"hr_system\".candidate c\n" +
+                    "JOIN \"hr_system\".interview_result ir ON c.id = ir.candidate_id\n" +
+                    "WHERE ir.interviewer_id = ?;";
     private User user;
 
     @Autowired
     private DataSource dataSource;
     private JdbcTemplate jdbcTemplate;
     private SimpleJdbcInsert simpleJdbcInsert;
+
+    @Autowired
+   private InterviewResultDAO interviewResultDAO;
 
 
     @Override
@@ -215,6 +226,26 @@ public class CandidateDAOImpl implements CandidateDAO {
         }
         return false;
 
+    }
+
+    @Override
+    public Collection<Candidate> getAllMarked(User user) {
+        Candidate candidate = new Candidate();
+        InterviewResult interviewResult = new InterviewResult();
+
+        try {
+            jdbcTemplate = new JdbcTemplate(dataSource);
+            List<Map<String, Object>> rows = jdbcTemplate.queryForList(FIND_ALL_MARKED_BY_CURRENT_INTERVIEWER, user.getId());
+            for (Map row : rows) {
+                candidate.setId((int) row.get("id"));
+                candidate.setStatusId((int) row.get("status_id"));
+                candidate.setCourseId((int) row.get("course_id"));
+                candidate.setInterviewResults(interviewResultDAO.findResultsByCandidateId(candidate.getId()));
+            }
+        } catch (Exception e) {
+            LOGGER.error("Error: " + e);
+        }
+        return null;
     }
 
     @Override

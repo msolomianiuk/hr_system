@@ -10,7 +10,6 @@ public class InterviewResult {
 
     private Integer interviewerId;
 
-
     private Integer mark;
 
     private String comment;

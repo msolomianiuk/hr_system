@@ -56,4 +56,6 @@ public interface CandidateService {
 
     boolean updateCandidateStatus(Integer candidateID, Integer newStatusID);
 
+    Collection<Candidate> getAllMarkedByCurrentInterviewer(User user);
+
 }

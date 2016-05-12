@@ -3,6 +3,9 @@ package ua.netcracker.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -11,9 +14,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import ua.netcracker.model.dao.UserDAO;
 import ua.netcracker.model.entity.Candidate;
 import ua.netcracker.model.entity.Question;
+import ua.netcracker.model.entity.User;
+import ua.netcracker.model.securiry.UserAuthenticationDetails;
 import ua.netcracker.model.service.CandidateService;
 import ua.netcracker.model.service.CourseSettingService;
 import ua.netcracker.model.service.QuestionService;
+import ua.netcracker.model.service.UserService;
+import ua.netcracker.model.service.impl.UserServiceImpl;
 
 import java.util.Collection;
 import java.util.Map;
@@ -35,6 +42,8 @@ public class HRController {
     private CandidateService candidateService;
     @Autowired
     private UserDAO userDAO;
+    @Autowired
+    private UserService userService;
 
     @RequestMapping(value = "hr/service/getCandidateById", method = RequestMethod.GET)
     @ResponseBody
@@ -86,5 +95,18 @@ public class HRController {
         return new ResponseEntity<Map<Integer, String>>(listStatus, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "hr/service/getAllMarked", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<Collection<Candidate>> getAllMarked(){
+            User user = userService.getAuthorizedUser();
+        Collection<Candidate> candidateList = null;
+        if (user != null) {
+            candidateList = candidateService.getAllMarkedByCurrentInterviewer(user);
+        }
+        if (candidateList.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<Collection<Candidate>>(candidateList, HttpStatus.OK);
+    }
 
 }
