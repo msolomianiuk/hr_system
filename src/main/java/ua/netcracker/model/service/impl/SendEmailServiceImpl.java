@@ -61,6 +61,9 @@ public class SendEmailServiceImpl implements SendEmailService {
         sendLetterToEmails(new String[]{toEmail},subject,text);
     }
 
+    public void sendLetterToEmails(Collection<String> toEmails, String subject, String text) {
+        sendLetterToEmails(toEmails.toArray(new String[0 ]),subject,text);
+    }
 
     @Override
     public void sendEmailAboutSuccessfulRegistration(String[] toEmails) {

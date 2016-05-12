@@ -28,13 +28,13 @@ public class ReportQueryDAOImpl implements ReportQueryDAO {
 
     private static final String SQL_FIND_ALL = "SELECT * FROM \"hr_system\".report;";
     private static final String SQL_FIND_BY_ID = "SELECT * FROM \"hr_system\".report WHERE id = (?);";
-    private static final String SQL_INSERT = "INSERT INTO \"hr_system\".report (description, report_query, \"isImportant\") VALUES (?, ?, ?)";
-    private static final String SQL_UPDATE = "UPDATE \"hr_system\".report SET description=?, report_query=?, \"isImportant\"=? WHERE id = (?);";
+    private static final String SQL_INSERT = "INSERT INTO \"hr_system\".report (description, report_query, \"isimportant\") VALUES (?, ?, ?)";
+    private static final String SQL_UPDATE = "UPDATE \"hr_system\".report SET description=?, report_query=?, \"isimportant\"=? WHERE id = (?);";
     private static final String SQL_DELETE = "DELETE FROM \"hr_system\".report WHERE id = (?);";
     private static final String SQL_GET_DESCRIPTIONS = "SELECT description FROM \"hr_system\".report;";
     private static final String SQL_GET_REPORT_QUERY_BY_DESCRIPTION = "SELECT * FROM \"hr_system\".report WHERE decription = (?);";
-    private static final String SQL_FIND_BY_IMPORTANCE = "SELECT * FROM \"hr_system\".report WHERE \"isImportant\" = (?);";
-    private static final String SQL_UPDATE_IMPORTANCE = "UPDATE \"hr_system\".report\n SET \"isImportant\" = ? WHERE id = (?);";
+    private static final String SQL_FIND_BY_IMPORTANCE = "SELECT * FROM \"hr_system\".report WHERE \"isimportant\" = (?);";
+    private static final String SQL_UPDATE_IMPORTANCE = "UPDATE \"hr_system\".report\n SET \"isimportant\" = ? WHERE id = (?);";
 
     @Override
     public Collection<ReportQuery> findAll() {
@@ -46,7 +46,7 @@ public class ReportQueryDAOImpl implements ReportQueryDAO {
             reportQuery.setId((int) row.get("id"));
             reportQuery.setDescription((String) row.get("description"));
             reportQuery.setQuery((String) row.get("report_query"));
-            reportQuery.setShow((boolean) row.get("isImportant"));
+            reportQuery.setShow((boolean) row.get("isimportant"));
             reports.add(reportQuery);
         }
         return reports;
@@ -70,7 +70,7 @@ public class ReportQueryDAOImpl implements ReportQueryDAO {
         reportQuery.setId(resultSet.getInt("id"));
         reportQuery.setDescription(resultSet.getString("description"));
         reportQuery.setQuery(resultSet.getString("report_query"));
-        reportQuery.setShow(resultSet.getBoolean("isImportant"));
+        reportQuery.setShow(resultSet.getBoolean("isimportant"));
         return reportQuery;
     }
 
@@ -135,7 +135,7 @@ public class ReportQueryDAOImpl implements ReportQueryDAO {
             reportQuery.setId((int) row.get("id"));
             reportQuery.setDescription((String) row.get("description"));
             reportQuery.setQuery((String) row.get("report_query"));
-            reportQuery.setShow((boolean) row.get("isImportant"));
+            reportQuery.setShow((boolean) row.get("isimportant"));
             reports.add(reportQuery);
         }
         return reports;

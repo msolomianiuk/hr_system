@@ -26,13 +26,13 @@ public class EmailTemplateDAOImpl implements EmailTemplateDAO {
     @Autowired
     private DataSource dataSource;
 
-    private static final String SQL_FIND_ALL = "SELECT * FROM \"hr_system\".letter_template;";
-    private static final String SQL_FIND_BY_ID = "SELECT * FROM \"hr_system\".letter_template WHERE id = (?);";
-    private static final String SQL_INSERT = "INSERT INTO \"hr_system\".letter_template (description, template) VALUES (?, ?)";
-    private static final String SQL_UPDATE = "UPDATE \"hr_system\".letter_template SET description=?, template=? WHERE id = (?);";
-    private static final String SQL_DELETE = "DELETE FROM \"hr_system\".letter_template WHERE id = (?);";
-    private static final String SQL_GET_DESCRIPTIONS = "SELECT description FROM \"hr_system\".letter_template;";
-    private static final String SQL_GET_EMAIL_TEMPLATE_BY_DESCRIPTION = "SELECT * FROM \"hr_system\".letter_template WHERE decription = (?);";
+    private static final String SQL_FIND_ALL = "SELECT * FROM \"hr_system\".email_template;";
+    private static final String SQL_FIND_BY_ID = "SELECT * FROM \"hr_system\".email_template WHERE id = (?);";
+    private static final String SQL_INSERT = "INSERT INTO \"hr_system\".email_template (description, template) VALUES (?, ?)";
+    private static final String SQL_UPDATE = "UPDATE \"hr_system\".email_template SET description=?, template=? WHERE id = (?);";
+    private static final String SQL_DELETE = "DELETE FROM \"hr_system\".email_template WHERE id = (?);";
+    private static final String SQL_GET_DESCRIPTIONS = "SELECT description FROM \"hr_system\".email_template;";
+    private static final String SQL_GET_EMAIL_TEMPLATE_BY_DESCRIPTION = "SELECT * FROM \"hr_system\".email_template WHERE decription = (?);";
 
 
     @Override
