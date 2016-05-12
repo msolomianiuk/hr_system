@@ -10,7 +10,7 @@ $(document).ready(function() {
         id  = parseInt(($(this).attr("candidate_id")));
 
         $.ajax({
-            url: "http://31.131.25.42:8080/hr_system-1.0-SNAPSHOT/admin/answer_candidate",
+            url: "http://localhost:8080/hr_system-1.0-SNAPSHOT/admin/answer_candidate",
             type: "GET",
             //   contentType : "application/json",
             //beforeSend: funcbefor,
@@ -30,7 +30,7 @@ $(document).ready(function() {
 
 
     $.ajax({
-        url: "http://31.131.25.42:8080/hr_system-1.0-SNAPSHOT/getStudents",
+        url: "http://localhost:8080/hr_system-1.0-SNAPSHOT/getStudents",
         type: "GET",
         dataType: "json",
         contentType: 'application/json',

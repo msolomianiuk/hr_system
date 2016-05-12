@@ -56,15 +56,15 @@ public class HRController {
         return "interviewPage";
     }
 
-//    @RequestMapping(value = "hr/service/getCandidatsList", method = RequestMethod.GET)
-//    @ResponseBody
-//    public ResponseEntity<Collection<Candidate>> getCandidatesList() {
-//        Collection<Candidate> listCandidates = candidateService.getAllCandidatesIsView();
-//        if (listCandidates.isEmpty()) {
-//            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-//        }
-//        return new ResponseEntity<Collection<Candidate>>(listCandidates, HttpStatus.OK);
-//    }
+    @RequestMapping(value = "hr/service/getCandidatsList", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<Collection<Candidate>> getCandidatesList() {
+        Collection<Candidate> listCandidates = candidateService.getAllCandidatesIsView();
+        if (listCandidates.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<Collection<Candidate>>(listCandidates, HttpStatus.OK);
+    }
 
     @RequestMapping(value = "hr/service/getQuestionViewList", method = RequestMethod.GET)
     @ResponseBody
@@ -85,5 +85,6 @@ public class HRController {
         }
         return new ResponseEntity<Map<Integer, String>>(listStatus, HttpStatus.OK);
     }
+
 
 }

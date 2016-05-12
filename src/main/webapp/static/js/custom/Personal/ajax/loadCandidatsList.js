@@ -8,8 +8,8 @@ function loadCandidatesList() {
         mimeType: 'application/json',
         success:  function(data) {
 
-            getAllStatus();
             addInTableCandidates(data);
+            $('.loading').attr('style', 'display: none');
             initTrigger();
         },
         error: function (data) {
