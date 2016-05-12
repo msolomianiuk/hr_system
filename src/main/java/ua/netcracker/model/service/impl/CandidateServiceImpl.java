@@ -1,8 +1,6 @@
 package ua.netcracker.model.service.impl;
 
 import org.apache.log4j.Logger;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -17,8 +15,12 @@ import ua.netcracker.model.securiry.UserAuthenticationDetails;
 import ua.netcracker.model.service.CandidateService;
 import ua.netcracker.model.service.CourseSettingService;
 import ua.netcracker.model.service.QuestionService;
+import ua.netcracker.model.utils.JsonParsing;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Alyona Bilous 05/05/2016
@@ -108,33 +110,9 @@ public class CandidateServiceImpl implements CandidateService {
         return candidateDAO.update(candidate);
     }
 
-    private Collection<Answer> parseJsonString(String answersJsonString) {
-        Collection<Answer> listAnswers = new ArrayList<>();
-        JSONObject obj = new JSONObject(answersJsonString);
-        Iterator<?> keys = obj.keys();
-        while (keys.hasNext()) {
-            String key = (String) keys.next();
-            if (obj.get(key) instanceof JSONArray) {
-                JSONArray array = (JSONArray) obj.get(key);
-                for (int i = 0; i < array.length(); i++) {
-                    Answer answer = new Answer();
-                    answer.setQuestionId(Integer.valueOf(key.replace("question-", "")));
-                    answer.setValue(array.getString(i));
-                    listAnswers.add(answer);
-                }
-                continue;
-            }
-            Answer answer = new Answer();
-            answer.setQuestionId(Integer.valueOf(key.replace("question-", "")));
-            answer.setValue((String) obj.get(key));
-            listAnswers.add(answer);
-        }
-        return listAnswers;
-    }
-
     @Override
     public Candidate saveAnswers(String answersJsonString) {
-        Collection<Answer> listAnswers = parseJsonString(answersJsonString);
+        Collection<Answer> listAnswers = JsonParsing.parseJsonString(answersJsonString);
         Candidate candidate = getCurrentCandidate();
         if (candidate.getId() == 0) {
             candidate.setUserId(userId);
