@@ -351,15 +351,9 @@ public class AdminController {
         return new ResponseEntity<>(report, HttpStatus.OK);
     }
 
-    @Autowired
-    private SendEmailServiceImpl service;
     @RequestMapping(value = "/service/getEmailTemplates", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<Collection<EmailTemplate>> getAllEmailTemplates() {
-        User user = new User();
-        user.setName("BUGAGA");
-        user.setEmail("chebakovvl@gmail.com");
-        service.sendEmailAboutSuccessfulRegistration(user,"ididididi");
         Collection<EmailTemplate> emailTemplates = emailTemplateService.getAllEmailTemplates();
         if (emailTemplates.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);

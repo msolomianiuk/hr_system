@@ -3,15 +3,17 @@ package ua.netcracker.model.service.impl;
 import org.apache.log4j.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.MailException;
-import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import ua.netcracker.model.dao.*;
 import ua.netcracker.model.entity.*;
 import ua.netcracker.model.entity.Address;
 import ua.netcracker.model.service.*;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 import java.util.*;
 
 @Service("SendEmail Service")
@@ -40,21 +42,24 @@ public class SendEmailServiceImpl implements SendEmailService {
     private AddressDAO addressDAO;
 
     @Autowired
-    private MailSender mailSender;
+    private JavaMailSender mailSender;
     @Autowired
     private SimpleMailMessage templateMessage;
 
     @Override
     public void sendLetterToEmails(String[] toEmails, String subject, String text) {
-        SimpleMailMessage message = new SimpleMailMessage(templateMessage);
-        message.setSubject(subject);
-        message.setText(text);
-        message.setBcc(toEmails);
+        MimeMessage mimeMessage = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
         try {
-            mailSender.send(message);
-        } catch (MailException mailException) {
-            LOGGER.debug(mailException.getStackTrace());
-            LOGGER.info(mailException.getMessage());
+            mimeMessage.setContent(text, "text/html");
+            helper.setSubject(subject);
+            helper.setTo(templateMessage.getTo());
+            helper.setFrom(templateMessage.getFrom());
+            helper.setBcc(toEmails);
+            mailSender.send(mimeMessage);
+        } catch (MessagingException messagingException) {
+            LOGGER.debug(messagingException.getStackTrace());
+            LOGGER.info(messagingException.getMessage());
         }
     }
 
@@ -137,7 +142,7 @@ public class SendEmailServiceImpl implements SendEmailService {
             case Interview:
                 InterviewDaysDetails interviewDaysDetails = interviewDaysDetailsDAO.find(candidate.getInterviewDaysDetailsId());
                 Address address = addressDAO.find(interviewDaysDetails.getAddressId());
-                sendReminderInterview(user, interviewDaysDetails);
+                sendReminderInterview(user, interviewDaysDetails, address);
                 return replacePatterns(template, user, interviewDaysDetails, address);
             case Interviews_passed:
             case Job_accepted:
@@ -150,22 +155,24 @@ public class SendEmailServiceImpl implements SendEmailService {
         }
     }
 
-    private void sendReminderInterview(User user, InterviewDaysDetails interviewDaysDetails) {
+    private void sendReminderInterview(User user, InterviewDaysDetails interviewDaysDetails, Address address) {
         EmailTemplate emailTemplate = emailTemplateDAO.find(TEMPLATE_COMING_INTERVIEW);
-        SimpleMailMessage message = new SimpleMailMessage(templateMessage);
-        message.setSubject(emailTemplate.getDescription());
-        message.setText(emailTemplate.getTemplate());
-        message.setBcc(user.getEmail());
+        String email = replacePatterns(emailTemplate.getTemplate(), user, interviewDaysDetails, address);
+        MimeMessage mimeMessage = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
         try {
+            mimeMessage.setContent(email, "text/html");
+            helper.setSubject(emailTemplate.getDescription());
+            helper.setTo(templateMessage.getTo());
+            helper.setFrom(templateMessage.getFrom());
+            helper.setBcc(user.getEmail());
+            mailSender.send(mimeMessage);
             String[] date = interviewDaysDetails.getInterviewDate().split(" ");
-            message.setSentDate(new Date(new GregorianCalendar(Integer.valueOf(date[0]), Integer.valueOf(date[1]), Integer.valueOf(date[2])).getTimeInMillis()));
-            mailSender.send(message);
-        } catch (MailException mailException) {
-            LOGGER.debug(mailException.getStackTrace());
-            LOGGER.info(mailException.getMessage());
-        } catch (Exception ex) {
-            LOGGER.debug(ex.getStackTrace());
-            LOGGER.info(ex.getMessage());
+            helper.setSentDate(new Date(new GregorianCalendar(Integer.valueOf(date[0]), Integer.valueOf(date[1]), Integer.valueOf(date[2]) - 1).getTimeInMillis()));
+            mailSender.send(mimeMessage);
+        } catch (MessagingException messagingException) {
+            LOGGER.debug(messagingException.getStackTrace());
+            LOGGER.info(messagingException.getMessage());
         }
     }
 }
