@@ -11,10 +11,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import ua.netcracker.model.entity.*;
 import ua.netcracker.model.service.*;
 import ua.netcracker.model.service.date.DateService;
-import ua.netcracker.model.service.impl.AnswerServiceImpl;
-import ua.netcracker.model.service.impl.CandidateServiceImpl;
-import ua.netcracker.model.service.impl.CourseSettingServiceImpl;
-import ua.netcracker.model.service.impl.QuestionServiceImpl;
+import ua.netcracker.model.service.impl.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -354,9 +351,15 @@ public class AdminController {
         return new ResponseEntity<>(report, HttpStatus.OK);
     }
 
+    @Autowired
+    private SendEmailServiceImpl service;
     @RequestMapping(value = "/service/getEmailTemplates", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<Collection<EmailTemplate>> getAllEmailTemplates() {
+        User user = new User();
+        user.setName("BUGAGA");
+        user.setEmail("chebakovvl@gmail.com");
+        service.sendEmailAboutSuccessfulRegistration(user,"ididididi");
         Collection<EmailTemplate> emailTemplates = emailTemplateService.getAllEmailTemplates();
         if (emailTemplates.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
