@@ -5,21 +5,18 @@ package ua.netcracker.controller;
  */
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.support.PagedListHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ua.netcracker.model.entity.Answer;
 import ua.netcracker.model.entity.Candidate;
 import ua.netcracker.model.filtering.SimpleFilter;
 import ua.netcracker.model.service.CandidateService;
 import ua.netcracker.model.service.impl.Pagination;
+import ua.netcracker.model.utils.JsonParsing;
 
-import java.util.Collections;
-import java.util.Comparator;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 
@@ -47,8 +44,11 @@ public class StudentsRestController {
     }
 
 
-    @RequestMapping(value = "/getStudents/filter")
-    public ResponseEntity<List<Candidate>> filterStudents(@RequestParam List<Answer> list) {
+    @RequestMapping(value = "/getStudents/filter", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<List<Candidate>> filterStudents(@RequestParam String answersJsonString) {
+
+        Collection<Answer> answers = JsonParsing.parseJsonString(answersJsonString);
 
         List<Candidate> students = (List<Candidate>) candidateService.getAllCandidates();
         List<Candidate> filtered = students;
@@ -57,11 +57,19 @@ public class StudentsRestController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
 
-        if (!list.isEmpty()) {
+        if (!answers.isEmpty()) {
+            List<Answer> selected = new ArrayList<>();
+            for (Answer answer : answers) {
+                if (!(answer.getValue().isEmpty())) {
+                    selected.add(answer);
+                }
+            }
             SimpleFilter filter = new SimpleFilter();
-            filter.setAnswerList(list);
+            filter.setExpected(selected);
             filtered = filter.filter(students);
         }
+
+        System.out.println(filtered);
 
         return new ResponseEntity<>(filtered, HttpStatus.OK);
     }

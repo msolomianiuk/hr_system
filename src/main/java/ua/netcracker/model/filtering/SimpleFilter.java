@@ -9,14 +9,14 @@ import java.util.List;
 
 public class SimpleFilter implements Filter {
 
-    private List<Answer> answerList;
+    private List<Answer> expected;
 
-    public List<Answer> getAnswerList() {
-        return answerList;
+    public List<Answer> getExpected() {
+        return expected;
     }
 
-    public void setAnswerList(List<Answer> answerList) {
-        this.answerList = answerList;
+    public void setExpected(List<Answer> expected) {
+        this.expected = expected;
     }
 
     @Override
@@ -25,7 +25,7 @@ public class SimpleFilter implements Filter {
         for (Candidate candidate : list) {
             Collection<Answer> answers = candidate.getAnswers();
 
-            if (answers.containsAll(answerList)) {
+            if (answers.containsAll(expected)) {
                 result.add(candidate);
             }
         }
