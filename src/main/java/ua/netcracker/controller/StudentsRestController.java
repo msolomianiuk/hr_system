@@ -57,19 +57,18 @@ public class StudentsRestController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
 
-        if (!answers.isEmpty()) {
-            List<Answer> selected = new ArrayList<>();
-            for (Answer answer : answers) {
-                if (!(answer.getValue().isEmpty())) {
-                    selected.add(answer);
-                }
+        List<Answer> selected = new ArrayList<>();
+        for (Answer answer : answers) {
+            if (!(answer.getValue().isEmpty())) {
+                selected.add(answer);
             }
+        }
+
+        if (!selected.isEmpty()) {
             SimpleFilter filter = new SimpleFilter();
             filter.setExpected(selected);
             filtered = filter.filter(students);
         }
-
-        System.out.println(filtered);
 
         return new ResponseEntity<>(filtered, HttpStatus.OK);
     }
