@@ -97,6 +97,11 @@ public class SendEmailServiceImpl implements SendEmailService {
         sendLetterToEmails(administratorsEmails, "CRITICAL ERROR ON SITE HRSYSTEM!!!", textError);
     }
 
+    @Override
+    public void sendEmailRestorePassword(String email, String url) {
+        sendLetterToEmails(email, "Restore password", "Your url: " + url);
+    }
+
     private String[] getEmailsByRole(Role role) {
         List<User> users = userDAO.getAllPersonalById(role.getId());
         String[] usersEmails = new String[users.size()];

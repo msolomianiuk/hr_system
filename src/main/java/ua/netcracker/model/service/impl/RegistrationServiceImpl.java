@@ -32,7 +32,8 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Autowired
     private ValidationService validationService;
 
-    private static String sha256Password(String password) {
+    @Override
+    public String sha256Password(String password) {
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-256");
 

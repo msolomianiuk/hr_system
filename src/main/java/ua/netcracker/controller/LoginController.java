@@ -1,5 +1,6 @@
 package ua.netcracker.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
@@ -8,6 +9,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import ua.netcracker.model.service.PasswordResetService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,6 +20,9 @@ import javax.servlet.http.HttpServletResponse;
  */
 @Controller
 public class LoginController {
+
+    @Autowired
+    PasswordResetService passwordResetService;
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public String loginPage(Model model,
@@ -40,6 +46,42 @@ public class LoginController {
             new SecurityContextLogoutHandler().logout(request, response, auth);
         }
         return "redirect:/login?logout";
+    }
+
+
+    @RequestMapping(value = "/password/reset", method = RequestMethod.GET)
+    public String resetPassword() {
+        return "resetPasswordEmail";
+    }
+
+    @RequestMapping(value = "/password/reset", method = RequestMethod.POST)
+    @ResponseBody
+    public Boolean resetPassword(HttpServletRequest request, @RequestParam String email) {
+        String appUrl =
+                "http://" + request.getServerName() +
+                        ":" + request.getServerPort() +
+                        request.getContextPath();
+        return passwordResetService.sendToken(email, appUrl);
+    }
+
+    @RequestMapping(value = "/password/resetToken", method = RequestMethod.GET)
+    public String resetPassword(Model model, @RequestParam("email") String email,
+                                @RequestParam(value = "token") String token) {
+        if (passwordResetService.checkToken(email, token)) {
+            model.addAttribute("email", email);
+            model.addAttribute("token", token);
+            return "resetPassword";
+        }
+        return "error";
+    }
+
+    @RequestMapping(value = "/password/updatePassword", method = RequestMethod.POST)
+    @ResponseBody
+    public Boolean updatePassword(@RequestParam(value = "password") String password,
+                                  @RequestParam(value = "token") String token,
+                                  @RequestParam(value = "email") String email) {
+
+        return passwordResetService.changePassword(email, token, password);
     }
 
 }
