@@ -2,6 +2,7 @@ package ua.netcracker.model.dao.impl;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -21,6 +22,7 @@ import java.util.Map;
  */
 @Repository("reportQueryDAO")
 public class ReportQueryDAOImpl implements ReportQueryDAO {
+
     static final Logger LOGGER = Logger.getLogger(ReportQueryDAOImpl.class);
 
     @Autowired
@@ -38,31 +40,41 @@ public class ReportQueryDAOImpl implements ReportQueryDAO {
 
     @Override
     public Collection<ReportQuery> findAll() {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-        List<Map<String, Object>> rows = jdbcTemplate.queryForList(SQL_FIND_ALL);
-        List<ReportQuery> reports = new ArrayList<>();
-        for (Map row : rows) {
-            ReportQuery reportQuery = new ReportQuery();
-            reportQuery.setId((int) row.get("id"));
-            reportQuery.setDescription((String) row.get("description"));
-            reportQuery.setQuery((String) row.get("report_query"));
-            reportQuery.setShow((boolean) row.get("isimportant"));
-            reports.add(reportQuery);
+        try {
+            JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+            List<Map<String, Object>> rows = jdbcTemplate.queryForList(SQL_FIND_ALL);
+            Collection<ReportQuery> reports = new ArrayList<>();
+            for (Map row : rows) {
+                ReportQuery reportQuery = new ReportQuery();
+                reportQuery.setId((int) row.get("id"));
+                reportQuery.setDescription((String) row.get("description"));
+                reportQuery.setQuery((String) row.get("report_query"));
+                reportQuery.setShow((boolean) row.get("isimportant"));
+                reports.add(reportQuery);
+            }
+            return reports;
+        } catch (DataAccessException ex) {
+            LOGGER.trace(ex);
+            return new ArrayList<>();
         }
-        return reports;
     }
 
     @Override
     public ReportQuery find(int id) {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-        ReportQuery reportQuery = jdbcTemplate.queryForObject(SQL_FIND_BY_ID, new Object[]{id}, new RowMapper<ReportQuery>() {
-                    @Override
-                    public ReportQuery mapRow(ResultSet resultSet, int i) throws SQLException {
-                        return getReportQuery(resultSet);
+        try {
+            JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+            ReportQuery reportQuery = jdbcTemplate.queryForObject(SQL_FIND_BY_ID, new Object[]{id}, new RowMapper<ReportQuery>() {
+                        @Override
+                        public ReportQuery mapRow(ResultSet resultSet, int i) throws SQLException {
+                            return getReportQuery(resultSet);
+                        }
                     }
-                }
-        );
-        return reportQuery;
+            );
+            return reportQuery;
+        } catch (DataAccessException ex) {
+            LOGGER.trace(ex);
+            return new ReportQuery();
+        }
     }
 
     private ReportQuery getReportQuery(ResultSet resultSet) throws SQLException {
@@ -76,77 +88,112 @@ public class ReportQueryDAOImpl implements ReportQueryDAO {
 
     @Override
     public boolean insert(ReportQuery reportQuery) {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-        jdbcTemplate.update(SQL_INSERT, new Object[]{reportQuery.getDescription(),
-                reportQuery.getQuery(), reportQuery.isShow()
-        });
-        return true;
+        try {
+            JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+            jdbcTemplate.update(SQL_INSERT, new Object[]{reportQuery.getDescription(),
+                    reportQuery.getQuery(), reportQuery.isShow()
+            });
+            return true;
+        } catch (DataAccessException ex) {
+            LOGGER.trace(ex);
+            return false;
+        }
 
     }
 
     @Override
     public boolean update(ReportQuery reportQuery) {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-        jdbcTemplate.update(SQL_UPDATE, new Object[]{reportQuery.getDescription(),
-                reportQuery.getQuery(), reportQuery.isShow(), reportQuery.getId()
-        });
-        return true;
+        try {
+            JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+            jdbcTemplate.update(SQL_UPDATE, new Object[]{reportQuery.getDescription(),
+                    reportQuery.getQuery(), reportQuery.isShow(), reportQuery.getId()
+            });
+            return true;
+        } catch (DataAccessException ex) {
+            LOGGER.trace(ex);
+            return false;
+        }
     }
 
     @Override
     public boolean remove(ReportQuery reportQuery) {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-        jdbcTemplate.update(SQL_DELETE, new Object[]{reportQuery.getId()});
-        return true;
+        try {
+            JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+            jdbcTemplate.update(SQL_DELETE, new Object[]{reportQuery.getId()});
+            return true;
+        } catch (DataAccessException ex) {
+            LOGGER.trace(ex);
+            return false;
+        }
     }
 
     @Override
-    public List<String> getDescriptions() {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-        List<String> descriptions = new ArrayList<>();
-        List<Map<String, Object>> rows = jdbcTemplate.queryForList(SQL_GET_DESCRIPTIONS);
-        for (Map row : rows) {
-            String description = (String) row.get("description");
-            descriptions.add(description);
+    public Collection<String> getDescriptions() {
+        try {
+            JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+            Collection<String> descriptions = new ArrayList<>();
+            List<Map<String, Object>> rows = jdbcTemplate.queryForList(SQL_GET_DESCRIPTIONS);
+            for (Map row : rows) {
+                String description = (String) row.get("description");
+                descriptions.add(description);
+            }
+            return descriptions;
+        } catch (DataAccessException ex) {
+            LOGGER.trace(ex);
+            return new ArrayList<>();
         }
-        return descriptions;
     }
 
     @Override
     public ReportQuery getReportQueryByDescription(String description) {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-        ReportQuery reportQuery = jdbcTemplate.queryForObject(SQL_GET_REPORT_QUERY_BY_DESCRIPTION, new Object[]{description}, new RowMapper<ReportQuery>() {
-                    @Override
-                    public ReportQuery mapRow(ResultSet resultSet, int i) throws SQLException {
-                        return getReportQuery(resultSet);
+        try {
+            JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+            ReportQuery reportQuery = jdbcTemplate.queryForObject(SQL_GET_REPORT_QUERY_BY_DESCRIPTION, new Object[]{description}, new RowMapper<ReportQuery>() {
+                        @Override
+                        public ReportQuery mapRow(ResultSet resultSet, int i) throws SQLException {
+                            return getReportQuery(resultSet);
+                        }
                     }
-                }
-        );
-        return reportQuery;
+            );
+            return reportQuery;
+        } catch (DataAccessException ex) {
+            LOGGER.trace(ex);
+            return new ReportQuery();
+        }
     }
 
     @Override
     public Collection<ReportQuery> findAllByImportant(boolean isImportant) {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-        List<Map<String, Object>> rows = jdbcTemplate.queryForList(SQL_FIND_BY_IMPORTANCE, new Object[]{isImportant});
-        List<ReportQuery> reports = new ArrayList<>();
-        for (Map row : rows) {
-            ReportQuery reportQuery = new ReportQuery();
-            reportQuery.setId((int) row.get("id"));
-            reportQuery.setDescription((String) row.get("description"));
-            reportQuery.setQuery((String) row.get("report_query"));
-            reportQuery.setShow((boolean) row.get("isimportant"));
-            reports.add(reportQuery);
+        try {
+            JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+            List<Map<String, Object>> rows = jdbcTemplate.queryForList(SQL_FIND_BY_IMPORTANCE, new Object[]{isImportant});
+            Collection<ReportQuery> reports = new ArrayList<>();
+            for (Map row : rows) {
+                ReportQuery reportQuery = new ReportQuery();
+                reportQuery.setId((int) row.get("id"));
+                reportQuery.setDescription((String) row.get("description"));
+                reportQuery.setQuery((String) row.get("report_query"));
+                reportQuery.setShow((boolean) row.get("isimportant"));
+                reports.add(reportQuery);
+            }
+            return reports;
+        } catch (DataAccessException ex) {
+            LOGGER.trace(ex);
+            return new ArrayList<>();
         }
-        return reports;
     }
 
     @Override
     public boolean updateImportance(ReportQuery reportQuery, boolean isImportant) {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-        jdbcTemplate.update(SQL_UPDATE_IMPORTANCE, new Object[]{reportQuery.getId(), isImportant
-        });
-        return true;
+        try {
+            JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+            jdbcTemplate.update(SQL_UPDATE_IMPORTANCE, new Object[]{reportQuery.getId(), isImportant
+            });
+            return true;
+        } catch (DataAccessException ex) {
+            LOGGER.trace(ex);
+            return false;
+        }
     }
 }
 

@@ -2,12 +2,13 @@ package ua.netcracker.model.service.impl;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import ua.netcracker.model.dao.ReportQueryDAO;
 import ua.netcracker.model.entity.ReportQuery;
 import ua.netcracker.model.service.ReportService;
 
-import javax.naming.InitialContext;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -15,6 +16,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Владимир on 04.05.2016.
@@ -26,36 +29,39 @@ public class ReportServiceImpl implements ReportService {
 
     @Autowired
     private ReportQueryDAO reportQueryDao;
+    @Autowired
+    private DataSource dataSource;
 
     @Override
     public Collection<Collection<String>> getReportByQuery(String sql) {
+        if(!checkSQL(sql)){
+            return new ArrayList<>();
+        }
         try {
-            DataSource dataSource = (DataSource) new InitialContext().lookup("jdbc/HRSystemPool");
-            Connection conn = dataSource.getConnection();
-            PreparedStatement stmt = conn.prepareStatement(sql);
-            ResultSet rs = stmt.executeQuery();
-            return convertToJSON(rs);
-        } catch (Exception e) {
-            LOGGER.trace("Error in user request", e);
-            return null;
+            JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+            List<Map<String, Object>> rows = jdbcTemplate.queryForList(sql);
+            Collection<Collection<String>> report = new ArrayList<>();
+            report.add(rows.get(0).keySet());
+            for (Map row : rows) {
+                report.add(row.values());
+            }
+            return report;
+        }
+        catch(DataAccessException ex){
+            LOGGER.trace("User request ", ex);
+            return new ArrayList<>();
         }
     }
 
-    public Collection<Collection<String>> convertToJSON(ResultSet rs) throws SQLException {
-        Collection<Collection<String>> rows = new ArrayList<>();
-        Collection<String> row = new ArrayList();
-        for (int i = 1; i <= rs.getMetaData().getColumnCount(); i++) {
-            row.add(rs.getMetaData().getColumnName(i));
-        }
-        rows.add(row);
-        while (rs.next()) {
-            row = new ArrayList();
-            for (int i = 1; i <= rs.getMetaData().getColumnCount(); i++) {
-                row.add(rs.getString(i));
-            }
-            rows.add(row);
-        }
-        return rows;
+    private boolean checkSQL(String sql) {
+        if(sql ==null)return false;
+        sql = sql.toLowerCase();
+        if(sql.contains("create")) return false;
+        if(sql.contains("drop")) return false;
+        if(sql.contains("delete")) return false;
+        if(sql.contains("update")) return false;
+        if(sql.contains("alter")) return false;
+        return true;
     }
 
     @Override

@@ -2,6 +2,7 @@ package ua.netcracker.model.dao.impl;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -37,30 +38,40 @@ public class EmailTemplateDAOImpl implements EmailTemplateDAO {
 
     @Override
     public Collection<EmailTemplate> findAll() {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-        List<Map<String, Object>> rows = jdbcTemplate.queryForList(SQL_FIND_ALL);
-        Collection<EmailTemplate> emailTemplates = new ArrayList<>();
-        for (Map row : rows) {
-            EmailTemplate emailTemplate = new EmailTemplate();
-            emailTemplate.setId((Integer) row.get("id"));
-            emailTemplate.setDescription((String) row.get("description"));
-            emailTemplate.setTemplate((String) row.get("template"));
-            emailTemplates.add(emailTemplate);
+        try {
+            JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+            List<Map<String, Object>> rows = jdbcTemplate.queryForList(SQL_FIND_ALL);
+            Collection<EmailTemplate> emailTemplates = new ArrayList<>();
+            for (Map row : rows) {
+                EmailTemplate emailTemplate = new EmailTemplate();
+                emailTemplate.setId((Integer) row.get("id"));
+                emailTemplate.setDescription((String) row.get("description"));
+                emailTemplate.setTemplate((String) row.get("template"));
+                emailTemplates.add(emailTemplate);
+            }
+            return emailTemplates;
+        } catch (DataAccessException ex) {
+            LOGGER.trace(ex);
+            return new ArrayList<>();
         }
-        return emailTemplates;
     }
 
     @Override
     public EmailTemplate find(int id) {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-        EmailTemplate emailTemplate = jdbcTemplate.queryForObject(SQL_FIND_BY_ID, new Object[]{id}, new RowMapper<EmailTemplate>() {
-                    @Override
-                    public EmailTemplate mapRow(ResultSet resultSet, int i) throws SQLException {
-                        return getEmailTemplate(resultSet);
+        try {
+            JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+            EmailTemplate emailTemplate = jdbcTemplate.queryForObject(SQL_FIND_BY_ID, new Object[]{id}, new RowMapper<EmailTemplate>() {
+                        @Override
+                        public EmailTemplate mapRow(ResultSet resultSet, int i) throws SQLException {
+                            return getEmailTemplate(resultSet);
+                        }
                     }
-                }
-        );
-        return emailTemplate;
+            );
+            return emailTemplate;
+        } catch (DataAccessException ex) {
+            LOGGER.trace(ex);
+            return new EmailTemplate();
+        }
     }
 
     private EmailTemplate getEmailTemplate(ResultSet resultSet) throws SQLException {
@@ -73,53 +84,77 @@ public class EmailTemplateDAOImpl implements EmailTemplateDAO {
 
     @Override
     public boolean insert(EmailTemplate emailTemplate) {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-        jdbcTemplate.update(SQL_INSERT, new Object[]{emailTemplate.getDescription(),
-                emailTemplate.getTemplate()
-        });
-        return true;
-
+        try {
+            JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+            jdbcTemplate.update(SQL_INSERT, new Object[]{emailTemplate.getDescription(),
+                    emailTemplate.getTemplate()
+            });
+            return true;
+        } catch (DataAccessException ex) {
+            LOGGER.trace(ex);
+            return false;
+        }
     }
 
     @Override
     public boolean update(EmailTemplate emailTemplate) {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-        jdbcTemplate.update(SQL_UPDATE, new Object[]{emailTemplate.getDescription(),
-                emailTemplate.getTemplate(), emailTemplate.getId()
-        });
-        return true;
+        try {
+            JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+            jdbcTemplate.update(SQL_UPDATE, new Object[]{emailTemplate.getDescription(),
+                    emailTemplate.getTemplate(), emailTemplate.getId()
+            });
+            return true;
+        } catch (DataAccessException ex) {
+            LOGGER.trace(ex);
+            return false;
+        }
     }
 
     @Override
     public boolean remove(EmailTemplate emailTemplate) {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-        jdbcTemplate.update(SQL_DELETE, new Object[]{emailTemplate.getId()
-        });
-        return true;
+        try {
+            JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+            jdbcTemplate.update(SQL_DELETE, new Object[]{emailTemplate.getId()
+            });
+            return true;
+        } catch (DataAccessException ex) {
+            LOGGER.trace(ex);
+            return false;
+        }
     }
 
     @Override
-    public List<String> getDescriptions() {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-        List<String> descriptions = new ArrayList<>();
-        List<Map<String, Object>> rows = jdbcTemplate.queryForList(SQL_GET_DESCRIPTIONS);
-        for (Map row : rows) {
-            String description = (String) row.get("description");
-            descriptions.add(description);
+    public Collection<String> getDescriptions() {
+        try {
+            JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+            Collection<String> descriptions = new ArrayList<>();
+            List<Map<String, Object>> rows = jdbcTemplate.queryForList(SQL_GET_DESCRIPTIONS);
+            for (Map row : rows) {
+                String description = (String) row.get("description");
+                descriptions.add(description);
+            }
+            return descriptions;
+        } catch (DataAccessException ex) {
+            LOGGER.trace(ex);
+            return new ArrayList<>();
         }
-        return descriptions;
     }
 
     @Override
     public EmailTemplate getEmailTemplateByDescription(String description) {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-        EmailTemplate emailTemplate = jdbcTemplate.queryForObject(SQL_GET_EMAIL_TEMPLATE_BY_DESCRIPTION, new Object[]{description}, new RowMapper<EmailTemplate>() {
-                    @Override
-                    public EmailTemplate mapRow(ResultSet resultSet, int i) throws SQLException {
-                        return getEmailTemplate(resultSet);
+        try {
+            JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+            EmailTemplate emailTemplate = jdbcTemplate.queryForObject(SQL_GET_EMAIL_TEMPLATE_BY_DESCRIPTION, new Object[]{description}, new RowMapper<EmailTemplate>() {
+                        @Override
+                        public EmailTemplate mapRow(ResultSet resultSet, int i) throws SQLException {
+                            return getEmailTemplate(resultSet);
+                        }
                     }
-                }
-        );
-        return emailTemplate;
+            );
+            return emailTemplate;
+        } catch (DataAccessException ex) {
+            LOGGER.trace(ex);
+            return new EmailTemplate();
+        }
     }
 }

@@ -335,7 +335,7 @@ public class AdminController {
     @ResponseBody
     public ResponseEntity<Collection<Collection<String>>> getReport(@RequestParam String query) {
         Collection<Collection<String>> report = reportService.getReportByQuery(query);
-        if (report == null) {
+        if (report.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(report, HttpStatus.OK);
@@ -345,7 +345,7 @@ public class AdminController {
     @ResponseBody
     public ResponseEntity<Collection<ReportQuery>> getAllReports() {
         Collection<ReportQuery> report = reportService.getAllReports();
-        if (report == null) {
+        if (report.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(report, HttpStatus.OK);
