@@ -3,6 +3,7 @@ package ua.netcracker.model.dao.impl;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import ua.netcracker.model.dao.AnswersDAO;
 import ua.netcracker.model.entity.Answer;
@@ -10,6 +11,8 @@ import ua.netcracker.model.entity.Candidate;
 import ua.netcracker.model.entity.Question;
 
 import javax.sql.DataSource;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -29,6 +32,10 @@ public class AnswersDAOImpl implements AnswersDAO {
     private static final String DELETE = "DELETE FROM \"hr_system\".candidate_answer WHERE candidate_id =?";
     private static final String UPDATE = "UPDATE \"hr_system\".candidate_answer SET value=? WHERE question_id =? AND " +
             " candidate_id = ?";
+
+    private static final String SELECT_ANSWER = "SELECT candidate_id, question_id, caption ,value FROM " +
+            "\"hr_system\".candidate_answer join \"hr_system\".question on question_id = id where candidate_id = ";
+
 
     @Autowired
     private DataSource dataSource;
@@ -149,5 +156,31 @@ public class AnswersDAOImpl implements AnswersDAO {
             LOGGER.error("Error: " + e);
         }
         return false;
+    }
+
+    public Collection getCandidateAnswer (int id)   {
+        Collection collectionAnswers;
+
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+
+        collectionAnswers = jdbcTemplate.query(SELECT_ANSWER + id, new RowMapper() {
+            @Override
+            public Object mapRow(ResultSet resultSet, int i) throws SQLException {
+                Collection answerCollection = new ArrayList();
+                Answer answer = new Answer();
+                Question question = new Question();
+
+                answer.setValue(resultSet.getString("value"));
+                question.setCaption(resultSet.getString("caption"));
+                answer.setQuestionId(resultSet.getInt("question_id"));
+
+                answerCollection.add(answer.getQuestionId());
+                answerCollection.add(answer.getValue());
+                answerCollection.add(question.getCaption());
+                return answerCollection;
+            }
+        });
+        return collectionAnswers;
+
     }
 }

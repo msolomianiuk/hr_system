@@ -29,6 +29,7 @@ public class QuestionForInterviewDAOImpl implements QuestionForInterviewDAO {
     private static final String SELECT_ALL_SUBJECT = "SELECT id,name FROM \"hr_system\".subject";
     private static final String SELECT_ALL_SUBJECT_QUESTION = "SELECT * FROM \"hr_system\".subject";
     private static final String SELECT_ALL_BY_SUBJECT = "SELECT id,question FROM \"hr_system\".interview_question WHERE subject_id = ?";
+    private static final String SELECT_LAST_QUESTION_ID = "SELECT id FROM \"hr_system\".interview_question ORDER BY id DESC limit 1";
     private static final String UPDATE_SUBJECT = "UPDATE \"hr_system\".subject SET (role_id,name)=(?,?) WHERE id =?";
     private static final String UPDATE_QUESTION = "UPDATE \"hr_system\".interview_question SET (subject_id,question)=(?,?) WHERE id =?";
     private static final String DELETE_SUBJECT = "DELETE FROM \"hr_system\".subject WHERE id=?";
@@ -82,7 +83,7 @@ public class QuestionForInterviewDAOImpl implements QuestionForInterviewDAO {
     public boolean update(QuestionForInterview questionForInterview) {
         try {
             JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-            jdbcTemplate.update(UPDATE_QUESTION, questionForInterview.getSubjectId(), questionForInterview.getValue());
+            jdbcTemplate.update(UPDATE_QUESTION, questionForInterview.getSubjectId(), questionForInterview.getValue(), questionForInterview.getId());
             return true;
         } catch (Exception e) {
             LOGGER.error("Error: " + e);
@@ -182,10 +183,10 @@ public class QuestionForInterviewDAOImpl implements QuestionForInterviewDAO {
     }
 
     @Override
-    public boolean delete(QuestionForInterview questionForInterview) {
+    public boolean delete(Integer questionId) {
         try {
             JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-            jdbcTemplate.update(DELETE_QUESTION, questionForInterview.getId());
+            jdbcTemplate.update(DELETE_QUESTION, questionId);
             return true;
         } catch (Exception e) {
             LOGGER.error(e);
@@ -203,6 +204,24 @@ public class QuestionForInterviewDAOImpl implements QuestionForInterviewDAO {
             LOGGER.error("Error: " + e);
         }
         return false;
+    }
+
+    @Override
+    public Integer findLastQuestionId() {
+        try {
+            JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+            Integer questionId = jdbcTemplate.queryForObject(SELECT_LAST_QUESTION_ID, new RowMapper<Integer>() {
+                        @Override
+                        public Integer mapRow(ResultSet resultSet, int i) throws SQLException {
+                            return resultSet.getInt("id");
+                        }
+                    }
+            );
+            return questionId;
+        } catch (Exception e) {
+            LOGGER.error("Error : " + e);
+        }
+        return 0;
     }
 
 

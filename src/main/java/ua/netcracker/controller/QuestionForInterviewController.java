@@ -12,7 +12,6 @@ import ua.netcracker.model.entity.QuestionForInterview;
 import ua.netcracker.model.service.QuestionForInterviewService;
 
 import java.util.Collection;
-import java.util.List;
 
 @Controller
 public class QuestionForInterviewController {
@@ -22,18 +21,35 @@ public class QuestionForInterviewController {
     @RequestMapping(value = "/service/getAllQuestionForInterview", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<Collection<QuestionForInterview>> getQuestionsForInterview(){
-        List<QuestionForInterview> questionForInterview = (List<QuestionForInterview>)
-                questionForInterviewService.getAllSubject();
+        Collection<QuestionForInterview> questionForInterview =
+                questionForInterviewService.getAllSubjectAndQuestion();
         if (questionForInterview == null) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<Collection<QuestionForInterview>>(questionForInterview, HttpStatus.OK);
     }
+
     @RequestMapping(value = "/service/addQuestion", method = RequestMethod.GET)
     @ResponseBody
-    public boolean addQuestion(@RequestParam int subjectId,
-                               @RequestParam String questionValue){
+    public Integer addQuestion(@RequestParam Integer subjectId,
+                               @RequestParam String questionValue
+    ){
+        questionForInterviewService.setQuestion(subjectId, questionValue);
+        return questionForInterviewService.getLastQuestionId();
+    }
 
-        return false;
+    @RequestMapping(value = "/service/editQuestion", method = RequestMethod.GET)
+    @ResponseBody
+    public Boolean editQuestion(@RequestParam Integer questionId,
+                               @RequestParam String questionValue,
+                               @RequestParam Integer subjectId
+    ){
+        return questionForInterviewService.updateQuestion(questionId, questionValue, subjectId);
+    }
+
+    @RequestMapping(value = "/service/deleteQuestion", method = RequestMethod.GET)
+    @ResponseBody
+    public Boolean deleteQuestion(@RequestParam Integer questionId){
+        return questionForInterviewService.remove(questionId);
     }
 }

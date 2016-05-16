@@ -27,4 +27,9 @@
 #ComboBox{
     display:none;
 }
+#TableStudents{
+    overflow-y: scroll!important;
+    height: 400px!important;
+    overflow-x: hidden!important;
+}
 

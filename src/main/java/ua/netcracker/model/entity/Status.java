@@ -7,9 +7,16 @@ import java.util.Collection;
  * Created by Nikita on 28.04.2016.
  */
 public enum Status {
-    New(1, "New"), Ready(2, "Ready"), Interview(3, "Interview"), No_interview(4, "No_interview"), Interview_dated(5, "Interview_dated"),
-    Interview_process(6, "Interview_process"), Interviews_passed(7, "Interviews_passed"), Trainee_accepted(8, "Trainee_accepted"),
-    Rejected(9, "Rejected"), Job_accepted(10, "Job_accepted");
+    Interview(1, "Interview"),
+    Interview_dated(2, "Interview_dated"),
+    Interview_passed(3, "Interview_passed"),
+    Interview_process(4, "Interview_process"),
+    Job_accepted(5, "Job_accepted"),
+    New(6, "New"),
+    No_interview(7, "No_interview"),
+    Ready(8, "Ready"),
+    Rejected(9, "Rejected"),
+    Trainee_accepted(10, "Trainee_accepted");
 
     int id;
     String status;

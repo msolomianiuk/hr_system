@@ -5432,7 +5432,7 @@ ul.notifications {
 }
 
 .profile{
-  height: 60px;
+  height: 70px;
 }
 
 .question-interview-button.btn {
@@ -5490,4 +5490,28 @@ button.filters-button{
   border-radius: 50px;
   width: 100%;
   margin-left: 0;
+}
+
+#add-question textarea{
+  margin-bottom: 10px;
+}
+
+.profile_img{
+  cursor: pointer;
+}
+
+td.candidate-status-td{
+  cursor: auto;
+}
+
+td.candidate-status-td select{
+  background-color: white;
+}
+
+.ln_solid {
+  margin: 10px 0;
+}
+
+.profile_info h2{
+  line-height: 20px;
 }

@@ -7,6 +7,8 @@
     <!-- meta -->
     <%@ include file="include/links/linksMeta.jsp" %>
     <title>Interview Page</title>
+
+    <script src="<c:url value="/static/js/custom/baseUrl.js"/>"></script>
     <!-- bootstrap core -->
     <%@ include file="include/links/linksBootstrapCore.jsp" %>
     <!-- IE9 -->
@@ -38,6 +40,10 @@
                     <div class="clearfix"></div>
                 </div>
                 <div class="x_content">
+
+                    <div class="hidden subject-selection-block">
+                        <select class="form-control col-md-7 col-xs-12 select-and-text" name="subjectId"></select>
+                    </div>
                     <%@ include file="include/personal/searchField.jsp"%>
                     <%@ include file="include/personal/candidateDetails.jsp"%>
                     <%@ include file="include/personal/interviewResultForm.jsp"%>
@@ -59,7 +65,15 @@
 
 
 
-
+<script src="<c:url value="/static/js/custom/Personal/questionsForInterview/drawQuestion.js"/>"></script>
+<script src="<c:url value="/static/js/custom/Personal/questionsForInterview/ajax/addQuestionForInterview.js"/>"></script>
+<script src="<c:url value="/static/js/custom/Personal/questionsForInterview/addQuestionModal.js"/>"></script>
+<script src="<c:url value="/static/js/custom/Personal/questionsForInterview/ajax/editQuestionForInterview.js"/>"></script>
+<script src="<c:url value="/static/js/custom/Personal/questionsForInterview/editQuestionModal.js"/>"></script>
+<script src="<c:url value="/static/js/custom/Personal/questionsForInterview/ajax/deleteQuestionForInterview.js"/>"></script>
+<script src="<c:url value="/static/js/custom/Personal/questionsForInterview/deleteQuestionModal.js"/>"></script>
+<script src="<c:url value="/static/js/custom/Personal/questionsForInterview/drawQuestionsForInterview.js"/>"></script>
+<script src="<c:url value="/static/js/custom/Personal/questionsForInterview/ajax/loadingQuestionsForInterview.js"/>"></script>
 
 <script src="<c:url value="/static/js/custom/Personal/ajax/loadQuestions.js"/>"></script>
 <script src="<c:url value="/static/js/custom/Personal/triggerForCandidateDetailsInterview.js"/>"></script>

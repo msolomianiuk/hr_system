@@ -193,16 +193,16 @@ public class DateService {
         return date;
     }
 
-    public String registrationPeriod() {
+    public int registrationPeriod() {
         courseSetting = courseSettingService.getLastSetting();
         LocalDate startRegistationDay = getDate(courseSetting.getRegistrationStartDate());
         LocalDate endRegistationDay = getDate(courseSetting.getRegistrationEndDate());
-        if (LocalDate.now().equals(startRegistationDay) || LocalDate.now().equals(endRegistationDay)) {
-            if (LocalDate.now().isAfter(startRegistationDay) || LocalDate.now().isBefore(endRegistationDay)) {
-                return "open";
+
+            if (LocalDate.now().isAfter(startRegistationDay) && LocalDate.now().isBefore(endRegistationDay)) {
+                return 1;
             }
-        }
-        return "close";
+
+        return 0;
     }
 
     private class DateEntity {
@@ -230,4 +230,5 @@ public class DateService {
         }
 
     }
+
 }

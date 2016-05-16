@@ -9,13 +9,13 @@
 
 .ModelViewStudent{
     width:400px;
-    height:400px;
     background-color: #ffffff;
     display:none;
     position:fixed;
     top:111px;
     left:500px;
 }
+
 
 .ModelViewDays{
     width:400px;
@@ -25,4 +25,10 @@
     position:fixed;
     top:111px;
     left:500px;
+}
+
+.TableNew{
+    overflow-y: scroll!important;
+    height: 400px!important;
+    overflow-x: hidden!important;
 }

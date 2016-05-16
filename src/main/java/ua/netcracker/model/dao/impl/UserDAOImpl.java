@@ -75,15 +75,20 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public User find(int id) {
-        User user = jdbcTemplate.queryForObject(
-                SQL_FIND,
-                new RowMapper<User>() {
-                    public User mapRow(ResultSet rs, int rowNum) throws SQLException {
-                        return createUserWithResultSet(rs);
-                    }
-                }, id);
+        User user = null;
+        try {
+            user = jdbcTemplate.queryForObject(
+                    SQL_FIND,
+                    new RowMapper<User>() {
+                        public User mapRow(ResultSet rs, int rowNum) throws SQLException {
+                            return createUserWithResultSet(rs);
+                        }
+                    }, id);
 
-        user.setRoles(getUserRolesById(user.getId()));
+            user.setRoles(getUserRolesById(user.getId()));
+        } catch (Exception e) {
+            LOGGER.info(e);
+        }
         return user;
     }
 
@@ -163,14 +168,20 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public User findByEmail(String email) {
-        User user = jdbcTemplate.queryForObject(
-                SQL_FIND_BY_EMAIL,
-                new RowMapper<User>() {
-                    public User mapRow(ResultSet rs, int rowNum) throws SQLException {
-                        return createUserWithResultSet(rs);
-                    }
-                }, email);
-        user.setRoles(getUserRolesById(user.getId()));
+        User user = null;
+        try {
+            user = jdbcTemplate.queryForObject(
+                    SQL_FIND_BY_EMAIL,
+                    new RowMapper<User>() {
+                        public User mapRow(ResultSet rs, int rowNum) throws SQLException {
+                            return createUserWithResultSet(rs);
+                        }
+                    }, email);
+
+            user.setRoles(getUserRolesById(user.getId()));
+        }catch (Exception e){
+            LOGGER.info(e);
+        }
         return user;
     }
 

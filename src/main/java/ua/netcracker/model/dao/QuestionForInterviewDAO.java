@@ -20,9 +20,11 @@ public interface QuestionForInterviewDAO extends DAO<QuestionForInterview> {
 
     boolean deleteSubject(SubjectQuestionForInterview subject);
 
-    boolean delete(QuestionForInterview questionForInterview);
+    boolean delete(Integer questionId);
 
     boolean updateSubject(SubjectQuestionForInterview subjectQuestionForInterview);
+
+    Integer findLastQuestionId();
 
 
 }

@@ -9,13 +9,15 @@ import java.util.Collection;
  * @author Oleg
  */
 @Component
-public class Candidate {
+public class Candidate implements Comparable<Candidate> {
 
     private int id;
 
     private int userId;
 
     private int courseId;
+
+
 
     private int statusId;
 
@@ -93,7 +95,15 @@ public class Candidate {
         return interviewDaysDetailsId;
     }
 
+    public void setInterviewResults(Collection<InterviewResult> interviewResults) {
+        this.interviewResults = interviewResults;
+    }
+
     public void setInterviewDaysDetailsId(int interviewDaysDetailsId) {
         this.interviewDaysDetailsId = interviewDaysDetailsId;
+    }
+    public int compareTo(Candidate c) {
+        int result = this.user.getName().compareTo(c.user.getName());
+        return result;
     }
 }

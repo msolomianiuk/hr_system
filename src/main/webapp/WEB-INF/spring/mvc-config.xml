@@ -23,6 +23,9 @@
    register our static resources.-->
     <mvc:annotation-driven/>
     <mvc:resources mapping="/static/**" location="/static/"/>
+    <!-- windows -->
+    <!--<mvc:resources mapping="/user/photos/**" location="file:/${userPhotoFolder}"/>-->
+    <!-- linux -->
     <mvc:resources mapping="/user/photos/**" location="file:/${userPhotoFolder}"/>
     <mvc:default-servlet-handler/>
 
@@ -33,7 +36,7 @@
 
         <!-- Maximum file size: 10MB -->
         <!-- 10MB = 1250000 Byte -->
-        <property name="maxUploadSize" value="1250000"/>
+        <property name="maxUploadSize" value="1000000"/>
         <!--<property name="uploadTempDir" ref="uploadDirResource" />-->
     </bean>
 

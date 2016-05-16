@@ -37,7 +37,13 @@ public class OrderedFilter implements Filter{
                         answer2 = answer.getValue();
                     }
                 }
-                return answer1.compareTo(answer2);
+                try {
+                    int a = Integer.parseInt(answer1);
+                    int b = Integer.parseInt(answer2);
+                    return a - b;
+                } catch (NumberFormatException e) {
+                    return answer1.compareTo(answer2);
+                }
             }
         });
 

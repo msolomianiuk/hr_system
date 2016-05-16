@@ -1,6 +1,7 @@
 $(document).ready(function () {
+    getAllStatus();
     $.ajax({
-        url: "http://localhost:8080/hr_system-1.0-SNAPSHOT/hr/service/getQuestionViewList",
+        url: baseUrl + "/hr/service/getQuestionViewList",
         type: "GET",
         dataType: "json",
         contentType: 'application/json',

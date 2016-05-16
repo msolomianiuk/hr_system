@@ -4,7 +4,7 @@
     <div class="form-group">
         <div class="col-md-6 col-md-offset-3">
             <button id="save" type="button" class="btn btn-primary">Submit</button>
-            <button id="cancel" type="button" class="btn btn-danger">Cancel</button>
+
         </div>
     </div>
 </form>

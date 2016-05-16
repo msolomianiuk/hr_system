@@ -130,9 +130,9 @@
 <%@ include file="include/footer.jsp" %>
 
 <!-- Javascript -->
-<script src="<c:url value="/static/js/jquery.min.js"/>"/>
-<script src="<c:url value="/static/js/bootstrap.min.js"/>"/>
-<script src="<c:url value="/static/js/scripts.js"/>"/>
+<script src="<c:url value="/static/js/jquery.min.js"/>"></script>
+<script src="<c:url value="/static/js/bootstrap.min.js"/>"></script>
+<script src="<c:url value="/static/js/scripts.js"/>"></script>
 
 <!--[if lt IE 10]>
 <script src="<c:url value="/static/js/placeholder.js"/>"/>

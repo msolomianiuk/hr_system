@@ -177,7 +177,7 @@
                         <div class="x_content">
                             <p class="text-muted font-13 m-b-30">
 
-                            <div class="tabke-filters">
+                            <div class="table-filters">
                                 <button class="btn btn-default" type="button" data-toggle="collapse"
                                         data-target="#collapseFilters" aria-expanded="false"
                                         aria-controls="collapseExample">
@@ -186,20 +186,29 @@
                                 <div class="collapse" id="collapseFilters">
                                     <div class="well">
                                         <div class="row">
-                                            <div class="col-md-4 col-sm-6 col-xs-6">
-                                                <select id="study" class="form-control">
-                                                    <option value="" disabled selected hidden>Select study</option>
-                                                    <option value="">KPI</option>
-                                                    <option value="">HAU</option>
-                                                    <option value="">Shevchenko</option>
-                                                </select>
-                                            </div>
+                                            <%--<select id="study" class="form-control">--%>
+                                                <%--<option value="" disabled selected hidden>Select study</option>--%>
+                                                <%--<option value="">KPI</option>--%>
+                                                <%--<option value="">HAU</option>--%>
+                                                <%--<option value="">Shevchenko</option>--%>
+                                            <%--</select>--%>
+                                            <%--<div class="x_panel">--%>
+                                                <div class="x_content">
+                                                    <div class="candidate-profile row">
+                                                        <%@ include file="include/filtering/filtersForm.jsp" %>
+                                                    </div>
+                                                    <div class="hidden">
+                                                        <%@ include file="include/profile/question/questionsFieldsTemplate.jsp" %>
+                                                    </div>
+                                                </div>
+                                            <%--</div>--%>
+                                            <%@ include file="include/links/linksForFiltering.jsp" %>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             </p>
-                            <table id="datatable" class="table table-striped table-bordered clicked-tr">
+                            <table id="StudentTable" class="table table-striped table-bordered clicked-tr">
                                 <thead>
                                 <tr>
                                     <th>Name</th>
@@ -242,6 +251,10 @@
 </div>
 <div id="hider"></div>
 <div class="ModelViewStudent"></div>
+
+<script src="<c:url value="/static/js/custom/baseUrl.js"/>"></script>
+
+
 <script src="<c:url value="/static/admin/js/AjaxForStudents.js"/>"></script>
 <script src="<c:url value="/static/admin/js/bootstrap.min.js"/>"></script>
 
@@ -254,25 +267,16 @@
 <script src="<c:url value="/static/admin/js/custom.js"/>"></script>
 
 
-<!-- Datatables -->
-<!-- <script src="js/datatables/js/jquery.dataTables.js"></script>
-<script src="js/datatables/tools/js/dataTables.tableTools.js"></script> -->
-
 <!-- Datatables-->
-<%--<script src="<c:url value="/static/admin/js/datatables/jquery.dataTables.min.js"/>"></script>
-<script src="<c:url value="/static/admin/js/datatables/dataTables.bootstrap.js"/>"></script>
-<script src="<c:url value="/static/admin/js/datatables/dataTables.buttons.min.js"/>"></script>
-<script src="<c:url value="/static/admin/js/datatables/buttons.bootstrap.min.js"/>"></script>--%>
 <script src="<c:url value="/static/admin/js/datatables/jszip.min.js"/>"></script>
 <script src="<c:url value="/static/admin/js/datatables/pdfmake.min.js"/>"></script>
 <script src="<c:url value="/static/admin/js/datatables/vfs_fonts.js"/>"></script>
 <script src="<c:url value="/static/admin/js/datatables/buttons.html5.min.js"/>"></script>
 <script src="<c:url value="/static/admin/js/datatables/buttons.print.min.js"/>"></script>
-<%--<script src="<c:url value="/static/admin/js/datatables/dataTables.fixedHeader.min.js"/>"></script>
-<script src="<c:url value="/static/admin/js/datatables/dataTables.keyTable.min.js"/>"></script>
-<script src="<c:url value="/static/admin/js/datatables/dataTables.responsive.min.js"/>"></script>
-<script src="<c:url value="/static/admin/js/datatables/responsive.bootstrap.min.js"/>"></script>
-<script src="<c:url value="/static/admin/js/datatables/dataTables.scroller.min.js"/>"></script>--%>
+<script src="<c:url value="/static/js/datatables/jquery.dataTables.min.js"/>"></script>
+<script src="<c:url value="/static/js/datatables/dataTables.bootstrap.js"/>"></script>
+<script src="<c:url value="/static/js/datatables/dataTables.buttons.min.js"/>"></script>
+<script src="<c:url value="/static/js/datatables/buttons.bootstrap.min.js"/>"></script>
 
 
 <!-- pace -->

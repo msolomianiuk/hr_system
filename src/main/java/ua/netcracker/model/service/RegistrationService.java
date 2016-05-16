@@ -27,4 +27,6 @@ public interface RegistrationService {
      * @return true - email is free, false - email busy
      */
     boolean isFreeEmail(String email);
+
+    String sha256Password(String password);
 }

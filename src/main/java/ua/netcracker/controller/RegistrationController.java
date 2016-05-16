@@ -3,16 +3,10 @@ package ua.netcracker.controller;
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
-import ua.netcracker.model.entity.CourseSetting;
 import ua.netcracker.model.entity.User;
-import ua.netcracker.model.service.CourseSettingService;
 import ua.netcracker.model.service.RegistrationService;
-import ua.netcracker.model.service.date.DateService;
-
-import java.time.LocalDate;
 
 /**
  * Class for processing registration requests
@@ -52,14 +46,13 @@ public class RegistrationController {
     @RequestMapping(value = "/check_email", method = RequestMethod.POST, headers = "Accept=application/json")
     public
     @ResponseBody
-    String checkEmail(@RequestBody String email, Model model) {
+    String checkEmail(@RequestBody String email) {
         Gson gson = new Gson();
         return gson.toJson(registrationService.isFreeEmail(email));
     }
 
     @RequestMapping(value = "/registration", method = RequestMethod.POST)
-    public String register(ModelMap model,
-                           @RequestParam(value = "form-email") String email,
+    public String register(@RequestParam(value = "form-email") String email,
                            @RequestParam(value = "form-name") String name,
                            @RequestParam(value = "form-surname") String surname,
                            @RequestParam(value = "form-patronymic") String patronymic,

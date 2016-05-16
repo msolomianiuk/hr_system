@@ -71,4 +71,37 @@ public class GetTypeOfQuestionsRestController {
         return new ResponseEntity(courseID, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/getQuestionTable", method = RequestMethod.POST)
+    public ResponseEntity<Integer> getQuestionTable() {
+        int courseID = questionServiceImpl.getCourseId();
+
+        return new ResponseEntity(courseID, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/update_question" , method = RequestMethod.POST)
+    @ResponseBody
+    public  ResponseEntity<Question> updateQuestion(
+            @RequestParam  int curse_id,
+            @RequestParam  String caption,
+            @RequestParam  String typeValue,
+            @RequestParam  List<String> additionValue,
+            @RequestParam  boolean isMandatory,
+            @RequestParam  int orderNumber,
+            @RequestParam  int id
+    ) {
+
+        Question question = new Question();
+        question.setId(id);
+        question.setOrderNumber(orderNumber);
+        question.setCaption(caption);
+        question.setCourseID(curse_id);
+        question.setType(typeValue);
+        question.setMandatory(isMandatory);
+        question.setAnswerVariants(questionServiceImpl.parseListJson(additionValue));
+
+        questionServiceImpl.update(question);
+
+        return new ResponseEntity(question, HttpStatus.OK);
+    }
+
 }

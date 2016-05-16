@@ -35,8 +35,8 @@ public class Answer {
         Answer answer = (Answer) o;
 
         if (questionId != null ? !questionId.equals(answer.questionId) : answer.questionId != null) return false;
-        return value != null ? value.equals(answer.value) : answer.value == null;
-
+        boolean res = value != null ? answer.value.toLowerCase().contains(value.toLowerCase()) : answer.value == null;
+        return res;
     }
 
     @Override

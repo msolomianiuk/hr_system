@@ -3,6 +3,7 @@ package ua.netcracker.model.dao;
 
 import ua.netcracker.model.entity.Candidate;
 import ua.netcracker.model.entity.Status;
+import ua.netcracker.model.entity.User;
 
 import java.util.Collection;
 import java.util.Map;
@@ -28,5 +29,15 @@ public interface CandidateDAO extends DAO<Candidate> {
     boolean saveCandidate(Candidate candidate);
 
     Map<Integer, String> findAllStatus();
+
+    boolean updateCandidateStatus(Integer candidateID, Integer newStatusID);
+
+    Collection<Candidate> getAllMarked(User user);
+
+    Collection<Candidate> findPart(Integer with, Integer to);
+
+    Collection<Candidate> findPartByCourse(Integer courseId, Integer with, Integer to);
+
+    Integer getCandidateCount();
 
 }

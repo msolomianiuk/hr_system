@@ -32,12 +32,24 @@ public class QuestionForInterviewServiceImpl implements QuestionForInterviewServ
     }
 
     @Override
-    public boolean setQuestion(QuestionForInterview questionForInterview) {
+    public boolean setQuestion(Integer subjectId,
+                               String questionValue
+    ) {
+        QuestionForInterview questionForInterview = new QuestionForInterview();
+        questionForInterview.setSubjectId(subjectId);
+        questionForInterview.setValue(questionValue);
         return questionForInterviewDAO.insert(questionForInterview);
     }
 
     @Override
-    public boolean updateQuestion(QuestionForInterview questionForInterview) {
+    public boolean updateQuestion( Integer questionId,
+                                   String questionValue,
+                                   Integer subjectId
+    ){
+        QuestionForInterview questionForInterview = new QuestionForInterview();
+        questionForInterview.setSubjectId(subjectId);
+        questionForInterview.setValue(questionValue);
+        questionForInterview.setId(questionId);
         return questionForInterviewDAO.update(questionForInterview);
     }
 
@@ -57,12 +69,17 @@ public class QuestionForInterviewServiceImpl implements QuestionForInterviewServ
     }
 
     @Override
-    public boolean remove(QuestionForInterview questionForInterview) {
-        return questionForInterviewDAO.delete(questionForInterview);
+    public boolean remove(Integer questionId) {
+        return questionForInterviewDAO.delete(questionId);
     }
 
     @Override
     public boolean updateSubject(SubjectQuestionForInterview subject) {
         return questionForInterviewDAO.updateSubject(subject);
+    }
+
+    @Override
+    public Integer getLastQuestionId() {
+        return questionForInterviewDAO.findLastQuestionId();
     }
 }
