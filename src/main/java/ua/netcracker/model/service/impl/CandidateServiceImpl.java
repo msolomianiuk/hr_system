@@ -66,6 +66,11 @@ public class CandidateServiceImpl implements CandidateService {
     }
 
     @Override
+    public Integer getCandidateCount() {
+        return candidateDAO.getCandidateCount();
+    }
+
+    @Override
     public Candidate getCandidateByUserId(Integer userId) {
         return candidateDAO.findByUserId(userId);
     }
