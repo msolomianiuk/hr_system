@@ -282,7 +282,7 @@ public class QuestionDAOImpl implements QuestionDAO {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
         int question = 0;
         try {
-             question = jdbcTemplate.queryForObject(LAST_ID_QUESTION, new RowMapper<Integer>() {
+            question = jdbcTemplate.queryForObject(LAST_ID_QUESTION, new RowMapper<Integer>() {
                 @Override
                 public Integer mapRow(ResultSet resultSet, int i) throws SQLException {
                     int quantityQuestions = resultSet.getInt("id");
