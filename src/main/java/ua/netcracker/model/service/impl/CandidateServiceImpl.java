@@ -158,9 +158,9 @@ public class CandidateServiceImpl implements CandidateService {
     @Override
     public Map<Integer, String> getAllStatus() {
         Map<Integer, String> status = new HashMap<>();
-        try{
+        try {
             status = candidateDAO.findAllStatus();
-        }catch (Exception e){
+        } catch (Exception e) {
             LOGGER.error("Error: " + e);
         }
         return status;
@@ -173,17 +173,32 @@ public class CandidateServiceImpl implements CandidateService {
 
     @Override
     public Collection<Candidate> getAllMarkedByCurrentInterviewer(User user) {
-       try {
-           Collection<Candidate> listCandidates = candidateDAO.getAllMarked(user);
-       }catch (Exception e){
-           LOGGER.error("Error " + e);
-       }
+        try {
+            Collection<Candidate> listCandidates = candidateDAO.getAllMarked(user);
+        } catch (Exception e) {
+            LOGGER.error("Error " + e);
+        }
         return null;
     }
 
     @Override
+    public Collection<Candidate> getPartCandidates(Integer with, Integer to) {
+        return candidateDAO.findPart(with, to);
+    }
+
+    @Override
     public Collection<Candidate> getAllCandidates() {
-        Collection<Candidate> listCandidates = candidateDAO.findAllByCourse(courseSettingService.getLastSetting().getId());
+        return getPartCandidatesWithAnswer(null, null);
+    }
+
+    @Override
+    public Collection<Candidate> getAllCandidatesIsView() {
+        return getPartCandidatesIsViewWithAnswer(null, null);
+    }
+
+    @Override
+    public Collection<Candidate> getPartCandidatesWithAnswer(Integer with, Integer to) {
+        Collection<Candidate> listCandidates = candidateDAO.findPartByCourse(courseSettingService.getLastSetting().getId(), with, to);
         for (Candidate candidate : listCandidates) {
             if (candidate.getUser() == null) {
                 candidate.setUser(userDAO.find(candidate.getUserId()));
@@ -196,9 +211,9 @@ public class CandidateServiceImpl implements CandidateService {
     }
 
     @Override
-    public Collection<Candidate> getAllCandidatesIsView() {
+    public Collection<Candidate> getPartCandidatesIsViewWithAnswer(Integer with, Integer to) {
         Collection<Candidate> listCandidates = new ArrayList<>();
-        for (Candidate candidate : getAllCandidates()) {
+        for (Candidate candidate : getPartCandidatesWithAnswer(with, to)) {
             Collection<Answer> listAnswers = answersDAO.findAllIsView(candidate, questionService.
                     getAllIsView(courseSettingService.getLastSetting().getId()));
 
@@ -217,6 +232,11 @@ public class CandidateServiceImpl implements CandidateService {
     @Override
     public Collection<Answer> getAnswersIsView(Candidate candidate, Collection<Question> listQuestions) {
         return answersDAO.findAllIsView(candidate, listQuestions);
+    }
+
+    @Override
+    public Collection<Candidate> getPartByCourse(Integer courseId, Integer with, Integer to) {
+        return candidateDAO.findPartByCourse(courseId, with, to);
     }
 }
 
