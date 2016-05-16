@@ -4,6 +4,7 @@
         <th>ID</th>
         <th>Full name</th>
         <th>Status</th>
+        <th class="hidden">Status Name</th>
     </tr>
     </thead>
     <tbody id="students-table"></tbody>
