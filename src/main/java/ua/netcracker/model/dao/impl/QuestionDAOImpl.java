@@ -44,14 +44,14 @@ public class QuestionDAOImpl implements QuestionDAO {
 
     private static final String SELECT_TYPE_ID = "SELECT id FROM \"hr_system\".type WHERE value = ?";
 
-    private static final String FIND_BY_ID = "SELECT qcp.order_number, q.*,t.value ,qcp.course_id " +
+    private static final String FIND_BY_ID = "SELECT qcp.order_number, q.*, t.value ,qcp.course_id " +
             "FROM \"hr_system\".question_course_maps qcp " +
             "INNER JOIN \"hr_system\".question q ON qcp.question_id = q.id " +
             "INNER JOIN \"hr_system\".type t ON q.type_id = t.id " +
             "WHERE q.id = ?; ";
 
-    private static final String UPDATE_QUESTION = "UPDATE \"hr_system\".question SET caption = ?, type_id = ?, is_mandatory = ? " +
-            "WHERE id = ?;";
+    private static final String UPDATE_QUESTION = "UPDATE \"hr_system\".question SET caption = ?, type_id = ?, is_mandatory = ?, " +
+            "is_view = ? WHERE id = ?;";
 
     private static final String UPDATE_QUESTION_COURSE_MAPS = "UPDATE \"hr_system\".question_course_maps SET course_id = ?, " +
             "order_number = ? WHERE question_id = ?;";
@@ -166,6 +166,7 @@ public class QuestionDAOImpl implements QuestionDAO {
             insertParameter.addValue("caption", question.getCaption());
             insertParameter.addValue("type_id", findTypeIdByValue(question.getType()));
             insertParameter.addValue("is_mandatory", question.isMandatory());
+            insertParameter.addValue("is_view", question.isView());
             Number key = simpleJdbcInsert.executeAndReturnKey(insertParameter);
             if (key != null) {
                 question.setId(key.intValue());
@@ -206,7 +207,7 @@ public class QuestionDAOImpl implements QuestionDAO {
             jdbcTemplate.update(DELETE_ANSWER_VARIANTS, question.getId());
 
             jdbcTemplate.update(UPDATE_QUESTION, question.getCaption(), findTypeIdByValue(question.getType()), question.isMandatory(),
-                    question.getId());
+                    question.isView(), question.getId());
 
             jdbcTemplate.update(UPDATE_QUESTION_COURSE_MAPS, question.getCourseID(), question.getOrderNumber(), question.getId());
 
