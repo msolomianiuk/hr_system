@@ -54,7 +54,7 @@ public class QuestionDAOImpl implements QuestionDAO {
             "WHERE id = ?;";
 
     private static final String UPDATE_QUESTION_COURSE_MAPS = "UPDATE \"hr_system\".question_course_maps SET course_id = ?, " +
-            "order_number = ?, WHERE question_id = ?;";
+            "order_number = ? WHERE question_id = ?;";
 
     private static final String LAST_ID_QUESTION = "SELECT id FROM \"hr_system\".question ORDER BY id DESC limit 1";
 
@@ -198,10 +198,12 @@ public class QuestionDAOImpl implements QuestionDAO {
     }
 
     @Override
-    //Not checked
+
     public boolean update(Question question) {
         try {
             JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+
+            jdbcTemplate.update(DELETE_ANSWER_VARIANTS, question.getId());
 
             jdbcTemplate.update(UPDATE_QUESTION, question.getCaption(), findTypeIdByValue(question.getType()), question.isMandatory(),
                     question.getId());
@@ -209,7 +211,6 @@ public class QuestionDAOImpl implements QuestionDAO {
             jdbcTemplate.update(UPDATE_QUESTION_COURSE_MAPS, question.getCourseID(), question.getOrderNumber(), question.getId());
 
             if (question.getAnswerVariants() != null) {
-                jdbcTemplate.update(DELETE_ANSWER_VARIANTS, question.getId());
                 for (int i = 0; i < question.getAnswerVariants().size(); i++) {
                     SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(dataSource).
                             withTableName("\"hr_system\".question_addition").
@@ -221,11 +222,9 @@ public class QuestionDAOImpl implements QuestionDAO {
                 }
             }
             return true;
-
         } catch (Exception e) {
             LOGGER.error(e);
         }
-
         return false;
     }
 
