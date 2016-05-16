@@ -10,6 +10,7 @@ import ua.netcracker.model.service.impl.CourseSettingServiceImpl;
 
 import java.time.DateTimeException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
@@ -151,6 +152,21 @@ public class DateService {
             dateIsValid = false;
         }
         return dateIsValid;
+    }
+
+    public String validTime(String time){
+        if (isTimeValid(getTime(time)[0],getTime(time)[1])){
+            return time;
+        }
+        return null;
+    }
+
+    public boolean isTimeValid(String hours, String minutes) {
+        boolean timeIsValid = false;
+        if (Integer.parseInt(hours)<24 && Integer.parseInt(hours)>0)
+            if (Integer.parseInt(minutes)<60 && Integer.parseInt(minutes)>=0)
+                timeIsValid = true;
+        return timeIsValid;
     }
 
     public String[] getTime(String time) {

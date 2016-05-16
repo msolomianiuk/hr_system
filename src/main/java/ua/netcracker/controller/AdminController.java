@@ -215,17 +215,27 @@ public class AdminController {
             @RequestParam String address_id
     ) {
         InterviewDaysDetails interviewDaysDetails = new InterviewDaysDetails();
+//        InterviewDaysDetails interviewDaysDetails = interviewDaysDetailsService.setInterviewDateDetails(
+//                id,
+//                start_time,
+//                end_time,
+//                addressService.findByAddress(address_id).getId()
+//        );
+
         interviewDaysDetails.setId(Integer.parseInt(id));
-        interviewDaysDetails.setStartTime(start_time);
-        interviewDaysDetails.setEndTime(end_time);
+        interviewDaysDetails.setStartTime(dateService.validTime(start_time));
+        interviewDaysDetails.setEndTime(dateService.validTime(end_time));
         interviewDaysDetails.setAddressId(addressService.findByAddress(address_id).getId());
-        interviewDaysDetails.setCountStudents(dateService.quantityStudent(interviewDaysDetails));
-        interviewDaysDetails.setCountPersonal(dateService.getPersonal(interviewDaysDetails));
-        interviewDaysDetailsService.update(interviewDaysDetails);
-        if (interviewDaysDetails == null) {
-            return ResponseEntity.accepted().body(interviewDaysDetails);
+        if (interviewDaysDetails.getStartTime() != null && interviewDaysDetails.getEndTime() != null) {
+            interviewDaysDetails.setCountStudents(dateService.quantityStudent(interviewDaysDetails));
+            interviewDaysDetails.setCountPersonal(dateService.getPersonal(interviewDaysDetails));
+            interviewDaysDetailsService.update(interviewDaysDetails);
+            return ResponseEntity.ok(interviewDaysDetails);
+        } else
+        {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        return ResponseEntity.ok(interviewDaysDetails);
+
     }
 
     //---REST Controllers for Address---

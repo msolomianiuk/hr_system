@@ -56,6 +56,20 @@ public class InterviewDaysDetailsServiceImpl implements InterviewDaysDetailsServ
 
     InterviewDaysDetails interviewDaysDetails;
 
+    public InterviewDaysDetails setInterviewDateDetails(String id, String startTime, String endTime,int addressId){
+        InterviewDaysDetails interviewDaysDetails = new InterviewDaysDetails();
+        interviewDaysDetails.setId(Integer.parseInt(id));
+        interviewDaysDetails.setStartTime(dateService.validTime(startTime));
+        interviewDaysDetails.setEndTime(dateService.validTime(endTime));
+        interviewDaysDetails.setAddressId(addressId);
+        if (interviewDaysDetails.getStartTime() != null && interviewDaysDetails.getEndTime() != null) {
+        if (Integer.parseInt(dateService.getTime(startTime)[0])< Integer.parseInt(dateService.getTime(endTime)[0]))
+            interviewDaysDetails.setCountStudents(dateService.quantityStudent(interviewDaysDetails));
+            interviewDaysDetails.setCountPersonal(dateService.getPersonal(interviewDaysDetails));
+        }
+        return interviewDaysDetails;
+    }
+
     @Override
     public boolean add(InterviewDaysDetails interviewDaysDetails) {
         return interviewDaysDetailsDAO.insert(interviewDaysDetails);
