@@ -41,6 +41,9 @@ public class CandidateDAOImpl implements CandidateDAO {
                     "FROM \"hr_system\".candidate c\n" +
                     "JOIN \"hr_system\".interview_result ir ON c.id = ir.candidate_id\n" +
                     "WHERE ir.interviewer_id = ?;";
+
+    private static final String FIND_PART = "SELECT * FROM \"hr_system\".candidate ORDER BY id OFFSET ";
+    private static final String FIND_PART_BY_COURSE = "SELECT * FROM \"hr_system\".candidate WHERE course_id = ";
     private User user;
 
     @Autowired
@@ -49,7 +52,7 @@ public class CandidateDAOImpl implements CandidateDAO {
     private SimpleJdbcInsert simpleJdbcInsert;
 
     @Autowired
-   private InterviewResultDAO interviewResultDAO;
+    private InterviewResultDAO interviewResultDAO;
 
 
     @Override
@@ -180,6 +183,10 @@ public class CandidateDAOImpl implements CandidateDAO {
         return findCandidates(FIND_ALL_BY_COURSE + courseId);
     }
 
+    @Override
+    public Collection<Candidate> findPartByCourse(Integer courseId, Integer with, Integer to) {
+        return findCandidates(FIND_PART_BY_COURSE + courseId + " ORDER BY id OFFSET " + with + " LIMIT " + to);
+    }
 
     public boolean saveCandidate(Candidate candidate) {
         try {
@@ -275,6 +282,10 @@ public class CandidateDAOImpl implements CandidateDAO {
     @Override
     public Collection<Candidate> findAll() {
         return findCandidates(FIND_ALL);
+    }
+
+    public Collection<Candidate> findPart(Integer with, Integer to) {
+        return findCandidates(FIND_PART + with + " LIMIT " + to);
     }
 
     private Collection<Candidate> findCandidates(String sql) {

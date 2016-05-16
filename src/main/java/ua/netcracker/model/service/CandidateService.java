@@ -16,17 +16,24 @@ public interface CandidateService {
     //
     void saveInterviewResult(Candidate candidate, InterviewResult interviewResult);
 
+    Collection<Candidate> getAllCandidates();
+
     Collection<Candidate> getAllCandidatesIsView();
+
+    Collection<Candidate> getPartCandidatesWithAnswer(Integer with, Integer to);
+
+    Collection<Candidate> getPartCandidatesIsViewWithAnswer(Integer with, Integer to);
 
     Collection<Candidate> getAllByCourse(Integer courseId);
 
     Collection<Answer> getAnswersIsView(Candidate candidate, Collection<Question> listQuestions);
+
+    Collection<Candidate> getPartByCourse(Integer courseId, Integer with, Integer to);
     //
     Candidate getCandidateById(Integer id);
 
     Candidate getCandidateByUserId(Integer userId);
 
-    Collection<Candidate> getAllCandidates();
 
     Status getStatusById(Integer statusId);
 
@@ -57,5 +64,7 @@ public interface CandidateService {
     boolean updateCandidateStatus(Integer candidateID, Integer newStatusID);
 
     Collection<Candidate> getAllMarkedByCurrentInterviewer(User user);
+
+    Collection<Candidate> getPartCandidates(Integer with, Integer to);
 
 }
