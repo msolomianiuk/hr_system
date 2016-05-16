@@ -60,6 +60,7 @@ public class CandidateServiceImpl implements CandidateService {
     public Candidate getCandidateById(Integer id) {
         Candidate candidate = candidateDAO.findByCandidateId(id);
         candidate.setUser(userDAO.find(candidate.getUserId()));
+        candidate.setInterviewResults(interviewResultDAO.findResultsByCandidateId(id));
         candidate.setAnswers(answersDAO.findAll(candidate.getId()));
         return candidate;
     }
@@ -173,12 +174,13 @@ public class CandidateServiceImpl implements CandidateService {
 
     @Override
     public Collection<Candidate> getAllMarkedByCurrentInterviewer(User user) {
+        Collection<Candidate> listCandidates = new ArrayList<>();
         try {
-            Collection<Candidate> listCandidates = candidateDAO.getAllMarked(user);
+             listCandidates = candidateDAO.getAllMarked(user);
         } catch (Exception e) {
             LOGGER.error("Error " + e);
         }
-        return null;
+        return listCandidates;
     }
 
     @Override
@@ -239,4 +241,3 @@ public class CandidateServiceImpl implements CandidateService {
         return candidateDAO.findPartByCourse(courseId, with, to);
     }
 }
-
