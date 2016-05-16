@@ -102,6 +102,12 @@ public class GeneratePDFServiceImpl implements GeneratePDFService {
         document.add(image);
         document.add(paragraphFree);
         document.add(tableQuestionAndTitle);
+        createPreLastForm(document, tableQuestionAndTitle);
+        createLastForm(document, paragraphFree);
+
+    }
+
+    private void createPreLastForm(Document document, PdfPTable tableQuestionAndTitle) throws DocumentException {
         Paragraph paragraphPreLast = new Paragraph("I consent to the storage, processing and use of my personal data for possible training and employment in the company NETCRACKER now and in the future.");
         paragraphPreLast.setAlignment(tableQuestionAndTitle.getHorizontalAlignment());
         PdfPTable tablePreLast = new PdfPTable(2);
@@ -113,6 +119,9 @@ public class GeneratePDFServiceImpl implements GeneratePDFService {
         tablePreLast.addCell(cellSignature);
         document.add(paragraphPreLast);
         document.add(tablePreLast);
+    }
+
+    private void createLastForm(Document document, Paragraph paragraphFree) throws DocumentException {
         Paragraph paragraphLast = new Paragraph("Interview (Filled interviewers)");
         paragraphLast.setAlignment(Element.ALIGN_CENTER);
         paragraphLast.setLeading(25.0f);
@@ -136,7 +145,6 @@ public class GeneratePDFServiceImpl implements GeneratePDFService {
         tableLast.addCell(tableSubFirst);
         tableLast.addCell(tableSubLast);
         document.add(tableLast);
-
     }
 
     private PdfPTable createQuestionTable() throws BadElementException, IOException {

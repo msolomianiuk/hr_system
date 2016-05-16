@@ -10,7 +10,6 @@ import org.springframework.stereotype.Repository;
 import ua.netcracker.model.dao.CandidateDAO;
 import ua.netcracker.model.dao.InterviewResultDAO;
 import ua.netcracker.model.entity.Candidate;
-import ua.netcracker.model.entity.InterviewResult;
 import ua.netcracker.model.entity.Status;
 import ua.netcracker.model.entity.User;
 
@@ -237,22 +236,22 @@ public class CandidateDAOImpl implements CandidateDAO {
 
     @Override
     public Collection<Candidate> getAllMarked(User user) {
-        Candidate candidate = new Candidate();
-        InterviewResult interviewResult = new InterviewResult();
-
+        Collection<Candidate> listCandidates = new ArrayList<>();
         try {
             jdbcTemplate = new JdbcTemplate(dataSource);
             List<Map<String, Object>> rows = jdbcTemplate.queryForList(FIND_ALL_MARKED_BY_CURRENT_INTERVIEWER, user.getId());
             for (Map row : rows) {
+                Candidate candidate = new Candidate();
                 candidate.setId((int) row.get("id"));
                 candidate.setStatusId((int) row.get("status_id"));
                 candidate.setCourseId((int) row.get("course_id"));
                 candidate.setInterviewResults(interviewResultDAO.findResultsByCandidateId(candidate.getId()));
+                listCandidates.add(candidate);
             }
         } catch (Exception e) {
             LOGGER.error("Error: " + e);
         }
-        return null;
+        return listCandidates;
     }
 
     @Override
