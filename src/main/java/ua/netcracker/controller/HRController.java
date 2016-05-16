@@ -114,4 +114,12 @@ public class HRController {
         return new ResponseEntity<Collection<Candidate>>(listCandidates, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "hr/service/setCandidateStatus", method = RequestMethod.GET)
+    @ResponseBody
+    public boolean setCandidateStatus(@RequestParam Integer candidateId,
+                                      @RequestParam Integer statusId
+    ){
+        return candidateService.updateCandidateStatus(candidateId, statusId);
+    }
+
 }
