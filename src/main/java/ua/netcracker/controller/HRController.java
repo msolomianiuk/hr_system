@@ -106,8 +106,9 @@ public class HRController {
 
     @RequestMapping(value = "hr/service/getCandidatsListWithTo", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<Collection<Candidate>> getCandidatesListWithTo() {
-        Collection<Candidate> listCandidates = candidateService.getPartCandidatesIsViewWithAnswer(10,20);
+    public ResponseEntity<Collection<Candidate>> getCandidatesListWithTo(@RequestParam Integer offset,
+                                                                         @RequestParam Integer limit) {
+        Collection<Candidate> listCandidates = candidateService.getPartCandidatesIsViewWithAnswer(offset, limit);
         if (listCandidates.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
