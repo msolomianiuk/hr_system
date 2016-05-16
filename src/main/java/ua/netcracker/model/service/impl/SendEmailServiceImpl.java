@@ -128,7 +128,7 @@ public class SendEmailServiceImpl implements SendEmailService {
         switch (status) {
             case Interview:
                 return emailTemplateDAO.find(TEMPLATE_INVITE_ON_INTERVIEW);
-            case Interviews_passed:
+            case Interview_passed:
                 return emailTemplateDAO.find(TEMPLATE_INTERVIEW_PASSED);
             case Job_accepted:
                 return emailTemplateDAO.find(TEMPLATE_JOB_ACCEPTED);
@@ -149,7 +149,7 @@ public class SendEmailServiceImpl implements SendEmailService {
                 Address address = addressDAO.find(interviewDaysDetails.getAddressId());
                 sendReminderInterview(user, interviewDaysDetails, address);
                 return replacePatterns(template, user, interviewDaysDetails, address);
-            case Interviews_passed:
+            case Interview_passed:
             case Job_accepted:
             case No_interview:
             case Rejected:
