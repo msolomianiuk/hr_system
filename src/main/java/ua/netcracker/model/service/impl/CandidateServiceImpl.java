@@ -124,7 +124,7 @@ public class CandidateServiceImpl implements CandidateService {
             candidate.setUserId(userId);
             candidate.setUser(userDAO.find(candidate.getUserId()));
             candidate.setStatusId(Status.Ready.getId());
-            candidate.setCourseId(1);
+            candidate.setCourseId(courseSettingService.getLastSetting().getId());
             saveCandidate(candidate);
             candidate = getCandidateById(userId);
         }
