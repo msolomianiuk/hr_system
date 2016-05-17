@@ -1,7 +1,9 @@
 package ua.netcracker.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,6 +15,7 @@ import ua.netcracker.model.service.*;
 import ua.netcracker.model.service.date.DateService;
 import ua.netcracker.model.service.impl.*;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -155,8 +158,6 @@ public class AdminController {
         collection.add(candidate);
         return ResponseEntity.ok(collection);
     }
-
-
 
 
     @RequestMapping(value = "/get_candidate", method = RequestMethod.GET)
@@ -327,12 +328,25 @@ public class AdminController {
 
     @RequestMapping(value = "/service/createReport", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<Collection<Collection<String>>> getReport(@RequestParam String query) {
-        Collection<Collection<String>> report = reportService.getReportByQuery(query);
+    public ResponseEntity<Collection<Collection<String>>> getReport(@RequestParam String query,@RequestParam String description) {
+        Collection<Collection<String>> report = reportService.getReportByQuery(query, description);
         if (report.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(report, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/service/getReportInXlSX", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<byte[]> getReportInXlSX() {
+        byte[] content;
+        try {
+            content = reportService.getXLSX();
+        } catch (IOException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        HttpHeaders headers = reportService.getHeaders();
+        return new ResponseEntity<>(content, headers, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/service/getAllReportQuery", method = RequestMethod.GET)
@@ -371,11 +385,12 @@ public class AdminController {
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
+
     @RequestMapping(value = "/get_list", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<Collection<Question>> getAllQuestion (@RequestParam String id){
-        Collection<Question> collection =  questionService.getAllIsView(Integer.parseInt(id));
-        if (collection.isEmpty()){
+    public ResponseEntity<Collection<Question>> getAllQuestion(@RequestParam String id) {
+        Collection<Question> collection = questionService.getAllIsView(Integer.parseInt(id));
+        if (collection.isEmpty()) {
             return (ResponseEntity<Collection<Question>>) ResponseEntity.EMPTY;
         }
         return ResponseEntity.ok(collection);
@@ -383,9 +398,9 @@ public class AdminController {
 
     @RequestMapping(value = "/get_question", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<Question> getQuestion (@RequestParam String id){
-        Question question =  questionService.get(Integer.parseInt(id));
-        if (question==null){
+    public ResponseEntity<Question> getQuestion(@RequestParam String id) {
+        Question question = questionService.get(Integer.parseInt(id));
+        if (question == null) {
             return (ResponseEntity<Question>) ResponseEntity.EMPTY;
         }
         return ResponseEntity.ok(question);
