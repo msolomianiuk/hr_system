@@ -14,15 +14,8 @@ import java.util.Collection;
 @RestController
 public class StatusRestController {
 
-//    @Autowired
-//    private CandidateService candidateService;
-
     @RequestMapping(value = "/getStatuses", method = RequestMethod.GET)
     public ResponseEntity<Collection<String>> listAllStatuses() {
-
-//        Map<Integer, String> allStatus = candidateService.getAllStatus();
-//
-//        Collection<String> statuses = allStatus.values();
 
         Status[] values = Status.values();
 

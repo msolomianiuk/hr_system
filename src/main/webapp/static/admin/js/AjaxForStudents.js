@@ -51,7 +51,7 @@ $("button#filter").on("click", function () {
     $.ajax({
         url: baseUrl + "/getStudents/filter",
         type: "GET",
-        data: {'answersJsonString': JSON.stringify($('.candidate-profile form').serializeObject())},
+        data: {'answersJsonString': JSON.stringify($('.candidate-profile form').serializeObject()), 'status': $('#status_select option:selected').text()},
         dataType: "json",
         success: showStudents,
         error: function (data) {

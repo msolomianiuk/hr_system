@@ -196,6 +196,16 @@
                                                 <div class="x_content">
                                                     <div class="candidate-profile row">
                                                         <%@ include file="include/filtering/filtersForm.jsp" %>
+                                                        <div class="form-group">
+                                                            <div class="col-md-6 col-md-offset-3">
+                                                                <label class="control-label caption" for="status_select">Change the status of filtered candidates to:</label>
+                                                                <select id="status_select" class="form-control select-and-text" name="statusId">
+                                                                    <option value="" disabled selected hidden>Change statuses</option>
+                                                                </select>
+                                                                <br>
+                                                                <button id="filter" type="button" class="btn btn-primary">Filter</button>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                     <div class="hidden">
                                                         <%@ include file="include/profile/question/questionsFieldsTemplate.jsp" %>

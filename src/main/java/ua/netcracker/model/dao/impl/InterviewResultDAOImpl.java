@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import ua.netcracker.model.dao.InterviewResultDAO;
+import ua.netcracker.model.dao.UserDAO;
 import ua.netcracker.model.entity.InterviewResult;
 import ua.netcracker.model.entity.Recommendation;
 
@@ -17,6 +18,9 @@ import java.util.*;
  */
 @Repository("InterviewResultDao")
 public class InterviewResultDAOImpl implements InterviewResultDAO {
+
+    @Autowired
+    private UserDAO userDAO;
     private static final Logger LOGGER = Logger.getLogger(InterviewResultDAOImpl.class);
     private static final String FIND_MARK = "Select mark, interviewer_id from \"hr_system\".interview_result " +
             "where candidate_id =?";
@@ -43,6 +47,7 @@ public class InterviewResultDAOImpl implements InterviewResultDAO {
             for (Map<String, Object> row : rows) {
                 InterviewResult interviewResult = new InterviewResult();
                 interviewResult.setInterviewerId((int) row.get("interviewer_id"));
+                interviewResult.setInterviewer(userDAO.find((int) row.get("interviewer_id")));
                 interviewResult.setMark((int) row.get("mark"));
                 interviewResult.setComment((String) row.get("comment"));
                 Recommendation[] recommendations = Recommendation.values();

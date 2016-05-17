@@ -3,3 +3,4 @@
 <script src="<c:url value="/static/js/custom/filtering/drawQuestionInProfileForm.js" />"></script>
 <script src="<c:url value="/static/js/custom/Profile/ajax/loadingQuestions.js" />"></script>
 <script src="<c:url value="/static/js/custom/filtering/serializeObjectsInFormToJSON.js"/>"></script>
+<script src="<c:url value="/static/js/custom/filtering/status.js" />"></script>
