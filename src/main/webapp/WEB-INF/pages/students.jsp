@@ -193,14 +193,19 @@
                                                 <%--<option value="">Shevchenko</option>--%>
                                             <%--</select>--%>
                                             <%--<div class="x_panel">--%>
-                                                <div class="x_content">
+                                                <div class="x_content">`
                                                     <div class="candidate-profile row">
                                                         <%@ include file="include/filtering/filtersForm.jsp" %>
                                                         <div class="form-group">
                                                             <div class="col-md-6 col-md-offset-3">
                                                                 <label class="control-label caption" for="status_select">Change the status of filtered candidates to:</label>
-                                                                <select id="status_select" class="form-control select-and-text" name="statusId">
-                                                                    <option value="" disabled selected hidden>Change statuses</option>
+                                                                <select id="status_select" class="status form-control select-and-text" name="statusId">
+                                                                    <option value="" selected>Select status</option>
+                                                                </select>
+                                                                <br>
+                                                                <label class="control-label caption" for="status_select_2">Change the status of the other candidates to:</label>
+                                                                <select id="status_select_2" class="status form-control select-and-text" name="statusId2">
+                                                                    <option value="" selected >Select status</option>
                                                                 </select>
                                                                 <br>
                                                                 <button id="filter" type="button" class="btn btn-primary">Filter</button>
