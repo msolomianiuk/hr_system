@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ua.netcracker.model.entity.Answer;
 import ua.netcracker.model.entity.Candidate;
+import ua.netcracker.model.entity.Status;
 import ua.netcracker.model.filtering.SimpleFilter;
 import ua.netcracker.model.service.CandidateService;
 import ua.netcracker.model.service.impl.Pagination;
@@ -29,7 +30,6 @@ public class StudentsRestController {
     @Autowired
     private Pagination pagination;
 
-
     @RequestMapping(value = "/getStudents", method = RequestMethod.GET)
     public ResponseEntity<List<Candidate>> listAllStudents() {
 
@@ -46,7 +46,7 @@ public class StudentsRestController {
 
     @RequestMapping(value = "/getStudents/filter", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<List<Candidate>> filterStudents(@RequestParam String answersJsonString) {
+    public ResponseEntity<List<Candidate>> filterStudents(@RequestParam String answersJsonString, @RequestParam String status) {
 
         Collection<Answer> answers = JsonParsing.parseJsonString(answersJsonString);
 
@@ -68,6 +68,13 @@ public class StudentsRestController {
             SimpleFilter filter = new SimpleFilter();
             filter.setExpected(selected);
             filtered = filter.filter(students);
+        }
+
+        if (!status.equals("Change statuses")) {
+            Status st = Status.valueOf(status);
+            for (Candidate candidate : filtered) {
+                candidateService.updateCandidateStatus(candidate.getId(), st.getId());
+            }
         }
 
         return new ResponseEntity<>(filtered, HttpStatus.OK);

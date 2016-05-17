@@ -35,30 +35,8 @@ public class SimpleFilter implements Filter {
             if (filledAnswers.containsAll(expected)) {
                 result.add(candidate);
             }
-
-//            if (containsAllLike((List<Answer>) answers, expected)) {
-//                result.add(candidate);
-//            }
         }
         return result;
-    }
-
-    private boolean containsAllLike(List<Answer> actual, List<Answer> expected){
-
-        List<Answer> list = new ArrayList<>();
-
-        for (Answer answer : expected) {
-            for (Answer answer1 : actual) {
-                if (answer.getQuestionId() == answer1.getQuestionId()) {
-                    if (answer.getValue().toLowerCase().contains(answer1.getValue().toLowerCase())) {
-                        list.add(answer);
-                        break;
-                    }
-                }
-
-            }
-        }
-        return list.containsAll(expected);
     }
 
 
