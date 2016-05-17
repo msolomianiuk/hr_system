@@ -51,7 +51,7 @@ public class SendEmailServiceImpl implements SendEmailService {
         MimeMessage mimeMessage = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
         try {
-            mimeMessage.setContent(text, "text/html");
+            mimeMessage.setContent(text, "text/html; charset=UTF-8");
             helper.setSubject(subject);
             helper.setTo(templateMessage.getTo());
             helper.setFrom(templateMessage.getFrom());

@@ -61,6 +61,8 @@ public interface CandidateService {
 
     void saveOrUpdateAnswers(Candidate candidate);
 
+    Collection<Answer> getAnswerByQuestionId(Candidate candidate, int questionId);
+
     Map<Integer, String> getAllStatus();
 
     boolean updateCandidateStatus(Integer candidateID, Integer newStatusID);
@@ -68,5 +70,7 @@ public interface CandidateService {
     Collection<Candidate> getAllMarkedByCurrentInterviewer(User user);
 
     Collection<Candidate> getPartCandidates(Integer with, Integer to);
+
+    boolean updateInterviewResult(Integer candidateId,InterviewResult interviewResult);
 
 }

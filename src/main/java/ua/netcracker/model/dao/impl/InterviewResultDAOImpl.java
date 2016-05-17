@@ -30,8 +30,7 @@ public class InterviewResultDAOImpl implements InterviewResultDAO {
                     "on i.recommendation_id = r.id where i.candidate_id =?";
     private static final String FIND_COMMENT =
             "Select response from \"hr_system\".interview_result where i.candidate_id = ?";
-    private static final String FIND_ALL = "Select interviewer_id, mark, comment, recommendation_id" +
-            "from \"hr_system\".interview_result where candidate_id = ?";
+    private static final String FIND_ALL = "Select * from \"hr_system\".interview_result where candidate_id = ?";
     private static final String CREATE = "Insert into \"hr_system\".interview_result " +
             "(interviewer_id, candidate_id, mark, comment, recommendation_id) values (?, ?, ?, ?, ?)";
     private static final String UPDATE = "UPDATE \"hr_system\".interview_result SET " +
@@ -40,7 +39,7 @@ public class InterviewResultDAOImpl implements InterviewResultDAO {
 
     @Override
     public Collection<InterviewResult> findResultsByCandidateId(Integer candidateId) {
-        List<InterviewResult> results = new ArrayList<>();
+        Collection<InterviewResult> results = new ArrayList<>();
         try {
             JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
             List<Map<String, Object>> rows = jdbcTemplate.queryForList(FIND_ALL, candidateId);
@@ -56,12 +55,12 @@ public class InterviewResultDAOImpl implements InterviewResultDAO {
                         interviewResult.setRecommendation(r);
                     }
                 }
+                results.add(interviewResult);
             }
 
         } catch (Exception e) {
             LOGGER.error("Error: " + e);
         }
-
         return results;
     }
 

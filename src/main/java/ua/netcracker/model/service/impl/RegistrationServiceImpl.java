@@ -4,9 +4,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ua.netcracker.model.dao.UserDAO;
-import ua.netcracker.model.entity.Candidate;
 import ua.netcracker.model.entity.Role;
-import ua.netcracker.model.entity.Status;
 import ua.netcracker.model.entity.User;
 import ua.netcracker.model.service.CandidateService;
 import ua.netcracker.model.service.RegistrationService;
@@ -20,6 +18,8 @@ import java.util.Arrays;
 public class RegistrationServiceImpl implements RegistrationService {
 
     private static final Logger LOGGER = Logger.getLogger(RegistrationServiceImpl.class);
+    @Autowired
+    private CourseSettingServiceImpl courseSettingService;
     @Autowired
     private UserDAO userDao;
 
@@ -59,11 +59,8 @@ public class RegistrationServiceImpl implements RegistrationService {
                     new ArrayList<>(Arrays.asList(Role.ROLE_STUDENT)));
             if (userDao.insert(user)) {
                 sendEmailServiceImpl.sendEmailAboutSuccessfulRegistration(user, password);
-                Candidate candidate = new Candidate();
-                candidate.setUserId(userDao.findByEmail(email).getId());
-                candidate.setStatusId(Status.New.getId());
-                candidate.setCourseId(1);
-                return candidateService.saveCandidate(candidate);
+
+                return true;
             }
         }
         return false;

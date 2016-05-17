@@ -49,7 +49,7 @@ $(document).ready(function () {
                 url: "http://localhost:8080/hr_system-1.0-SNAPSHOT/admin/service/createReport",
                 type: "GET",
                 dataType: "json",
-                data: {"query": curData[index].query},
+                data: {"query": curData[index].query,"description":curData[index].description},
                 contentType: 'application/json',
                 mimeType: 'application/json',
                 success: function (data) {
@@ -147,14 +147,14 @@ $(document).ready(function () {
         init();
         isShowAll = false;
     });
-    $(".export_button").click(function () {
-        var index = getIndexByRadio();
-        var now = new Date();
-        $("#table2excel").table2excel({
-            filename: curData[index].description + now.getFullYear()+':'+(now.getMonth()+1)+':'+now.getDate()
-        });
-
-    });
+    //$(".export_button").click(function () {
+    //    var index = getIndexByRadio();
+    //    var now = new Date();
+    //    $("#table2excel").table2excel({
+    //        filename: curData[index].description + now.getFullYear()+':'+(now.getMonth()+1)+':'+now.getDate()
+    //    });
+    //
+    //});
     $(window).on('beforeunload', function () {
         sendAjax();
     });
