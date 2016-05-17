@@ -103,17 +103,15 @@ public class ReportServiceImpl implements ReportService {
     public boolean manageReportQuery(ReportQuery reportQuery, String status) {
         switch (status) {
             case "delete":
-                reportQueryDao.updateImportance(reportQuery, false);
-                break;
+                return reportQueryDao.update(reportQuery);
             case "insert":
-                reportQueryDao.insert(reportQuery);
-                break;
+                return reportQueryDao.insert(reportQuery);
             case "update":
-                reportQueryDao.update(reportQuery);
-                break;
+                return reportQueryDao.update(reportQuery);
+            case "new":
+                return true;
             default:
                 return false;
         }
-        return true;
     }
 }

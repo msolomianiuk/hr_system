@@ -5,6 +5,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import ua.netcracker.model.dao.*;
@@ -49,7 +50,7 @@ public class SendEmailServiceImpl implements SendEmailService {
     @Override
     public void sendLetterToEmails(String[] toEmails, String subject, String text) {
         MimeMessage mimeMessage = mailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
+        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage);
         try {
             mimeMessage.setContent(text, "text/html; charset=UTF-8");
             helper.setSubject(subject);
@@ -164,9 +165,9 @@ public class SendEmailServiceImpl implements SendEmailService {
         EmailTemplate emailTemplate = emailTemplateDAO.find(TEMPLATE_COMING_INTERVIEW);
         String email = replacePatterns(emailTemplate.getTemplate(), user, interviewDaysDetails, address);
         MimeMessage mimeMessage = mailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
+        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage);
         try {
-            mimeMessage.setContent(email, "text/html");
+            mimeMessage.setContent(email, "text/html; charset=UTF-8");
             helper.setSubject(emailTemplate.getDescription());
             helper.setTo(templateMessage.getTo());
             helper.setFrom(templateMessage.getFrom());
