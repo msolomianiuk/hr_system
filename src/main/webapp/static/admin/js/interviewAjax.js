@@ -155,11 +155,6 @@ $(document).ready(function () {
 
     });
     $(document).on("click","#UpdateInerviw",function(){
-
-
-
-
-
         var id  = parseInt(($("#id_interview").attr("id_day")));
         var address_id = $("#SelectorAddress").val();
         var start_time = $("input[name='StartInterview']").val();
@@ -173,9 +168,7 @@ $(document).ready(function () {
             contentType: 'application/json',
             mimeType: 'application/json',
             success: updateAddress,
-            error: function (data) {
-                console.log(data);
-            }
+            error: AlertError
         });
 
     });
@@ -263,7 +256,7 @@ function addAddress(data){
 }
 
 function updateAddress(data){
-    alert("U update address")
+    alert("Update is success")
 
     $("#TableAddressFull").empty();
     $.ajax({
@@ -277,6 +270,11 @@ function updateAddress(data){
     });
 
 
+}
+
+function AlertError(data){
+    alert(data.responseText);
+    dataAlert=data;
 }
 
 function getCourseID(data){

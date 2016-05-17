@@ -154,11 +154,24 @@ public class DateService {
         return dateIsValid;
     }
 
-    public String validTime(String time){
-        if (isTimeValid(getTime(time)[0],getTime(time)[1])){
-            return time;
+    public boolean validTwoTimes(String time1, String time2){
+        boolean valid = false;
+        String hoursTime1 = getTime(time1)[0];
+        String minutesTime1 = getTime(time1)[1];
+        String hoursTime2 = getTime(time2)[0];
+        String minutesTime2 = getTime(time2)[1];
+        if ((isTimeValid(hoursTime1,minutesTime1)) &&(isTimeValid(hoursTime2,minutesTime2))){
+            if (Integer.parseInt(hoursTime1)<Integer.parseInt(hoursTime2)){
+                valid = true;
+            }else{
+                if (Integer.parseInt(hoursTime1)==Integer.parseInt(hoursTime2)){
+                    if (Integer.parseInt(minutesTime1)<Integer.parseInt(minutesTime2)){
+                        valid = true;
+                    }
+                }
+            }
         }
-        return null;
+        return valid;
     }
 
     public boolean isTimeValid(String hours, String minutes) {

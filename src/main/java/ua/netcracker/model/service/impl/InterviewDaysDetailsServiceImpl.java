@@ -54,18 +54,25 @@ public class InterviewDaysDetailsServiceImpl implements InterviewDaysDetailsServ
     @Autowired
     private DateService dateService;
 
-    InterviewDaysDetails interviewDaysDetails;
+    @Autowired
+    private AddressServiceImpl addressService;
 
     public InterviewDaysDetails setInterviewDateDetails(String id, String startTime, String endTime,int addressId){
+        if (dateService.validTwoTimes(startTime,endTime)==false) {
+            startTime=null;
+            endTime=null;
+        }
         InterviewDaysDetails interviewDaysDetails = new InterviewDaysDetails();
         interviewDaysDetails.setId(Integer.parseInt(id));
-        interviewDaysDetails.setStartTime(dateService.validTime(startTime));
-        interviewDaysDetails.setEndTime(dateService.validTime(endTime));
+        interviewDaysDetails.setStartTime(startTime);
+        interviewDaysDetails.setEndTime(endTime);
         interviewDaysDetails.setAddressId(addressId);
         if (interviewDaysDetails.getStartTime() != null && interviewDaysDetails.getEndTime() != null) {
-        if (Integer.parseInt(dateService.getTime(startTime)[0])< Integer.parseInt(dateService.getTime(endTime)[0]))
             interviewDaysDetails.setCountStudents(dateService.quantityStudent(interviewDaysDetails));
             interviewDaysDetails.setCountPersonal(dateService.getPersonal(interviewDaysDetails));
+            if (addressService.findById(addressId).getRoomCapacity()<interviewDaysDetails.getCountPersonal()*2){
+                interviewDaysDetails.setCountPersonal(0);
+            }
         }
         return interviewDaysDetails;
     }
@@ -87,11 +94,7 @@ public class InterviewDaysDetailsServiceImpl implements InterviewDaysDetailsServ
 
     @Override
     public void update(InterviewDaysDetails interviewDaysDetails) {
-//        if (interviewDaysDetails.getId() > 0) {
-//            interviewDaysDetailsDAO.insert(interviewDaysDetails);
-//        } else {
         interviewDaysDetailsDAO.update(interviewDaysDetails);
-//        }
     }
 
     @Override
@@ -99,6 +102,7 @@ public class InterviewDaysDetailsServiceImpl implements InterviewDaysDetailsServ
         interviewDaysDetailsDAO.remove(id);
     }
 
+    @Override
     public void removeByCourseId(int course_id) {
         jdbcTemplateFactory.getJdbcTemplate(dataSource).update(REMOVE_SQL_BY_COURSE_ID, course_id);
     }
