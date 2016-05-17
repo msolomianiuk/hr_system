@@ -61,6 +61,8 @@ public interface CandidateService {
 
     void saveOrUpdateAnswers(Candidate candidate);
 
+    Collection<Answer> getAnswerByQuestionId(Candidate candidate, int questionId);
+
     Map<Integer, String> getAllStatus();
 
     boolean updateCandidateStatus(Integer candidateID, Integer newStatusID);

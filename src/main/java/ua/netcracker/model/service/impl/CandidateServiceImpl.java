@@ -162,6 +162,18 @@ public class CandidateServiceImpl implements CandidateService {
     }
 
     @Override
+    public Collection<Answer> getAnswerByQuestionId(Candidate candidate, int questionId) {
+        ArrayList<Answer> resultAnswer = new ArrayList<>();
+        ArrayList<Answer> answers = (ArrayList<Answer>) getAllCandidateAnswers(candidate);
+        for (Answer answer : answers){
+            if (answer.getQuestionId() == questionId){
+                resultAnswer.add(answer);
+            }
+        }
+        return resultAnswer;
+    }
+
+    @Override
     public Map<Integer, String> getAllStatus() {
         Map<Integer, String> status = new HashMap<>();
         try {
