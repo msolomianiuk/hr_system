@@ -52,7 +52,6 @@ $("button#reset-password").on("click", function () {
         },
         dataType: "json",
         success: function (data) {
-            alert(data);
             setTimeout(function () {
                 $('.loading').hide();
             }, 1000);
