@@ -123,7 +123,7 @@ public class CandidateServiceImpl implements CandidateService {
         if (candidate.getId() == 0) {
             candidate.setUserId(userId);
             candidate.setUser(userDAO.find(candidate.getUserId()));
-            candidate.setStatusId(Status.New.getId());
+            candidate.setStatusId(Status.Ready.getId());
             candidate.setCourseId(1);
             saveCandidate(candidate);
             candidate = getCandidateById(userId);
@@ -181,7 +181,7 @@ public class CandidateServiceImpl implements CandidateService {
     public Collection<Candidate> getAllMarkedByCurrentInterviewer(User user) {
         Collection<Candidate> listCandidates = new ArrayList<>();
         try {
-             listCandidates = candidateDAO.getAllMarked(user);
+            listCandidates = candidateDAO.getAllMarked(user);
         } catch (Exception e) {
             LOGGER.error("Error " + e);
         }
@@ -191,6 +191,11 @@ public class CandidateServiceImpl implements CandidateService {
     @Override
     public Collection<Candidate> getPartCandidates(Integer with, Integer to) {
         return candidateDAO.findPart(with, to);
+    }
+
+    @Override
+    public boolean updateInterviewResult(Integer candidateId, InterviewResult interviewResult) {
+        return interviewResultDAO.updateInterviewResult(candidateId, interviewResult);
     }
 
     @Override

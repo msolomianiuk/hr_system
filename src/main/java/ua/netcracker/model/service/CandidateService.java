@@ -69,4 +69,6 @@ public interface CandidateService {
 
     Collection<Candidate> getPartCandidates(Integer with, Integer to);
 
+    boolean updateInterviewResult(Integer candidateId,InterviewResult interviewResult);
+
 }
