@@ -5515,3 +5515,7 @@ td.candidate-status-td select{
 .profile_info h2{
   line-height: 20px;
 }
+
+.interview-comments, .candidate-details, .form-interview-result{
+  display: none;
+}

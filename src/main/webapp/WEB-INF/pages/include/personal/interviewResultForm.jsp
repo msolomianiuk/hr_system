@@ -1,4 +1,4 @@
-<form class="form-horizontal form-label-left col-md-6 col-md-offset-3 col-sm-6 col-sm-offset-3 col-xs-12" novalidate>
+<form class="form-interview-result form-horizontal form-label-left col-md-6 col-md-offset-3 col-sm-6 col-sm-offset-3 col-xs-12" novalidate>
 
     <!-- comment input -->
     <div class="item form-group text-input-type">
