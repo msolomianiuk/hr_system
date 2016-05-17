@@ -29,10 +29,9 @@ public class AnswersDAOImpl implements AnswersDAO {
             "SELECT * FROM \"hr_system\".candidate_answer WHERE candidate_id = ? AND question_id = ?";
     private static final String INSERT =
             "INSERT INTO \"hr_system\".candidate_answer(candidate_id, question_id, value) VALUES(?,?,?)";
-    private static final String DELETE = "DELETE FROM \"hr_system\".candidate_answer WHERE candidate_id =?";
+    private static final String DELETE_ALL = "DELETE FROM \"hr_system\".candidate_answer WHERE candidate_id =?";
     private static final String UPDATE = "UPDATE \"hr_system\".candidate_answer SET value=? WHERE question_id =? AND " +
             " candidate_id = ?";
-
     private static final String SELECT_ANSWER = "SELECT candidate_id, question_id, caption ,value FROM " +
             "\"hr_system\".candidate_answer join \"hr_system\".question on question_id = id where candidate_id = ";
 
@@ -106,12 +105,13 @@ public class AnswersDAOImpl implements AnswersDAO {
     public void deleteAnswers(int candidateId) {
         try {
             JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-            jdbcTemplate.update(DELETE, candidateId);
+            jdbcTemplate.update(DELETE_ALL, candidateId);
         } catch (Exception e) {
             LOGGER.error("Error: " + e);
         }
 
     }
+
 
     private void executeSaveAnswer(int candidateId, Answer answer) {
 
@@ -146,10 +146,13 @@ public class AnswersDAOImpl implements AnswersDAO {
             if (answers.size() == 0) {
                 saveAll(candidate);
             } else {
+
                 JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+                deleteAnswers(candidate.getId());
                 answers = candidate.getAnswers();
                 for (Answer answer : answers) {
-                    jdbcTemplate.update(UPDATE, answer.getValue(), answer.getQuestionId(), candidate.getId());
+                    executeSaveAnswer(candidate.getId(),answer);
+                        //jdbcTemplate.update(UPDATE, answer.getValue(), answer.getQuestionId(), candidate.getId());
                 }
             }
         } catch (Exception e) {
@@ -158,7 +161,7 @@ public class AnswersDAOImpl implements AnswersDAO {
         return false;
     }
 
-    public Collection getCandidateAnswer (int id)   {
+    public Collection getCandidateAnswer(int id) {
         Collection collectionAnswers;
 
         JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
