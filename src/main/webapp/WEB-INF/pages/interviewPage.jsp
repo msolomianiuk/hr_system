@@ -23,7 +23,7 @@
 </div>
 
 <%@ include file="include/loadingSpinner.jsp" %>
-<div class="container body">
+<div class="container body" user-id=<sec:authentication property="principal.user.id"/>>
     <div class="main_container">
         <!-- left menu -->
         <%@ include file="include/leftCol.jsp" %>

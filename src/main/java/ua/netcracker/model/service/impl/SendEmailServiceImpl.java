@@ -3,148 +3,92 @@ package ua.netcracker.model.service.impl;
 import org.apache.log4j.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.mail.MailException;
-import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import ua.netcracker.model.dao.*;
 import ua.netcracker.model.entity.*;
+import ua.netcracker.model.entity.Address;
 import ua.netcracker.model.service.*;
 
-import javax.mail.*;
-import javax.mail.internet.InternetAddress;
+import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
-import java.util.Collection;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 
 @Service("SendEmail Service")
 public class SendEmailServiceImpl implements SendEmailService {
 
     private static final Logger LOGGER = Logger.getLogger(SendEmailServiceImpl.class);
 
+    private static final int TEMPLATE_SUCCESS_REGISTRATION = 1;
+    private static final int TEMPLATE_COMING_INTERVIEW = 2;
+    private static final int TEMPLATE_INVITE_ON_INTERVIEW = 3;
+    private static final int TEMPLATE_INTERVIEW_PASSED = 4;
+    private static final int TEMPLATE_JOB_ACCEPTED = 5;
+    private static final int TEMPLATE_NO_INTERVIEW = 6;
+    private static final int TEMPLATE_REJECTED = 7;
+
+
     @Autowired
     private EmailTemplateDAO emailTemplateDAO;
     @Autowired
     private UserDAO userDAO;
     @Autowired
-    private InterviewDaysDetailsService daysDetailsService;
+    private CandidateDAO candidateDAO;
+    @Autowired
+    private InterviewDaysDetailsDAO interviewDaysDetailsDAO;
     @Autowired
     private AddressDAO addressDAO;
-    @Autowired
-    private CandidateService candidateService;
 
     @Autowired
-    private MailSender mailSender;
+    private JavaMailSender mailSender;
     @Autowired
     private SimpleMailMessage templateMessage;
 
     @Override
     public void sendLetterToEmails(String[] toEmails, String subject, String text) {
-        SimpleMailMessage message = new SimpleMailMessage(templateMessage);
-        message.setSubject(subject);
-        message.setText(text);
-        message.setBcc(toEmails);
+        MimeMessage mimeMessage = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage);
         try {
-            mailSender.send(message);
-
-        } catch (MailException mailException) {
-            LOGGER.debug(mailException.getStackTrace());
-            LOGGER.info(mailException.getMessage());
+            mimeMessage.setContent(text, "text/html; charset=UTF-8");
+            helper.setSubject(subject);
+            helper.setTo(templateMessage.getTo());
+            helper.setFrom(templateMessage.getFrom());
+            helper.setBcc(toEmails);
+            mailSender.send(mimeMessage);
+        } catch (MessagingException messagingException) {
+            LOGGER.debug(messagingException.getStackTrace());
+            LOGGER.info(messagingException.getMessage());
         }
     }
 
     @Override
     public void sendLetterToEmails(String toEmail, String subject, String text) {
-        sendLetterToEmails(new String[]{toEmail},subject,text);
+        sendLetterToEmails(new String[]{toEmail}, subject, text);
     }
 
+    @Override
     public void sendLetterToEmails(Collection<String> toEmails, String subject, String text) {
-        sendLetterToEmails(toEmails.toArray(new String[0 ]),subject,text);
+        sendLetterToEmails(toEmails.toArray(new String[0]), subject, text);
     }
 
     @Override
-    public void sendEmailAboutSuccessfulRegistration(String[] toEmails) {
-        sendLetterToEmails(toEmails, "You successfully registered", "You successfully registered on site");
-        //This is will be when BD has emailTemplates
-//        int idTemplateAboutSuccessfulRegistration = 1; //not good (better to use ENUM)
-//        String dayAndTime = daysDetailsService.getDateofInterview(1)
-//                + " " + daysDetailsService.getStartTimeofInterview(1);
-//        EmailTemplate emailTemplate = emailTemplateDAO.find(idTemplateAboutSuccessfulRegistration);
-//        sendLetterToEmails(toEmails, emailTemplate.getDescription(), emailTemplate.getTemplate().replaceAll("\\{time\\}", dayAndTime));
+    public void sendEmailAboutSuccessfulRegistration(User user, String password) {
+        EmailTemplate emailTemplate = emailTemplateDAO.find(TEMPLATE_SUCCESS_REGISTRATION);
+        String email = replacePatterns(emailTemplate.getTemplate(), user, password);
+        sendLetterToEmails(user.getEmail(), emailTemplate.getDescription(), email);
     }
 
     @Override
-    public void sendEmailAboutComingInterview(Role role, InterviewDaysDetails daysDetails) {
-        //TODO:
-        //Think about template to dev/hr/ba (are they similar???)
-        int idTemplateAboutComingInterview = 2;
-        String dayAndTime = daysDetailsService.getDateofInterview(daysDetails.getId())
-                + " " + daysDetailsService.getStartTimeofInterview(daysDetails.getId());
-        EmailTemplate emailTemplate;
-        String[] usersEmailsBasedOnRole = getEmailsByRole(role);
-        switch (role) {
-            case ROLE_ADMIN:
-                break;
-            case ROLE_STUDENT:
-                emailTemplate = emailTemplateDAO.find(idTemplateAboutComingInterview);
-                sendLetterToEmails(usersEmailsBasedOnRole, emailTemplate.getDescription(),
-                        emailTemplate.getTemplate().replaceAll("\\{time\\}", dayAndTime));
-                break;
-            case ROLE_BA:
-            case ROLE_DEV:
-            case ROLE_HR:
-                emailTemplate = emailTemplateDAO.find(idTemplateAboutComingInterview);
-                sendLetterToEmails(usersEmailsBasedOnRole, emailTemplate.getDescription(),
-                        emailTemplate.getTemplate().replaceAll("\\{time\\}", dayAndTime));
-                break;
-            default:
-                LOGGER.info("No more roles!!!");
-                break;
-        }
-    }
-
-    @Override
-    public void sendEmailToStudentsByStatus(Status status, InterviewDaysDetails daysDetails) {
-        EmailTemplate emailTemplate;
-        String[] toEmails = getEmailsByCandidateStatus(status);
-
-        //idTemplates based on status:
-        int idTemplateOnInterview = 3;
-        int idTemplateInterviewPassed = 4;
-        int idTemplateJobAccepted = 5;
-        int idTemplateNoInterview = 6;
-        int idTemplateRejected = 7;
-        switch (status) {
-            case Interview:
-                String dayAndTime = daysDetailsService.getDateofInterview(daysDetails.getId())
-                        + " " + daysDetailsService.getStartTimeofInterview(daysDetails.getId());
-                String address = addressDAO.find(daysDetails.getAddressId()).getAddress();
-                emailTemplate = emailTemplateDAO.find(idTemplateOnInterview);
-                sendLetterToEmails(toEmails, emailTemplate.getDescription(), emailTemplate.getTemplate()
-                        .replaceAll("\\{time\\}", dayAndTime)
-                        .replaceAll("\\{address\\}", address));
-                break;
-            case Interviews_passed:
-                emailTemplate = emailTemplateDAO.find(idTemplateInterviewPassed);
-                sendLetterToEmails(toEmails, emailTemplate.getDescription(), emailTemplate.getTemplate());
-                break;
-            case Job_accepted:
-                emailTemplate = emailTemplateDAO.find(idTemplateJobAccepted);
-                sendLetterToEmails(toEmails, emailTemplate.getDescription(), emailTemplate.getTemplate());
-                break;
-            case No_interview:
-                emailTemplate = emailTemplateDAO.find(idTemplateNoInterview);
-                sendLetterToEmails(toEmails, emailTemplate.getDescription(), emailTemplate.getTemplate());
-                break;
-            case Rejected:
-                emailTemplate = emailTemplateDAO.find(idTemplateRejected);
-                sendLetterToEmails(toEmails, emailTemplate.getDescription(), emailTemplate.getTemplate());
-                break;
-            default:
-                LOGGER.info("No templates");
-                break;
+    public void sendEmailToStudentsByStatus(Status status) {
+        Collection<Candidate> candidates = candidateDAO.findCandidateByStatus(status.getStatus());
+        EmailTemplate emailTemplate = getTemplateByCandidateStatus(status);
+        for (Candidate candidate : candidates) {
+            User user = userDAO.find(candidate.getUserId());
+            String email = getEmailByCandidateStatus(emailTemplate.getTemplate(), user, candidate, status);
+            sendLetterToEmails(user.getEmail(), emailTemplate.getDescription(), email);
         }
     }
 
@@ -152,6 +96,11 @@ public class SendEmailServiceImpl implements SendEmailService {
     public void sendEmailAboutCriticalError(String textError) {
         String[] administratorsEmails = getEmailsByRole(Role.ROLE_ADMIN);
         sendLetterToEmails(administratorsEmails, "CRITICAL ERROR ON SITE HRSYSTEM!!!", textError);
+    }
+
+    @Override
+    public void sendEmailRestorePassword(String email, String url) {
+        sendLetterToEmails(email, "Restore password", "Your url: " + url);
     }
 
     private String[] getEmailsByRole(Role role) {
@@ -163,13 +112,73 @@ public class SendEmailServiceImpl implements SendEmailService {
         return usersEmails;
     }
 
-    private String[] getEmailsByCandidateStatus(Status status) {
-        //must ne candidates by courseId!
-        List<Candidate> candidates = (List<Candidate>) candidateService.getCandidateByStatus(status.toString());
-        String[] candidatesEmails = new String[candidates.size()];
-        for (int i = 0; i < candidates.size(); i++) {
-            candidatesEmails[i] = candidates.get(i).getUser().getEmail();
+    private String replacePatterns(String template, User user, String password) {
+        return replacePatterns(template, user).replaceAll("\\{password\\}", password);
+    }
+
+    private String replacePatterns(String template, User user) {
+        return template.replaceAll("\\{name\\}", user.getName());
+    }
+
+    private String replacePatterns(String template, User user, InterviewDaysDetails interviewDaysDetails, Address address) {
+        return replacePatterns(template, user).replaceAll("\\{address\\}", address.getAddress() + " " + address.getRoomCapacity())
+                .replaceAll("\\{time}\\}", interviewDaysDetails.getInterviewDate() + " " + interviewDaysDetails.getStartTime());
+    }
+
+    private EmailTemplate getTemplateByCandidateStatus(Status status) {
+        switch (status) {
+            case Interview:
+                return emailTemplateDAO.find(TEMPLATE_INVITE_ON_INTERVIEW);
+            case Interview_passed:
+                return emailTemplateDAO.find(TEMPLATE_INTERVIEW_PASSED);
+            case Job_accepted:
+                return emailTemplateDAO.find(TEMPLATE_JOB_ACCEPTED);
+            case No_interview:
+                return emailTemplateDAO.find(TEMPLATE_NO_INTERVIEW);
+            case Rejected:
+                return emailTemplateDAO.find(TEMPLATE_REJECTED);
+            default:
+                LOGGER.info("No templates");
+                throw new IllegalArgumentException();
         }
-        return candidatesEmails;
+    }
+
+    private String getEmailByCandidateStatus(String template, User user, Candidate candidate, Status status) {
+        switch (status) {
+            case Interview:
+                InterviewDaysDetails interviewDaysDetails = interviewDaysDetailsDAO.find(candidate.getInterviewDaysDetailsId());
+                Address address = addressDAO.find(interviewDaysDetails.getAddressId());
+                sendReminderInterview(user, interviewDaysDetails, address);
+                return replacePatterns(template, user, interviewDaysDetails, address);
+            case Interview_passed:
+            case Job_accepted:
+            case No_interview:
+            case Rejected:
+                return replacePatterns(template, user);
+            default:
+                LOGGER.info("No templates");
+                throw new IllegalArgumentException();
+        }
+    }
+
+    private void sendReminderInterview(User user, InterviewDaysDetails interviewDaysDetails, Address address) {
+        EmailTemplate emailTemplate = emailTemplateDAO.find(TEMPLATE_COMING_INTERVIEW);
+        String email = replacePatterns(emailTemplate.getTemplate(), user, interviewDaysDetails, address);
+        MimeMessage mimeMessage = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage);
+        try {
+            mimeMessage.setContent(email, "text/html; charset=UTF-8");
+            helper.setSubject(emailTemplate.getDescription());
+            helper.setTo(templateMessage.getTo());
+            helper.setFrom(templateMessage.getFrom());
+            helper.setBcc(user.getEmail());
+            mailSender.send(mimeMessage);
+            String[] date = interviewDaysDetails.getInterviewDate().split(" ");
+            helper.setSentDate(new Date(new GregorianCalendar(Integer.valueOf(date[0]), Integer.valueOf(date[1]), Integer.valueOf(date[2]) - 1).getTimeInMillis()));
+            mailSender.send(mimeMessage);
+        } catch (MessagingException messagingException) {
+            LOGGER.debug(messagingException.getStackTrace());
+            LOGGER.info(messagingException.getMessage());
+        }
     }
 }

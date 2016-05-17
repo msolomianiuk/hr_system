@@ -102,6 +102,12 @@ public class GeneratePDFServiceImpl implements GeneratePDFService {
         document.add(image);
         document.add(paragraphFree);
         document.add(tableQuestionAndTitle);
+        createPreLastForm(document, tableQuestionAndTitle);
+        createLastForm(document, paragraphFree);
+
+    }
+
+    private void createPreLastForm(Document document, PdfPTable tableQuestionAndTitle) throws DocumentException {
         Paragraph paragraphPreLast = new Paragraph("I consent to the storage, processing and use of my personal data for possible training and employment in the company NETCRACKER now and in the future.");
         paragraphPreLast.setAlignment(tableQuestionAndTitle.getHorizontalAlignment());
         PdfPTable tablePreLast = new PdfPTable(2);
@@ -113,6 +119,9 @@ public class GeneratePDFServiceImpl implements GeneratePDFService {
         tablePreLast.addCell(cellSignature);
         document.add(paragraphPreLast);
         document.add(tablePreLast);
+    }
+
+    private void createLastForm(Document document, Paragraph paragraphFree) throws DocumentException {
         Paragraph paragraphLast = new Paragraph("Interview (Filled interviewers)");
         paragraphLast.setAlignment(Element.ALIGN_CENTER);
         paragraphLast.setLeading(25.0f);
@@ -136,10 +145,9 @@ public class GeneratePDFServiceImpl implements GeneratePDFService {
         tableLast.addCell(tableSubFirst);
         tableLast.addCell(tableSubLast);
         document.add(tableLast);
-
     }
 
-    private PdfPTable createQuestionTable() throws BadElementException, IOException {
+    private PdfPTable createQuestionTable() throws DocumentException, IOException {
         PdfPTable tableQuestions = new PdfPTable(1);
         ArrayList<Question> listQuestions = (ArrayList<Question>) questionService.
                 getAllMandatory(courseSettingService.getLastSetting().getId());
@@ -149,20 +157,130 @@ public class GeneratePDFServiceImpl implements GeneratePDFService {
             for (int i = 0; i < listQuestions.size(); i++) {
                 Question question = listQuestions.get(i);
                 String answerString = " ";
-                for (int j = 0; j < listAnswers.size(); j++) {
-                    Answer answer = listAnswers.get(j);
-                    if (question.getId() == answer.getQuestionId()) {
-                        answerString = answerString + answer.getValue() + " ";
+                PdfPCell cellQuestion = null;
+                PdfPCell cellAnswer = null;
+                cellQuestion = new PdfPCell(new Paragraph(question.getCaption(),
+                        FontFactory.getFont(FontFactory.HELVETICA, 14, Font.BOLDITALIC)));
+
+                ArrayList<Answer> answers =
+                        (ArrayList<Answer>) candidateService.getAnswerByQuestionId(
+                                candidateService.getCurrentCandidate(), question.getId());
+
+                switch (question.getType()){
+                    case "Text":
+                    case "Number":{
+
+                        cellAnswer = new PdfPCell(new Paragraph(answers.get(0).getValue(),
+                                FontFactory.getFont(FontFactory.HELVETICA, 10, Font.NORMAL)));
+//                        cellQuestion.setBorder(Rectangle.NO_BORDER);
+//                        cellAnswer.setBorder(Rectangle.NO_BORDER);
+//                        tableQuestions.addCell(cellQuestion);
+//                        tableQuestions.addCell(cellAnswer);
+                        break;
+                    }
+                    case "Select":{
+
+                        PdfPTable tableAnswers = new PdfPTable(3);
+
+                        for (String variant : question.getAnswerVariants()){
+                            String check = "  ";
+                            if (answers.get(0).getValue().equals(variant)){
+                                check = "+";
+                            }
+                            PdfPTable tableVariant = new PdfPTable(2);
+                            tableVariant.setWidths(new int[]{3,30});
+                            tableVariant.setTotalWidth(99);
+                            PdfPCell cellCheck = new PdfPCell();
+                            cellCheck.setColspan(1);
+                            cellCheck.setUseAscender(true);
+                            cellCheck.setUseDescender(true);
+                            Paragraph p = new Paragraph(check,
+                                    FontFactory.getFont(FontFactory.HELVETICA, 10, Font.NORMAL));
+                            p.setAlignment(Element.ALIGN_CENTER);
+                            cellCheck.addElement(p);
+                            PdfPCell cellValue = new PdfPCell(new Paragraph(variant,
+                                    FontFactory.getFont(FontFactory.HELVETICA, 10, Font.NORMAL)));
+                            cellValue.setBorder(Rectangle.NO_BORDER);
+//                            PdfPCell cellVariant = new PdfPCell(new Paragraph(check + " " + variant,
+//                                    FontFactory.getFont(FontFactory.HELVETICA, 10, Font.NORMAL)));
+                            tableVariant.addCell(cellCheck);
+                            tableVariant.addCell(cellValue);
+                            PdfPCell cellVariant = new PdfPCell(tableVariant);
+                            cellVariant.setBorder(Rectangle.NO_BORDER);
+                            tableAnswers.addCell(cellVariant);
+                        }
+
+                        cellAnswer = new PdfPCell(tableAnswers);
+                        break;
+                    }
+                    case "Checkboxes":{
+
+                        PdfPTable tableAnswers = new PdfPTable(3);
+
+                        for (String variant : question.getAnswerVariants()){
+                            for (Answer answer : answers){
+                                String check = "  ";
+                                if (answer.getValue().equals(variant)){
+                                    check = "+";
+                                }
+                                PdfPCell cellVariant = new PdfPCell(new Paragraph(check + " " + variant,
+                                        FontFactory.getFont(FontFactory.HELVETICA, 10, Font.NORMAL)));
+                                cellVariant.setBorder(Rectangle.NO_BORDER);
+                                tableAnswers.addCell(cellVariant);
+                            }
+                        }
+
+                        cellAnswer = new PdfPCell(tableAnswers);
+                        break;
+                    }
+                    case "Select or text":{
+
+                        PdfPTable tableAnswers = new PdfPTable(1);
+                        PdfPTable tableVariants = new PdfPTable(3);
+
+                        for (String variant : question.getAnswerVariants()){
+                            String check = "  ";
+                            if (answers.get(0).getValue().equals(variant)){
+                                check = "+";
+                            }
+                            PdfPCell cellVariant = new PdfPCell(new Paragraph(check + " " + variant,
+                                    FontFactory.getFont(FontFactory.HELVETICA, 10, Font.NORMAL)));
+                            cellVariant.setBorder(Rectangle.NO_BORDER);
+                            tableVariants.addCell(cellVariant);
+                        }
+                        String textAnswer = "";
+                        if (!question.getAnswerVariants().contains(answers.get(0).getValue())){
+                            textAnswer = answers.get(0).getValue();
+                        }
+                        PdfPCell cellText = new PdfPCell(new Paragraph(textAnswer));
+
+                        tableAnswers.addCell(tableVariants);
+                        tableAnswers.addCell(cellText);
+
+                        cellAnswer = new PdfPCell(tableAnswers);
+
+                        break;
                     }
                 }
-                PdfPCell cellQuestion = new PdfPCell(new Paragraph(question.getCaption()));
-                PdfPCell cellAnswer = new PdfPCell(new Paragraph(answerString));
                 cellQuestion.setBorder(Rectangle.NO_BORDER);
-                PdfPCell cellFree = new PdfPCell(new Paragraph("  "));
-                cellFree.setBorder(Rectangle.NO_BORDER);
+                cellAnswer.setBorder(Rectangle.NO_BORDER);
                 tableQuestions.addCell(cellQuestion);
                 tableQuestions.addCell(cellAnswer);
-                tableQuestions.addCell(cellFree);
+//                for (int j = 0; j < listAnswers.size(); j++) {
+//                    Answer answer = listAnswers.get(j);
+//                    if (question.getId() == answer.getQuestionId()) {
+//                        answerString = answerString + answer.getValue() + " ";
+//                    }
+//                }
+//                PdfPCell cellQuestion = new PdfPCell(new Paragraph(question.getCaption(),
+//                        FontFactory.getFont(FontFactory.HELVETICA, 18, Font.BOLDITALIC)));
+//                PdfPCell cellAnswer = new PdfPCell(new Paragraph(answerString));
+//                cellQuestion.setBorder(Rectangle.NO_BORDER);
+//                PdfPCell cellFree = new PdfPCell(new Paragraph("  "));
+//                cellFree.setBorder(Rectangle.NO_BORDER);
+//                tableQuestions.addCell(cellQuestion);
+//                tableQuestions.addCell(cellAnswer);
+//                tableQuestions.addCell(cellFree);
             }
         }
         return tableQuestions;

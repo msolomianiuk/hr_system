@@ -13,4 +13,6 @@ public interface SendEmailService {
 
     void sendEmailToStudentsByStatus(Status status);
     void sendEmailAboutCriticalError(String textError);
+
+    void sendEmailRestorePassword(String email,String url);
 }

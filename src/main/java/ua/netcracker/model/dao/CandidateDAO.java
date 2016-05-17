@@ -2,7 +2,6 @@ package ua.netcracker.model.dao;
 
 
 import ua.netcracker.model.entity.Candidate;
-import ua.netcracker.model.entity.InterviewResult;
 import ua.netcracker.model.entity.Status;
 import ua.netcracker.model.entity.User;
 
@@ -34,5 +33,11 @@ public interface CandidateDAO extends DAO<Candidate> {
     boolean updateCandidateStatus(Integer candidateID, Integer newStatusID);
 
     Collection<Candidate> getAllMarked(User user);
+
+    Collection<Candidate> findPart(Integer with, Integer to);
+
+    Collection<Candidate> findPartByCourse(Integer courseId, Integer with, Integer to);
+
+    Integer getCandidateCount();
 
 }

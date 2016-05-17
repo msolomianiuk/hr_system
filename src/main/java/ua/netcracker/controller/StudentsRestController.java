@@ -5,21 +5,19 @@ package ua.netcracker.controller;
  */
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.support.PagedListHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ua.netcracker.model.entity.Answer;
 import ua.netcracker.model.entity.Candidate;
+import ua.netcracker.model.entity.Status;
 import ua.netcracker.model.filtering.SimpleFilter;
 import ua.netcracker.model.service.CandidateService;
 import ua.netcracker.model.service.impl.Pagination;
+import ua.netcracker.model.utils.JsonParsing;
 
-import java.util.Collections;
-import java.util.Comparator;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 
@@ -31,7 +29,6 @@ public class StudentsRestController {
 
     @Autowired
     private Pagination pagination;
-
 
     @RequestMapping(value = "/getStudents", method = RequestMethod.GET)
     public ResponseEntity<List<Candidate>> listAllStudents() {
@@ -47,8 +44,11 @@ public class StudentsRestController {
     }
 
 
-    @RequestMapping(value = "/getStudents/filter")
-    public ResponseEntity<List<Candidate>> filterStudents(@RequestParam List<Answer> list) {
+    @RequestMapping(value = "/getStudents/filter", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<List<Candidate>> filterStudents(@RequestParam String answersJsonString, @RequestParam String status, @RequestParam String status2) {
+
+        Collection<Answer> answers = JsonParsing.parseJsonString(answersJsonString);
 
         List<Candidate> students = (List<Candidate>) candidateService.getAllCandidates();
         List<Candidate> filtered = students;
@@ -57,10 +57,34 @@ public class StudentsRestController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
 
-        if (!list.isEmpty()) {
+        List<Answer> selected = new ArrayList<>();
+        for (Answer answer : answers) {
+            if (!(answer.getValue().isEmpty())) {
+                selected.add(answer);
+            }
+        }
+
+        if (!selected.isEmpty()) {
             SimpleFilter filter = new SimpleFilter();
-            filter.setAnswerList(list);
+            filter.setExpected(selected);
             filtered = filter.filter(students);
+        }
+
+        if (!status.equals("Select status")) {
+            Status st = Status.valueOf(status);
+            for (Candidate candidate : filtered) {
+                candidateService.updateCandidateStatus(candidate.getId(), st.getId());
+            }
+        }
+
+        if (filtered.size() < students.size()) {
+            if (!status2.equals("Select status")) {
+                Status st2 = Status.valueOf(status2);
+                students.removeAll(filtered);
+                for (Candidate student : students) {
+                    candidateService.updateCandidateStatus(student.getId(), st2.getId());
+                }
+            }
         }
 
         return new ResponseEntity<>(filtered, HttpStatus.OK);

@@ -1,4 +1,5 @@
 $(document).ready(function () {
+    getAllStatus();
     $.ajax({
         url: baseUrl + "/hr/service/getQuestionViewList",
         type: "GET",

@@ -21,6 +21,8 @@ public class Question {
 
     private int orderNumber;
 
+    private boolean isView;
+
     public Question() {
     }
 
@@ -79,6 +81,10 @@ public class Question {
     public void setOrderNumber(int orderNumber) {
         this.orderNumber = orderNumber;
     }
+
+    public void setView(boolean isView) {this.isView = isView;}
+
+    public boolean isView() {return isView;}
 
     @Override
     public String toString() {

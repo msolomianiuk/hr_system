@@ -68,10 +68,12 @@
 <script src="<c:url value="/static/js/datatables/buttons.bootstrap.min.js"/>"></script>
 
 
+<script src="<c:url value="/static/js/custom/Personal/getStatusColor.js"/>"></script>
 <script src="<c:url value="/static/js/custom/Personal/ajax/loadQuestions.js"/>"></script>
 <script src="<c:url value="/static/js/custom/Personal/drawCandidateDetails.js"/>"></script>
 <script src="<c:url value="/static/js/custom/Personal/ajax/loadCandidateById.js"/>"></script>
 <script src="<c:url value="/static/js/custom/Personal/triggerForCandidateDetailsModal.js"/>"></script>
+<script src="<c:url value="/static/js/custom/Personal/ajax/setCandidateStatus.js"/>"></script>
 <script src="<c:url value="/static/js/custom/Personal/addInTableQuestions.js"/>"></script>
 <script src="<c:url value="/static/js/custom/Personal/addInTableCandidats.js"/>"></script>
 <script src="<c:url value="/static/js/custom/Personal/ajax/loadQuestionsView.js"/>"></script>

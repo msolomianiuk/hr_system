@@ -54,7 +54,7 @@
                             </table>
                         </div>
                         <br>
-                        <button type="button" class="btn export_button">Export to Excel</button>
+                        <button type="button" class="btn export_button"><a href="<c:url value="/admin/service/getReportInXlSX"/>">Export to Excel</a></button>
                     </div>
                 </div>
             </div>

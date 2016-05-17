@@ -3,9 +3,6 @@ package ua.netcracker.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -15,12 +12,10 @@ import ua.netcracker.model.dao.UserDAO;
 import ua.netcracker.model.entity.Candidate;
 import ua.netcracker.model.entity.Question;
 import ua.netcracker.model.entity.User;
-import ua.netcracker.model.securiry.UserAuthenticationDetails;
 import ua.netcracker.model.service.CandidateService;
 import ua.netcracker.model.service.CourseSettingService;
 import ua.netcracker.model.service.QuestionService;
 import ua.netcracker.model.service.UserService;
-import ua.netcracker.model.service.impl.UserServiceImpl;
 
 import java.util.Collection;
 import java.util.Map;
@@ -87,9 +82,9 @@ public class HRController {
 
     @RequestMapping(value = "hr/service/getAllStatus", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<Map<Integer, String>> getAllStatus(){
+    public ResponseEntity<Map<Integer, String>> getAllStatus() {
         Map<Integer, String> listStatus = candidateService.getAllStatus();
-        if (listStatus.isEmpty()){
+        if (listStatus.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<Map<Integer, String>>(listStatus, HttpStatus.OK);
@@ -97,16 +92,41 @@ public class HRController {
 
     @RequestMapping(value = "hr/service/getAllMarked", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<Collection<Candidate>> getAllMarked(){
-            User user = userService.getAuthorizedUser();
+    public ResponseEntity<Collection<Candidate>> getAllMarked() {
+        User user = userService.getAuthorizedUser();
         Collection<Candidate> candidateList = null;
         if (user != null) {
             candidateList = candidateService.getAllMarkedByCurrentInterviewer(user);
         }
-        if (candidateList.isEmpty()){
+        if (candidateList.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<Collection<Candidate>>(candidateList, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "hr/service/getCandidatsListWithTo", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<Collection<Candidate>> getCandidatesListWithTo(@RequestParam Integer offset,
+                                                                         @RequestParam Integer limit) {
+        Collection<Candidate> listCandidates = candidateService.getPartCandidatesIsViewWithAnswer(offset, limit);
+        if (listCandidates.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<Collection<Candidate>>(listCandidates, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "hr/service/setCandidateStatus", method = RequestMethod.GET)
+    @ResponseBody
+    public boolean setCandidateStatus(@RequestParam Integer candidateId,
+                                      @RequestParam Integer statusId
+    ) {
+        return candidateService.updateCandidateStatus(candidateId, statusId);
+    }
+
+    @RequestMapping(value = "hr/service/getCandidateCount", method = RequestMethod.GET)
+    @ResponseBody
+    public Integer getCandidateCount() {
+        return candidateService.getCandidateCount();
     }
 
 }
