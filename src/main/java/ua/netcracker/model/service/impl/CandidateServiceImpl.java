@@ -57,7 +57,7 @@ public class CandidateServiceImpl implements CandidateService {
     private InterviewResultDAO interviewResultDAO;
     @Autowired
     private SendEmailService sendEmailService;
-
+    
     @Override
     public Candidate getCandidateById(Integer id) {
         Candidate candidate = candidateDAO.findByCandidateId(id);
@@ -190,7 +190,7 @@ public class CandidateServiceImpl implements CandidateService {
     @Override
     public boolean updateCandidateStatus(Integer candidateID, Integer newStatusID) {
         if (getCandidateById(candidateID).getStatusId() != newStatusID) {
-            sendEmailService.sendEmailToStudentsByStatus(Status.values()[newStatusID-1]);
+            sendEmailService.sendEmailToStudentsByStatus(Status.values()[newStatusID - 1]);
         }
         return candidateDAO.updateCandidateStatus(candidateID, newStatusID);
     }

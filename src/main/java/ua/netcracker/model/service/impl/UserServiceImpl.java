@@ -118,6 +118,11 @@ public class UserServiceImpl implements UserService {
         return null;
     }
 
+    @Override
+    public Integer getAllWorkers() {
+        return userDao.findAllWorkers();
+    }
+
     private String generateUUID() {
         UUID id = UUID.randomUUID();
         return String.valueOf(id);

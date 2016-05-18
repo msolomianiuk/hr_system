@@ -27,4 +27,6 @@ public interface UserDAO extends DAO<User> {
     boolean insertUserRoles(User user);
 
     boolean remove(User user);
+
+    Integer findAllWorkers();
 }

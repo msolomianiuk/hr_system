@@ -48,6 +48,8 @@ public class UserDAOImpl implements UserDAO {
             " VALUES (?,?)";
     private static final String SQL_REMOVE_USER_ROLES = "DELETE FROM \"hr_system\".role_users_maps WHERE user_id=?";
 
+    private static final String SQL_FIND_ALL_WORKERS = "SELECT COUNT(*) FROM \"hr_system\".role_users_maps WHERE role_id != 5";
+
     @Autowired
     private JdbcTemplate jdbcTemplate;
     private SimpleJdbcInsert simpleJdbcInsert;
@@ -133,6 +135,23 @@ public class UserDAOImpl implements UserDAO {
         }
         return false;
     }
+
+    @Override
+    public Integer findAllWorkers() {
+        try{
+            Integer count = jdbcTemplate.queryForObject(SQL_FIND_ALL_WORKERS, new RowMapper<Integer>() {
+                @Override
+                public Integer mapRow(ResultSet rs, int rowNum) throws SQLException {
+                    return rs.getInt(1);
+                }
+            });
+        }catch (Exception e){
+            LOGGER.error("Error: " + e);
+        }
+        return 0;
+    }
+
+
 
     @Override
     public List<User> findByName(String name) {

@@ -38,7 +38,7 @@ public class GeneratePDFServiceImpl implements GeneratePDFService {
 
     private static final Logger LOGGER = Logger.getLogger(GeneratePDFServiceImpl.class);
     private static final String NAME_PDF = "form.pdf";
-    public static final String FONT = "arial.ttf";
+    public static final String FONT = "Arial.ttf";
     @Value("/static/")
     private String staticPath;
     @Value("${userPhotoFolder}")
@@ -210,9 +210,10 @@ public class GeneratePDFServiceImpl implements GeneratePDFService {
                 cellQuestion.setBorder(Rectangle.NO_BORDER);
                 cellAnswer.setBorder(Rectangle.NO_BORDER);
                 tableQuestions.addCell(cellQuestion);
-                tableQuestions.addCell(cellAnswer);
                 PdfPCell cellFree = new PdfPCell(new Paragraph("  "));
                 cellFree.setBorder(Rectangle.NO_BORDER);
+                tableQuestions.addCell(cellFree);
+                tableQuestions.addCell(cellAnswer);
                 tableQuestions.addCell(cellFree);
             }
 
@@ -294,7 +295,6 @@ public class GeneratePDFServiceImpl implements GeneratePDFService {
         tableImage.addCell(cellImage);
         tableImage.addCell(cellId);
         return tableImage;
-
     }
 
     private PdfPTable createTitleName(User user) throws DocumentException, IOException {
