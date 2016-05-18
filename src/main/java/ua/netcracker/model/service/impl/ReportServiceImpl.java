@@ -11,6 +11,7 @@ import ua.netcracker.model.dao.ReportQueryDAO;
 import ua.netcracker.model.entity.ReportQuery;
 import ua.netcracker.model.service.ExcelService;
 import ua.netcracker.model.service.ReportService;
+import ua.netcracker.model.service.ValidationService;
 
 import javax.sql.DataSource;
 import java.io.IOException;
@@ -29,6 +30,8 @@ public class ReportServiceImpl implements ReportService {
     private ReportQueryDAO reportQueryDao;
     @Autowired
     private ExcelService excelService;
+    @Autowired
+    private ValidationService validationService;
 
     @Autowired
     private DataSource dataSource;
@@ -74,11 +77,11 @@ public class ReportServiceImpl implements ReportService {
     }
 
     @Override
-    public HttpHeaders getHeaders(){
+    public HttpHeaders getHeaders() {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"));
         String date = getCurrentDate();
-        String filename = description + " " + date+".xlsx";
+        String filename = description + " " + date + ".xlsx";
         headers.setContentDispositionFormData(filename, filename);
         headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
         return headers;
@@ -101,17 +104,21 @@ public class ReportServiceImpl implements ReportService {
 
     @Override
     public boolean manageReportQuery(ReportQuery reportQuery, String status) {
-        switch (status) {
-            case "delete":
-                return reportQueryDao.update(reportQuery);
-            case "insert":
-                return reportQueryDao.insert(reportQuery);
-            case "update":
-                return reportQueryDao.update(reportQuery);
-            case "new":
-                return true;
-            default:
-                return false;
-        }
+//        if (!validationService.nameValidation(reportQuery.getDescription())
+//                && !validationService.nameValidation(reportQuery.getQuery())) {
+            switch (status) {
+                case "delete":
+                    return reportQueryDao.update(reportQuery);
+                case "insert":
+                    return reportQueryDao.insert(reportQuery);
+                case "update":
+                    return reportQueryDao.update(reportQuery);
+                case "new":
+                    return true;
+                default:
+                    return false;
+            }
+//        }
+//        return false;
     }
 }

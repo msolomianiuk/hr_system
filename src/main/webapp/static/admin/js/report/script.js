@@ -121,7 +121,7 @@ $(document).ready(function () {
         isShowAll = false;
         sendAjax();
         setTimeout(init, 500);
-        setTimeout(init, 500);
+        //setTimeout(init, 500);
     });
 
     $(".cancel_list_button").click(function () {
@@ -215,10 +215,10 @@ function showQuery(radioButtons) {
     var text = $(".immut_text");
     var radio = $("input:radio:checked");
     radioButtons.parent().css({
-        'background': 'rgba(0, 0, 0, 0.35)'
+        'background': '#ccc'
     });
     radio.parent().css({
-        'background': 'rgba(100, 149, 237, 0.35)'
+        'background': '#d6e9c6'
     });
     text.empty();
     text.append(curData[getIndexById(radio.val())].query);
