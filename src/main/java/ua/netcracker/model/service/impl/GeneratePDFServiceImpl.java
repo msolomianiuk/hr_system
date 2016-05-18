@@ -4,6 +4,7 @@ import com.itextpdf.text.*;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.Image;
 import com.itextpdf.text.Rectangle;
+import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
@@ -37,6 +38,9 @@ public class GeneratePDFServiceImpl implements GeneratePDFService {
 
     private static final Logger LOGGER = Logger.getLogger(GeneratePDFServiceImpl.class);
     private static final String NAME_PDF = "form.pdf";
+    public static final String FONT = "Arial.ttf";
+    @Value("/static/")
+    private String staticPath;
     @Value("${userPhotoFolder}")
     private String absolutePath;
     @Autowired
@@ -50,11 +54,15 @@ public class GeneratePDFServiceImpl implements GeneratePDFService {
 
 
     private static final String PHOTO_PATH = "static/images/";
+    private static final String FONT_PATH = "static/fonts/";
     private String absolutePathImage;
+    private String absolutePathFont;
+
 
     @Autowired
     public void setAbsolutePath(ServletContext servletContext) {
         this.absolutePathImage = servletContext.getRealPath("/") + PHOTO_PATH;
+        this.absolutePathFont = servletContext.getRealPath("/") + FONT_PATH;
     }
 
     @Override
@@ -111,8 +119,12 @@ public class GeneratePDFServiceImpl implements GeneratePDFService {
     }
 
     private void createPreLastForm(Document document, PdfPTable tableQuestionAndTitle) throws DocumentException {
+        PdfPTable table = new PdfPTable(1);
         Paragraph paragraphPreLast = new Paragraph("I consent to the storage, processing and use of my personal data for possible training and employment in the company NETCRACKER now and in the future.");
         paragraphPreLast.setAlignment(tableQuestionAndTitle.getHorizontalAlignment());
+        PdfPCell cell = new PdfPCell();
+        cell.setBorder(Rectangle.NO_BORDER);
+        cell.addElement(paragraphPreLast);
         PdfPTable tablePreLast = new PdfPTable(2);
         PdfPCell cellFree = new PdfPCell(new Paragraph("  "));
         cellFree.setBorder(Rectangle.NO_BORDER);
@@ -124,8 +136,11 @@ public class GeneratePDFServiceImpl implements GeneratePDFService {
         cellDate.setBorder(Rectangle.NO_BORDER);
         tablePreLast.addCell(cellDate);
         tablePreLast.addCell(cellSignature);
-        document.add(paragraphPreLast);
-        document.add(tablePreLast);
+        cell.addElement(tablePreLast);
+        table.addCell(cell);
+        document.add(table);
+//        document.add(paragraphPreLast);
+//        document.add(tablePreLast);
     }
 
     private void createLastForm(Document document, Paragraph paragraphFree) throws DocumentException {
@@ -155,6 +170,9 @@ public class GeneratePDFServiceImpl implements GeneratePDFService {
     }
 
     private PdfPTable createQuestionTable() throws DocumentException, IOException {
+        BaseFont baseFont = BaseFont.createFont(absolutePathFont + FONT, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+        Font fontQuestion = new Font(baseFont, 14, Font.BOLDITALIC);
+        Font fontAnswers = new Font(baseFont, 10);
         PdfPTable tableQuestions = new PdfPTable(1);
         ArrayList<Question> listQuestions = (ArrayList<Question>) questionService.
                 getAllMandatory(courseSettingService.getLastSetting().getId());
@@ -166,8 +184,7 @@ public class GeneratePDFServiceImpl implements GeneratePDFService {
                 String answerString = " ";
                 PdfPCell cellQuestion = null;
                 PdfPCell cellAnswer = null;
-                cellQuestion = new PdfPCell(new Paragraph(question.getCaption(),
-                        FontFactory.getFont(FontFactory.HELVETICA, 14, Font.BOLDITALIC)));
+                cellQuestion = new PdfPCell(new Paragraph(question.getCaption(),fontQuestion));
 
                 ArrayList<Answer> answers =
                         (ArrayList<Answer>) candidateService.getAnswerByQuestionId(
@@ -176,26 +193,27 @@ public class GeneratePDFServiceImpl implements GeneratePDFService {
                 switch (question.getType()){
                     case "Text":
                     case "Number":{
-                        cellAnswer = getSimpleAnswer(answers);
+                        cellAnswer = getSimpleAnswer(answers, fontAnswers);
                         break;
                     }
                     case "Select":
                     case "Checkboxes":{
-                        cellAnswer = getSelectedAnswer(answers, question);
+                        cellAnswer = getSelectedAnswer(answers, question, fontAnswers);
                         break;
                     }
 
                     case "Select or text":{
-                        cellAnswer = getSelectedOrTextAnswer(answers,question);
+                        cellAnswer = getSelectedOrTextAnswer(answers,question, fontAnswers);
                         break;
                     }
                 }
                 cellQuestion.setBorder(Rectangle.NO_BORDER);
                 cellAnswer.setBorder(Rectangle.NO_BORDER);
                 tableQuestions.addCell(cellQuestion);
-                tableQuestions.addCell(cellAnswer);
                 PdfPCell cellFree = new PdfPCell(new Paragraph("  "));
                 cellFree.setBorder(Rectangle.NO_BORDER);
+                tableQuestions.addCell(cellFree);
+                tableQuestions.addCell(cellAnswer);
                 tableQuestions.addCell(cellFree);
             }
 
@@ -212,12 +230,13 @@ public class GeneratePDFServiceImpl implements GeneratePDFService {
         return table;
     }
 
-    private PdfPCell getSimpleAnswer(ArrayList<Answer> answers){
-        return new PdfPCell(new Paragraph(answers.get(0).getValue(),
-                FontFactory.getFont(FontFactory.HELVETICA, 10, Font.NORMAL)));
+    private PdfPCell getSimpleAnswer(ArrayList<Answer> answers, Font font) throws IOException, DocumentException {
+
+        return new PdfPCell(new Paragraph(answers.get(0).getValue(), font));
+//                FontFactory.getFont(FontFactory.HELVETICA, 10, Font.NORMAL)));
     }
 
-    private PdfPCell getSelectedAnswer(ArrayList<Answer> answers, Question question) throws DocumentException {
+    private PdfPCell getSelectedAnswer(ArrayList<Answer> answers, Question question, Font font) throws DocumentException {
         PdfPTable tableAnswers = new PdfPTable(3);
 
         for (String variant : question.getAnswerVariants()){
@@ -230,12 +249,10 @@ public class GeneratePDFServiceImpl implements GeneratePDFService {
             PdfPTable tableVariant = new PdfPTable(2);
             tableVariant.setWidths(new int[]{3, 30});
             tableVariant.setTotalWidth(99);
-            Paragraph p = new Paragraph("",
-                    FontFactory.getFont(FontFactory.HELVETICA, 10, Font.NORMAL));
+            Paragraph p = new Paragraph("", font);
             p.setAlignment(Element.ALIGN_CENTER);
             cellCheck.addElement(p);
-            PdfPCell cellValue = new PdfPCell(new Paragraph(variant,
-                    FontFactory.getFont(FontFactory.HELVETICA, 10, Font.NORMAL)));
+            PdfPCell cellValue = new PdfPCell(new Paragraph(variant, font));
             cellValue.setBorder(Rectangle.NO_BORDER);
             tableVariant.addCell(cellCheck);
             tableVariant.addCell(cellValue);
@@ -247,16 +264,16 @@ public class GeneratePDFServiceImpl implements GeneratePDFService {
         return new PdfPCell(tableAnswers);
     }
 
-    private PdfPCell getSelectedOrTextAnswer(ArrayList<Answer> answers, Question question) throws DocumentException {
+    private PdfPCell getSelectedOrTextAnswer(ArrayList<Answer> answers, Question question, Font font) throws DocumentException {
         PdfPTable tableAnswers = new PdfPTable(1);
 
-        tableAnswers.addCell(getSelectedAnswer(answers,question));
+        tableAnswers.addCell(getSelectedAnswer(answers,question, font));
 
         String textAnswer = "";
         if (!question.getAnswerVariants().contains(answers.get(0).getValue())){
             textAnswer = answers.get(0).getValue();
         }
-        PdfPCell cellText = new PdfPCell(new Paragraph(textAnswer));
+        PdfPCell cellText = new PdfPCell(new Paragraph(textAnswer, font));
         tableAnswers.addCell(cellText);
 
         return new PdfPCell(tableAnswers);
@@ -278,15 +295,16 @@ public class GeneratePDFServiceImpl implements GeneratePDFService {
         tableImage.addCell(cellImage);
         tableImage.addCell(cellId);
         return tableImage;
-
     }
 
-    private PdfPTable createTitleName(User user) throws BadElementException, IOException {
+    private PdfPTable createTitleName(User user) throws DocumentException, IOException {
+        BaseFont baseFont = BaseFont.createFont(absolutePathFont + FONT, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+        Font font = new Font(baseFont, 12);
         PdfPTable tableName = new PdfPTable(1);
-        PdfPCell cellName = new PdfPCell(new Paragraph("Name : " + user.getName()));
-        PdfPCell cellSurname = new PdfPCell(new Paragraph("Surname : " + user.getSurname()));
-        PdfPCell cellPatronymic = new PdfPCell(new Paragraph("Patronymic : " + user.getPatronymic()));
-        PdfPCell cellEmail = new PdfPCell(new Paragraph("E-mail : " + user.getEmail()));
+        PdfPCell cellName = new PdfPCell(new Paragraph("Name : " + user.getName(), font));
+        PdfPCell cellSurname = new PdfPCell(new Paragraph("Surname : " + user.getSurname(), font));
+        PdfPCell cellPatronymic = new PdfPCell(new Paragraph("Patronymic : " + user.getPatronymic(), font));
+        PdfPCell cellEmail = new PdfPCell(new Paragraph("E-mail : " + user.getEmail(), font));
         PdfPCell cellImage = new PdfPCell(Image.getInstance(String.valueOf(new File(absolutePathImage + "netcracker.png"))));
         cellEmail.setBorder(Rectangle.NO_BORDER);
         cellImage.setBorder(Rectangle.NO_BORDER);

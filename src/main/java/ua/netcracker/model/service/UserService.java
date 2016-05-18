@@ -14,4 +14,6 @@ public interface UserService {
     User get(int id);
 
     User getAuthorizedUser();
+
+    Integer getAllWorkers();
 }

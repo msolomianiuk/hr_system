@@ -1,94 +1,7 @@
-body {
-	font-family: 'Roboto', sans-serif;
-	font-size: 16px;
-	font-weight: 300;
-	color: #888;
-	line-height: 30px;
-	text-align: center;
-	background: linear-gradient(to bottom, #2A3F54, #19B9E7);
-}
-
-a,
-a:hover,
-a:focus {
-	color: #19b9e7;
-	text-decoration: none;
-	-o-transition: all .3s;
-	-moz-transition: all .3s;
-	-webkit-transition: all .3s;
-	-ms-transition: all .3s;
-	transition: all .3s;
-}
-
-h1,
-h2 {
-	margin-top: 10px;
-	font-size: 38px;
-	font-weight: 100;
-	color: #555;
-	line-height: 50px;
-}
-
-h3 {
-	font-size: 22px;
-	font-weight: 300;
-	line-height: 30px;
-}
-
-.container {
-	padding-right: 15px;
-	padding-left: 15px;
-	margin-right: auto;
-	margin-left: auto;
-}
-
-.row {
-	margin-right: -15px;
-	margin-left: -15px;
-}
-
-.btn {
-	width: 120px;
-	height: 50px;
-	margin-top: 10px;
-	padding: 0 20px;
-	vertical-align: middle;
-	background: #19b9e7;
-	border: 0;
-	font-family: 'Roboto', sans-serif;
-	font-size: 16px;
-	font-weight: 300;
-	line-height: 50px;
-	color: #fff;
-	-moz-border-radius: 4px;
-	-webkit-border-radius: 4px;
-	border-radius: 4px;
-	text-shadow: none;
-	-moz-box-shadow: none;
-	-webkit-box-shadow: none;
-	box-shadow: none;
-	-o-transition: all .3s;
-	-moz-transition: all .3s;
-	-webkit-transition: all .3s;
-	-ms-transition: all .3s;
-	transition: all .3s;
-}
-
-.update_button {
-	margin-left: 4px;
-}
-
-.btn:hover,
-.btn:focus,
-.btn:active {
-	outline: 0;
-	opacity: 0.6;
-	color: #fff;
-}
-
 .template_form {
-	color: #fff;
+	/*color: #fff;*/
 	width: 150px;
+	float: left;
 }
 
 .template_form label {
@@ -102,51 +15,21 @@ h3 {
 }
 
 .immut_text {
-	color: #fff;
+	/*color: #fff;*/
 }
 
 .template_edit {
 	margin: 15px auto;
-	color: #000;
+	/*color: #000;*/
 	text-align: center;
 }
 
 .template_edit h3{
-	color:#fff;
+	/*color:#fff;*/
 }
 
 .template_edit input {
 	margin-bottom: 15px;
-}
-
-
-/***** Footer *****/
-
-footer {
-	padding-bottom: 70px;
-	color: #fff;
-}
-
-footer .footer-border {
-	width: 200px;
-	margin: 0 auto;
-	padding-bottom: 30px;
-	border-top: 1px solid #fff;
-	border-top: 1px solid rgba(255, 255, 255, 0.6);
-}
-
-footer p {
-	opacity: 0.8;
-}
-
-footer a {
-	color: #fff;
-}
-
-footer a:hover,
-footer a:focus {
-	color: #fff;
-	border-bottom: 1px dotted #fff;
 }
 
 .template_edit {

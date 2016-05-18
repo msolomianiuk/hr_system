@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ModelAndView;
@@ -44,15 +45,10 @@ public class UploadImageController implements HandlerExceptionResolver {
     @Override
     public ModelAndView resolveException(HttpServletRequest arg0, HttpServletResponse arg1, Object arg2, Exception exception) {
         Map<Object, Object> model = new HashMap<Object, Object>();
-        model.put("error", "Sorry, file too large!");
+        if (exception instanceof MultipartException) {
+            model.put("error", "Sorry, file too large!");
+        }
         return new ModelAndView("/error", (Map) model);
-        /*if (exception instanceof MaxUploadSizeExceededException) {
-            model.put("error", "File size should be less then " +
-                    ((MaxUploadSizeExceededException) exception).getMaxUploadSize() + " byte.");
-        } else {
-
-        }*/
-
     }
 
 }
