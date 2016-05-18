@@ -182,12 +182,12 @@ public class CandidateDAOImpl implements CandidateDAO {
 
     @Override
     public Collection<Candidate> findAllByCourse(Integer courseId) {
-        return findCandidates(FIND_ALL_BY_COURSE + courseId);
+        return findCandidates(FIND_ALL_BY_COURSE + courseId + " ORDER BY status_id DESC");
     }
 
     @Override
     public Collection<Candidate> findPartByCourse(Integer courseId, Integer with, Integer to) {
-        return findCandidates(FIND_PART_BY_COURSE + courseId + " ORDER BY id OFFSET " + with + " LIMIT " + to);
+        return findCandidates(FIND_PART_BY_COURSE + courseId + " ORDER BY status_id DESC OFFSET " + with + " LIMIT " + to);
     }
 
     @Override
