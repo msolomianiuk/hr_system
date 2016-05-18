@@ -32,6 +32,14 @@ public interface CandidateDAO extends DAO<Candidate> {
 
     boolean updateCandidateStatus(Integer candidateID, Integer newStatusID);
 
+    public Collection<Candidate> pagination(Integer elementPage, Integer fromElement);
+
+    public Integer getRows();
+
+    public Collection<Candidate> findForSerach (Integer elementPage, Integer fromElement, String find);
+
+    public long rowsFind(String find);
+
     Collection<Candidate> getAllMarked(User user);
 
     Collection<Candidate> findPart(Integer with, Integer to);
@@ -39,6 +47,7 @@ public interface CandidateDAO extends DAO<Candidate> {
     Collection<Candidate> findPartByCourse(Integer courseId, Integer with, Integer to);
 
     Integer getCandidateCount(int courseId);
+
 
 
 

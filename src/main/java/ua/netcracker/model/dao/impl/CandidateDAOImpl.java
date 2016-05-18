@@ -35,13 +35,18 @@ public class CandidateDAOImpl implements CandidateDAO {
     private static final String FIND_ALL_STATUS = "SELECT * FROM \"hr_system\".status";
     private static final String UPDATE_STATUS = "UPDATE \"hr_system\".candidate SET status_id=(?)" +
             "WHERE id=?";
-
+    private static final String PAGINATION = "SELECT u.name,u.email ,u.surname, u.patronymic, candidate.id, candidate.status_id, candidate.course_id " +
+            "FROM \"hr_system\".users u " +
+            "JOIN \"hr_system\".role_users_maps rol " +
+            "ON rol.user_id = u.id JOIN \"hr_system\".candidate candidate " +
+            "ON candidate.user_id = u.id WHERE rol.role_id = 5 " +
+            "ORDER BY candidate.course_id DESC, candidate.status_id DESC,  candidate.id LIMIT ";
+    private static final String LAST_ROWS = "SELECT id FROM \"hr_system\".candidate ORDER BY id DESC limit 1";
     private static final String FIND_ALL_MARKED_BY_CURRENT_INTERVIEWER =
             "SELECT c.id, c.status_id, ir.mark, ir.comment, ir.recommendation_id\n" +
                     "FROM \"hr_system\".candidate c\n" +
                     "JOIN \"hr_system\".interview_result ir ON c.id = ir.candidate_id\n" +
                     "WHERE ir.interviewer_id = ?;";
-
     private static final String FIND_PART = "SELECT * FROM \"hr_system\".candidate ORDER BY id OFFSET ";
     private static final String FIND_PART_BY_COURSE = "SELECT * FROM \"hr_system\".candidate WHERE course_id = ";
     private static final String SELECT_CANDIDATE_COUNT = "SELECT COUNT(*) FROM \"hr_system\".candidate WHERE course_id = ";
@@ -335,5 +340,155 @@ public class CandidateDAOImpl implements CandidateDAO {
 
         return listCandidates;
 
+    }
+    @Override
+    public Collection<Candidate> pagination(Integer elementPage, Integer fromElement) {
+
+
+        Collection<Candidate> listCandidates;
+        try {
+            jdbcTemplate = new JdbcTemplate(dataSource);
+            listCandidates = jdbcTemplate.query(PAGINATION + elementPage + " offset " + fromElement, new RowMapper<Candidate>() {
+                @Override
+                public Candidate mapRow(ResultSet resultSet, int i) throws SQLException {
+                    Candidate candidate = new Candidate();
+                    User user = new User();
+                    user.setName(resultSet.getString("name"));
+                    user.setSurname(resultSet.getString("surname"));
+                    user.setPatronymic(resultSet.getString("patronymic"));
+                    user.setEmail(resultSet.getString("email"));
+                    candidate.setUser(user);
+                    candidate.setId(resultSet.getInt("id"));
+                    candidate.setStatusId(resultSet.getInt("status_id"));
+                    candidate.setCourseId(resultSet.getInt("course_id"));
+                    return candidate;
+                }
+            });
+           return listCandidates;
+        } catch (Exception e) {
+            LOGGER.error("Error:" + e);
+        }
+
+        return null;
+
+    }
+
+    @Override
+    public Integer getRows() {
+        Candidate candidate = new Candidate();
+
+        try {
+            jdbcTemplate = new JdbcTemplate(dataSource);
+            candidate = jdbcTemplate.queryForObject(LAST_ROWS, new RowMapper<Candidate>() {
+                @Override
+                public Candidate mapRow(ResultSet resultSet, int i) throws SQLException {
+                    Candidate candidate = new Candidate();
+                    candidate.setId(resultSet.getInt("id"));
+                    return candidate;
+                }
+            });
+
+        } catch (Exception e) {
+            LOGGER.error("Error: " + e);
+        }
+
+        return candidate.getId();
+    }
+
+    @Override
+    public Collection<Candidate> findForSerach(Integer elementPage, Integer fromElement, String find) {
+
+        int d=2000000000;
+        try {
+            d = Integer.valueOf(find);
+        } catch (Exception e) {
+
+        }
+
+        Collection<Candidate> listCandidates;
+        try {
+            jdbcTemplate = new JdbcTemplate(dataSource);
+            listCandidates = jdbcTemplate.query(
+                    "SELECT candidate.id, u.name, surname, patronymic, email, " +
+                            "status_id, course_id, value , answer.question_id " +
+                            "FROM \"hr_system\".users u " +
+                            "JOIN \"hr_system\".role_users_maps rol ON rol.user_id = u.id " +
+                            "JOIN \"hr_system\".candidate candidate ON candidate.user_id = u.id " +
+                            "JOIN \"hr_system\".candidate_answer answer " +
+                            "ON candidate.id = answer.candidate_id " +
+                            "WHERE answer.question_id = 3 and " +
+                            "rol.role_id = 5 " +
+                            "and( name LIKE '%"+find+"%' " +
+                            "or surname LIKE '%"+find+"%' " +
+                            "or patronymic LIKE '%"+find+"%' " +
+                            "or email LIKE '%"+find+"%' " +
+                            "or value LIKE '%"+find+"%'" +
+                            "or candidate.id = "+d+") " +
+                            "ORDER BY candidate.course_id DESC, " +
+                            "candidate.status_id DESC,  candidate.id " +
+                            "limit "+elementPage+" offset "+fromElement,
+                    new RowMapper<Candidate>() {
+                        @Override
+                        public Candidate mapRow(ResultSet resultSet, int i) throws SQLException {
+                            Candidate candidate = new Candidate();
+                            User user = new User();
+                            user.setName(resultSet.getString("name"));
+                            user.setSurname(resultSet.getString("surname"));
+                            user.setPatronymic(resultSet.getString("patronymic"));
+                            user.setEmail(resultSet.getString("email"));
+                            candidate.setUser(user);
+                            candidate.setId(resultSet.getInt("id"));
+                            candidate.setStatusId(resultSet.getInt("status_id"));
+                            candidate.setCourseId(resultSet.getInt("course_id"));
+                            return candidate;
+                        }
+                    });
+            return listCandidates;
+        } catch (Exception e) {
+            LOGGER.error("Error:" + e);
+        }
+
+        return null;
+    }
+    @Override
+    public long rowsFind(String find) {
+
+        int id=2000000000;
+        try {
+            id = Integer.valueOf(find);
+        } catch (Exception e) {
+
+        }
+
+        long rows;
+        try {
+            jdbcTemplate = new JdbcTemplate(dataSource);
+            rows = jdbcTemplate.queryForObject(
+                    "SELECT COUNT(*) " +
+                            "FROM \"hr_system\".users u " +
+                            "JOIN \"hr_system\".role_users_maps rol ON rol.user_id = u.id " +
+                            "JOIN \"hr_system\".candidate candidate ON candidate.user_id = u.id " +
+                            "JOIN \"hr_system\".candidate_answer answer " +
+                            "ON candidate.id = answer.candidate_id " +
+                            "WHERE answer.question_id = 3 and " +
+                            "rol.role_id = 5 " +
+                            "and( name LIKE '%" + find + "%' " +
+                            "or surname LIKE '%" + find + "%' " +
+                            "or patronymic LIKE '%" + find + "%' " +
+                            "or email LIKE '%" + find + "%' " +
+                            "or value LIKE '%" + find + "%'" +
+                            "or candidate.id = " + id + ")", new RowMapper<Long>() {
+                        @Override
+                        public Long mapRow(ResultSet resultSet, int i) throws SQLException {
+                            long row = resultSet.getLong("count");
+                            return row;
+                        }
+                    });
+            return rows;
+        } catch (Exception e) {
+            LOGGER.error("Error:" + e);
+        }
+
+        return 0;
     }
 }

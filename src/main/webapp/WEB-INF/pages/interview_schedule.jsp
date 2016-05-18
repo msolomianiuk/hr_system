@@ -7,6 +7,7 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@page session="true" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -77,7 +78,7 @@
           <div class="profile_info">
             <span>Welcome,</span>
 
-            <h2>Vasya Pupkin</h2>
+            <h2><sec:authentication property="principal.name"/>&nbsp;<sec:authentication property="principal.surname"/></h2>
           </div>
         </div>
         <!-- /menu prile quick info -->
@@ -118,7 +119,7 @@
             <li class="">
               <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown"
                  aria-expanded="false">
-                <img src="<c:url value="/static/admin/images/img.jpg"/>" alt="">John Doe
+                <img src="<c:url value="/static/admin/images/img.jpg"/>" alt="">
                 <span class=" fa fa-angle-down"></span>
               </a>
               <ul class="dropdown-menu dropdown-usermenu animated fadeInDown pull-right">

@@ -67,17 +67,22 @@ public class AdminController {
         return "candidate";
     }
 
-    @RequestMapping(value = "/candidate/update_status")
-    public void updateCandidateStatus(@RequestParam Integer candidateID, @RequestParam String status) {
+
+    @RequestMapping(value = "/candidate/update_status", method = RequestMethod.GET)
+    public ResponseEntity updateCandidateStatus(@RequestParam Integer candidateID, @RequestParam String status) {
+
         candidateService.updateCandidateStatus(candidateID, Status.valueOf(status).getId());
+
+        return ResponseEntity.ok(HttpStatus.ACCEPTED);
     }
 
-    @RequestMapping(value = "/add_role")
-    public void addUserRole(@RequestParam Integer userID, @RequestParam String role) {
+    @RequestMapping(value = "/add_role" , method = RequestMethod.GET)
+    public ResponseEntity addUserRole(@RequestParam Integer userID, @RequestParam String role) {
 
         User user = userService.get(userID);
 
         userService.addUserRole(user, Role.valueOf(role));
+        return ResponseEntity.ok(HttpStatus.ACCEPTED);
     }
 
     @RequestMapping(value = "/interview_schedule", method = RequestMethod.GET)
@@ -442,4 +447,99 @@ public class AdminController {
         }
         return ResponseEntity.ok(question);
     }
+
+    @RequestMapping(value = "/paginationCandidate", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<Collection<Candidate>> paginationCandidate(
+            @RequestParam String elementPage,
+            @RequestParam String fromElement) {
+
+        Collection<Candidate> candidates = candidateService.pagination(
+                Integer.valueOf(elementPage),
+                Integer.valueOf(fromElement));
+        if (candidates.isEmpty()) {
+            return new ResponseEntity<Collection<Candidate>>(HttpStatus.BAD_REQUEST);
+        }
+        return ResponseEntity.ok(candidates);
+    }
+
+
+    @RequestMapping(value = "/getFirst", method = RequestMethod.GET)
+    public ResponseEntity<Collection<Candidate>> getCandidate() {
+        Collection<Candidate> candidates = candidateService.pagination(
+                Integer.valueOf(10),
+                Integer.valueOf(1));
+        if (candidates.isEmpty()) {
+            return new ResponseEntity<Collection<Candidate>>(HttpStatus.BAD_REQUEST);
+        }
+        return ResponseEntity.ok(candidates);
+    }
+
+    @RequestMapping(value = "/getRows", method = RequestMethod.GET)
+    public ResponseEntity<Integer> getRows() {
+        int rows = candidateService.getRows();
+        if (rows==0) {
+            return new ResponseEntity<Integer>(HttpStatus.BAD_REQUEST);
+        }
+        return ResponseEntity.ok(rows);
+    }
+    @RequestMapping(value = "/findCandidate", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<Collection<Candidate>> findCandidate(
+            @RequestParam String elementPage,
+            @RequestParam String fromElement,
+            @RequestParam String find
+    ) {
+
+        Collection<Candidate> candidates = candidateService.findCandidate(
+                Integer.valueOf(elementPage),
+                Integer.valueOf(fromElement),
+                find);
+        if (candidates.isEmpty()) {
+            return new ResponseEntity<Collection<Candidate>>(HttpStatus.BAD_REQUEST);
+        }
+        return ResponseEntity.ok(candidates);
+    }
+    @RequestMapping(value = "/rowsFind", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<String> rowsFind(
+            @RequestParam String find
+    ) {
+        long rows = candidateService.rowsFind(find);
+        if (rows==0) {
+            return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+        }
+        return ResponseEntity.ok(String.valueOf(rows));
+    }
+    @RequestMapping(value = "/candidate_id", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<String> candidateId(
+            @RequestParam String id
+    ) {
+
+        if (id.equals("")) {
+            return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+        }
+        return ResponseEntity.ok(id);
+    }
+    @RequestMapping(value = "/user_id", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<String> userId(
+            @RequestParam String id
+    ) {
+        if (id.equals("")) {
+            return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+        }
+        return ResponseEntity.ok(id);
+    }
+
+    @RequestMapping(value = "/candidateCount", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<Integer> userId(
+    ) {
+        int countStudents = candidateService.getCandidateCount();
+
+        return ResponseEntity.ok(countStudents);
+    }
+
 }

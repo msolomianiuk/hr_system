@@ -259,6 +259,33 @@ public class CandidateServiceImpl implements CandidateService {
     }
 
     @Override
+    public Collection<Candidate> pagination(Integer limitRows, Integer fromElement) {
+        int element = 0;
+        if ((fromElement-1)!=0){
+            element = (fromElement-1)*limitRows;
+        }
+        return candidateDAO.pagination(limitRows, element);
+    }
+    @Override
+    public Integer getRows(){
+        return candidateDAO.getRows();
+    }
+
+    @Override
+    public Collection<Candidate> findCandidate (Integer limitRows, Integer fromElement, String find){
+        int element = 0;
+        if ((fromElement-1)!=0){
+            element = (fromElement-1)*limitRows;
+        }
+        return candidateDAO.findForSerach(limitRows, element, find);
+    }
+
+    public long rowsFind(String find){
+        return candidateDAO.rowsFind(find);
+    }
+
+
+    @Override
     public Collection<Candidate> getPartByCourse(Integer courseId, Integer with, Integer to) {
         return candidateDAO.findPartByCourse(courseId, with, to);
     }

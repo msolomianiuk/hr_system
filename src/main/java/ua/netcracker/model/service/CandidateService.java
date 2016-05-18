@@ -68,6 +68,12 @@ public interface CandidateService {
 
     boolean updateCandidateStatus(Integer candidateID, Integer newStatusID);
 
+    public Integer getRows();
+
+    public Collection<Candidate> pagination(Integer elementPage, Integer fromElement);
+
+    public Collection<Candidate> findCandidate(Integer limitRows, Integer fromElement, String find);
+
     Collection<Candidate> getAllMarkedByCurrentInterviewer(User user);
 
     Collection<Candidate> getPartCandidates(Integer with, Integer to);
@@ -75,4 +81,5 @@ public interface CandidateService {
     boolean updateInterviewResult(Integer candidateId, InterviewResult interviewResult);
 
     boolean saveInterviewResult(Integer candidateId, Integer interviewerId, Integer mark, String recomendation, String comment);
+
 }

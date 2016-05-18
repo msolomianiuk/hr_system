@@ -7,6 +7,7 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@page session="true" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -43,6 +44,7 @@
           type="text/css"/>
     <link href="<c:url value="/static/admin/js/datatables/scroller.bootstrap.min.css"/>" rel="stylesheet"
           type="text/css"/>
+    <link href="<c:url value="/static/admin/css/simplePagination.css"/>" rel="stylesheet">
 
 
     <script src="<c:url value="/static/admin/js/jquery.min.js"/>"></script>
@@ -75,7 +77,7 @@
                     <div class="profile_info">
                         <span>Welcome,</span>
 
-                        <h2>Vasya Pupkin</h2>
+                        <h2><sec:authentication property="principal.name"/>&nbsp;<sec:authentication property="principal.surname"/></h2>
                     </div>
                 </div>
                 <!-- /menu prile quick info -->
@@ -116,7 +118,7 @@
                         <li class="">
                             <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown"
                                aria-expanded="false">
-                                <img src="<c:url value="/static/admin/images/img.jpg"/>" alt="">John Doe
+                                <img src="<c:url value="/static/admin/images/img.jpg"/>" alt="">
                                 <span class=" fa fa-angle-down"></span>
                             </a>
                             <ul class="dropdown-menu dropdown-usermenu animated fadeInDown pull-right">
@@ -223,19 +225,50 @@
                                 </div>
                             </div>
                             </p>
+                            <div class="col-md-4 col-lg-4 col-sm-4 col-xs-4">
+                                <select id="Rows" class="form-control">
+                                    <option value="10" selected>10</option>
+                                    <option value="15">15</option>
+                                    <option value="25">25</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4 col-lg-4 col-sm-4 col-xs-4">
+
+                             </div>
+                            <div class="col-md-4 col-sm-4 col-xs-4">
+                                <div id="search" class="nav nav-sidebar">
+                                    <div id="custom-search-input">
+                                        <div class="input-group col-md-12">
+                                            <input type="text" id="fieldSearch" class="form-control" placeholder="Организации , адреса...">
+                                        <span class="input-group-btn">
+                                            <button id="buttonSearch" class="btn btn-info" type="button">
+                                            </button>
+                                            <div id="animationSearch">
+                                                <div id="ball_outside"></div>
+                                                <div id="ball_inside"></div>
+                                            </div>
+                                        </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             <table id="StudentTable" class="table table-striped table-bordered clicked-tr">
                                 <thead>
                                 <tr>
+                                    <th>Status</th>
                                     <th>Name</th>
                                     <th>Surname</th>
                                     <th>Patronymic</th>
                                     <th>email</th>
+                                    <th>Redaction</th>
                                 </tr>
                                 </thead>
                                 <tbody id="TableStudents">
 
                                 </tbody>
+
                             </table>
+                            <div id="dark-pagination" class="pagination"></div>
                         </div>
                     </div>
                 </div>
@@ -266,13 +299,30 @@
 </div>
 <div id="hider"></div>
 <div class="ModelViewStudent"></div>
+<div class="ModelStatus">
+    <div class="col-md-4 col-lg-4 col-sm-4 col-xs-4">
+        <select id="Status" class="form-control">
+            <option value="" selected>Choose to change status</option>
+            <option value="Rejected">Rejected</option>
+            <option value="Ready">Ready</option>
+            <option value="No_interview">No_interview</option>
+            <option value="Interview">Interview</option>
+            <option value="Interview_dated">Interview_dated</option>
+            <option value="Interview_process">Interview_process</option>
+            <option value="Interview_passed">Interview_passed</option>
+            <option value="Trainee_accepted">Trainee_accepted</option>
+            <option value="Job_accepted">Job_accepted</option>
+        </select>
+        <button type="button" id="UpdateStatus" class="btn btn-success">Click to change</button>
+    </div>
+
+</div>
 
 <script src="<c:url value="/static/js/custom/baseUrl.js"/>"></script>
 
-
 <script src="<c:url value="/static/admin/js/AjaxForStudents.js"/>"></script>
 <script src="<c:url value="/static/admin/js/bootstrap.min.js"/>"></script>
-
+<script src="<c:url value="/static/admin/js/jquery.simplePagination.js"/>"></script>
 <!-- bootstrap progress js -->
 <script src="<c:url value="/static/admin/js/progressbar/bootstrap-progressbar.min.js"/>"></script>
 <script src="<c:url value="/static/admin/js/nicescroll/jquery.nicescroll.min.js"/>"></script>

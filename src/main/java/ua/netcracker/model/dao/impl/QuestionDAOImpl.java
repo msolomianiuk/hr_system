@@ -158,7 +158,6 @@ public class QuestionDAOImpl implements QuestionDAO {
     }
 
 
-    @Override
     public boolean insert(Question question) {
         try {
             SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(dataSource).
@@ -201,8 +200,8 @@ public class QuestionDAOImpl implements QuestionDAO {
         return false;
     }
 
-    @Override
 
+    @Override
     public boolean update(Question question) {
         try {
             JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);

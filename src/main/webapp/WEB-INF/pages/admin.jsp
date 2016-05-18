@@ -7,6 +7,7 @@
 --%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@page session="true" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -66,7 +67,7 @@
                     <div class="profile_info">
                         <span>Welcome,</span>
 
-                        <h2>Vasya Pupkin</h2>
+                        <h2><sec:authentication property="principal.name"/>&nbsp;<sec:authentication property="principal.surname"/></h2>
                     </div>
                 </div>
                 <!-- /menu prile quick info -->
@@ -105,7 +106,7 @@
                         <li class="">
                             <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown"
                                aria-expanded="false">
-                                <img src="<c:url value="/static/admin/images/img.jpg"/>" alt="">John Doe
+                                <img src="<c:url value="/static/admin/images/img.jpg"/>" alt="">
                                 <span class=" fa fa-angle-down"></span>
                             </a>
                             <ul class="dropdown-menu dropdown-usermenu animated fadeInDown pull-right">
@@ -143,7 +144,7 @@
                     <div class="right">
                         <span class="count_top"><i class="fa fa-users"></i> Total Students</span>
 
-                        <div class="count">50000</div>
+                        <div class="count CountView">50000</div>
                     </div>
                 </div>
                 <div class="animated flipInY col-md-4 col-sm-4 col-xs-4 tile_stats_count">
@@ -275,7 +276,7 @@
 </body>
 <%--<script src="js/bootstrap.min.js"></script>--%>
 <script src="<c:url value="/static/admin/js/bootstrap.min.js"/>"></script>
-
+<script src="<c:url value="/static/admin/js/AdminHomeAjax.js"/>"></script>
 <!-- gauge js -->
 <%--<script type="text/javascript" src="js/gauge/gauge.min.js"></script>--%>
 <script src="<c:url value="/static/admin/js/gauge/gauge.min.js"/>"></script>
