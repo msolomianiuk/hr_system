@@ -44,6 +44,10 @@
                           action="<c:url value="/upload/photo" />?${_csrf.parameterName}=${_csrf.token}"
                           style="display: inline;">
                         <input class="sr-only" id="inputImage" name="inputImage" type="file" accept="image/jpeg">
+                        <input id="x" name="x" type="hidden">
+                        <input id="y" name="y" type="hidden">
+                        <input id="width" name="width" type="hidden">
+                        <input id="height" name="height" type="hidden">
                         <input type="submit" class="btn btn-primary" value="Save changes">
 
                     </form>

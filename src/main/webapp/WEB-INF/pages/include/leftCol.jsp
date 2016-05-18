@@ -19,7 +19,7 @@
 
                 <c:choose>
                     <c:when test="${photo eq 'null'}">
-                        <c:set var="photo" scope="page" value="static/images/anonymouse.png"/>
+                        <c:set var="photo" scope="page" value="/static/images/anonymouse.png"/>
                     </c:when>
                     <c:otherwise>
                         <c:set var="photo" scope="page" value="/user/photos/${photo}"/>

@@ -2,12 +2,15 @@ package ua.netcracker.model.service.impl;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import ua.netcracker.model.dao.UserDAO;
 import ua.netcracker.model.entity.User;
 import ua.netcracker.model.securiry.UserAuthenticationDetails;
+
+import java.io.File;
 
 /**
  * Class for load user-specific data
@@ -23,6 +26,9 @@ public class CustomUserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
     UserDAO userDAO;
+
+    @Value("${userPhotoFolder}")
+    private String absolutePath;
 
     /**
      * Locates the user based on the username. In the actual implementation, the search
@@ -48,6 +54,12 @@ public class CustomUserDetailsServiceImpl implements UserDetailsService {
         if (user == null)
             //user not found in DB
             throw new UsernameNotFoundException(email + " not found");
+
+        //check image
+        if (!new File(absolutePath + user.getImage()).exists()) {
+            user.setImage(null);
+            userDAO.update(user);
+        }
 
         LOGGER.debug("load user in database: " + user.toString());
         /**
