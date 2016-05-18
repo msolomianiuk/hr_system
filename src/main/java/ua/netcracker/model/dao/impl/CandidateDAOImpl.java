@@ -12,6 +12,7 @@ import ua.netcracker.model.dao.InterviewResultDAO;
 import ua.netcracker.model.entity.Candidate;
 import ua.netcracker.model.entity.Status;
 import ua.netcracker.model.entity.User;
+import ua.netcracker.model.service.SendEmailService;
 
 import javax.sql.DataSource;
 import java.sql.ResultSet;
@@ -53,7 +54,8 @@ public class CandidateDAOImpl implements CandidateDAO {
 
     @Autowired
     private InterviewResultDAO interviewResultDAO;
-
+    @Autowired
+    private SendEmailService sendEmailService;
 
     @Override
     public Collection<Candidate> findCandidateByStatus(String status) {
@@ -220,6 +222,7 @@ public class CandidateDAOImpl implements CandidateDAO {
             return true;
         } catch (Exception e) {
             LOGGER.error("Error: " + e);
+            sendEmailService.sendEmailAboutCriticalError("ERROR in saveCandidate\n" + e.getMessage());
         }
 
         return false;
@@ -292,6 +295,7 @@ public class CandidateDAOImpl implements CandidateDAO {
             return true;
         } catch (Exception e) {
             LOGGER.error("Error:" + e);
+            sendEmailService.sendEmailAboutCriticalError("ERROR in saveOrUpdateAnswers\n" + e.getMessage());
         }
         return false;
     }
