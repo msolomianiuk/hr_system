@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -209,24 +210,32 @@ public class AdminController {
 
     @RequestMapping(value = "/interview_details_update", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<InterviewDaysDetails> updateInterviewDaysDetails(
+    public ResponseEntity updateInterviewDaysDetails(
             @RequestParam String id,
             @RequestParam String start_time,
             @RequestParam String end_time,
             @RequestParam String address_id
     ) {
-        InterviewDaysDetails interviewDaysDetails = new InterviewDaysDetails();
-        interviewDaysDetails.setId(Integer.parseInt(id));
-        interviewDaysDetails.setStartTime(start_time);
-        interviewDaysDetails.setEndTime(end_time);
-        interviewDaysDetails.setAddressId(addressService.findByAddress(address_id).getId());
-        interviewDaysDetails.setCountStudents(dateService.quantityStudent(interviewDaysDetails));
-        interviewDaysDetails.setCountPersonal(dateService.getPersonal(interviewDaysDetails));
-        interviewDaysDetailsService.update(interviewDaysDetails);
-        if (interviewDaysDetails == null) {
-            return ResponseEntity.accepted().body(interviewDaysDetails);
+        InterviewDaysDetails interviewDaysDetails = interviewDaysDetailsService.setInterviewDateDetails(
+                id,
+                start_time,
+                end_time,
+                addressService.findByAddress(address_id).getId()
+        );
+        if (interviewDaysDetails.getCountPersonal()==0){
+            return ResponseEntity
+                    .status(HttpStatus.FORBIDDEN)
+                    .body("This room can not accommodate all the people");
+        }else {
+            if (interviewDaysDetails.getStartTime() != null && interviewDaysDetails.getEndTime() != null) {
+                interviewDaysDetailsService.update(interviewDaysDetails);
+                return ResponseEntity.ok(interviewDaysDetails);
+            } else {
+                return ResponseEntity
+                        .status(HttpStatus.FORBIDDEN)
+                        .body("Please, enter the valid time");
+            }
         }
-        return ResponseEntity.ok(interviewDaysDetails);
     }
 
     //---REST Controllers for Address---
@@ -286,6 +295,15 @@ public class AdminController {
             return ResponseEntity.accepted().body(addressEntity);
         }
         return ResponseEntity.ok(addressEntity);
+    }
+
+    @RequestMapping(value = "/address_delete", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity removeAddress(
+            @RequestParam String id
+    ) {
+           addressService.delete(Integer.parseInt(id));
+        return ResponseEntity.ok(Integer.parseInt(id));
     }
 
     @RequestMapping(value = "/template", method = RequestMethod.GET)
