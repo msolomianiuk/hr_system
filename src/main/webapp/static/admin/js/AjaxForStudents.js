@@ -146,6 +146,7 @@ $(document).ready(function() {
 
 
     $.ajax({
+
         url: location_origin + "/admin/getRows",
         type: "GET",
         dataType: "json",
@@ -173,6 +174,73 @@ $(document).ready(function() {
 
 
 });
+
+$("button#filter").on("click", function () {
+    $('.loading').attr('style', 'display: flex');
+    $.ajax({
+        url: baseUrl + "/getStudents/filter",
+        type: "GET",
+        data: {'answersJsonString': JSON.stringify($('.candidate-profile form').serializeObject()), 'status': $('#status_select option:selected').text(), 'status2': $('#status_select_2 option:selected').text()},
+        dataType: "json",
+        success: showStudents,
+        error: function (data) {
+            setTimeout(function () { $('.loading').hide(); }, 1000);
+            new PNotify({
+                title: 'Some Problem',
+                text: 'There have been some problems!',
+                type: 'error'
+            });
+        }
+    });
+});
+
+function showStudents(data) {
+
+    dataNewStudents = data;
+
+    $('#StudentTable').empty();
+    
+    $('#StudentTable').append('<thead>' +
+        '<tr>' +
+        '<th>Name</th>' +
+        '<th>Surname</th>' +
+        '<th>Patronymic</th>' +
+        '<th>email</th>' +
+        '</tr>' +
+        '</thead>' +
+        '<tbody id="TableStudents">' +
+        '</tbody>');
+
+    $('#TableStudents').empty();
+
+    // $('#StudentTable').dataTable.fnClearTable();
+    
+    for(var index_student in data)
+    {
+        studentIndex = data[index_student];
+        $("#TableStudents").append('<tr class="win getModalStudent" candidate_id="'+ studentIndex.id +'">' +
+            '<td>'+studentIndex.user.name+'</td>' +
+            '<td>'+studentIndex.user.surname+'</td>' +
+            '<td>'+studentIndex.user.patronymic+'</td>' +
+            '<td>'+studentIndex.user.email+'</td>' +
+            '</tr>');
+
+    }
+    
+    $("#hider").click(function(){
+        $(".ModelViewStudent").css('display','none');
+        $('#hider').css('display','none');
+    });
+    $(".getModalStudent").click(function(){
+        if( $(".ModelViewStudent").css('display') == 'none' ){
+            $(".ModelViewStudent").css('display','block');
+            $('#hider').css('display','block');
+        } else{
+            $(".ModelViewStudent").css('display','none');
+            $('#hider').css('display','none');
+        }
+    });
+}
 
 function funcForStudents (data){
     dataNewStudents = data;

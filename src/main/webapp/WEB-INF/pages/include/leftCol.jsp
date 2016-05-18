@@ -31,7 +31,7 @@
             </div>
             <div class="profile_info">
                 <span>Welcome,</span>
-                <h2><sec:authentication property="principal.name"/>&nbsp;<sec:authentication
+                <h2><sec:authentication property="principal.name"/><br><sec:authentication
                         property="principal.surname"/></h2>
             </div>
         </div>

@@ -23,7 +23,7 @@
 </div>
 
 <%@ include file="include/loadingSpinner.jsp" %>
-<div class="container body">
+<div class="container body" user-id=<sec:authentication property="principal.user.id"/>>
     <div class="main_container">
         <!-- left menu -->
         <%@ include file="include/leftCol.jsp" %>
@@ -79,6 +79,11 @@
 <script src="<c:url value="/static/js/custom/Personal/triggerForCandidateDetailsInterview.js"/>"></script>
 <script src="<c:url value="/static/js/custom/Personal/drawCandidateDetails.js"/>"></script>
 <script src="<c:url value="/static/js/custom/Personal/ajax/loadCandidateById.js"/>"></script>
+<script src="<c:url value="/static/js/custom/Personal/ajax/setInterviewResult.js"/>"></script>
+<script src="<c:url value="/static/js/custom/Personal/addInterviewResult.js"/>"></script>
+<script src="<c:url value="/static/js/custom/Personal/cancelInterviewResult.js"/>"></script>
+
+
 
 
 </body>

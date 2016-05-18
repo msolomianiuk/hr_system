@@ -4,7 +4,9 @@
 
 $(document).ready(function () {
 
+
     location_origin = "http://localhost:8080/hr_system-1.0-SNAPSHOT"
+
 
     var token = $("meta[name='_csrf']").attr("content");
     var header = $("meta[name='_csrf_header']").attr("content");

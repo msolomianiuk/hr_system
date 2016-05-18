@@ -6,6 +6,7 @@ import java.util.Collection;
 
 /**
  * Created by on 24.04.2016.
+ *
  * @author Oleg
  */
 @Component
@@ -17,6 +18,7 @@ public class Candidate implements Comparable<Candidate> {
 
     private int courseId;
 
+
     private int statusId;
 
     private Status status;
@@ -24,6 +26,10 @@ public class Candidate implements Comparable<Candidate> {
     private int interviewDaysDetailsId;
 
     private Collection<Answer> answers;
+
+    public Collection<InterviewResult> getInterviewResults() {
+        return interviewResults;
+    }
 
     private Collection<InterviewResult> interviewResults;
 
@@ -93,9 +99,14 @@ public class Candidate implements Comparable<Candidate> {
         return interviewDaysDetailsId;
     }
 
+    public void setInterviewResults(Collection<InterviewResult> interviewResults) {
+        this.interviewResults = interviewResults;
+    }
+
     public void setInterviewDaysDetailsId(int interviewDaysDetailsId) {
         this.interviewDaysDetailsId = interviewDaysDetailsId;
     }
+
     public int compareTo(Candidate c) {
         int result = this.user.getName().compareTo(c.user.getName());
         return result;

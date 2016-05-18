@@ -16,17 +16,27 @@ public interface CandidateService {
     //
     void saveInterviewResult(Candidate candidate, InterviewResult interviewResult);
 
+    Collection<Candidate> getAllCandidates();
+
     Collection<Candidate> getAllCandidatesIsView();
+
+    Collection<Candidate> getPartCandidatesWithAnswer(Integer with, Integer to);
+
+    Collection<Candidate> getPartCandidatesIsViewWithAnswer(Integer with, Integer to);
 
     Collection<Candidate> getAllByCourse(Integer courseId);
 
     Collection<Answer> getAnswersIsView(Candidate candidate, Collection<Question> listQuestions);
+
+    Collection<Candidate> getPartByCourse(Integer courseId, Integer with, Integer to);
+
     //
     Candidate getCandidateById(Integer id);
 
+    Integer getCandidateCount();
+
     Candidate getCandidateByUserId(Integer userId);
 
-    Collection<Candidate> getAllCandidates();
 
     Status getStatusById(Integer statusId);
 
@@ -52,6 +62,8 @@ public interface CandidateService {
 
     void saveOrUpdateAnswers(Candidate candidate);
 
+    Collection<Answer> getAnswerByQuestionId(Candidate candidate, int questionId);
+
     Map<Integer, String> getAllStatus();
 
     boolean updateCandidateStatus(Integer candidateID, Integer newStatusID);
@@ -61,5 +73,13 @@ public interface CandidateService {
     public Collection<Candidate> pagination(Integer elementPage, Integer fromElement);
 
     public Collection<Candidate> findCandidate(Integer limitRows, Integer fromElement, String find);
+
+    Collection<Candidate> getAllMarkedByCurrentInterviewer(User user);
+
+    Collection<Candidate> getPartCandidates(Integer with, Integer to);
+
+    boolean updateInterviewResult(Integer candidateId, InterviewResult interviewResult);
+
+    boolean saveInterviewResult(Integer candidateId, Integer interviewerId, Integer mark, String recomendation, String comment);
 
 }

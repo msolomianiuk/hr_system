@@ -8,9 +8,11 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import ua.netcracker.model.dao.CandidateDAO;
+import ua.netcracker.model.dao.InterviewResultDAO;
 import ua.netcracker.model.entity.Candidate;
 import ua.netcracker.model.entity.Status;
 import ua.netcracker.model.entity.User;
+import ua.netcracker.model.service.SendEmailService;
 
 import javax.sql.DataSource;
 import java.sql.ResultSet;
@@ -40,14 +42,25 @@ public class CandidateDAOImpl implements CandidateDAO {
             "ON candidate.user_id = u.id WHERE rol.role_id = 5 " +
             "ORDER BY candidate.course_id DESC, candidate.status_id DESC,  candidate.id LIMIT ";
     private static final String LAST_ROWS = "SELECT id FROM \"hr_system\".candidate ORDER BY id DESC limit 1";
-
-
+    private static final String FIND_ALL_MARKED_BY_CURRENT_INTERVIEWER =
+            "SELECT c.id, c.status_id, ir.mark, ir.comment, ir.recommendation_id\n" +
+                    "FROM \"hr_system\".candidate c\n" +
+                    "JOIN \"hr_system\".interview_result ir ON c.id = ir.candidate_id\n" +
+                    "WHERE ir.interviewer_id = ?;";
+    private static final String FIND_PART = "SELECT * FROM \"hr_system\".candidate ORDER BY id OFFSET ";
+    private static final String FIND_PART_BY_COURSE = "SELECT * FROM \"hr_system\".candidate WHERE course_id = ";
+    private static final String SELECT_CANDIDATE_COUNT = "SELECT COUNT(*) FROM \"hr_system\".candidate";
+    private User user;
 
     @Autowired
     private DataSource dataSource;
     private JdbcTemplate jdbcTemplate;
     private SimpleJdbcInsert simpleJdbcInsert;
 
+    @Autowired
+    private InterviewResultDAO interviewResultDAO;
+    @Autowired
+    private SendEmailService sendEmailService;
 
     @Override
     public Collection<Candidate> findCandidateByStatus(String status) {
@@ -174,9 +187,31 @@ public class CandidateDAOImpl implements CandidateDAO {
 
     @Override
     public Collection<Candidate> findAllByCourse(Integer courseId) {
-        return findCandidates(FIND_ALL_BY_COURSE + courseId);
+        return findCandidates(FIND_ALL_BY_COURSE + courseId + " ORDER BY status_id DESC");
     }
 
+    @Override
+    public Collection<Candidate> findPartByCourse(Integer courseId, Integer with, Integer to) {
+        return findCandidates(FIND_PART_BY_COURSE + courseId + " ORDER BY status_id DESC OFFSET " + with + " LIMIT " + to);
+    }
+
+    @Override
+    public Integer getCandidateCount() {
+        try {
+            jdbcTemplate = new JdbcTemplate(dataSource);
+            Integer count = jdbcTemplate.queryForObject(SELECT_CANDIDATE_COUNT, new RowMapper<Integer>() {
+                @Override
+                public Integer mapRow(ResultSet rs, int rowNum) throws SQLException {
+                    return rs.getInt(1);
+                }
+            });
+            return count;
+
+        } catch (Exception e) {
+            LOGGER.error("Error: " + e);
+        }
+        return 0;
+    }
 
     public boolean saveCandidate(Candidate candidate) {
         try {
@@ -192,6 +227,7 @@ public class CandidateDAOImpl implements CandidateDAO {
             return true;
         } catch (Exception e) {
             LOGGER.error("Error: " + e);
+            sendEmailService.sendEmailAboutCriticalError("ERROR in saveCandidate\n" + e.getMessage());
         }
 
         return false;
@@ -226,6 +262,26 @@ public class CandidateDAOImpl implements CandidateDAO {
     }
 
     @Override
+    public Collection<Candidate> getAllMarked(User user) {
+        Collection<Candidate> listCandidates = new ArrayList<>();
+        try {
+            jdbcTemplate = new JdbcTemplate(dataSource);
+            List<Map<String, Object>> rows = jdbcTemplate.queryForList(FIND_ALL_MARKED_BY_CURRENT_INTERVIEWER, user.getId());
+            for (Map row : rows) {
+                Candidate candidate = new Candidate();
+                candidate.setId((int) row.get("id"));
+                candidate.setStatusId((int) row.get("status_id"));
+                candidate.setCourseId((int) row.get("course_id"));
+                candidate.setInterviewResults(interviewResultDAO.findResultsByCandidateId(candidate.getId()));
+                listCandidates.add(candidate);
+            }
+        } catch (Exception e) {
+            LOGGER.error("Error: " + e);
+        }
+        return listCandidates;
+    }
+
+    @Override
     public Candidate find(int id) {
         return null;
     }
@@ -244,6 +300,7 @@ public class CandidateDAOImpl implements CandidateDAO {
             return true;
         } catch (Exception e) {
             LOGGER.error("Error:" + e);
+            sendEmailService.sendEmailAboutCriticalError("ERROR in saveOrUpdateAnswers\n" + e.getMessage());
         }
         return false;
     }
@@ -252,6 +309,10 @@ public class CandidateDAOImpl implements CandidateDAO {
     @Override
     public Collection<Candidate> findAll() {
         return findCandidates(FIND_ALL);
+    }
+
+    public Collection<Candidate> findPart(Integer with, Integer to) {
+        return findCandidates(FIND_PART + with + " LIMIT " + to);
     }
 
     private Collection<Candidate> findCandidates(String sql) {

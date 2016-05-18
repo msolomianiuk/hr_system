@@ -41,39 +41,59 @@ public class AddressDAOImpl implements AddressDAO {
     @Override
     public Address find(int id) {
         Address address = null;
-        address = jdbcTemplateFactory.getJdbcTemplate(dataSource).queryForObject(FIND_SQL,
-                new RowMapper<Address>() {
-                    public Address mapRow(ResultSet rs, int rowNum) throws SQLException {
-                        return createAddressWithResultSet(rs);
-                    }
-                },
-                id);
+        try {
+            address = jdbcTemplateFactory.getJdbcTemplate(dataSource).queryForObject(FIND_SQL,
+                    new RowMapper<Address>() {
+                        public Address mapRow(ResultSet rs, int rowNum) throws SQLException {
+                            return createAddressWithResultSet(rs);
+                        }
+                    },
+                    id);
+        } catch (Exception e){
+            LOGGER.error("Error: " + e);
+        }
         return address;
     }
 
     @Override
     public boolean insert(Address address) {
-        return jdbcTemplateFactory.getJdbcTemplate(dataSource).update(INSERT_SQL,
-                address.getAddress(),
-                address.getRoomCapacity()) > 0;
+        try {
+            return jdbcTemplateFactory.getJdbcTemplate(dataSource).update(INSERT_SQL,
+                    address.getAddress(),
+                    address.getRoomCapacity()) > 0;
+        } catch (Exception e){
+            LOGGER.error("Error: " + e);
+        }
+        return false;
     }
 
     @Override
     public boolean remove(long id) {
+        try{
         return jdbcTemplateFactory.getJdbcTemplate(dataSource).update(REMOVE_SQL, id) > 0;
+        } catch (Exception e){
+            LOGGER.error("Error: " + e);
+        }
+        return false;
     }
 
     @Override
     public boolean update(Address address) {
+        try{
         return jdbcTemplateFactory.getJdbcTemplate(dataSource).update(UPDATE_SQL,
                 address.getAddress(),
                 address.getRoomCapacity(),
                 address.getId()) > 0;
+        } catch (Exception e){
+            LOGGER.error("Error: " + e);
+        }
+        return false;
     }
 
     @Override
     public Address findByAdrress(String addressName) {
         Address address = null;
+        try{
         address = jdbcTemplateFactory.getJdbcTemplate(dataSource).queryForObject(FIND_ADDRESS_SQL,
                 new RowMapper<Address>() {
                     public Address mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -81,18 +101,26 @@ public class AddressDAOImpl implements AddressDAO {
                     }
                 },
                 addressName);
+        } catch (Exception e){
+            LOGGER.error("Error: " + e);
+        }
         return address;
     }
 
     @Override
     public List<Address> findAll() {
         List<Address> addressList = null;
-        return addressList = jdbcTemplateFactory.getJdbcTemplate(dataSource).query(FIND_ALL_SQL,
-                new RowMapper<Address>() {
-                    public Address mapRow(ResultSet rs, int rowNum) throws SQLException {
-                        return createAddressWithResultSet(rs);
-                    }
-                });
+        try {
+            return addressList = jdbcTemplateFactory.getJdbcTemplate(dataSource).query(FIND_ALL_SQL,
+                    new RowMapper<Address>() {
+                        public Address mapRow(ResultSet rs, int rowNum) throws SQLException {
+                            return createAddressWithResultSet(rs);
+                        }
+                    });
+        } catch (Exception e){
+            LOGGER.error("Error: " + e);
+        }
+        return addressList;
     }
 
 

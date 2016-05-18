@@ -5432,7 +5432,7 @@ ul.notifications {
 }
 
 .profile{
-  height: 60px;
+  height: 70px;
 }
 
 .question-interview-button.btn {
@@ -5498,4 +5498,24 @@ button.filters-button{
 
 .profile_img{
   cursor: pointer;
+}
+
+td.candidate-status-td{
+  cursor: auto;
+}
+
+td.candidate-status-td select{
+  background-color: white;
+}
+
+.ln_solid {
+  margin: 10px 0;
+}
+
+.profile_info h2{
+  line-height: 20px;
+}
+
+.interview-comments, .candidate-details, .form-interview-result{
+  display: none;
 }

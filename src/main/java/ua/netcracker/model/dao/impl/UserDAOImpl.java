@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 import ua.netcracker.model.dao.UserDAO;
 import ua.netcracker.model.entity.Role;
 import ua.netcracker.model.entity.User;
+import ua.netcracker.model.service.SendEmailService;
 
 import javax.sql.DataSource;
 import java.sql.PreparedStatement;
@@ -50,7 +51,8 @@ public class UserDAOImpl implements UserDAO {
     @Autowired
     private JdbcTemplate jdbcTemplate;
     private SimpleJdbcInsert simpleJdbcInsert;
-
+    @Autowired
+    private SendEmailService sendEmailService;
     @Autowired
     public void setSimpleJdbcInsert(DataSource dataSource) {
         simpleJdbcInsert = new SimpleJdbcInsert(dataSource).
@@ -75,15 +77,21 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public User find(int id) {
-        User user = jdbcTemplate.queryForObject(
-                SQL_FIND,
-                new RowMapper<User>() {
-                    public User mapRow(ResultSet rs, int rowNum) throws SQLException {
-                        return createUserWithResultSet(rs);
-                    }
-                }, id);
+        User user = null;
+        try {
+            user = jdbcTemplate.queryForObject(
+                    SQL_FIND,
+                    new RowMapper<User>() {
+                        public User mapRow(ResultSet rs, int rowNum) throws SQLException {
+                            return createUserWithResultSet(rs);
+                        }
+                    }, id);
 
-        user.setRoles(getUserRolesById(user.getId()));
+            user.setRoles(getUserRolesById(user.getId()));
+        } catch (Exception e) {
+            LOGGER.info(e);
+            sendEmailService.sendEmailAboutCriticalError("Error in find User(Login Error)" + e.getMessage());
+        }
         return user;
     }
 
@@ -163,14 +171,20 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public User findByEmail(String email) {
-        User user = jdbcTemplate.queryForObject(
-                SQL_FIND_BY_EMAIL,
-                new RowMapper<User>() {
-                    public User mapRow(ResultSet rs, int rowNum) throws SQLException {
-                        return createUserWithResultSet(rs);
-                    }
-                }, email);
-        user.setRoles(getUserRolesById(user.getId()));
+        User user = null;
+        try {
+            user = jdbcTemplate.queryForObject(
+                    SQL_FIND_BY_EMAIL,
+                    new RowMapper<User>() {
+                        public User mapRow(ResultSet rs, int rowNum) throws SQLException {
+                            return createUserWithResultSet(rs);
+                        }
+                    }, email);
+
+            user.setRoles(getUserRolesById(user.getId()));
+        }catch (Exception e){
+            LOGGER.info(e);
+        }
         return user;
     }
 

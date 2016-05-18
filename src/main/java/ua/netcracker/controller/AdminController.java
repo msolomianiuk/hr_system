@@ -1,9 +1,12 @@
 package ua.netcracker.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -11,11 +14,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import ua.netcracker.model.entity.*;
 import ua.netcracker.model.service.*;
 import ua.netcracker.model.service.date.DateService;
-import ua.netcracker.model.service.impl.AnswerServiceImpl;
-import ua.netcracker.model.service.impl.CandidateServiceImpl;
-import ua.netcracker.model.service.impl.CourseSettingServiceImpl;
-import ua.netcracker.model.service.impl.QuestionServiceImpl;
+import ua.netcracker.model.service.impl.*;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -66,9 +67,9 @@ public class AdminController {
         return "candidate";
     }
 
+
     @RequestMapping(value = "/candidate/update_status", method = RequestMethod.GET)
     public ResponseEntity updateCandidateStatus(@RequestParam Integer candidateID, @RequestParam String status) {
-
 
         candidateService.updateCandidateStatus(candidateID, Status.valueOf(status).getId());
 
@@ -165,8 +166,6 @@ public class AdminController {
     }
 
 
-
-
     @RequestMapping(value = "/get_candidate", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<Collection> setCandidate(
@@ -216,26 +215,53 @@ public class AdminController {
 
     @RequestMapping(value = "/interview_details_update", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<InterviewDaysDetails> updateInterviewDaysDetails(
+    public ResponseEntity updateInterviewDaysDetails(
             @RequestParam String id,
             @RequestParam String start_time,
             @RequestParam String end_time,
             @RequestParam String address_id
     ) {
-        InterviewDaysDetails interviewDaysDetails = new InterviewDaysDetails();
-        interviewDaysDetails.setId(Integer.parseInt(id));
-        interviewDaysDetails.setStartTime(start_time);
-        interviewDaysDetails.setEndTime(end_time);
-        interviewDaysDetails.setAddressId(addressService.findByAddress(address_id).getId());
-        interviewDaysDetails.setCountStudents(dateService.quantityStudent(interviewDaysDetails));
-        interviewDaysDetails.setCountPersonal(dateService.getPersonal(interviewDaysDetails));
-        interviewDaysDetailsService.update(interviewDaysDetails);
-        if (interviewDaysDetails == null) {
-            return ResponseEntity.accepted().body(interviewDaysDetails);
+        InterviewDaysDetails interviewDaysDetails = interviewDaysDetailsService.setInterviewDateDetails(
+                id,
+                start_time,
+                end_time,
+                addressService.findByAddress(address_id).getId()
+        );
+        if (interviewDaysDetails.getCountPersonal()==-1){
+            return ResponseEntity
+                    .status(HttpStatus.FORBIDDEN)
+                    .body("This room can not accommodate all the people");
+        }else {
+            if (interviewDaysDetails.getStartTime() != null && interviewDaysDetails.getEndTime() != null) {
+                interviewDaysDetailsService.update(interviewDaysDetails);
+                return ResponseEntity.ok(interviewDaysDetails);
+            } else {
+                return ResponseEntity
+                        .status(HttpStatus.FORBIDDEN)
+                        .body("Please, enter the valid time");
+            }
         }
-        return ResponseEntity.ok(interviewDaysDetails);
     }
 
+    @RequestMapping(value = "/date_list", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<List<Map<String,Object>>> getDateList() {
+        List<Map<String,Object>> dateList =  dateService.getDateList(courseSettingService.getLastSetting());
+        if (dateList.isEmpty()) {
+            return new ResponseEntity<List<Map<String,Object>>>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<List<Map<String,Object>>>(dateList, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/add_date", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity setNewDate(@RequestParam String date) {
+        InterviewDaysDetails interviewDaysDetails = new InterviewDaysDetails();
+        interviewDaysDetails.setCourseId(courseSettingService.getLastSetting().getId());
+        interviewDaysDetails.setInterviewDate(date);
+        interviewDaysDetailsService.addDate(interviewDaysDetails);
+        return ResponseEntity.ok(interviewDaysDetails);
+    }
     //---REST Controllers for Address---
 
     @RequestMapping(value = "/address_list", method = RequestMethod.GET)
@@ -295,6 +321,15 @@ public class AdminController {
         return ResponseEntity.ok(addressEntity);
     }
 
+    @RequestMapping(value = "/address_delete", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity removeAddress(
+            @RequestParam String id
+    ) {
+           addressService.delete(Integer.parseInt(id));
+        return ResponseEntity.ok(Integer.parseInt(id));
+    }
+
     @RequestMapping(value = "/template", method = RequestMethod.GET)
     public String getEmailTemplatePage() {
         return "template";
@@ -335,19 +370,32 @@ public class AdminController {
 
     @RequestMapping(value = "/service/createReport", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<Collection<Collection<String>>> getReport(@RequestParam String query) {
-        Collection<Collection<String>> report = reportService.getReportByQuery(query);
-        if (report == null) {
+    public ResponseEntity<Collection<Collection<String>>> getReport(@RequestParam String query,@RequestParam String description) {
+        Collection<Collection<String>> report = reportService.getReportByQuery(query, description);
+        if (report.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(report, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/service/getReportInXlSX", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<byte[]> getReportInXlSX() {
+        byte[] content;
+        try {
+            content = reportService.getXLSX();
+        } catch (IOException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        HttpHeaders headers = reportService.getHeaders();
+        return new ResponseEntity<>(content, headers, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/service/getAllReportQuery", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<Collection<ReportQuery>> getAllReports() {
         Collection<ReportQuery> report = reportService.getAllReports();
-        if (report == null) {
+        if (report.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(report, HttpStatus.OK);
@@ -379,11 +427,12 @@ public class AdminController {
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
+
     @RequestMapping(value = "/get_list", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<Collection<Question>> getAllQuestion (@RequestParam String id){
-        Collection<Question> collection =  questionService.getAllIsView(Integer.parseInt(id));
-        if (collection.isEmpty()){
+    public ResponseEntity<Collection<Question>> getAllQuestion(@RequestParam String id) {
+        Collection<Question> collection = questionService.getAllIsView(Integer.parseInt(id));
+        if (collection.isEmpty()) {
             return (ResponseEntity<Collection<Question>>) ResponseEntity.EMPTY;
         }
         return ResponseEntity.ok(collection);
@@ -391,9 +440,9 @@ public class AdminController {
 
     @RequestMapping(value = "/get_question", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<Question> getQuestion (@RequestParam String id){
-        Question question =  questionService.get(Integer.parseInt(id));
-        if (question==null){
+    public ResponseEntity<Question> getQuestion(@RequestParam String id) {
+        Question question = questionService.get(Integer.parseInt(id));
+        if (question == null) {
             return (ResponseEntity<Question>) ResponseEntity.EMPTY;
         }
         return ResponseEntity.ok(question);

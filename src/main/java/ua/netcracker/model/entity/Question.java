@@ -26,13 +26,6 @@ public class Question {
     public Question() {
     }
 
-    public boolean isView() {
-        return isView;
-    }
-
-    public void setView(boolean isView) {
-        this.isView = isView;
-    }
 
     public int getId() {
         return id;
@@ -89,6 +82,10 @@ public class Question {
     public void setOrderNumber(int orderNumber) {
         this.orderNumber = orderNumber;
     }
+
+    public void setView(boolean isView) {this.isView = isView;}
+
+    public boolean isView() {return isView;}
 
     @Override
     public String toString() {

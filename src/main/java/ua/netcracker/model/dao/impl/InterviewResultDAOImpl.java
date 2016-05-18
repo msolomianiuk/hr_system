@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import ua.netcracker.model.dao.InterviewResultDAO;
+import ua.netcracker.model.dao.UserDAO;
 import ua.netcracker.model.entity.InterviewResult;
 import ua.netcracker.model.entity.Recommendation;
 
@@ -17,6 +18,9 @@ import java.util.*;
  */
 @Repository("InterviewResultDao")
 public class InterviewResultDAOImpl implements InterviewResultDAO {
+
+    @Autowired
+    private UserDAO userDAO;
     private static final Logger LOGGER = Logger.getLogger(InterviewResultDAOImpl.class);
     private static final String FIND_MARK = "Select mark, interviewer_id from \"hr_system\".interview_result " +
             "where candidate_id =?";
@@ -26,8 +30,7 @@ public class InterviewResultDAOImpl implements InterviewResultDAO {
                     "on i.recommendation_id = r.id where i.candidate_id =?";
     private static final String FIND_COMMENT =
             "Select response from \"hr_system\".interview_result where i.candidate_id = ?";
-    private static final String FIND_ALL = "Select interviewer_id, mark, comment, recommendation_id" +
-            "from \"hr_system\".interview_result where candidate_id = ?";
+    private static final String FIND_ALL = "Select * from \"hr_system\".interview_result where candidate_id = ?";
     private static final String CREATE = "Insert into \"hr_system\".interview_result " +
             "(interviewer_id, candidate_id, mark, comment, recommendation_id) values (?, ?, ?, ?, ?)";
     private static final String UPDATE = "UPDATE \"hr_system\".interview_result SET " +
@@ -36,13 +39,14 @@ public class InterviewResultDAOImpl implements InterviewResultDAO {
 
     @Override
     public Collection<InterviewResult> findResultsByCandidateId(Integer candidateId) {
-        List<InterviewResult> results = new ArrayList<>();
+        Collection<InterviewResult> results = new ArrayList<>();
         try {
             JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
             List<Map<String, Object>> rows = jdbcTemplate.queryForList(FIND_ALL, candidateId);
             for (Map<String, Object> row : rows) {
                 InterviewResult interviewResult = new InterviewResult();
                 interviewResult.setInterviewerId((int) row.get("interviewer_id"));
+                interviewResult.setInterviewer(userDAO.find((int) row.get("interviewer_id")));
                 interviewResult.setMark((int) row.get("mark"));
                 interviewResult.setComment((String) row.get("comment"));
                 Recommendation[] recommendations = Recommendation.values();
@@ -51,12 +55,12 @@ public class InterviewResultDAOImpl implements InterviewResultDAO {
                         interviewResult.setRecommendation(r);
                     }
                 }
+                results.add(interviewResult);
             }
 
         } catch (Exception e) {
             LOGGER.error("Error: " + e);
         }
-
         return results;
     }
 

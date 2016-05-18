@@ -10,12 +10,12 @@ public class InterviewResult {
 
     private Integer interviewerId;
 
-
     private Integer mark;
 
     private String comment;
 
     private Recommendation recommendation;
+    private User interviewer;
 
     public InterviewResult() {
 
@@ -51,5 +51,13 @@ public class InterviewResult {
 
     public void setRecommendation(Recommendation recommendation) {
         this.recommendation = recommendation;
+    }
+
+    public User getInterviewer() {
+        return interviewer;
+    }
+
+    public void setInterviewer(User interviewer) {
+        this.interviewer = interviewer;
     }
 }

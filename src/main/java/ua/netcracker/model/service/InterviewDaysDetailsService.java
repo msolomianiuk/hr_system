@@ -36,5 +36,7 @@ public interface InterviewDaysDetailsService {
 
     int getIdbyDate(String date);
 
+    InterviewDaysDetails setInterviewDateDetails(String id,String startTime, String endTime,int addressId);
+
     List<Map<String, Object>> findAllInterviewDetailsAddress();
 }

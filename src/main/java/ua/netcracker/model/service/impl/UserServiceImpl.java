@@ -91,6 +91,23 @@ public class UserServiceImpl implements UserService {
         return userDao.find(id);
     }
 
+    @Override
+    public User getAuthorizedUser() {
+        int userId = 0;
+        try {
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            if (!(auth instanceof AnonymousAuthenticationToken)) {
+                UserAuthenticationDetails userDetails =
+                        (UserAuthenticationDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+                userId = userDetails.getUserId();
+            }
+            return userDao.find(userId);
+        }catch (Exception e){
+            LOGGER.error("Error : " + e);
+        }
+        return null;
+    }
+
     private String generateUUID() {
         UUID id = UUID.randomUUID();
         return String.valueOf(id);

@@ -35,6 +35,7 @@ $(document).ready(function () {
         var index = getIndexByRadio();
         if (curData[index].status !== 'insert') {
             curData[index].status = 'delete';
+            curData[index].show = false;
         } else {
             curData.splice(index, 1);
         }
@@ -45,24 +46,14 @@ $(document).ready(function () {
         var index = getIndexByRadio();
         var query = curData[index].query.toLowerCase();
         if (query.indexOf('drop') === -1 && query.indexOf('insert') === -1 && query.indexOf('update') === -1) {
-            $.ajax({
-                url: "http://localhost:8080/hr_system-1.0-SNAPSHOT/admin/service/createReport",
-                type: "GET",
-                dataType: "json",
-                data: {"query": curData[index].query},
-                contentType: 'application/json',
-                mimeType: 'application/json',
-                success: function (data) {
-                    // console.log(data);
-                    showReport(data);
-                    showElement(showTable);
-                },
-                error: function (data) {
-                    alert("ERROR: bad request");
-                    //console.log(data);
-                }
-            });
-        }else{
+            ajax("/service/createReport", function (data) {
+                showReport(data);
+                showElement(showTable);
+            }, function (data) {
+                alert("ERROR: bad request");
+                console.log(data);
+            }, {"query": curData[index].query, "description": curData[index].description});
+        } else {
             alert("ban words: drop, insert, update");
         }
     });
@@ -75,23 +66,15 @@ $(document).ready(function () {
         disableButton(deleteButton);
         isShowAll = true;
         sendAjax();
-        $.ajax({
-            url: "http://localhost:8080/hr_system-1.0-SNAPSHOT/admin/service/getAllReportQuery",
-            type: "GET",
-            dataType: "json",
-            contentType: 'application/json',
-            mimeType: 'application/json',
-            success: function (data) {
-                curData = data;
-                for (var index in curData) {
-                    curData[index].status = "new";
-                }
-                generateDescriptionList(curData);
-            },
-            error: function (data) {
-                console.log(data);
+        ajax("/service/getAllReportQuery", function (data) {
+            curData = data;
+            for (var index in curData) {
+                curData[index].status = "new";
             }
-        });
+            generateDescriptionList(curData);
+        }, function (data) {
+            console.log(data);
+        })
     });
 
     $(".save_button").click(function () {
@@ -135,8 +118,10 @@ $(document).ready(function () {
         enableButton(createButton);
         enableButton(deleteButton);
         checkChanges();
-        sendAjax();
         isShowAll = false;
+        sendAjax();
+        setTimeout(init, 500);
+        setTimeout(init, 500);
     });
 
     $(".cancel_list_button").click(function () {
@@ -144,17 +129,17 @@ $(document).ready(function () {
         enableButton(showAllButton);
         enableButton(createButton);
         enableButton(deleteButton);
-        init();
         isShowAll = false;
+        init();
     });
-    $(".export_button").click(function () {
-        var index = getIndexByRadio();
-        var now = new Date();
-        $("#table2excel").table2excel({
-            filename: curData[index].description + now.getFullYear()+':'+(now.getMonth()+1)+':'+now.getDate()
-        });
-
-    });
+    //$(".export_button").click(function () {
+    //    var index = getIndexByRadio();
+    //    var now = new Date();
+    //    $("#table2excel").table2excel({
+    //        filename: curData[index].description + now.getFullYear()+':'+(now.getMonth()+1)+':'+now.getDate()
+    //    });
+    //
+    //});
     $(window).on('beforeunload', function () {
         sendAjax();
     });
@@ -165,14 +150,8 @@ var maxID = 0;
 var isShowAll = false;
 
 function init() {
-    $.ajax({
-        url: "http://localhost:8080/hr_system-1.0-SNAPSHOT/admin/service/getReportQuery",
-        type: "GET",
-        dataType: "json",
-        success: ajaxSuccess,
-        error: function (data) {
-            console.log(data);
-        }
+    ajax("/service/getReportQuery", ajaxSuccess, function (data) {
+        console.log(data);
     });
 }
 
@@ -193,7 +172,6 @@ function generateDescriptionList(data) {
             reportForm.append(createRow(data[index].id, data[index].description, data[index].show));
             isExist = true;
         }
-        // maxID = data[index].id > maxID ? data[index].id : maxID;
     }
     $(".radio_button:first").prop("checked", true);
     if (!isExist || data.length == 0) {
@@ -248,24 +226,16 @@ function showQuery(radioButtons) {
 
 function sendAjax() {
     for (var index in curData) {
-        if (curData[index].status !== "new") {
-            $.ajax({
-                url: "http://localhost:8080/hr_system-1.0-SNAPSHOT/admin/service/setReportQuery",
-                type: "GET",
-                dataType: "json",
-                data: curData[index],
-                contentType: 'application/json',
-                mimeType: 'application/json',
-                success: function (data) {
-                    init();
+        if (curData[index] !== "new") {
+            ajax("/service/setReportQuery", function () {
                 },
-                error: function (data) {
+                function (data) {
                     console.log(data);
-                }
-            });
+                },
+                curData[index]
+            );
         }
     }
-    init();
 }
 
 function checkChanges() {
@@ -277,7 +247,6 @@ function checkChanges() {
             curData[index].show = !curData[index].show;
         }
     });
-    console.log(curData);
 }
 
 function getReportByRadio() {
@@ -315,4 +284,17 @@ function disableButton(but) {
 
 function enableButton(but) {
     but.prop("disabled", false);
+}
+
+function ajax(url, success, error, data) {
+    $.ajax({
+        url: "http://localhost:8080/hr_system-1.0-SNAPSHOT/admin" + url,
+        type: "GET",
+        dataType: "json",
+        contentType: 'application/json',
+        mimeType: 'application/json',
+        data: data,
+        success: success,
+        error: error
+    });
 }

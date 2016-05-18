@@ -21,6 +21,8 @@
         <intercept-url pattern="/service/user" access="hasRole('ROLE_ADMIN')"/>
         <intercept-url pattern="/new_personal" access="hasRole('ROLE_ADMIN')"/>
         <intercept-url pattern="/info/**" access="permitAll"/>
+        <intercept-url pattern="/password/**" access="isAnonymous()"/>
+
         <intercept-url pattern="/" access="permitAll"/>
         <intercept-url pattern="/admin/**" access="hasRole('ROLE_ADMIN')"/>
         <intercept-url pattern="/hr/**" access="hasRole('ROLE_HR')"/>

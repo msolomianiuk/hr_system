@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import ua.netcracker.model.dao.QuestionDAO;
 import ua.netcracker.model.entity.Question;
+import ua.netcracker.model.service.SendEmailService;
 
 import javax.sql.DataSource;
 import java.sql.ResultSet;
@@ -70,7 +71,8 @@ public class QuestionDAOImpl implements QuestionDAO {
 
     @Autowired
     private DataSource dataSource;
-
+    @Autowired
+    private SendEmailService sendEmailService;
 
     @Override
     public Collection<Question> findQuestions(String sql) {
@@ -92,6 +94,7 @@ public class QuestionDAOImpl implements QuestionDAO {
             }
             return questions;
         } catch (Exception e) {
+            sendEmailService.sendEmailAboutCriticalError("ERROR in findQuestions\n" + e.getMessage());
             LOGGER.error(e);
         }
         return null;
@@ -197,6 +200,8 @@ public class QuestionDAOImpl implements QuestionDAO {
         return false;
     }
 
+
+    @Override
     public boolean update(Question question) {
         try {
             JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);

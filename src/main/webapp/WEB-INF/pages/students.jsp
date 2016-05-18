@@ -179,7 +179,7 @@
                         <div class="x_content">
                             <p class="text-muted font-13 m-b-30">
 
-                            <div class="tabke-filters">
+                            <div class="table-filters">
                                 <button class="btn btn-default" type="button" data-toggle="collapse"
                                         data-target="#collapseFilters" aria-expanded="false"
                                         aria-controls="collapseExample">
@@ -188,14 +188,38 @@
                                 <div class="collapse" id="collapseFilters">
                                     <div class="well">
                                         <div class="row">
-                                            <div class="col-md-4 col-sm-6 col-xs-6">
-                                                <select id="study" class="form-control">
-                                                    <option value="" disabled selected hidden>Select study</option>
-                                                    <option value="">KPI</option>
-                                                    <option value="">HAU</option>
-                                                    <option value="">Shevchenko</option>
-                                                </select>
-                                            </div>
+                                            <%--<select id="study" class="form-control">--%>
+                                                <%--<option value="" disabled selected hidden>Select study</option>--%>
+                                                <%--<option value="">KPI</option>--%>
+                                                <%--<option value="">HAU</option>--%>
+                                                <%--<option value="">Shevchenko</option>--%>
+                                            <%--</select>--%>
+                                            <%--<div class="x_panel">--%>
+                                                <div class="x_content">`
+                                                    <div class="candidate-profile row">
+                                                        <%@ include file="include/filtering/filtersForm.jsp" %>
+                                                        <div class="form-group">
+                                                            <div class="col-md-6 col-md-offset-3">
+                                                                <label class="control-label caption" for="status_select">Change the status of filtered candidates to:</label>
+                                                                <select id="status_select" class="status form-control select-and-text" name="statusId">
+                                                                    <option value="" selected>Select status</option>
+                                                                </select>
+                                                                <br>
+                                                                <label class="control-label caption" for="status_select_2">Change the status of the other candidates to:</label>
+                                                                <select id="status_select_2" class="status form-control select-and-text" name="statusId2">
+                                                                    <option value="" selected >Select status</option>
+                                                                </select>
+                                                                <br>
+                                                                <button id="filter" type="button" class="btn btn-primary">Filter</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="hidden">
+                                                        <%@ include file="include/profile/question/questionsFieldsTemplate.jsp" %>
+                                                    </div>
+                                                </div>
+                                            <%--</div>--%>
+                                            <%@ include file="include/links/linksForFiltering.jsp" %>
                                         </div>
                                     </div>
                                 </div>
@@ -293,6 +317,9 @@
     </div>
 
 </div>
+
+<script src="<c:url value="/static/js/custom/baseUrl.js"/>"></script>
+
 <script src="<c:url value="/static/admin/js/AjaxForStudents.js"/>"></script>
 <script src="<c:url value="/static/admin/js/bootstrap.min.js"/>"></script>
 <script src="<c:url value="/static/admin/js/jquery.simplePagination.js"/>"></script>
@@ -303,8 +330,6 @@
 <script src="<c:url value="/static/admin/js/icheck/icheck.min.js"/>"></script>
 
 <script src="<c:url value="/static/admin/js/custom.js"/>"></script>
-
-
 
 
 <!-- Datatables-->

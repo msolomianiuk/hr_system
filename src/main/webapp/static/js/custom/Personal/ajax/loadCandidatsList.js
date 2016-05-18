@@ -7,22 +7,19 @@ function loadCandidatesList() {
         contentType: 'application/json',
         mimeType: 'application/json',
         success:  function(data) {
-
-            getAllStatus();
             addInTableCandidates(data);
             initTrigger();
+            $('.loading').attr('style', 'display: none');
         },
         error: function (data) {
             console.log(data);
         }
     });
-
-
 }
-
+var statusAllList;
 function getAllStatus() {
     $.ajax({
-        url: "http://localhost:8080/hr_system-1.0-SNAPSHOT/hr/service/getAllStatus",
+        url: baseUrl + "/hr/service/getAllStatus",
         type: "GET",
         dataType: "json",
         contentType: 'application/json',
@@ -37,8 +34,9 @@ function getAllStatus() {
 
 }
 
+var statusSelectOptionsString = ''
 function drawSatus(statusList) {
     for (var index in statusList) {
-        $('div.statusSelector select').append("<options value='" + index + "'>" + statusList[index] + "</options>");
+        statusSelectOptionsString += "<option value='" + index + "'>" + statusList[index] + "</option>";
     }
 }

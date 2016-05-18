@@ -4,9 +4,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ua.netcracker.model.dao.UserDAO;
-import ua.netcracker.model.entity.Candidate;
 import ua.netcracker.model.entity.Role;
-import ua.netcracker.model.entity.Status;
 import ua.netcracker.model.entity.User;
 import ua.netcracker.model.service.CandidateService;
 import ua.netcracker.model.service.RegistrationService;
@@ -21,6 +19,8 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     private static final Logger LOGGER = Logger.getLogger(RegistrationServiceImpl.class);
     @Autowired
+    private CourseSettingServiceImpl courseSettingService;
+    @Autowired
     private UserDAO userDao;
 
     @Autowired
@@ -32,7 +32,8 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Autowired
     private ValidationService validationService;
 
-    private static String sha256Password(String password) {
+    @Override
+    public String sha256Password(String password) {
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-256");
 
@@ -57,13 +58,11 @@ public class RegistrationServiceImpl implements RegistrationService {
             User user = new User(email, sha256Password(password), name, surname, patronymic,
                     new ArrayList<>(Arrays.asList(Role.ROLE_STUDENT)));
             if (userDao.insert(user)) {
-                sendEmailServiceImpl.sendEmailAboutSuccessfulRegistration(new String[]{user.getEmail()});
-                Candidate candidate = new Candidate();
-                candidate.setUserId(userDao.findByEmail(email).getId());
-                candidate.setStatusId(Status.New.getId());
-                candidate.setCourseId(1);
-                return candidateService.saveCandidate(candidate);
+                sendEmailServiceImpl.sendEmailAboutSuccessfulRegistration(user, password);
+
+                return true;
             }
+            sendEmailServiceImpl.sendEmailAboutCriticalError("ERROR in registrationStudent with email: " + email);
         }
         return false;
     }

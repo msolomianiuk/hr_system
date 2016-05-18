@@ -22,7 +22,7 @@ $(document).ready(function () {
             mimeType: 'application/json',
             success: getInterviewAddress,
             error: function (data) {
-                console.log(data);
+                // console.log(data);
             }
         });
 
@@ -38,7 +38,7 @@ $(document).ready(function () {
         mimeType: 'application/json',
         success: getInterviewAddress,
         error: function (data) {
-            console.log(data);
+            // console.log(data);
         }
     });
     $(document).on("click",".getModalAddress",function(){
@@ -54,7 +54,7 @@ $(document).ready(function () {
             mimeType: 'application/json',
             success: getAddressSolo,
             error: function (data) {
-                console.log(data);
+                // console.log(data);
             }
         });
 
@@ -72,7 +72,7 @@ $(document).ready(function () {
             mimeType: 'application/json',
             success: addAddress,
             error: function (data) {
-                console.log(data);
+                // console.log(data);
             }
         });
 
@@ -92,12 +92,30 @@ $(document).ready(function () {
             mimeType: 'application/json',
             success: updateAddress,
             error: function (data) {
-                console.log(data);
+                // console.log(data);
             }
         });
 
     });
 
+    $(document).on("click","#DeleteAddress",function(){
+
+        var id  = parseInt(($("#AddressUpdate").attr("id_day")));
+
+        $.ajax({
+            url: location_origin + "/admin/address_delete",
+            type: "GET",
+            dataType: "json",
+            data:{'id':id},
+            contentType: 'application/json',
+            mimeType: 'application/json',
+            success: updateAddress,
+            error: function (data) {
+                // console.log(data);
+            }
+        });
+
+    });
 
     $.ajax({
         url: location_origin+"/getCurseId",
@@ -107,7 +125,7 @@ $(document).ready(function () {
         mimeType: 'application/json',
         success: getCourseID,
         error: function (data) {
-            console.log(data);
+            // console.log(data);
         }
     });
 
@@ -121,7 +139,7 @@ $(document).ready(function () {
             data:{'date':date},
             success: getSettingInterviewDays,
             error: function (data) {
-                console.log(data);
+                // console.log(data);
             }
         });
 
@@ -133,7 +151,7 @@ $(document).ready(function () {
         dataType: "json",
         success: getTableWithDate,
         error: function (data) {
-            console.log(data);
+            // console.log(data);
         }
     });
     $(document).on("click",".getModalInerviewDaysD",function(){
@@ -149,17 +167,12 @@ $(document).ready(function () {
             mimeType: 'application/json',
             success: getInterviewsSolo,
             error: function (data) {
-                console.log(data);
+                // console.log(data);
             }
         });
 
     });
     $(document).on("click","#UpdateInerviw",function(){
-
-
-
-
-
         var id  = parseInt(($("#id_interview").attr("id_day")));
         var address_id = $("#SelectorAddress").val();
         var start_time = $("input[name='StartInterview']").val();
@@ -173,12 +186,39 @@ $(document).ready(function () {
             contentType: 'application/json',
             mimeType: 'application/json',
             success: updateAddress,
-            error: function (data) {
-                console.log(data);
-            }
+            error: AlertError
         });
 
     });
+
+    $.ajax({
+        url: location_origin+"/admin/date_list",
+        type: "GET",
+        dataType: "json",
+        success: getDaysSelector,
+        error: function (data) {
+            // console.log(data);
+        }
+    });
+
+    $('body').on('click', '#UpdateDateinSelect', function(){
+        
+        var date = $("#Days").val();
+
+        $.ajax({
+            url: location_origin + "/admin/add_date",
+            type: "GET",
+            dataType: "json",
+            data:{'date':date},
+            contentType: 'application/json',
+            mimeType: 'application/json',
+            success: updateAddressForSelect,
+            error: function (data) {
+                // console.log(data);
+            }
+        });
+    });
+    
 });
 
 
@@ -221,7 +261,6 @@ function getInterviewAddress(data){
 
 function getAddressSolo(data){
     dataInNewAll = data;
-    alert("U get Address");
     $(".ModelViewDays").empty();
     $(".ModelViewDays").append('<div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">'+
     '<div class="form-group">'+
@@ -236,7 +275,8 @@ function getAddressSolo(data){
     '</div>'+
     '</div>'+
     '<div class="col-md-12 col-lg-12 col-sm-12 col-xs-12">'+
-    '<button type="button" id="UpdateAddress" class="btn btn-success">Add Address Interview days details</button>'+
+    '<button type="button" id="UpdateAddress" class="btn btn-success">Update Address </button>'+
+    '<button type="button" id="DeleteAddress" class="btn btn-success">Delete Address </button>'+
     '</div>');
     $("#AddressUpdate").attr("id_day", data.id);
     $("#AddressUpdate").attr("value", data.address);
@@ -257,13 +297,13 @@ function addAddress(data){
         mimeType: 'application/json',
         success: getInterviewAddress,
         error: function (data) {
-            console.log(data);
+            // console.log(data);
         }
     });
 }
 
 function updateAddress(data){
-    alert("U update address")
+    alert("Update is success")
 
     $("#TableAddressFull").empty();
     $.ajax({
@@ -272,11 +312,16 @@ function updateAddress(data){
         dataType: "json",
         success: getTableWithDate,
         error: function (data) {
-            console.log(data);
+            // console.log(data);
         }
     });
 
 
+}
+
+function AlertError(data){
+    alert(data.responseText);
+    dataAlert=data;
 }
 
 function getCourseID(data){
@@ -338,8 +383,9 @@ function getInterviewsSolo (data){
 
     $(".ModelViewDays").append('<h3 style="text-align:center;">'+data.interviewDate+'</h3>');
     $(".ModelViewDays").append('<div class="col-md-12 col-lg-12 col-sm-12 col-xs-12">'+
+    '<div class="form-group">'+
     '<select id="SelectorAddress">'+
-    '<option selected>Choose day</selected>'+
+    '<option selected>Address</selected>'+
     '<select>'+
     '</div>'+
     '<div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">'+
@@ -356,7 +402,11 @@ function getInterviewsSolo (data){
     '</div>'+
     '<div class="col-md-12 col-lg-12 col-sm-12 col-xs-12">'+
     '<button type="button" id="UpdateInerviw" class="btn btn-success">Add Address Interview days details</button>'+
+    '</div>'+
     '</div>');
+        $("#StartInterview").mask("99:99");
+        $("#EndInterview").mask("99:99");
+    
     $("#StartInterview").attr("value", data.startTime);
     $("#EndInterview").attr("value", data.endTime);
 
@@ -368,7 +418,7 @@ function getInterviewsSolo (data){
         mimeType: 'application/json',
         success: getAddressWithID,
         error: function (data) {
-            console.log(data);
+            // console.log(data);
         }
     });
 
@@ -379,5 +429,28 @@ function getInterviewsSolo (data){
         }
 
     }
+
+}
+
+function getDaysSelector (data){
+    for(var index in  data) {
+     $("#Days").append( '<option value="'+data[index].date+' ">'+data[index].date+'</selected>')
+    }
+
+}
+
+function updateAddressForSelect(data){
+    console.log(data);
+
+    $("#TableAddressFull").empty();
+    $.ajax({
+        url: location_origin+"/admin/getInterviewDetailsAddressList",
+        type: "GET",
+        dataType: "json",
+        success: getTableWithDate,
+        error: function (data) {
+            // console.log(data);
+        }
+    });
 
 }
