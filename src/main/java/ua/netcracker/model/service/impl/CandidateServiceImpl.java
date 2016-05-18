@@ -15,6 +15,7 @@ import ua.netcracker.model.securiry.UserAuthenticationDetails;
 import ua.netcracker.model.service.CandidateService;
 import ua.netcracker.model.service.CourseSettingService;
 import ua.netcracker.model.service.QuestionService;
+import ua.netcracker.model.service.SendEmailService;
 import ua.netcracker.model.utils.JsonParsing;
 
 import java.util.ArrayList;
