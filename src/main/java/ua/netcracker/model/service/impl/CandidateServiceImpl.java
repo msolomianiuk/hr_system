@@ -66,7 +66,8 @@ public class CandidateServiceImpl implements CandidateService {
 
     @Override
     public Integer getCandidateCount() {
-        return candidateDAO.getCandidateCount();
+        int courseId = courseSettingService.getLastSetting().getId();
+        return candidateDAO.getCandidateCount(courseId);
     }
 
     @Override

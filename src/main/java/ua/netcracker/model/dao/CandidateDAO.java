@@ -46,7 +46,9 @@ public interface CandidateDAO extends DAO<Candidate> {
 
     Collection<Candidate> findPartByCourse(Integer courseId, Integer with, Integer to);
 
-    Integer getCandidateCount();
+    Integer getCandidateCount(int courseId);
+
+
 
 
 }
