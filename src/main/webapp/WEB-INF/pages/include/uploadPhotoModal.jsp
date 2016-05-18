@@ -27,11 +27,15 @@
                                           title="Import image with Blob URLs">
                                         <span class="fa fa-upload"></span>
                                         <span>Upload Photo</span>
+
                                     </span>
+
                                 <!--</form>-->
 
                             </label>
+
                         </div>
+                        <p>Size of image must be less then 2MB</p>
                     </div>
                 </div>
             </div>
