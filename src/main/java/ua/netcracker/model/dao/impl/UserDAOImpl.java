@@ -50,7 +50,8 @@ public class UserDAOImpl implements UserDAO {
     @Autowired
     private JdbcTemplate jdbcTemplate;
     private SimpleJdbcInsert simpleJdbcInsert;
-
+    @Autowired
+    private SendEmailService sendEmailService;
     @Autowired
     public void setSimpleJdbcInsert(DataSource dataSource) {
         simpleJdbcInsert = new SimpleJdbcInsert(dataSource).
@@ -88,6 +89,7 @@ public class UserDAOImpl implements UserDAO {
             user.setRoles(getUserRolesById(user.getId()));
         } catch (Exception e) {
             LOGGER.info(e);
+            sendEmailService.sendEmailAboutCriticalError("Error in find User(Login Error)" + e.getMessage());
         }
         return user;
     }
