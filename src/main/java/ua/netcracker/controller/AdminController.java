@@ -222,7 +222,7 @@ public class AdminController {
                 end_time,
                 addressService.findByAddress(address_id).getId()
         );
-        if (interviewDaysDetails.getCountPersonal()==0){
+        if (interviewDaysDetails.getCountPersonal()==-1){
             return ResponseEntity
                     .status(HttpStatus.FORBIDDEN)
                     .body("This room can not accommodate all the people");
@@ -238,6 +238,25 @@ public class AdminController {
         }
     }
 
+    @RequestMapping(value = "/date_list", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<List<Map<String,Object>>> getDateList() {
+        List<Map<String,Object>> dateList =  dateService.getDateList(courseSettingService.getLastSetting());
+        if (dateList.isEmpty()) {
+            return new ResponseEntity<List<Map<String,Object>>>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<List<Map<String,Object>>>(dateList, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/add_date", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity setNewDate(@RequestParam String date) {
+        InterviewDaysDetails interviewDaysDetails = new InterviewDaysDetails();
+        interviewDaysDetails.setCourseId(courseSettingService.getLastSetting().getId());
+        interviewDaysDetails.setInterviewDate(date);
+        interviewDaysDetailsService.addDate(interviewDaysDetails);
+        return ResponseEntity.ok(interviewDaysDetails);
+    }
     //---REST Controllers for Address---
 
     @RequestMapping(value = "/address_list", method = RequestMethod.GET)

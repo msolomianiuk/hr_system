@@ -39,18 +39,23 @@ public class InterviewDaysDetailsDAOImpl implements InterviewDaysDetailsDAO {
     @Override
     public InterviewDaysDetails find(int id) {
         InterviewDaysDetails interviewDaysDetails = null;
-        interviewDaysDetails = jdbcTemplateFactory.getJdbcTemplate(dataSource).queryForObject(FIND_SQL,
-                new RowMapper<InterviewDaysDetails>() {
-                    public InterviewDaysDetails mapRow(ResultSet rs, int rowNum) throws SQLException {
-                        return createInterviewWithResultSet(rs);
-                    }
-                },
-                id);
+        try {
+            interviewDaysDetails = jdbcTemplateFactory.getJdbcTemplate(dataSource).queryForObject(FIND_SQL,
+                    new RowMapper<InterviewDaysDetails>() {
+                        public InterviewDaysDetails mapRow(ResultSet rs, int rowNum) throws SQLException {
+                            return createInterviewWithResultSet(rs);
+                        }
+                    },
+                    id);
+        } catch (Exception e){
+            LOGGER.error("Error: " + e);
+        }
         return interviewDaysDetails;
     }
 
     @Override
     public boolean insert(InterviewDaysDetails interviewDaysDetails) {
+        try{
         return jdbcTemplateFactory.getJdbcTemplate(dataSource).update(INSERT_SQL,
                 interviewDaysDetails.getCourseId(),
                 interviewDaysDetails.getInterviewDate(),
@@ -60,11 +65,20 @@ public class InterviewDaysDetailsDAOImpl implements InterviewDaysDetailsDAO {
                 interviewDaysDetails.getCountStudents(),
                 interviewDaysDetails.getCountPersonal()
         ) > 0;
+        } catch (Exception e){
+            LOGGER.error("Error: " + e);
+        }
+        return false;
     }
 
     @Override
     public boolean remove(int id) {
-        return jdbcTemplateFactory.getJdbcTemplate(dataSource).update(REMOVE_SQL, id) > 0;
+        try {
+            return jdbcTemplateFactory.getJdbcTemplate(dataSource).update(REMOVE_SQL, id) > 0;
+        } catch (Exception e){
+            LOGGER.error("Error: " + e);
+        }
+        return false;
     }
 
     @Override
@@ -86,21 +100,30 @@ public class InterviewDaysDetailsDAOImpl implements InterviewDaysDetailsDAO {
 
     @Override
     public boolean insertDate(InterviewDaysDetails interviewDaysDetails) {
-        return jdbcTemplateFactory.getJdbcTemplate(dataSource).update(INSERT_DATE_SQL,
-                interviewDaysDetails.getCourseId(),
-                interviewDaysDetails.getInterviewDate()
-        ) > 0;
+        try {
+            return jdbcTemplateFactory.getJdbcTemplate(dataSource).update(INSERT_DATE_SQL,
+                    interviewDaysDetails.getCourseId(),
+                    interviewDaysDetails.getInterviewDate()
+            ) > 0;
+        } catch (Exception e){
+            LOGGER.error("Error: " + e);
+        }
+        return false;
     }
 
     @Override
     public List<InterviewDaysDetails> findAll() {
         List<InterviewDaysDetails> interviewList = null;
+        try{
         interviewList = jdbcTemplateFactory.getJdbcTemplate(dataSource).query(FIND_ALL_SQL,
                 new RowMapper<InterviewDaysDetails>() {
                     public InterviewDaysDetails mapRow(ResultSet rs, int rowNum) throws SQLException {
                         return createInterviewWithResultSet(rs);
                     }
                 });
+        } catch (Exception e){
+            LOGGER.error("Error: " + e);
+        }
         return interviewList;
     }
 
