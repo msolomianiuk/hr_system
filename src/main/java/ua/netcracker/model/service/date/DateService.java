@@ -13,7 +13,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -185,6 +187,18 @@ public class DateService {
     public String[] getTime(String time) {
         String[] timePars = time.split(":");
         return timePars;
+    }
+
+    public List<Map<String,Object>> getDateList(CourseSetting courseSetting){
+        int period = getPeriodDate(courseSetting);
+        String currDate = courseSetting.getInterviewStartDate();
+        List<Map<String,Object>> list = new ArrayList<Map<String, Object>>();
+        for (int i = 0; i < period ; i++) {
+            Map<String,Object> row = new HashMap<String,Object>();
+            row.put("date", String.valueOf(getDate(currDate).plusDays(i)));
+            list.add(row);
+        }
+        return list;
     }
 
     public List<DateEntity> listDate() {

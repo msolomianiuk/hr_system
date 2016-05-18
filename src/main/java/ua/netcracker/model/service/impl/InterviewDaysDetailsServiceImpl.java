@@ -36,7 +36,7 @@ public class InterviewDaysDetailsServiceImpl implements InterviewDaysDetailsServ
                     " FROM hr_system.interview_days_details" +
                     " LEFT JOIN hr_system.address" +
                     " ON hr_system.interview_days_details.address_id=hr_system.address.id" +
-                    " ORDER BY hr_system.interview_days_details.id ";
+                    " ORDER BY hr_system.interview_days_details.date ";
     private static final String REMOVE_SQL_BY_COURSE_ID = "DELETE FROM \"hr_system\".interview_days_details WHERE course_id = ?";
 
     @Autowired
@@ -58,7 +58,7 @@ public class InterviewDaysDetailsServiceImpl implements InterviewDaysDetailsServ
     private AddressServiceImpl addressService;
 
     public InterviewDaysDetails setInterviewDateDetails(String id, String startTime, String endTime,int addressId){
-        if (dateService.validTwoTimes(startTime,endTime)==false) {
+        if (!dateService.validTwoTimes(startTime,endTime)) {
             startTime=null;
             endTime=null;
         }
@@ -71,7 +71,7 @@ public class InterviewDaysDetailsServiceImpl implements InterviewDaysDetailsServ
             interviewDaysDetails.setCountStudents(dateService.quantityStudent(interviewDaysDetails));
             interviewDaysDetails.setCountPersonal(dateService.getPersonal(interviewDaysDetails));
             if (addressService.findById(addressId).getRoomCapacity()<interviewDaysDetails.getCountPersonal()*2){
-                interviewDaysDetails.setCountPersonal(0);
+                interviewDaysDetails.setCountPersonal(-1);
             }
         }
         return interviewDaysDetails;

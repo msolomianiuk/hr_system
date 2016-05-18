@@ -98,6 +98,24 @@ $(document).ready(function () {
 
     });
 
+    $(document).on("click","#DeleteAddress",function(){
+
+        var id  = parseInt(($("#AddressUpdate").attr("id_day")));
+
+        $.ajax({
+            url: location_origin + "/admin/address_delete",
+            type: "GET",
+            dataType: "json",
+            data:{'id':id},
+            contentType: 'application/json',
+            mimeType: 'application/json',
+            success: updateAddress,
+            error: function (data) {
+                console.log(data);
+            }
+        });
+
+    });
 
     $.ajax({
         url: location_origin+"/getCurseId",
@@ -214,7 +232,6 @@ function getInterviewAddress(data){
 
 function getAddressSolo(data){
     dataInNewAll = data;
-    alert("U get Address");
     $(".ModelViewDays").empty();
     $(".ModelViewDays").append('<div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">'+
     '<div class="form-group">'+
@@ -229,7 +246,8 @@ function getAddressSolo(data){
     '</div>'+
     '</div>'+
     '<div class="col-md-12 col-lg-12 col-sm-12 col-xs-12">'+
-    '<button type="button" id="UpdateAddress" class="btn btn-success">Add Address Interview days details</button>'+
+    '<button type="button" id="UpdateAddress" class="btn btn-success">Update Address </button>'+
+    '<button type="button" id="DeleteAddress" class="btn btn-success">Delete Address </button>'+
     '</div>');
     $("#AddressUpdate").attr("id_day", data.id);
     $("#AddressUpdate").attr("value", data.address);
@@ -337,7 +355,7 @@ function getInterviewsSolo (data){
     $(".ModelViewDays").append('<h3 style="text-align:center;">'+data.interviewDate+'</h3>');
     $(".ModelViewDays").append('<div class="col-md-12 col-lg-12 col-sm-12 col-xs-12">'+
     '<select id="SelectorAddress">'+
-    '<option selected>Choose day</selected>'+
+    '<option selected>Address</selected>'+
     '<select>'+
     '</div>'+
     '<div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">'+
@@ -355,6 +373,9 @@ function getInterviewsSolo (data){
     '<div class="col-md-12 col-lg-12 col-sm-12 col-xs-12">'+
     '<button type="button" id="UpdateInerviw" class="btn btn-success">Add Address Interview days details</button>'+
     '</div>');
+        $("#StartInterview").mask("99:99");
+        $("#EndInterview").mask("99:99");
+    
     $("#StartInterview").attr("value", data.startTime);
     $("#EndInterview").attr("value", data.endTime);
 

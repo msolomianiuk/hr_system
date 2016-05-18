@@ -283,6 +283,8 @@
 <script src="<c:url value="/static/admin/js/bootstrap.min.js"/>"></script>
 
 <!-- bootstrap progress js -->
+<script src="<c:url value="/static/admin/js/maskedInput/jquery.maskedinput.js"/>"></script>
+<script src="<c:url value="/static/admin/js/maskedInput/jquery.maskedinput.min.js"/>"></script>
 <script src="<c:url value="/static/admin/js/progressbar/bootstrap-progressbar.min.js"/>"></script>
 <script src="<c:url value="/static/admin/js/nicescroll/jquery.nicescroll.min.js"/>"></script>
 <script src="<c:url value="/static/admin/js/interviewAjax.js"/>"></script>
