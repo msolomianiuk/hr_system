@@ -62,6 +62,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
                 return true;
             }
+            sendEmailServiceImpl.sendEmailAboutCriticalError("ERROR in registrationStudent with email: " + email);
         }
         return false;
     }

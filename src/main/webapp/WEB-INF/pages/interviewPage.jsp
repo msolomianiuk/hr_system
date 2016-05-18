@@ -79,6 +79,11 @@
 <script src="<c:url value="/static/js/custom/Personal/triggerForCandidateDetailsInterview.js"/>"></script>
 <script src="<c:url value="/static/js/custom/Personal/drawCandidateDetails.js"/>"></script>
 <script src="<c:url value="/static/js/custom/Personal/ajax/loadCandidateById.js"/>"></script>
+<script src="<c:url value="/static/js/custom/Personal/ajax/setInterviewResult.js"/>"></script>
+<script src="<c:url value="/static/js/custom/Personal/addInterviewResult.js"/>"></script>
+<script src="<c:url value="/static/js/custom/Personal/cancelInterviewResult.js"/>"></script>
+
+
 
 
 </body>
