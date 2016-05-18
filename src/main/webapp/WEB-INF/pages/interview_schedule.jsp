@@ -223,7 +223,7 @@
                     </div>
                     <div class="col-md-4 col-lg-4 col-sm-4 col-xs-4">
                       <div style="height:25px;"></div>
-                      <button type="button" id="UpdateDateinSelect" class="btn btn-success">Add Address</button>
+                      <button type="button" id="UpdateDateinSelect" class="btn btn-success">Add Date</button>
                       <div style="height:25px;"></div>
                     </div>
                   </div>

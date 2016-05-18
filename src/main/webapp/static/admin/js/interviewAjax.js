@@ -22,7 +22,7 @@ $(document).ready(function () {
             mimeType: 'application/json',
             success: getInterviewAddress,
             error: function (data) {
-                console.log(data);
+                // console.log(data);
             }
         });
 
@@ -38,7 +38,7 @@ $(document).ready(function () {
         mimeType: 'application/json',
         success: getInterviewAddress,
         error: function (data) {
-            console.log(data);
+            // console.log(data);
         }
     });
     $(document).on("click",".getModalAddress",function(){
@@ -54,7 +54,7 @@ $(document).ready(function () {
             mimeType: 'application/json',
             success: getAddressSolo,
             error: function (data) {
-                console.log(data);
+                // console.log(data);
             }
         });
 
@@ -72,7 +72,7 @@ $(document).ready(function () {
             mimeType: 'application/json',
             success: addAddress,
             error: function (data) {
-                console.log(data);
+                // console.log(data);
             }
         });
 
@@ -92,7 +92,7 @@ $(document).ready(function () {
             mimeType: 'application/json',
             success: updateAddress,
             error: function (data) {
-                console.log(data);
+                // console.log(data);
             }
         });
 
@@ -111,7 +111,7 @@ $(document).ready(function () {
             mimeType: 'application/json',
             success: updateAddress,
             error: function (data) {
-                console.log(data);
+                // console.log(data);
             }
         });
 
@@ -125,7 +125,7 @@ $(document).ready(function () {
         mimeType: 'application/json',
         success: getCourseID,
         error: function (data) {
-            console.log(data);
+            // console.log(data);
         }
     });
 
@@ -139,7 +139,7 @@ $(document).ready(function () {
             data:{'date':date},
             success: getSettingInterviewDays,
             error: function (data) {
-                console.log(data);
+                // console.log(data);
             }
         });
 
@@ -151,7 +151,7 @@ $(document).ready(function () {
         dataType: "json",
         success: getTableWithDate,
         error: function (data) {
-            console.log(data);
+            // console.log(data);
         }
     });
     $(document).on("click",".getModalInerviewDaysD",function(){
@@ -167,7 +167,7 @@ $(document).ready(function () {
             mimeType: 'application/json',
             success: getInterviewsSolo,
             error: function (data) {
-                console.log(data);
+                // console.log(data);
             }
         });
 
@@ -197,7 +197,7 @@ $(document).ready(function () {
         dataType: "json",
         success: getDaysSelector,
         error: function (data) {
-            console.log(data);
+            // console.log(data);
         }
     });
 
@@ -214,7 +214,7 @@ $(document).ready(function () {
             mimeType: 'application/json',
             success: updateAddressForSelect,
             error: function (data) {
-                console.log(data);
+                // console.log(data);
             }
         });
     });
@@ -297,7 +297,7 @@ function addAddress(data){
         mimeType: 'application/json',
         success: getInterviewAddress,
         error: function (data) {
-            console.log(data);
+            // console.log(data);
         }
     });
 }
@@ -312,7 +312,7 @@ function updateAddress(data){
         dataType: "json",
         success: getTableWithDate,
         error: function (data) {
-            console.log(data);
+            // console.log(data);
         }
     });
 
@@ -383,6 +383,7 @@ function getInterviewsSolo (data){
 
     $(".ModelViewDays").append('<h3 style="text-align:center;">'+data.interviewDate+'</h3>');
     $(".ModelViewDays").append('<div class="col-md-12 col-lg-12 col-sm-12 col-xs-12">'+
+    '<div class="form-group">'+
     '<select id="SelectorAddress">'+
     '<option selected>Address</selected>'+
     '<select>'+
@@ -401,6 +402,7 @@ function getInterviewsSolo (data){
     '</div>'+
     '<div class="col-md-12 col-lg-12 col-sm-12 col-xs-12">'+
     '<button type="button" id="UpdateInerviw" class="btn btn-success">Add Address Interview days details</button>'+
+    '</div>'+
     '</div>');
         $("#StartInterview").mask("99:99");
         $("#EndInterview").mask("99:99");
@@ -416,7 +418,7 @@ function getInterviewsSolo (data){
         mimeType: 'application/json',
         success: getAddressWithID,
         error: function (data) {
-            console.log(data);
+            // console.log(data);
         }
     });
 
@@ -447,7 +449,7 @@ function updateAddressForSelect(data){
         dataType: "json",
         success: getTableWithDate,
         error: function (data) {
-            console.log(data);
+            // console.log(data);
         }
     });
 
