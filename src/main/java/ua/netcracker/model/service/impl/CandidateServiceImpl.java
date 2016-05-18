@@ -15,6 +15,7 @@ import ua.netcracker.model.securiry.UserAuthenticationDetails;
 import ua.netcracker.model.service.CandidateService;
 import ua.netcracker.model.service.CourseSettingService;
 import ua.netcracker.model.service.QuestionService;
+import ua.netcracker.model.service.SendEmailService;
 import ua.netcracker.model.utils.JsonParsing;
 
 import java.util.ArrayList;
@@ -54,6 +55,8 @@ public class CandidateServiceImpl implements CandidateService {
     private AnswersDAO answersDAO;
     @Autowired
     private InterviewResultDAO interviewResultDAO;
+    @Autowired
+    private SendEmailService sendEmailService;
 
     @Override
     public Candidate getCandidateById(Integer id) {
@@ -186,6 +189,9 @@ public class CandidateServiceImpl implements CandidateService {
 
     @Override
     public boolean updateCandidateStatus(Integer candidateID, Integer newStatusID) {
+        if (getCandidateById(candidateID).getStatusId() != newStatusID) {
+            sendEmailService.sendEmailToStudentsByStatus(Status.values()[newStatusID-1]);
+        }
         return candidateDAO.updateCandidateStatus(candidateID, newStatusID);
     }
 
