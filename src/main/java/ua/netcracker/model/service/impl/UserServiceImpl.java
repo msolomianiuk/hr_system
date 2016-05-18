@@ -1,6 +1,5 @@
 package ua.netcracker.model.service.impl;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,8 +14,12 @@ import ua.netcracker.model.entity.User;
 import ua.netcracker.model.securiry.UserAuthenticationDetails;
 import ua.netcracker.model.service.UserService;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
@@ -41,7 +44,7 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public boolean saveUserPhoto(MultipartFile image) {
+    public boolean saveUserPhoto(MultipartFile image, int x, int y, int width, int height) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (!(auth instanceof AnonymousAuthenticationToken)) {
             UserAuthenticationDetails userDetails =
@@ -61,9 +64,8 @@ public class UserServiceImpl implements UserService {
                 fullPath = absolutePath + fileName;
                 file = new File(fullPath);
             } while (file.exists());
-
             try {
-                FileUtils.writeByteArrayToFile(file, image.getBytes());
+                saveImage(image, x, y, width, height, file);
                 user.setImage(fileName);
                 userDao.update(user);
                 userDetails.getUser().setImage(fileName);
@@ -75,6 +77,14 @@ public class UserServiceImpl implements UserService {
         }
         LOGGER.error("Error load UserAuthenticationDetails");
         return false;
+    }
+
+    private void saveImage(MultipartFile imgFile, int x, int y, int width, int height, File file) throws IOException {
+        InputStream in = new ByteArrayInputStream(imgFile.getBytes());
+        BufferedImage image = ImageIO.read(in);
+        image = image.getSubimage(x, y, width, height);
+
+        ImageIO.write(image, "jpg", file);
     }
 
     @Override

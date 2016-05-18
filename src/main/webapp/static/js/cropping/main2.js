@@ -24,13 +24,13 @@ $(function () {
 
   (function () {
     var $image = $('.img-container > img'),
-        $dataX = $('#dataX'),
-        $dataY = $('#dataY'),
-        $dataHeight = $('#dataHeight'),
-        $dataWidth = $('#dataWidth'),
+        $dataX = $('#x'),
+        $dataY = $('#y'),
+        $dataHeight = $('#height'),
+        $dataWidth = $('#width'),
         $dataRotate = $('#dataRotate'),
         options = {
-          aspectRatio: 16 / 9,
+          aspectRatio: 4 / 4,
           preview: '.img-preview',
           crop: function (data) {
             $dataX.val(Math.round(data.x));
@@ -185,5 +185,8 @@ $(function () {
 
 
   }());
+
+
+
 
 });
