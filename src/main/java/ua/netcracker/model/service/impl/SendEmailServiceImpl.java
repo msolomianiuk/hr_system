@@ -151,13 +151,18 @@ public class SendEmailServiceImpl implements SendEmailService {
             case Interview:
                 InterviewDaysDetails interviewDaysDetails = interviewDaysDetailsDAO.find(candidate.getInterviewDaysDetailsId());
                 Address address = addressDAO.find(interviewDaysDetails.getAddressId());
-                sendReminderInterview(user, interviewDaysDetails, address);
+                /**
+                 * Remind about coming interview a day before
+                 */
+                 sendReminderInterview(user, interviewDaysDetails, address);
                 return replacePatterns(template, user, interviewDaysDetails, address);
             case Interview_passed:
             case Job_accepted:
             case No_interview:
             case Rejected:
-                return replacePatterns(template, user);
+                return template;
+                //no user name in template
+                //return replacePatterns(template, user);
             default:
                 LOGGER.info("No templates");
                 throw new IllegalArgumentException();
