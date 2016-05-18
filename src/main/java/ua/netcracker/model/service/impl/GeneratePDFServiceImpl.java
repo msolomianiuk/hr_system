@@ -1,6 +1,9 @@
 package ua.netcracker.model.service.impl;
 
 import com.itextpdf.text.*;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.Image;
+import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
@@ -96,7 +99,7 @@ public class GeneratePDFServiceImpl implements GeneratePDFService {
         cellQuestions.setBorderColor(baseColor);
         tableQuestionAndTitle.addCell(cellQuestions);
         document.add(table);
-        image.scaleAbsoluteHeight(70);
+        image.scaleAbsoluteHeight(40);
         image.setAbsolutePosition(0, image.getAbsoluteY());
         document.add(paragraphFree);
         document.add(image);
@@ -111,6 +114,10 @@ public class GeneratePDFServiceImpl implements GeneratePDFService {
         Paragraph paragraphPreLast = new Paragraph("I consent to the storage, processing and use of my personal data for possible training and employment in the company NETCRACKER now and in the future.");
         paragraphPreLast.setAlignment(tableQuestionAndTitle.getHorizontalAlignment());
         PdfPTable tablePreLast = new PdfPTable(2);
+        PdfPCell cellFree = new PdfPCell(new Paragraph("  "));
+        cellFree.setBorder(Rectangle.NO_BORDER);
+        tablePreLast.addCell(cellFree);
+        tablePreLast.addCell(cellFree);
         PdfPCell cellDate = new PdfPCell(new Paragraph(new Date().toString()));
         PdfPCell cellSignature = new PdfPCell(new Paragraph("           (Signature)_______________"));
         cellSignature.setBorder(Rectangle.NO_BORDER);
@@ -122,7 +129,7 @@ public class GeneratePDFServiceImpl implements GeneratePDFService {
     }
 
     private void createLastForm(Document document, Paragraph paragraphFree) throws DocumentException {
-        Paragraph paragraphLast = new Paragraph("Interview (Filled interviewers)");
+        Paragraph paragraphLast = new Paragraph("Interview (Interviewers fill)");
         paragraphLast.setAlignment(Element.ALIGN_CENTER);
         paragraphLast.setLeading(25.0f);
         PdfPTable tableLast = new PdfPTable(2);
@@ -169,96 +176,17 @@ public class GeneratePDFServiceImpl implements GeneratePDFService {
                 switch (question.getType()){
                     case "Text":
                     case "Number":{
-
-                        cellAnswer = new PdfPCell(new Paragraph(answers.get(0).getValue(),
-                                FontFactory.getFont(FontFactory.HELVETICA, 10, Font.NORMAL)));
-//                        cellQuestion.setBorder(Rectangle.NO_BORDER);
-//                        cellAnswer.setBorder(Rectangle.NO_BORDER);
-//                        tableQuestions.addCell(cellQuestion);
-//                        tableQuestions.addCell(cellAnswer);
+                        cellAnswer = getSimpleAnswer(answers);
                         break;
                     }
-                    case "Select":{
-
-                        PdfPTable tableAnswers = new PdfPTable(3);
-
-                        for (String variant : question.getAnswerVariants()){
-                            String check = "  ";
-                            if (answers.get(0).getValue().equals(variant)){
-                                check = "+";
-                            }
-                            PdfPTable tableVariant = new PdfPTable(2);
-                            tableVariant.setWidths(new int[]{3,30});
-                            tableVariant.setTotalWidth(99);
-                            PdfPCell cellCheck = new PdfPCell();
-                            cellCheck.setColspan(1);
-                            cellCheck.setUseAscender(true);
-                            cellCheck.setUseDescender(true);
-                            Paragraph p = new Paragraph(check,
-                                    FontFactory.getFont(FontFactory.HELVETICA, 10, Font.NORMAL));
-                            p.setAlignment(Element.ALIGN_CENTER);
-                            cellCheck.addElement(p);
-                            PdfPCell cellValue = new PdfPCell(new Paragraph(variant,
-                                    FontFactory.getFont(FontFactory.HELVETICA, 10, Font.NORMAL)));
-                            cellValue.setBorder(Rectangle.NO_BORDER);
-//                            PdfPCell cellVariant = new PdfPCell(new Paragraph(check + " " + variant,
-//                                    FontFactory.getFont(FontFactory.HELVETICA, 10, Font.NORMAL)));
-                            tableVariant.addCell(cellCheck);
-                            tableVariant.addCell(cellValue);
-                            PdfPCell cellVariant = new PdfPCell(tableVariant);
-                            cellVariant.setBorder(Rectangle.NO_BORDER);
-                            tableAnswers.addCell(cellVariant);
-                        }
-
-                        cellAnswer = new PdfPCell(tableAnswers);
-                        break;
-                    }
+                    case "Select":
                     case "Checkboxes":{
-
-                        PdfPTable tableAnswers = new PdfPTable(3);
-
-                        for (String variant : question.getAnswerVariants()){
-                            for (Answer answer : answers){
-                                String check = "  ";
-                                if (answer.getValue().equals(variant)){
-                                    check = "+";
-                                }
-                                PdfPCell cellVariant = new PdfPCell(new Paragraph(check + " " + variant,
-                                        FontFactory.getFont(FontFactory.HELVETICA, 10, Font.NORMAL)));
-                                cellVariant.setBorder(Rectangle.NO_BORDER);
-                                tableAnswers.addCell(cellVariant);
-                            }
-                        }
-
-                        cellAnswer = new PdfPCell(tableAnswers);
+                        cellAnswer = getSelectedAnswer(answers, question);
                         break;
                     }
+
                     case "Select or text":{
-
-                        PdfPTable tableAnswers = new PdfPTable(1);
-                        PdfPTable tableVariants = new PdfPTable(3);
-
-                        for (String variant : question.getAnswerVariants()){
-                            String check = "  ";
-                            if (answers.get(0).getValue().equals(variant)){
-                                check = "+";
-                            }
-                            PdfPCell cellVariant = new PdfPCell(new Paragraph(check + " " + variant,
-                                    FontFactory.getFont(FontFactory.HELVETICA, 10, Font.NORMAL)));
-                            cellVariant.setBorder(Rectangle.NO_BORDER);
-                            tableVariants.addCell(cellVariant);
-                        }
-                        String textAnswer = "";
-                        if (!question.getAnswerVariants().contains(answers.get(0).getValue())){
-                            textAnswer = answers.get(0).getValue();
-                        }
-                        PdfPCell cellText = new PdfPCell(new Paragraph(textAnswer));
-
-                        tableAnswers.addCell(tableVariants);
-                        tableAnswers.addCell(cellText);
-
-                        cellAnswer = new PdfPCell(tableAnswers);
-
+                        cellAnswer = getSelectedOrTextAnswer(answers,question);
                         break;
                     }
                 }
@@ -266,24 +194,72 @@ public class GeneratePDFServiceImpl implements GeneratePDFService {
                 cellAnswer.setBorder(Rectangle.NO_BORDER);
                 tableQuestions.addCell(cellQuestion);
                 tableQuestions.addCell(cellAnswer);
-//                for (int j = 0; j < listAnswers.size(); j++) {
-//                    Answer answer = listAnswers.get(j);
-//                    if (question.getId() == answer.getQuestionId()) {
-//                        answerString = answerString + answer.getValue() + " ";
-//                    }
-//                }
-//                PdfPCell cellQuestion = new PdfPCell(new Paragraph(question.getCaption(),
-//                        FontFactory.getFont(FontFactory.HELVETICA, 18, Font.BOLDITALIC)));
-//                PdfPCell cellAnswer = new PdfPCell(new Paragraph(answerString));
-//                cellQuestion.setBorder(Rectangle.NO_BORDER);
-//                PdfPCell cellFree = new PdfPCell(new Paragraph("  "));
-//                cellFree.setBorder(Rectangle.NO_BORDER);
-//                tableQuestions.addCell(cellQuestion);
-//                tableQuestions.addCell(cellAnswer);
-//                tableQuestions.addCell(cellFree);
+                PdfPCell cellFree = new PdfPCell(new Paragraph("  "));
+                cellFree.setBorder(Rectangle.NO_BORDER);
+                tableQuestions.addCell(cellFree);
             }
+
         }
         return tableQuestions;
+    }
+
+    private PdfPTable addCells(int n, PdfPTable table){
+        PdfPCell cell = new PdfPCell();
+        cell.setBorder(Rectangle.NO_BORDER);
+        for (int i = 0; i<n; i++){
+            table.addCell(cell);
+        }
+        return table;
+    }
+
+    private PdfPCell getSimpleAnswer(ArrayList<Answer> answers){
+        return new PdfPCell(new Paragraph(answers.get(0).getValue(),
+                FontFactory.getFont(FontFactory.HELVETICA, 10, Font.NORMAL)));
+    }
+
+    private PdfPCell getSelectedAnswer(ArrayList<Answer> answers, Question question) throws DocumentException {
+        PdfPTable tableAnswers = new PdfPTable(3);
+
+        for (String variant : question.getAnswerVariants()){
+            PdfPCell cellCheck = new PdfPCell();
+            for (Answer answer : answers) {
+                if (answer.getValue().equals(variant)) {
+                    cellCheck.setBackgroundColor(new BaseColor(66, 167, 206));
+                }
+            }
+            PdfPTable tableVariant = new PdfPTable(2);
+            tableVariant.setWidths(new int[]{3, 30});
+            tableVariant.setTotalWidth(99);
+            Paragraph p = new Paragraph("",
+                    FontFactory.getFont(FontFactory.HELVETICA, 10, Font.NORMAL));
+            p.setAlignment(Element.ALIGN_CENTER);
+            cellCheck.addElement(p);
+            PdfPCell cellValue = new PdfPCell(new Paragraph(variant,
+                    FontFactory.getFont(FontFactory.HELVETICA, 10, Font.NORMAL)));
+            cellValue.setBorder(Rectangle.NO_BORDER);
+            tableVariant.addCell(cellCheck);
+            tableVariant.addCell(cellValue);
+            PdfPCell cellVariant = new PdfPCell(tableVariant);
+            cellVariant.setBorder(Rectangle.NO_BORDER);
+            tableAnswers.addCell(cellVariant);
+        }
+        tableAnswers = addCells(3-question.getAnswerVariants().size()%3,tableAnswers);
+        return new PdfPCell(tableAnswers);
+    }
+
+    private PdfPCell getSelectedOrTextAnswer(ArrayList<Answer> answers, Question question) throws DocumentException {
+        PdfPTable tableAnswers = new PdfPTable(1);
+
+        tableAnswers.addCell(getSelectedAnswer(answers,question));
+
+        String textAnswer = "";
+        if (!question.getAnswerVariants().contains(answers.get(0).getValue())){
+            textAnswer = answers.get(0).getValue();
+        }
+        PdfPCell cellText = new PdfPCell(new Paragraph(textAnswer));
+        tableAnswers.addCell(cellText);
+
+        return new PdfPCell(tableAnswers);
     }
 
     private PdfPTable createImageTable(Candidate candidate, UserAuthenticationDetails userDetails)

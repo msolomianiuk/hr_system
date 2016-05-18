@@ -52,7 +52,6 @@ public class CandidateServiceImpl implements CandidateService {
     private CourseSettingService courseSettingService;
     @Autowired
     private AnswersDAO answersDAO;
-
     @Autowired
     private InterviewResultDAO interviewResultDAO;
 
@@ -261,5 +260,20 @@ public class CandidateServiceImpl implements CandidateService {
     @Override
     public Collection<Candidate> getPartByCourse(Integer courseId, Integer with, Integer to) {
         return candidateDAO.findPartByCourse(courseId, with, to);
+    }
+
+    @Override
+    public boolean saveInterviewResult (Integer candidateId,
+                                        Integer interviewerId,
+                                        Integer mark,
+                                        String recomendation,
+                                        String comment
+    ) {
+        InterviewResult interviewResult = new InterviewResult();
+        interviewResult.setComment(comment);
+        interviewResult.setInterviewerId(interviewerId);
+        interviewResult.setMark(mark);
+        interviewResult.setRecommendation(Recommendation.valueOf(recomendation));
+        return interviewResultDAO.createInterviewResult(candidateId, interviewResult);
     }
 }
