@@ -190,6 +190,35 @@ $(document).ready(function () {
         });
 
     });
+
+    $.ajax({
+        url: location_origin+"/admin/date_list",
+        type: "GET",
+        dataType: "json",
+        success: getDaysSelector,
+        error: function (data) {
+            console.log(data);
+        }
+    });
+
+    $('body').on('click', '#UpdateDateinSelect', function(){
+        
+        var date = $("#Days").val();
+
+        $.ajax({
+            url: location_origin + "/admin/add_date",
+            type: "GET",
+            dataType: "json",
+            data:{'date':date},
+            contentType: 'application/json',
+            mimeType: 'application/json',
+            success: updateAddressForSelect,
+            error: function (data) {
+                console.log(data);
+            }
+        });
+    });
+    
 });
 
 
@@ -398,5 +427,28 @@ function getInterviewsSolo (data){
         }
 
     }
+
+}
+
+function getDaysSelector (data){
+    for(var index in  data) {
+     $("#Days").append( '<option value="'+data[index].date+' ">'+data[index].date+'</selected>')
+    }
+
+}
+
+function updateAddressForSelect(data){
+    console.log(data);
+
+    $("#TableAddressFull").empty();
+    $.ajax({
+        url: location_origin+"/admin/getInterviewDetailsAddressList",
+        type: "GET",
+        dataType: "json",
+        success: getTableWithDate,
+        error: function (data) {
+            console.log(data);
+        }
+    });
 
 }

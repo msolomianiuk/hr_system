@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 import ua.netcracker.model.dao.UserDAO;
 import ua.netcracker.model.entity.Role;
 import ua.netcracker.model.entity.User;
+import ua.netcracker.model.service.SendEmailService;
 
 import javax.sql.DataSource;
 import java.sql.PreparedStatement;

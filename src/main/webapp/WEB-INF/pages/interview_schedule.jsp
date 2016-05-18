@@ -168,20 +168,25 @@
 
                   <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
                     <div class="form-group">
+                      <div style="height:25px;"></div>
                       <label for="AddressAdd">Address interview</label>
                       <input type="text" name="AddressAdd" class="form-control"
                              id="AddressAdd" placeholder="Nothing detected">
+                      <div style="height:25px;"></div>
                     </div>
                   </div>
                   <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
                     <div class="form-group">
+                      <div style="height:25px;"></div>
                       <label for="RoomCapacity">Room Capacity:</label>
                       <input type="text" name="RoomCapacity" class="form-control"
                              id="RoomCapacity" placeholder="Nothing detected">
+                      <div style="height:25px;"></div>
                     </div>
                   </div>
                   <div class="col-md-12 col-lg-12 col-sm-12 col-xs-12">
                     <button type="button" id="AddAddress" class="btn btn-success">Add Address Interview days details</button>
+                    <div style="height:25px;"></div>
                   </div>
                   <table id="datatable" class="table table-striped table-bordered clicked-tr">
                     <thead>
@@ -205,7 +210,24 @@
                    aria-expanded="true" aria-controls="main-setting4">
                 <h3 class="panel-title">Interview Days Details</h3>
               </div>
+
               <div class="panel-body" id="Interview_Days_Details-setting">
+                <div class="col-md-12 col-lg-12 col-sm-12 col-xs-12">
+                  <div class="row">
+                    <div class="col-md-4 col-lg-4 col-sm-4 col-xs-4">
+                      <div style="height:25px;"></div>
+                      <select id="Days" class="form-control">
+
+                      </select>
+                      <div style="height:25px;"></div>
+                    </div>
+                    <div class="col-md-4 col-lg-4 col-sm-4 col-xs-4">
+                      <div style="height:25px;"></div>
+                      <button type="button" id="UpdateDateinSelect" class="btn btn-success">Add Address</button>
+                      <div style="height:25px;"></div>
+                    </div>
+                  </div>
+                </div>
                 <div class="col-md-12 col-lg-12 col-sm-12 col-xs-12">
                   <table id="datatableIn" class="table table-striped table-bordered clicked-tr">
                     <thead>
