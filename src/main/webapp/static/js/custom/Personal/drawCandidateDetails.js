@@ -8,6 +8,7 @@ function drawCandidateDetails(candidate) {
     $('.interview-comments').show();
     cleanCandidateDetails();
     $('#candidate-details h4').append(candidate.id); // for modal only
+    $('.candidate-details').attr('candidate-id', candidate.id);
     $('div.candidate-details h3').html(candidate.user.name+' '+candidate.user.surname+' '+candidate.user.patronymic);
     $('div.candidate-details img').attr('src', $('div.candidate-details img').attr('src')+candidate.user.image);
     questionsList.forEach(function (question) {

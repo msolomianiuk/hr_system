@@ -29,6 +29,7 @@ public interface CandidateService {
     Collection<Answer> getAnswersIsView(Candidate candidate, Collection<Question> listQuestions);
 
     Collection<Candidate> getPartByCourse(Integer courseId, Integer with, Integer to);
+
     //
     Candidate getCandidateById(Integer id);
 
@@ -71,6 +72,7 @@ public interface CandidateService {
 
     Collection<Candidate> getPartCandidates(Integer with, Integer to);
 
-    boolean updateInterviewResult(Integer candidateId,InterviewResult interviewResult);
+    boolean updateInterviewResult(Integer candidateId, InterviewResult interviewResult);
 
+    boolean saveInterviewResult(Integer candidateId, Integer interviewerId, Integer mark, String recomendation, String comment);
 }
