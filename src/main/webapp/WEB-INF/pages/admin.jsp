@@ -87,6 +87,10 @@
                             </a>
                             </li>
                             <li><a href="admin/admin_settings"><i class="fa fa-cogs"></i> System Setting </a></li>
+                            <li><a href="admin/report"><i class="fa fa-calendar"></i> Reports
+                            </a>
+                            </li>
+                            <li><a href="admin/template"><i class="fa fa-home"></i> Template </a></li>
                         </ul>
                     </div>
                 </div>
