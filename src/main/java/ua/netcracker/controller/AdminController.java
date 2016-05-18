@@ -532,4 +532,14 @@ public class AdminController {
         }
         return ResponseEntity.ok(id);
     }
+
+    @RequestMapping(value = "/candidateCount", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<Integer> userId(
+    ) {
+        int countStudents = candidateService.getCandidateCount();
+
+        return ResponseEntity.ok(countStudents);
+    }
+
 }

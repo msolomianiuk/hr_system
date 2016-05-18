@@ -144,7 +144,7 @@
                     <div class="right">
                         <span class="count_top"><i class="fa fa-users"></i> Total Students</span>
 
-                        <div class="count">50000</div>
+                        <div class="count CountView">50000</div>
                     </div>
                 </div>
                 <div class="animated flipInY col-md-4 col-sm-4 col-xs-4 tile_stats_count">
@@ -276,7 +276,7 @@
 </body>
 <%--<script src="js/bootstrap.min.js"></script>--%>
 <script src="<c:url value="/static/admin/js/bootstrap.min.js"/>"></script>
-
+<script src="<c:url value="/static/admin/js/AdminHomeAjax.js"/>"></script>
 <!-- gauge js -->
 <%--<script type="text/javascript" src="js/gauge/gauge.min.js"></script>--%>
 <script src="<c:url value="/static/admin/js/gauge/gauge.min.js"/>"></script>
