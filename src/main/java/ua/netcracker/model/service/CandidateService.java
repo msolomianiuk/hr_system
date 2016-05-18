@@ -56,4 +56,10 @@ public interface CandidateService {
 
     boolean updateCandidateStatus(Integer candidateID, Integer newStatusID);
 
+    public Integer getRows();
+
+    public Collection<Candidate> pagination(Integer elementPage, Integer fromElement);
+
+    public Collection<Candidate> findCandidate(Integer limitRows, Integer fromElement, String find);
+
 }

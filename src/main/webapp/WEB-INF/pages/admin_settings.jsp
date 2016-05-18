@@ -26,7 +26,7 @@
     <title>Settings </title>
 
     <!-- Bootstrap core CSS -->
-
+    <script src="<c:url value="/static/js/custom/baseUrl.js"/>"></script>
     <link href="<c:url value="/static/admin/css/bootstrap.min.css"/>" rel="stylesheet">
 
     <link href="<c:url value="/static/admin/fonts/css/font-awesome.min.css"/>" rel="stylesheet">
@@ -82,7 +82,7 @@
                     <div class="profile_info">
                         <span>Welcome,</span>
 
-                        <h2><sec:authentication property="principal.name"/></h2>
+                        <h2><sec:authentication property="principal.name"/>&nbsp;<sec:authentication property="principal.surname"/></h2>
                     </div>
                 </div>
                 <!-- /menu prile quick info -->
@@ -123,7 +123,7 @@
                         <li class="">
                             <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown"
                                aria-expanded="false">
-                                <img src="<c:url value="/static/admin/images/img.jpg"/>" alt="">John Doe
+                                <img src="<c:url value="/static/admin/images/img.jpg"/>" alt="">
                                 <span class=" fa fa-angle-down"></span>
                             </a>
                             <ul class="dropdown-menu dropdown-usermenu animated fadeInDown pull-right">
@@ -283,10 +283,13 @@
                                         <h1>Anketa</h1>
                                         <div class="x_content">
                                             <div class="candidate-profile row">
-                                                <%@ include file="include/profile/profileForm.jsp" %>
+                                                <form class="form-horizontal form-label-left col-md-9 col-sm-9 col-xs-12" novalidate>
+                                                    <div class="questions"></div>
+                                                    <div class="ln_solid"></div>
+                                                </form>
                                             </div>
                                             <div class="hidden">
-                                                <%@ include file="include/profile/question/questionsFieldsTemplate.jsp" %>
+                                                <%@ include file="include/Anketa.jsp" %>
                                             </div>
                                         </div>
                                     </div>
@@ -432,10 +435,10 @@
 <script src="<c:url value="/static/admin/js/datatables/dataTables.responsive.min.js"/>"></script>
 <script src="<c:url value="/static/admin/js/datatables/responsive.bootstrap.min.js"/>"></script>
 <script src="<c:url value="/static/admin/js/datatables/dataTables.scroller.min.js"/>"></script>
-<script src="<c:url value="/static/js/custom/Profile/drawQuestionInProfileForm.js" />"></script>
-<script src="<c:url value="/static/js/custom/Profile/insertAnswersInCandidateForm.js"/>"></script>
-<script src="<c:url value="/static/js/custom/Profile/ajax/loadingQuestions.js" />"></script>
-<script src="<c:url value="/static/js/custom/Profile/ajax/loadingAnswers.js" />"></script>
+<script src="<c:url value="/static/admin/js/Question/drawQuestionInProfileForm.js" />"></script>
+<script src="<c:url value="/static/admin/js/Question/insertAnswersInCandidateForm.js"/>"></script>
+<script src="<c:url value="/static/admin/js/Question/loadingQuestions.js" />"></script>
+<script src="<c:url value="/static/admin/js/Question/loadingAnswers.js" />"></script>
 
 
 

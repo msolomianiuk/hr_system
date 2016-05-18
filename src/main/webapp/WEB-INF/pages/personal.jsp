@@ -7,6 +7,7 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@page session="true" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -26,6 +27,7 @@
 
   <link href="<c:url value="/static/admin/fonts/css/font-awesome.min.css"/>" rel="stylesheet">
   <link href="<c:url value="/static/admin/css/animate.min.css"/>" rel="stylesheet">
+  <link href="<c:url value="/static/admin/css/style.css"/>" rel="stylesheet">
 
   <!-- Custom styling plus plugins -->
   <link href="<c:url value="/static/admin/css/custom.css"/>" rel="stylesheet">
@@ -70,7 +72,7 @@
           </div>
           <div class="profile_info">
             <span>Welcome,</span>
-            <h2>Vasya Pupkin</h2>
+            <h2><sec:authentication property="principal.name"/>&nbsp;<sec:authentication property="principal.surname"/></h2>
           </div>
         </div>
         <!-- /menu prile quick info -->
@@ -110,7 +112,7 @@
           <ul class="nav navbar-nav navbar-right">
             <li class="">
               <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                <img src="<c:url value="/static/admin/images/img.jpg"/>" alt="">John Doe
+                <img src="<c:url value="/static/admin/images/img.jpg"/>" alt="">
                 <span class=" fa fa-angle-down"></span>
               </a>
               <ul class="dropdown-menu dropdown-usermenu animated fadeInDown pull-right">
@@ -241,7 +243,20 @@
   </div>
 
 </div>
-
+<div id="hider"></div>
+<div class="ModalPersonal">
+  <div class="col-md-4 col-lg-4 col-sm-4 col-xs-4">
+    <select id="Status" class="form-control">
+      <option value="" selected>Choose to change Role</option>
+      <option value="ROLE_ADMIN">ROLE_ADMIN</option>
+      <option value="ROLE_HR">ROLE_HR</option>
+      <option value="ROLE_BA">ROLE_BA</option>
+      <option value="ROLE_DEV">ROLE_DEV</option>
+      <option value="ROLE_STUDENT">ROLE_STUDENT</option>
+    </select>
+    <button type="button" id="UpdateStatus" class="btn btn-success">Click to change</button>
+  </div>
+</div>
 <div id="custom_notifications" class="custom-notifications dsp_none">
   <ul class="list-unstyled notifications clearfix" data-tabbed_notifications="notif-group">
   </ul>

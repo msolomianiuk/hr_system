@@ -7,15 +7,22 @@
     opacity:0.7;
 }
 
-.ModelViewStudent{
+.ModelViewStudent {
+    width: 400px;
+    background-color: #ffffff;
+    display: none;
+    position: fixed;
+    top: 111px;
+    left: 36%;
+}
+.ModelStatus{
     width:400px;
     background-color: #ffffff;
     display:none;
     position:fixed;
     top:111px;
-    left:500px;
+    left:36%;
 }
-
 
 .ModelViewDays{
     width:400px;
@@ -31,4 +38,55 @@
     overflow-y: scroll!important;
     height: 400px!important;
     overflow-x: hidden!important;
+}
+
+#StudentTable{
+    margin-top:91px;
+}
+#buttonSearch {
+    width: 30px;
+    height: 34px;
+    background-color: #48c1ff;
+    background-image: url("search.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    border: none;
+    float: right;
+}
+
+.REJECTED{
+    background:#F44336;
+}
+.READY{
+    background:#00C4DA;
+}
+.NO_INTERVIEW{
+    background:#FD7268;
+}
+.INTERVIEW{
+    background:#ACD878;
+}
+.INTERVIEW_DATED{
+    background:#7486E6;
+}
+.INTERVIEW_IN_PROCESS{
+    background:#FFB240;
+}
+.INTERVIEW_PASSED{
+    background:#985EFF;
+}
+.TRAINEE_ACCEPTED{
+    background:#4CAF50;
+}
+.JOB_ACCEPTED{
+    background:#008EFF;
+}
+
+.ModalPersonal{
+    width: 400px;
+    background-color: #ffffff;
+    display: none;
+    position: fixed;
+    top: 111px;
+    left: 36%;
 }

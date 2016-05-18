@@ -21,7 +21,17 @@ public class Question {
 
     private int orderNumber;
 
+    private boolean isView;
+
     public Question() {
+    }
+
+    public boolean isView() {
+        return isView;
+    }
+
+    public void setView(boolean isView) {
+        this.isView = isView;
     }
 
     public int getId() {

@@ -11,6 +11,8 @@ public enum Status {
     Interview_process(6, "Interview_process"), Interviews_passed(7, "Interviews_passed"), Trainee_accepted(8, "Trainee_accepted"),
     Rejected(9, "Rejected"), Job_accepted(10, "Job_accepted");
 
+
+
     int id;
     String status;
 

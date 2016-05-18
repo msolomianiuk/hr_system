@@ -3,8 +3,10 @@
  */
 $(document).ready(function () {
 
+    location_origin = "http://localhost:8080/hr_system-1.0-SNAPSHOT"
+
     $.ajax({
-        url: "http://31.131.25.42:8080/hr_system-1.0-SNAPSHOT/personal_list",
+        url: location_origin + "/personal_list",
         type: "GET",
         dataType: "json",
         contentType: 'application/json',
@@ -16,13 +18,51 @@ $(document).ready(function () {
     });
 
 
+    $('body').on('click', '.getModalStatus', function(){
+
+        var id  = parseInt(($(this).attr("user_id")));
+
+        $.ajax({
+            url: location_origin + "/admin/user_id",
+            type: "GET",
+            dataType: "json",
+            data:{'id':id},
+            contentType: 'application/json',
+            mimeType: 'application/json',
+            success: getCandidateId,
+            error: function (data) {
+                console.log(data);
+            }
+        });
+
+    });
+
+    $(document).on("click","#UpdateStatus",function (){
+
+        var userID  = parseInt(($(this).attr("user_id")));
+
+        var role =  $("#Status").val();
+
+        $.ajax({
+            url: location_origin + "/admin/add_role",
+            type: "GET",
+            dataType: "json",
+            data:{'userID':userID,'role':role},
+            success: functionForUpdateRole,
+            error: function (data) {
+                console.log(data);
+            }
+        });
+
+    });
+
 });
 
 function funcForAjax(data) {
     dataNewIn = data;
     for (var indexba in data["BA"]) {
         baIndex = data["BA"][indexba];
-        $("#TableBA").append('<tr user_id="'+ baIndex.id +'">' +
+        $("#TableBA").append('<tr class="getModalStatus" user_id="'+ baIndex.id +'">' +
         '<td>' + baIndex.name + '</td>' +
         '<td>' + baIndex.surname + '</td>' +
         '<td>' + baIndex.patronymic + '</td>' +
@@ -31,7 +71,7 @@ function funcForAjax(data) {
     }
     for (var indexhr in data["HR"]) {
         hrIndex = data["HR"][indexhr];
-        $("#TableHR").append('<tr user_id="'+ hrIndex.id +'">' +
+        $("#TableHR").append('<tr class="getModalStatus" user_id="'+ hrIndex.id +'">' +
         '<td>' + hrIndex.name + '</td>' +
         '<td>' + hrIndex.surname + '</td>' +
         '<td>' + hrIndex.patronymic + '</td>' +
@@ -40,7 +80,7 @@ function funcForAjax(data) {
     }
     for (var indexdev in data["DEV"]) {
         devIndex = data["DEV"][indexdev];
-        $("#TableDEV").append('<tr user_id="'+ devIndex.id +'">' +
+        $("#TableDEV").append('<tr class="getModalStatus" user_id="'+ devIndex.id +'">' +
         '<td>' + devIndex.name + '</td>' +
         '<td>' + devIndex.surname + '</td>' +
         '<td>' + devIndex.patronymic + '</td>' +
@@ -48,4 +88,41 @@ function funcForAjax(data) {
         '</tr>');
     }
 
+    $("#hider").click(function(){
+        $(".ModalPersonal").css('display','none');
+        $('#hider').css('display','none');
+    });
+    $(".getModalStudent").click(function(){
+        if( $(".ModalPersonal").css('display') == 'none' ){
+            $(".ModalPersonal").css('display','block');
+            $('#hider').css('display','block');
+        } else{
+            $(".ModalPersonal").css('display','none');
+            $('#hider').css('display','none');
+        }
+    });
+
+    $(".getModalStatus").click(function(){
+        if( $(".ModalPersonal").css('display') == 'none' ){
+            $(".ModalPersonal").css('display','block');
+            $('#hider').css('display','block');
+        } else{
+            $(".ModalPersonal").css('display','none');
+            $('#hider').css('display','none');
+        }
+    });
+
+}
+
+
+function getCandidateId(data){
+    $("#UpdateStatus").attr('user_id','');
+
+    id_us = data;
+
+    $("#UpdateStatus").attr('user_id',id_us);
+}
+
+function functionForUpdateRole(data){
+    console.log("Update Role");
 }

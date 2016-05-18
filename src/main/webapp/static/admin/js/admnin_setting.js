@@ -4,7 +4,7 @@
 
 $(document).ready(function () {
 
-    location_origin = "http://31.131.25.42:8080/hr_system-1.0-SNAPSHOT"
+    location_origin = "http://localhost:8080/hr_system-1.0-SNAPSHOT"
 
     var token = $("meta[name='_csrf']").attr("content");
     var header = $("meta[name='_csrf_header']").attr("content");
@@ -49,6 +49,7 @@ $(document).ready(function () {
         var additionValue = null;
         var isMandatory = true;//
         var orderNumber = QuantityQuestions+1;
+        var isView = true;
 
 
         $.ajax({
@@ -60,7 +61,8 @@ $(document).ready(function () {
                 'typeValue': typeValue,
                 'additionValue': additionValue,
                 'isMandatory': isMandatory,
-                'orderNumber': orderNumber
+                'orderNumber': orderNumber,
+                'isView':isView
             },
             dataType: "json",
             success: setQuestionWithAdd,
@@ -82,7 +84,7 @@ $(document).ready(function () {
         var additionValue = JSON.stringify(additionValueNoAjax);
         var isMandatory = true;
         var orderNumber = QuantityQuestions+1;
-
+        var isView = true;
         $.ajax({
             url: location_origin+"/setQuestion",
             type: "POST",
@@ -92,7 +94,8 @@ $(document).ready(function () {
                 'typeValue': typeValue,
                 'additionValue': additionValue,
                 'isMandatory': isMandatory,
-                'orderNumber': orderNumber
+                'orderNumber': orderNumber,
+                'isView': isView
             },
             dataType: "json",
             success: setQuestionWithAdd,
@@ -205,6 +208,7 @@ $(document).ready(function () {
 
 
     });
+
     $('body').on("click",".plus",function(){
         $("#HowToAdd").append('<div>'+
         '<div class="form-group NewVariant">'+
@@ -219,13 +223,13 @@ $(document).ready(function () {
         $(this).parent().remove();
     });
 
-    $('body').on("click",".plus",function(){
+    $('body').on("click",".plusUpdate",function(){
         $("#HowToAddUpdate").append('<div>'+
         '<div class="form-group NewVariant">'+
         '<span>Possible answers to the question:</span>'+
-        '<input type="text" name="VariantQuestion" class="VariantQuestion form-control">'+
+        '<input type="text" name="VariantQuestion" class="VariantQuestion VariantQuestionUpdate form-control">'+
         '</div>'+
-        '<span class="glyphicon glyphicon-plus-sign plus"></span>'+
+        '<span class="glyphicon glyphicon-plus-sign plusUpdate"></span>'+
         '<span class="glyphicon glyphicon-minus-sign minus newminus"></span>'+
         '</div>');
     });
@@ -260,6 +264,7 @@ $(document).ready(function () {
         var isMandatory = $("#IsMandatorySolo").val();
         var orderNumber = parseInt(($("#CaptionUpdate").attr("order_number")));
         var id = parseInt(($("#CaptionUpdate").attr("question_id")));
+        var isView = true;
 
 
         $.ajax({
@@ -272,7 +277,8 @@ $(document).ready(function () {
                 'additionValue': additionValue,
                 'isMandatory': isMandatory,
                 'orderNumber': orderNumber,
-                'id':id
+                'id':id,
+                'isView': isView
             },
             dataType: "json",
             success: updateQuestionWithAdd,
@@ -295,6 +301,7 @@ $(document).ready(function () {
         var isMandatory = $("#IsMandatorySolo").val();
         var orderNumber = parseInt(($("#CaptionUpdate").attr("order_number")));
         var id = parseInt(($("#CaptionUpdate").attr("question_id")));
+        var isView = true;
         $.ajax({
             url: location_origin+"/update_question",
             type: "POST",
@@ -305,7 +312,8 @@ $(document).ready(function () {
                 'additionValue': additionValue,
                 'isMandatory': isMandatory,
                 'orderNumber': orderNumber,
-                'id':id
+                'id':id,
+                'isView':isView
             },
             dataType: "json",
             success: updateQuestionWithAdd,
@@ -476,7 +484,7 @@ function getQuestion (data){
     '<span>Possible answers to the question:</span>'+
     '<input type="text" name="VariantQuestion" class="VariantQuestion VariantQuestionUpdate  form-control">'+
     '</div>'+
-    '<span class="glyphicon glyphicon-plus-sign plus"></span>'+
+    '<span class="glyphicon glyphicon-plus-sign plusUpdate"></span>'+
     '<span class="glyphicon glyphicon-minus-sign minus"></span>'+
     '</div>'+
     '</div>'+
