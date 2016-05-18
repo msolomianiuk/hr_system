@@ -29,6 +29,7 @@ public class SendEmailServiceImpl implements SendEmailService {
     private static final int TEMPLATE_JOB_ACCEPTED = 5;
     private static final int TEMPLATE_NO_INTERVIEW = 6;
     private static final int TEMPLATE_REJECTED = 7;
+    private static final int TEMPLATE_RESTORE_PASSWORD = 8;
 
 
     @Autowired
@@ -78,7 +79,7 @@ public class SendEmailServiceImpl implements SendEmailService {
     public void sendEmailAboutSuccessfulRegistration(User user, String password) {
         EmailTemplate emailTemplate = emailTemplateDAO.find(TEMPLATE_SUCCESS_REGISTRATION);
         String email = replacePatterns(emailTemplate.getTemplate(), user, password);
-        sendLetterToEmails(user.getEmail(), emailTemplate.getDescription(), email);
+        sendLetterToEmails(user.getEmail(), emailTemplate.getDescription(), email.replaceAll("\\{url\\}","http://31.131.25.206:8080/"));
     }
 
     @Override
@@ -100,7 +101,9 @@ public class SendEmailServiceImpl implements SendEmailService {
 
     @Override
     public void sendEmailRestorePassword(String email, String url) {
-        sendLetterToEmails(email, "Restore password", "Your url: " + url);
+        EmailTemplate emailTemplate = emailTemplateDAO.find(TEMPLATE_RESTORE_PASSWORD);
+        String emailText = emailTemplate.getTemplate().replaceAll("\\{url\\}", url);
+        sendLetterToEmails(email, emailTemplate.getDescription(), emailText);
     }
 
     private String[] getEmailsByRole(Role role) {
