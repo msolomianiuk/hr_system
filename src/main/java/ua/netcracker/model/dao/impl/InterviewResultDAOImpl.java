@@ -30,7 +30,9 @@ public class InterviewResultDAOImpl implements InterviewResultDAO {
                     "on i.recommendation_id = r.id where i.candidate_id =?";
     private static final String FIND_COMMENT =
             "Select response from \"hr_system\".interview_result where i.candidate_id = ?";
-    private static final String FIND_ALL = "Select * from \"hr_system\".interview_result where candidate_id = ?";
+//    private static final String FIND_ALL = "Select * from \"hr_system\".interview_result where candidate_id = ?";
+    private static final String FIND_ALL = "Select ir.interviewer_id, ir.mark, ir.comment, r.value from \"hr_system\".interview_result ir " +
+        "inner join \"hr_system\".recommendation r on ir.recommendation_id = r.id where ir.candidate_id = ?";
     private static final String CREATE = "Insert into \"hr_system\".interview_result " +
             "(interviewer_id, candidate_id, mark, comment, recommendation_id) values (?, ?, ?, ?, ?)";
     private static final String UPDATE = "UPDATE \"hr_system\".interview_result SET " +
@@ -49,12 +51,13 @@ public class InterviewResultDAOImpl implements InterviewResultDAO {
                 interviewResult.setInterviewer(userDAO.find((int) row.get("interviewer_id")));
                 interviewResult.setMark((int) row.get("mark"));
                 interviewResult.setComment((String) row.get("comment"));
-                Recommendation[] recommendations = Recommendation.values();
-                for (Recommendation r : recommendations) {
-                    if (r.getId() == (int) row.get("recommendation_id")) {
-                        interviewResult.setRecommendation(r);
-                    }
-                }
+                interviewResult.setRecommendation(Recommendation.valueOf((String) row.get("value")));
+//                Recommendation[] recommendations = Recommendation.values();
+//                for (Recommendation r : recommendations) {
+//                    if (r.getId() == (int) row.get("recommendation_id")) {
+//                        interviewResult.setRecommendation(r);
+//                    }
+//                }
                 results.add(interviewResult);
             }
 
