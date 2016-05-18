@@ -87,6 +87,10 @@ public class StudentsRestController {
             }
         }
 
+        Status.values();
+
+
+
         return new ResponseEntity<>(filtered, HttpStatus.OK);
     }
 
