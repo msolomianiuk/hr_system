@@ -158,6 +158,7 @@ public class AdminController {
     public ResponseEntity<Collection> answerCandidate(
             @RequestParam String id
     ) {
+
         Collection candidate = answerService.getAnswerCandidate(Integer.parseInt(id));
 
         Collection collection = new ArrayList();
@@ -541,5 +542,6 @@ public class AdminController {
 
         return ResponseEntity.ok(countStudents);
     }
+
 
 }

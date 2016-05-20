@@ -5,7 +5,7 @@ currPage = 1;
 elementPage = 10;
 $(document).ready(function() {
 
-    location_origin = "http://localhost:8080/hr_system-1.0-SNAPSHOT"
+    location_origin = "http://31.131.25.206:8080/hr_system-1.0-SNAPSHOT"
 
     $(document).on("click",".getModalStudent",function(){
 
@@ -182,7 +182,7 @@ $("button#filter").on("click", function () {
         type: "GET",
         data: {'answersJsonString': JSON.stringify($('.candidate-profile form').serializeObject()), 'status': $('#status_select option:selected').text(), 'status2': $('#status_select_2 option:selected').text()},
         dataType: "json",
-        success: showStudents,
+        success: function(data){console.log(data)},
         error: function (data) {
             setTimeout(function () { $('.loading').hide(); }, 1000);
             new PNotify({
@@ -194,53 +194,7 @@ $("button#filter").on("click", function () {
     });
 });
 
-function showStudents(data) {
 
-    dataNewStudents = data;
-
-    $('#StudentTable').empty();
-    
-    $('#StudentTable').append('<thead>' +
-        '<tr>' +
-        '<th>Name</th>' +
-        '<th>Surname</th>' +
-        '<th>Patronymic</th>' +
-        '<th>email</th>' +
-        '</tr>' +
-        '</thead>' +
-        '<tbody id="TableStudents">' +
-        '</tbody>');
-
-    $('#TableStudents').empty();
-
-    // $('#StudentTable').dataTable.fnClearTable();
-    
-    for(var index_student in data)
-    {
-        studentIndex = data[index_student];
-        $("#TableStudents").append('<tr class="win getModalStudent" candidate_id="'+ studentIndex.id +'">' +
-            '<td>'+studentIndex.user.name+'</td>' +
-            '<td>'+studentIndex.user.surname+'</td>' +
-            '<td>'+studentIndex.user.patronymic+'</td>' +
-            '<td>'+studentIndex.user.email+'</td>' +
-            '</tr>');
-
-    }
-    
-    $("#hider").click(function(){
-        $(".ModelViewStudent").css('display','none');
-        $('#hider').css('display','none');
-    });
-    $(".getModalStudent").click(function(){
-        if( $(".ModelViewStudent").css('display') == 'none' ){
-            $(".ModelViewStudent").css('display','block');
-            $('#hider').css('display','block');
-        } else{
-            $(".ModelViewStudent").css('display','none');
-            $('#hider').css('display','none');
-        }
-    });
-}
 
 function funcForStudents (data){
     dataNewStudents = data;
@@ -380,7 +334,7 @@ function funcForAnketOfStudents (data){
     $(".ModelViewStudent").css('display','block');
 
     dataInNewAll = data;
-    alert("U get Anket");
+
     $(".ModelViewStudent").empty();
 
 
@@ -400,7 +354,8 @@ function funcForAnketOfStudents (data){
 
 
             $(".ModelViewStudent").append('<div class="form-group">'+
-            '<h5>'+ index_second[2]+ " " +'<br>'+"Answer :" +index_second[1] +' <h5>'+
+            '<span class="QuestionInModal">'+ index_second[2]+'</span>'+
+            '<span class="AnswerInModal">' +index_second[1] +'</span>'+
             '<div style="margin-top:20px;"></div>'+
             '</div>');
 

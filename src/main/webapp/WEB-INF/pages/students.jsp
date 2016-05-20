@@ -95,6 +95,10 @@
                             <li><a href="personal"><i class="fa fa-list-ul"></i> Personal List </a></li>
                             <li><a href="interview_schedule"><i class="fa fa-calendar"></i> Interview Schedule </a></li>
                             <li><a href="admin_settings"><i class="fa fa-cogs"></i> System Setting </a></li>
+                            <li><a href="report"><i class="fa fa-calendar"></i> Reports
+                            </a>
+                            </li>
+                            <li><a href="template"><i class="fa fa-home"></i> Template </a></li>
                         </ul>
                     </div>
 
@@ -300,22 +304,27 @@
 <div id="hider"></div>
 <div class="ModelViewStudent"></div>
 <div class="ModelStatus">
-    <div class="col-md-4 col-lg-4 col-sm-4 col-xs-4">
-        <select id="Status" class="form-control">
-            <option value="" selected>Choose to change status</option>
-            <option value="Rejected">Rejected</option>
-            <option value="Ready">Ready</option>
-            <option value="No_interview">No_interview</option>
-            <option value="Interview">Interview</option>
-            <option value="Interview_dated">Interview_dated</option>
-            <option value="Interview_process">Interview_process</option>
-            <option value="Interview_passed">Interview_passed</option>
-            <option value="Trainee_accepted">Trainee_accepted</option>
-            <option value="Job_accepted">Job_accepted</option>
-        </select>
-        <button type="button" id="UpdateStatus" class="btn btn-success">Click to change</button>
+    <h1 class="Header_status">Change status:</h1>
+    <div id="StatusNewIn">
+        <div class="col-md-4 col-lg-4 col-sm-4 col-xs-4">
+            <select id="Status" class="form-control">
+                <option value="" selected>Choose to change status</option>
+                <option value="Rejected">Rejected</option>
+                <option value="Ready">Ready</option>
+                <option value="No_interview">No_interview</option>
+                <option value="Interview">Interview</option>
+                <option value="Interview_dated">Interview_dated</option>
+                <option value="Interview_process">Interview_process</option>
+                <option value="Interview_passed">Interview_passed</option>
+                <option value="Trainee_accepted">Trainee_accepted</option>
+                <option value="Job_accepted">Job_accepted</option>
+            </select>
+        </div>
+        <div class="col-md-4 col-lg-4 col-sm-4 col-xs-4">
+            <button type="button" id="UpdateStatus" class="btn btn-success">Click to change</button>
+        </div>
     </div>
-
+    <div style="height:20px"></div>
 </div>
 
 <script src="<c:url value="/static/js/custom/baseUrl.js"/>"></script>

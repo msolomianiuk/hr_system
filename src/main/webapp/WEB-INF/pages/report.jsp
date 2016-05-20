@@ -83,13 +83,15 @@
                     <div class="menu_section">
                         <h3>Administrator</h3>
                         <ul class="nav side-menu">
-                            <li><a href="admin"><i class="fa fa-home"></i> Home </a></li>
-                            <li><a href="admin/students"><i class="fa fa-list"></i> Students List </a></li>
-                            <li><a href="admin/personal"><i class="fa fa-list-ul"></i> Personal List </a></li>
-                            <li><a href="admin/interview_schedule"><i class="fa fa-calendar"></i> Interview Schedule
+                            <li><a href="../"><i class="fa fa-home"></i> Home </a></li>
+                            <li><a href="students"><i class="fa fa-list"></i> Students List </a></li>
+                            <li><a href="personal"><i class="fa fa-list-ul"></i> Personal List </a></li>
+                            <li><a href="interview_schedule"><i class="fa fa-calendar"></i> Interview Schedule </a></li>
+                            <li><a href="admin_settings"><i class="fa fa-cogs"></i> System Setting </a></li>
+                            <li><a href="report"><i class="fa fa-calendar"></i> Reports
                             </a>
                             </li>
-                            <li><a href="admin/admin_settings"><i class="fa fa-cogs"></i> System Setting </a></li>
+                            <li><a href="template"><i class="fa fa-home"></i> Template </a></li>
                         </ul>
                     </div>
                 </div>

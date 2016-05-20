@@ -96,6 +96,10 @@
               <li><a href="personal"><i class="fa fa-list-ul"></i> Personal List </a></li>
               <li><a href="interview_schedule"><i class="fa fa-calendar"></i> Interview Schedule </a></li>
               <li><a href="admin_settings"><i class="fa fa-cogs"></i> System Setting </a></li>
+              <li><a href="report"><i class="fa fa-calendar"></i> Reports
+              </a>
+              </li>
+              <li><a href="template"><i class="fa fa-home"></i> Template </a></li>
             </ul>
           </div>
 
