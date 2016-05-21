@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import ua.netcracker.model.dao.CandidateDAO;
 import ua.netcracker.model.dao.InterviewResultDAO;
+import ua.netcracker.model.entity.Answer;
 import ua.netcracker.model.entity.Candidate;
 import ua.netcracker.model.entity.Status;
 import ua.netcracker.model.entity.User;
@@ -491,4 +492,50 @@ public class CandidateDAOImpl implements CandidateDAO {
 
         return 0;
     }
+
+    @Override
+     public Collection<Candidate> filterCandidates(List<Answer> expected, Integer limit, Integer offset) {
+        if (expected.isEmpty()) {
+            return pagination(limit, offset);
+        }
+        String sql = "SELECT u.name,u.email ,u.surname, u.patronymic, candidate.id, candidate.status_id, candidate.course_id " +
+                "FROM \"hr_system\".users u " +
+                "JOIN \"hr_system\".role_users_maps rol " +
+                "ON rol.user_id = u.id AND rol.role_id = 5 " +
+                "JOIN \"hr_system\".candidate candidate " +
+                "ON candidate.user_id = u.id " +
+                "WHERE candidate.id IN (SELECT candidate_id FROM \"hr_system\".candidate_answer a WHERE CASE";
+        for (Answer answer : expected) {
+            sql += (" WHEN a.question_id = " + answer.getQuestionId() + " THEN a.value LIKE '%" + answer.getValue() + "%' ");
+        }
+
+        sql += " END LIMIT " + limit + " OFFSET " + offset + ") ORDER BY candidate.course_id DESC, candidate.status_id DESC";
+
+        List<Candidate> candidateList = new ArrayList<>();
+        try {
+            jdbcTemplate = new JdbcTemplate(dataSource);
+            candidateList = jdbcTemplate.query(sql, new RowMapper<Candidate>() {
+                @Override
+                public Candidate mapRow(ResultSet resultSet, int i) throws SQLException {
+                    Candidate candidate = new Candidate();
+                    User user = new User();
+                    user.setName(resultSet.getString("name"));
+                    user.setSurname(resultSet.getString("surname"));
+                    user.setPatronymic(resultSet.getString("patronymic"));
+                    user.setEmail(resultSet.getString("email"));
+                    candidate.setUser(user);
+                    candidate.setId(resultSet.getInt("id"));
+                    candidate.setStatusId(resultSet.getInt("status_id"));
+                    candidate.setCourseId(resultSet.getInt("course_id"));
+                    return candidate;
+                }
+            });
+        } catch (Exception e) {
+            LOGGER.error("Error:" + e);
+        }
+
+        return candidateList;
+//        return findCandidates(sql);
+    }
+
 }
