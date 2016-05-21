@@ -19,6 +19,8 @@ public interface QuestionService {
 
     Collection<Question> getAllIsView(int courseId);
 
+    Collection<Question> getAllByCourseId(int courseId);
+
     boolean save(Question question);
 
     boolean update(Question question);
@@ -34,6 +36,7 @@ public interface QuestionService {
     public void setQuestion(Question question);
 
     public int getCourseId();
+
 
 
 }
