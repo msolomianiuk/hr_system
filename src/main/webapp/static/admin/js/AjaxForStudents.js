@@ -5,7 +5,7 @@ currPage = 1;
 elementPage = 10;
 $(document).ready(function() {
 
-    location_origin = "http://31.131.25.206:8080/hr_system-1.0-SNAPSHOT"
+    location_origin = "http://localhost:8080/hr_system-1.0-SNAPSHOT"
 
     $(document).on("click",".getModalStudent",function(){
 
@@ -16,7 +16,7 @@ $(document).ready(function() {
             type: "GET",
             dataType: "json",
             data:{'id':id},
-            contentType: 'application/json',
+            contentType: 'application/json',    
             mimeType: 'application/json',
             success: funcForAnketOfStudents,
             error: function (data) {
@@ -276,26 +276,20 @@ function funcForStudents (data){
         '<td>'+studentIndex.user.patronymic+'</td>' +
         '<td>'+studentIndex.user.email+'</td>' +
         '<td>'+
-            '<button candidate_id="'+ studentIndex.id +'" type="button" class="win getModalStudent btn btn-success">A</button>'+
+            '<button candidate_id="'+ studentIndex.id +'" data-toggle="modal" data-target = "#candidate-details" ' +
+                'type="button" class="btn btn-success candidateProfile">A</button>'+
             '<button candidate_id="'+ studentIndex.id +'" type="button" class="getModalStatus btn btn-danger">R</button>'+
         '</td>'+
         '</tr>');
 
 
-
-
     }
 
 
-
-
-
-    /* $('#StudentTable').dataTable({
-     "oLanguage": {
-     "sSearch": "_INPUT_" //search
-     }
-     });
-     */
+    $('.candidateProfile').on("click", function () {
+        var candidateId = $(this).attr('candidate_id');
+        loadCandidateById(candidateId);
+    });
 
 
     $("#hider").click(function(){

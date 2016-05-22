@@ -55,6 +55,8 @@
 
 <body class="nav-md">
 
+<%@ include file="include/personal/modalCandidateDetails.jsp"%>
+
 <div class="container body">
 
 
@@ -327,7 +329,13 @@
     <div style="height:20px"></div>
 </div>
 
+
 <script src="<c:url value="/static/js/custom/baseUrl.js"/>"></script>
+
+<script src="<c:url value="/static/js/custom/Personal/ajax/loadQuestions.js"/>"></script>
+<script src="<c:url value="/static/js/custom/Personal/drawCandidateDetails.js"/>"></script>
+<script src="<c:url value="/static/js/custom/Personal/ajax/loadCandidateById.js"/>"></script>
+
 
 <script src="<c:url value="/static/admin/js/AjaxForStudents.js"/>"></script>
 <script src="<c:url value="/static/admin/js/bootstrap.min.js"/>"></script>
@@ -358,6 +366,7 @@
 <script type="text/javascript" src="<c:url value="/static/admin/js/Students.js"/>"></script>
 <!-- /datepicker -->
 <!-- /footer content -->
+
 </body>
 
 </html>
