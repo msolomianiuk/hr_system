@@ -259,6 +259,7 @@
                             <table id="StudentTable" class="table table-striped table-bordered clicked-tr">
                                 <thead>
                                 <tr>
+                                    <th>Recomendations</th>
                                     <th>Status</th>
                                     <th>Name</th>
                                     <th>Surname</th>

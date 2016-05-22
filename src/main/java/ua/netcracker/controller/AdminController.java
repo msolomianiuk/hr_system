@@ -543,5 +543,20 @@ public class AdminController {
         return ResponseEntity.ok(countStudents);
     }
 
+    @RequestMapping(value = "/personalCount", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<Integer> PersonalCount(
+    ) {
+        int countStudents = userService.getAllWorkers();
 
+        return ResponseEntity.ok(countStudents);
+    }
+    @RequestMapping(value = "/getStudent", method = RequestMethod.GET)
+    public ResponseEntity<Candidate> getCandidate(@RequestParam int id) {
+        Candidate candidate = candidateService.getCandidateById(id);
+        if (candidate == null) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(candidate, HttpStatus.OK);
+    }
 }

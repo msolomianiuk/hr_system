@@ -4,7 +4,7 @@
 $(document).ready(function () {
 
     $.ajax({
-        url: "http://31.131.25.206:8080/hr_system-1.0-SNAPSHOT/registration_period",
+        url: "http://localhost:8080/hr_system-1.0-SNAPSHOT/registration_period",
         type: "GET",
         dataType: "json",
         success: getPeriodRegistration,

@@ -146,17 +146,17 @@
                 <div class="animated flipInY col-md-4 col-sm-4 col-xs-4 tile_stats_count">
                     <div class="left"></div>
                     <div class="right">
-                        <span class="count_top"><i class="fa fa-users"></i> Total Students</span>
+                        <span class="count_top"><i class="fa fa-users"></i> Total Candidates</span>
 
-                        <div class="count CountView">50000</div>
+                        <div class="count CountView"></div>
                     </div>
                 </div>
                 <div class="animated flipInY col-md-4 col-sm-4 col-xs-4 tile_stats_count">
                     <div class="left"></div>
                     <div class="right">
-                        <span class="count_top"><i class="fa fa-user"></i> Total Users</span>
+                        <span class="count_top"><i class="fa fa-user"></i> Total Personal</span>
 
-                        <div class="count green">50</div>
+                        <div class="count CountWorkers green"></div>
                     </div>
                 </div>
                 <div class="animated flipInY col-md-4 col-sm-4 col-xs-4 tile_stats_count">

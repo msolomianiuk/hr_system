@@ -45,7 +45,8 @@ public class GetTypeOfQuestionsRestController {
             @RequestParam  String typeValue,
             @RequestParam  List<String> additionValue,
             @RequestParam  boolean isMandatory,
-            @RequestParam  int orderNumber
+            @RequestParam  int orderNumber,
+            @RequestParam boolean isView
     ) {
 
 
@@ -56,6 +57,7 @@ public class GetTypeOfQuestionsRestController {
         question.setCourseID(curse_id);
         question.setType(typeValue);
         question.setMandatory(isMandatory);
+        question.setView(isView);
         question.setAnswerVariants(questionServiceImpl.parseListJson(additionValue));
 
         questionServiceImpl.setQuestion(question);

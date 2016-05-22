@@ -5,17 +5,17 @@ currPage = 1;
 elementPage = 10;
 $(document).ready(function() {
 
-    location_origin = "http://31.131.25.206:8080/hr_system-1.0-SNAPSHOT"
+    location_origin = "http://localhost:8080/hr_system-1.0-SNAPSHOT"
 
-    $(document).on("click",".getModalStudent",function(){
+    $(document).on("click", ".getModalStudent", function () {
 
-        var id  = parseInt(($(this).attr("candidate_id")));
+        var id = parseInt(($(this).attr("candidate_id")));
 
         $.ajax({
             url: location_origin + "/admin/answer_candidate",
             type: "GET",
             dataType: "json",
-            data:{'id':id},
+            data: {'id': id},
             contentType: 'application/json',
             mimeType: 'application/json',
             success: funcForAnketOfStudents,
@@ -27,45 +27,15 @@ $(document).ready(function() {
     });
 
 
-    $(document).on("click",".page-link",function(){
-        var fromElement =  $(this).text();
-        elementPage = $("#Rows").val();
+    $(document).on("click", ".getModalStatus", function () {
 
-        currPage = parseInt(fromElement);
-        $.ajax({
-            url: location_origin + "/admin/getRows",
-            type: "GET",
-            dataType: "json",
-            contentType: 'application/json',
-            mimeType: 'application/json',
-            success: fistPaggination,
-            error: function (data) {
-                console.log(data);
-            }
-        });
-
-        $.ajax({
-            url: location_origin + "/admin/paginationCandidate",
-            type: "GET",
-            dataType: "json",
-            data:{'elementPage':elementPage,'fromElement':fromElement},
-            success: funcForStudents,
-            error: function (data) {
-                console.log(data);
-            }
-        });
-
-    });
-
-    $(document).on("click",".getModalStatus",function (){
-
-       var id  = parseInt(($(this).attr("candidate_id")));
+        var id = parseInt(($(this).attr("candidate_id")));
 
         $.ajax({
             url: location_origin + "/admin/candidate_id",
             type: "GET",
             dataType: "json",
-            data:{'id':id},
+            data: {'id': id},
             contentType: 'application/json',
             mimeType: 'application/json',
             success: getCandidateId,
@@ -77,17 +47,17 @@ $(document).ready(function() {
     });
 
 
-    $(document).on("click","#UpdateStatus",function (){
+    $(document).on("click", "#UpdateStatus", function () {
 
-        var candidateID  = parseInt(($(this).attr("candidate_id")));
+        var candidateID = parseInt(($(this).attr("candidate_id")));
 
-        var status =  $("#Status").val();
+        var status = $("#Status").val();
 
         $.ajax({
             url: location_origin + "/admin/candidate/update_status",
             type: "GET",
             dataType: "json",
-            data:{'candidateID':candidateID,'status':status},
+            data: {'candidateID': candidateID, 'status': status},
             success: functionUpdate,
             error: function (data) {
                 console.log(data);
@@ -95,33 +65,99 @@ $(document).ready(function() {
         });
 
     });
+    $(document).on("click",".page-link",function(){
+
+       var new_in = $('#fieldSearch').val().replace(/\s+/g, '');
 
 
-    $(document).on("click","#buttonSearch",function findClock(){
+    if(new_in.length) {
+
+            var find = $('#fieldSearch').val().replace(/\s+/g, '');
+            elementPage = $("#Rows").val();
+            fromElement = $(this).text();
+            currPage = parseInt(fromElement);
+
+
+
+            $.ajax({
+                url: location_origin + "/admin/rowsFind",
+                type: "GET",
+                dataType: "json",
+                data: {'find': find},
+                success: rowsAfterFind,
+                error: function (data) {
+                    console.log(data);
+                }
+            });
+
+
+            $.ajax({
+                url: location_origin + "/admin/findCandidate",
+                type: "GET",
+                dataType: "json",
+                data: {'find': find, 'elementPage': elementPage, "fromElement": currPage},
+                success: funcForStudents,
+                error: function (data) {
+                    console.log(data);
+                }
+            });
+        }
+
+        else {
+
+                var fromElement = $(this).text();
+                elementPage = $("#Rows").val();
+
+                currPage = parseInt(fromElement);
+                $.ajax({
+                    url: location_origin + "/admin/getRows",
+                    type: "GET",
+                    dataType: "json",
+                    contentType: 'application/json',
+                    mimeType: 'application/json',
+                    success: fistPaggination,
+                    error: function (data) {
+                        console.log(data);
+                    }
+                });
+
+                $.ajax({
+                    url: location_origin + "/admin/paginationCandidate",
+                    type: "GET",
+                    dataType: "json",
+                    data: {'elementPage': elementPage, 'fromElement': fromElement},
+                    success: funcForStudents,
+                    error: function (data) {
+                        console.log(data);
+                    }
+                });
+
+        }
+});
+    $(document).on("click", "#buttonSearch", function findClock() {
 
 
         var find = $('#fieldSearch').val();
         elementPage = $("#Rows").val();
 
-        if(findClock.count == 0){
+        if (findClock.count == 0) {
             fromElement = 1;
             currPage = parseInt(fromElement);
             findClock.count = 1;
         }
 
 
-        if(findClock.count >1) {
+        if (findClock.count > 1) {
             fromElement = $(this).text();
             currPage = parseInt(fromElement);
         }
-
 
 
         $.ajax({
             url: location_origin + "/admin/rowsFind",
             type: "GET",
             dataType: "json",
-            data:{'find':find},
+            data: {'find': find},
             success: rowsAfterFind,
             error: function (data) {
                 console.log(data);
@@ -129,12 +165,11 @@ $(document).ready(function() {
         });
 
 
-
         $.ajax({
             url: location_origin + "/admin/findCandidate",
             type: "GET",
             dataType: "json",
-            data:{'find':find,'elementPage':elementPage,"fromElement":currPage},
+            data: {'find': find, 'elementPage': elementPage, "fromElement": currPage},
             success: funcForStudents,
             error: function (data) {
                 console.log(data);
@@ -142,8 +177,6 @@ $(document).ready(function() {
         });
 
     });
-
-
 
     $.ajax({
 
@@ -209,31 +242,31 @@ function funcForStudents (data){
         status = studentIndex.statusId;
 
         if(status == 1 ){
-            status = "REJECTED";
+            status = "Rejected";
         }
         if(status == 2 ){
-            statusNew = "READY";
+            statusNew = "Ready";
         }
         if(status == 3 ){
-            statusNew = "NO_INTERVIEW";
+            statusNew = "No_interview";
         }
         if(status == 4 ){
-            statusNew = "INTERVIEW";
+            statusNew = "Interview";
         }
         if(status == 5 ){
-            statusNew = "INTERVIEW_DATED";
+            statusNew = "Interview_dated";
         }
         if(status == 6 ){
-            statusNew = "INTERVIEW_IN_PROCESS";
+            statusNew = "Interview_process";
         }
         if(status == 7 ){
-            statusNew = "INTERVIEW_PASSED";
+            statusNew = "Interview_passed";
         }
         if(status == 8 ){
-            statusNew = "TRAINEE_ACCEPTED";
+            statusNew = "Trainee_accepted";
         }
         if(status == 9 ){
-            statusNew = "JOB_ACCEPTED";
+            statusNew = "Job_accepted";
         }
 
         var ClassName = " ";
@@ -270,7 +303,8 @@ function funcForStudents (data){
         }
 
         $("#TableStudents").append('<tr>' +
-        '<td  class="'+ClassName+'" status_id="'+ studentIndex.statusId +'">'+statusNew+'</td>' +
+        '<td class="Recomendations"></td>'+
+        '<td  class="'+ClassName+' TextColorBlack" status_id="'+ studentIndex.statusId +'">'+statusNew+'</td>' +
         '<td>'+studentIndex.user.name+'</td>' +
         '<td>'+studentIndex.user.surname+'</td>' +
         '<td>'+studentIndex.user.patronymic+'</td>' +
@@ -282,20 +316,13 @@ function funcForStudents (data){
         '</tr>');
 
 
+        }
 
+   /* for (var interview_index in studentIndex.interviewResults) {
+        $(".Recomendations").append('<p>' + studentIndex.interviewResults[interview_index].mark + '</p>' +
+        '<p>' + studentIndex.interviewResults[interview_index].recommendation + '</p>');
 
-    }
-
-
-
-
-
-    /* $('#StudentTable').dataTable({
-     "oLanguage": {
-     "sSearch": "_INPUT_" //search
-     }
-     });
-     */
+    }*/
 
 
     $("#hider").click(function(){
