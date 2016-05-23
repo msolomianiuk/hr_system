@@ -71,7 +71,7 @@ public class CandidateDAOImpl implements CandidateDAO {
 
     @Override
     public Collection<Candidate> findCandidateByStatus(String status) {
-        Collection<Candidate> listCandidate = null;
+        Collection<Candidate> listCandidate = new ArrayList<>();
         try {
             jdbcTemplate = new JdbcTemplate(dataSource);
             List<Map<String, Object>> rows = jdbcTemplate.
