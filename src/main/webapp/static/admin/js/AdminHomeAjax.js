@@ -21,9 +21,27 @@ $(document).ready(function () {
         }
     });
 
+    $.ajax({
+        url: location_origin+"/admin/personalCount",
+        type: "GET",
+        dataType: "json",
+        contentType: 'application/json',
+        mimeType: 'application/json',
+        success: getPersonalCount,
+        error: function (data) {
+            console.log(data);
+        }
+    });
+
 });
 
 function getCountCandidate(data){
     $(".CountView").empty();
     $(".CountView").append(data);
 }
+
+function getPersonalCount(data){
+    $(".CountWorkers").empty();
+    $(".CountWorkers").append(data);
+}
+

@@ -8,10 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ua.netcracker.model.dao.CandidateDAO;
 import ua.netcracker.model.entity.Answer;
 import ua.netcracker.model.entity.Candidate;
 import ua.netcracker.model.entity.Status;
-import ua.netcracker.model.filtering.SimpleFilter;
 import ua.netcracker.model.service.CandidateService;
 import ua.netcracker.model.service.impl.Pagination;
 import ua.netcracker.model.utils.JsonParsing;
@@ -26,6 +26,8 @@ public class StudentsRestController {
 
     @Autowired
     private CandidateService candidateService;
+    @Autowired
+    private CandidateDAO candidateDAO;
 
     @Autowired
     private Pagination pagination;
@@ -50,24 +52,16 @@ public class StudentsRestController {
 
         Collection<Answer> answers = JsonParsing.parseJsonString(answersJsonString);
 
-        List<Candidate> students = (List<Candidate>) candidateService.getAllCandidates();
-        List<Candidate> filtered = students;
-
-        if (students.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-
         List<Answer> selected = new ArrayList<>();
         for (Answer answer : answers) {
             if (!(answer.getValue().isEmpty())) {
                 selected.add(answer);
             }
         }
+        List<Candidate> filtered = (List<Candidate>) candidateService.filterCandidates(selected, 10, 0);
 
-        if (!selected.isEmpty()) {
-            SimpleFilter filter = new SimpleFilter();
-            filter.setExpected(selected);
-            filtered = filter.filter(students);
+        if (filtered.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
 
         if (!status.equals("Select status")) {
@@ -77,8 +71,9 @@ public class StudentsRestController {
             }
         }
 
-        if (filtered.size() < students.size()) {
-            if (!status2.equals("Select status")) {
+        if (!status2.equals("Select status")) {
+            List<Candidate> students = (List<Candidate>) candidateService.getAllCandidates();
+            if (filtered.size() < students.size()) {
                 Status st2 = Status.valueOf(status2);
                 students.removeAll(filtered);
                 for (Candidate student : students) {
@@ -86,6 +81,22 @@ public class StudentsRestController {
                 }
             }
         }
+
+
+
+        //using SimpleFilter
+//        List<Candidate> students = (List<Candidate>) candidateService.getAllCandidates();
+//        List<Candidate> filtered = students;
+//
+//        if (students.isEmpty()) {
+//            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+//        }
+//        if (!selected.isEmpty()) {
+//            SimpleFilter filter = new SimpleFilter();
+//            filter.setExpected(selected);
+//            filtered = filter.filter(students);
+//        }
+
 
         return new ResponseEntity<>(filtered, HttpStatus.OK);
     }

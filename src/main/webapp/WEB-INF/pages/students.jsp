@@ -55,6 +55,8 @@
 
 <body class="nav-md">
 
+<%@ include file="include/personal/modalCandidateDetails.jsp"%>
+
 <div class="container body">
 
 
@@ -95,6 +97,10 @@
                             <li><a href="personal"><i class="fa fa-list-ul"></i> Personal List </a></li>
                             <li><a href="interview_schedule"><i class="fa fa-calendar"></i> Interview Schedule </a></li>
                             <li><a href="admin_settings"><i class="fa fa-cogs"></i> System Setting </a></li>
+                            <li><a href="report"><i class="fa fa-calendar"></i> Reports
+                            </a>
+                            </li>
+                            <li><a href="template"><i class="fa fa-home"></i> Template </a></li>
                         </ul>
                     </div>
 
@@ -239,7 +245,7 @@
                                 <div id="search" class="nav nav-sidebar">
                                     <div id="custom-search-input">
                                         <div class="input-group col-md-12">
-                                            <input type="text" id="fieldSearch" class="form-control" placeholder="Организации , адреса...">
+                                            <input type="text" id="fieldSearch" class="form-control" placeholder="Search ...">
                                         <span class="input-group-btn">
                                             <button id="buttonSearch" class="btn btn-info" type="button">
                                             </button>
@@ -255,6 +261,7 @@
                             <table id="StudentTable" class="table table-striped table-bordered clicked-tr">
                                 <thead>
                                 <tr>
+                                    <th>Recomendations</th>
                                     <th>Status</th>
                                     <th>Name</th>
                                     <th>Surname</th>
@@ -274,8 +281,24 @@
                 </div>
             </div>
 
-            <!-- footer content -->
+            <div class="panel panel-success">
+                <h3 class="panel-title">Edit Question parametres</h3>
 
+                <div class="panel-body" id="main-setting4">
+                    <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                        <select id="Status_Email" class="form-control">
+                            <option value="Rejected" selected>Rejected</option>
+                            <option value="No_interview">No_interview</option>
+                            <option value="Interview">Interview</option>
+                            <option value="Interview_passed">Interview_passed</option>
+                            <option value="Interview_passed">Job_accepted</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4 col-lg-4 col-sm-12 col-xs-12">
+                        <button type="button" id="EmailGo" class="btn btn-success">Click to change</button>
+                    </div>
+                </div>
+            </div>
             <footer>
                 <div class="copyright-info">
                     <p class="pull-right">Gentelella - Bootstrap Admin Template by <a href="https://colorlib.com">Colorlib</a>
@@ -300,25 +323,36 @@
 <div id="hider"></div>
 <div class="ModelViewStudent"></div>
 <div class="ModelStatus">
-    <div class="col-md-4 col-lg-4 col-sm-4 col-xs-4">
-        <select id="Status" class="form-control">
-            <option value="" selected>Choose to change status</option>
-            <option value="Rejected">Rejected</option>
-            <option value="Ready">Ready</option>
-            <option value="No_interview">No_interview</option>
-            <option value="Interview">Interview</option>
-            <option value="Interview_dated">Interview_dated</option>
-            <option value="Interview_process">Interview_process</option>
-            <option value="Interview_passed">Interview_passed</option>
-            <option value="Trainee_accepted">Trainee_accepted</option>
-            <option value="Job_accepted">Job_accepted</option>
-        </select>
-        <button type="button" id="UpdateStatus" class="btn btn-success">Click to change</button>
+    <h1 class="Header_status">Change status:</h1>
+    <div id="StatusNewIn">
+        <div class="col-md-4 col-lg-4 col-sm-4 col-xs-4">
+            <select id="Status" class="form-control">
+                <option value="" selected>Choose to change status</option>
+                <option value="Rejected">Rejected</option>
+                <option value="Ready">Ready</option>
+                <option value="No_interview">No_interview</option>
+                <option value="Interview">Interview</option>
+                <option value="Interview_dated">Interview_dated</option>
+                <option value="Interview_process">Interview_process</option>
+                <option value="Interview_passed">Interview_passed</option>
+                <option value="Trainee_accepted">Trainee_accepted</option>
+                <option value="Job_accepted">Job_accepted</option>
+            </select>
+        </div>
+        <div class="col-md-4 col-lg-4 col-sm-4 col-xs-4">
+            <button type="button" id="UpdateStatus" class="btn btn-success">Click to change</button>
+        </div>
     </div>
-
+    <div style="height:20px"></div>
 </div>
 
+
 <script src="<c:url value="/static/js/custom/baseUrl.js"/>"></script>
+
+<script src="<c:url value="/static/js/custom/Personal/ajax/loadQuestions.js"/>"></script>
+<script src="<c:url value="/static/js/custom/Personal/drawCandidateDetails.js"/>"></script>
+<script src="<c:url value="/static/js/custom/Personal/ajax/loadCandidateById.js"/>"></script>
+
 
 <script src="<c:url value="/static/admin/js/AjaxForStudents.js"/>"></script>
 <script src="<c:url value="/static/admin/js/bootstrap.min.js"/>"></script>
@@ -349,6 +383,7 @@
 <script type="text/javascript" src="<c:url value="/static/admin/js/Students.js"/>"></script>
 <!-- /datepicker -->
 <!-- /footer content -->
+
 </body>
 
 </html>

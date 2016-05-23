@@ -1,3 +1,5 @@
+loadQuestions();
+
 function cleanCandidateDetails() {
     $('#candidate-details h4').html("Candidate #"); //modal only
     $('.candidate-details').html($('.candidate-details-template').html());

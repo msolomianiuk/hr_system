@@ -48,16 +48,10 @@ public class InterviewResultDAOImpl implements InterviewResultDAO {
             for (Map<String, Object> row : rows) {
                 InterviewResult interviewResult = new InterviewResult();
                 interviewResult.setInterviewerId((int) row.get("interviewer_id"));
-                interviewResult.setInterviewer(userDAO.find((int) row.get("interviewer_id")));
                 interviewResult.setMark((int) row.get("mark"));
                 interviewResult.setComment((String) row.get("comment"));
                 interviewResult.setRecommendation(Recommendation.valueOf((String) row.get("value")));
-//                Recommendation[] recommendations = Recommendation.values();
-//                for (Recommendation r : recommendations) {
-//                    if (r.getId() == (int) row.get("recommendation_id")) {
-//                        interviewResult.setRecommendation(r);
-//                    }
-//                }
+
                 results.add(interviewResult);
             }
 

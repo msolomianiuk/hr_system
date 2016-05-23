@@ -18,10 +18,7 @@ import ua.netcracker.model.service.QuestionService;
 import ua.netcracker.model.service.SendEmailService;
 import ua.netcracker.model.utils.JsonParsing;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author Alyona Bilous 05/05/2016
@@ -189,9 +186,9 @@ public class CandidateServiceImpl implements CandidateService {
 
     @Override
     public boolean updateCandidateStatus(Integer candidateID, Integer newStatusID) {
-        if (getCandidateById(candidateID).getStatusId() != newStatusID) {
-            sendEmailService.sendEmailToStudentsByStatus(Status.values()[newStatusID - 1]);
-        }
+//        if (getCandidateById(candidateID).getStatusId() != newStatusID) {
+//            sendEmailService.sendEmailToStudentsByStatus(Status.values()[newStatusID - 1]);
+//        }
         return candidateDAO.updateCandidateStatus(candidateID, newStatusID);
     }
 
@@ -309,5 +306,10 @@ public class CandidateServiceImpl implements CandidateService {
         interviewResult.setMark(mark);
         interviewResult.setRecommendation(Recommendation.valueOf(recomendation));
         return interviewResultDAO.createInterviewResult(candidateId, interviewResult);
+    }
+
+    @Override
+    public Collection<Candidate> filterCandidates(List<Answer> expected, Integer limit, Integer offset) {
+        return candidateDAO.filterCandidates(expected, limit, offset);
     }
 }

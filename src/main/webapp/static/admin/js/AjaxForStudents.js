@@ -7,15 +7,34 @@ $(document).ready(function() {
 
     location_origin = "http://localhost:8080/hr_system-1.0-SNAPSHOT"
 
-    $(document).on("click",".getModalStudent",function(){
 
-        var id  = parseInt(($(this).attr("candidate_id")));
+    $(document).on("click", "#EmailGo", function () {
+        var candidateStatus = $("#Status_Email").val();
+
+        $.ajax({
+            url: location_origin + "/admin/service/sendEmailToStatus",
+            type: "GET",
+            dataType: "json",
+            data: {'candidateStatus': candidateStatus},
+            contentType: 'application/json',
+            mimeType: 'application/json',
+            success: functionForEmail,
+            error: function (data) {
+                console.log(data);
+            }
+        });
+
+    });
+
+    $(document).on("click", ".getModalStudent", function () {
+
+        var id = parseInt(($(this).attr("candidate_id")));
 
         $.ajax({
             url: location_origin + "/admin/answer_candidate",
             type: "GET",
             dataType: "json",
-            data:{'id':id},
+            data: {'id': id},
             contentType: 'application/json',
             mimeType: 'application/json',
             success: funcForAnketOfStudents,
@@ -27,45 +46,15 @@ $(document).ready(function() {
     });
 
 
-    $(document).on("click",".page-link",function(){
-        var fromElement =  $(this).text();
-        elementPage = $("#Rows").val();
+    $(document).on("click", ".getModalStatus", function () {
 
-        currPage = parseInt(fromElement);
-        $.ajax({
-            url: location_origin + "/admin/getRows",
-            type: "GET",
-            dataType: "json",
-            contentType: 'application/json',
-            mimeType: 'application/json',
-            success: fistPaggination,
-            error: function (data) {
-                console.log(data);
-            }
-        });
-
-        $.ajax({
-            url: location_origin + "/admin/paginationCandidate",
-            type: "GET",
-            dataType: "json",
-            data:{'elementPage':elementPage,'fromElement':fromElement},
-            success: funcForStudents,
-            error: function (data) {
-                console.log(data);
-            }
-        });
-
-    });
-
-    $(document).on("click",".getModalStatus",function (){
-
-       var id  = parseInt(($(this).attr("candidate_id")));
+        var id = parseInt(($(this).attr("candidate_id")));
 
         $.ajax({
             url: location_origin + "/admin/candidate_id",
             type: "GET",
             dataType: "json",
-            data:{'id':id},
+            data: {'id': id},
             contentType: 'application/json',
             mimeType: 'application/json',
             success: getCandidateId,
@@ -77,17 +66,17 @@ $(document).ready(function() {
     });
 
 
-    $(document).on("click","#UpdateStatus",function (){
+    $(document).on("click", "#UpdateStatus", function () {
 
-        var candidateID  = parseInt(($(this).attr("candidate_id")));
+        var candidateID = parseInt(($(this).attr("candidate_id")));
 
-        var status =  $("#Status").val();
+        var status = $("#Status").val();
 
         $.ajax({
             url: location_origin + "/admin/candidate/update_status",
             type: "GET",
             dataType: "json",
-            data:{'candidateID':candidateID,'status':status},
+            data: {'candidateID': candidateID, 'status': status},
             success: functionUpdate,
             error: function (data) {
                 console.log(data);
@@ -95,33 +84,99 @@ $(document).ready(function() {
         });
 
     });
+    $(document).on("click",".page-link",function(){
+
+       var new_in = $('#fieldSearch').val().replace(/\s+/g, '');
 
 
-    $(document).on("click","#buttonSearch",function findClock(){
+    if(new_in.length) {
+
+            var find = $('#fieldSearch').val().replace(/\s+/g, '');
+            elementPage = $("#Rows").val();
+            fromElement = $(this).text();
+            currPage = parseInt(fromElement);
+
+
+
+            $.ajax({
+                url: location_origin + "/admin/rowsFind",
+                type: "GET",
+                dataType: "json",
+                data: {'find': find},
+                success: rowsAfterFind,
+                error: function (data) {
+                    console.log(data);
+                }
+            });
+
+
+            $.ajax({
+                url: location_origin + "/admin/findCandidate",
+                type: "GET",
+                dataType: "json",
+                data: {'find': find, 'elementPage': elementPage, "fromElement": currPage},
+                success: funcForStudents,
+                error: function (data) {
+                    console.log(data);
+                }
+            });
+        }
+
+        else {
+
+                var fromElement = $(this).text();
+                elementPage = $("#Rows").val();
+
+                currPage = parseInt(fromElement);
+                $.ajax({
+                    url: location_origin + "/admin/getRows",
+                    type: "GET",
+                    dataType: "json",
+                    contentType: 'application/json',
+                    mimeType: 'application/json',
+                    success: fistPaggination,
+                    error: function (data) {
+                        console.log(data);
+                    }
+                });
+
+                $.ajax({
+                    url: location_origin + "/admin/paginationCandidate",
+                    type: "GET",
+                    dataType: "json",
+                    data: {'elementPage': elementPage, 'fromElement': fromElement},
+                    success: funcForStudents,
+                    error: function (data) {
+                        console.log(data);
+                    }
+                });
+
+        }
+});
+    $(document).on("click", "#buttonSearch", function findClock() {
 
 
         var find = $('#fieldSearch').val();
         elementPage = $("#Rows").val();
 
-        if(findClock.count == 0){
+        if (findClock.count == 0) {
             fromElement = 1;
             currPage = parseInt(fromElement);
             findClock.count = 1;
         }
 
 
-        if(findClock.count >1) {
+        if (findClock.count > 1) {
             fromElement = $(this).text();
             currPage = parseInt(fromElement);
         }
-
 
 
         $.ajax({
             url: location_origin + "/admin/rowsFind",
             type: "GET",
             dataType: "json",
-            data:{'find':find},
+            data: {'find': find},
             success: rowsAfterFind,
             error: function (data) {
                 console.log(data);
@@ -129,12 +184,11 @@ $(document).ready(function() {
         });
 
 
-
         $.ajax({
             url: location_origin + "/admin/findCandidate",
             type: "GET",
             dataType: "json",
-            data:{'find':find,'elementPage':elementPage,"fromElement":currPage},
+            data: {'find': find, 'elementPage': elementPage, "fromElement": currPage},
             success: funcForStudents,
             error: function (data) {
                 console.log(data);
@@ -142,8 +196,6 @@ $(document).ready(function() {
         });
 
     });
-
-
 
     $.ajax({
 
@@ -182,7 +234,7 @@ $("button#filter").on("click", function () {
         type: "GET",
         data: {'answersJsonString': JSON.stringify($('.candidate-profile form').serializeObject()), 'status': $('#status_select option:selected').text(), 'status2': $('#status_select_2 option:selected').text()},
         dataType: "json",
-        success: showStudents,
+        success: function(data){console.log(data)},
         error: function (data) {
             setTimeout(function () { $('.loading').hide(); }, 1000);
             new PNotify({
@@ -194,53 +246,7 @@ $("button#filter").on("click", function () {
     });
 });
 
-function showStudents(data) {
 
-    dataNewStudents = data;
-
-    $('#StudentTable').empty();
-    
-    $('#StudentTable').append('<thead>' +
-        '<tr>' +
-        '<th>Name</th>' +
-        '<th>Surname</th>' +
-        '<th>Patronymic</th>' +
-        '<th>email</th>' +
-        '</tr>' +
-        '</thead>' +
-        '<tbody id="TableStudents">' +
-        '</tbody>');
-
-    $('#TableStudents').empty();
-
-    // $('#StudentTable').dataTable.fnClearTable();
-    
-    for(var index_student in data)
-    {
-        studentIndex = data[index_student];
-        $("#TableStudents").append('<tr class="win getModalStudent" candidate_id="'+ studentIndex.id +'">' +
-            '<td>'+studentIndex.user.name+'</td>' +
-            '<td>'+studentIndex.user.surname+'</td>' +
-            '<td>'+studentIndex.user.patronymic+'</td>' +
-            '<td>'+studentIndex.user.email+'</td>' +
-            '</tr>');
-
-    }
-    
-    $("#hider").click(function(){
-        $(".ModelViewStudent").css('display','none');
-        $('#hider').css('display','none');
-    });
-    $(".getModalStudent").click(function(){
-        if( $(".ModelViewStudent").css('display') == 'none' ){
-            $(".ModelViewStudent").css('display','block');
-            $('#hider').css('display','block');
-        } else{
-            $(".ModelViewStudent").css('display','none');
-            $('#hider').css('display','none');
-        }
-    });
-}
 
 function funcForStudents (data){
     dataNewStudents = data;
@@ -255,31 +261,31 @@ function funcForStudents (data){
         status = studentIndex.statusId;
 
         if(status == 1 ){
-            status = "REJECTED";
+            status = "Rejected";
         }
         if(status == 2 ){
-            statusNew = "READY";
+            statusNew = "Ready";
         }
         if(status == 3 ){
-            statusNew = "NO_INTERVIEW";
+            statusNew = "No_interview";
         }
         if(status == 4 ){
-            statusNew = "INTERVIEW";
+            statusNew = "Interview";
         }
         if(status == 5 ){
-            statusNew = "INTERVIEW_DATED";
+            statusNew = "Interview_dated";
         }
         if(status == 6 ){
-            statusNew = "INTERVIEW_IN_PROCESS";
+            statusNew = "Interview_process";
         }
         if(status == 7 ){
-            statusNew = "INTERVIEW_PASSED";
+            statusNew = "Interview_passed";
         }
         if(status == 8 ){
-            statusNew = "TRAINEE_ACCEPTED";
+            statusNew = "Trainee_accepted";
         }
         if(status == 9 ){
-            statusNew = "JOB_ACCEPTED";
+            statusNew = "Job_accepted";
         }
 
         var ClassName = " ";
@@ -314,15 +320,24 @@ function funcForStudents (data){
                 break;
 
         }
+        var b = "";
+        for (var interview_index in studentIndex.interviewResults) {
+        b += '<div>'+
+                '<p>' + studentIndex.interviewResults[interview_index].mark + '</p>' +
+                '<p>' + studentIndex.interviewResults[interview_index].recommendation + '</p>'+
+            '</div>';
+        }
 
         $("#TableStudents").append('<tr>' +
-        '<td  class="'+ClassName+'" status_id="'+ studentIndex.statusId +'">'+statusNew+'</td>' +
+        '<td class="Recomendations">'+b+'</td>'+
+        '<td  class="'+ClassName+' TextColorBlack" status_id="'+ studentIndex.statusId +'">'+statusNew+'</td>' +
         '<td>'+studentIndex.user.name+'</td>' +
         '<td>'+studentIndex.user.surname+'</td>' +
         '<td>'+studentIndex.user.patronymic+'</td>' +
         '<td>'+studentIndex.user.email+'</td>' +
         '<td>'+
-            '<button candidate_id="'+ studentIndex.id +'" type="button" class="win getModalStudent btn btn-success">A</button>'+
+            '<button candidate_id="'+ studentIndex.id +'" data-toggle="modal" data-target = "#candidate-details" ' +
+                'type="button" class="btn btn-success candidateProfile">A</button>'+
             '<button candidate_id="'+ studentIndex.id +'" type="button" class="getModalStatus btn btn-danger">R</button>'+
         '</td>'+
         '</tr>');
@@ -330,18 +345,18 @@ function funcForStudents (data){
 
 
 
-    }
+        }
 
 
 
 
 
-    /* $('#StudentTable').dataTable({
-     "oLanguage": {
-     "sSearch": "_INPUT_" //search
-     }
-     });
-     */
+
+    $('.candidateProfile').on("click", function () {
+        var candidateId = $(this).attr('candidate_id');
+        loadCandidateById(candidateId);
+    });
+
 
 
     $("#hider").click(function(){
@@ -380,7 +395,7 @@ function funcForAnketOfStudents (data){
     $(".ModelViewStudent").css('display','block');
 
     dataInNewAll = data;
-    alert("U get Anket");
+
     $(".ModelViewStudent").empty();
 
 
@@ -400,7 +415,8 @@ function funcForAnketOfStudents (data){
 
 
             $(".ModelViewStudent").append('<div class="form-group">'+
-            '<h5>'+ index_second[2]+ " " +'<br>'+"Answer :" +index_second[1] +' <h5>'+
+            '<span class="QuestionInModal">'+ index_second[2]+'</span>'+
+            '<span class="AnswerInModal">' +index_second[1] +'</span>'+
             '<div style="margin-top:20px;"></div>'+
             '</div>');
 
@@ -447,4 +463,8 @@ function getCandidateId(data){
     id_can = data;
 
     $("#UpdateStatus").attr('candidate_id',id_can);
+}
+
+function functionForEmail(data){
+    console.log("EmailGo");
 }

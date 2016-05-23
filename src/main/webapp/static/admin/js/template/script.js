@@ -74,7 +74,7 @@ var maxID = 0;
 
 function init() {
     $.ajax({
-        url: "http://localhost:8080/hr_system-1.0-SNAPSHOT/admin/service/getEmailTemplates",
+        url: "http://31.131.25.206:8080/hr_system-1.0-SNAPSHOT/admin/service/getEmailTemplates",
         type: "GET",
         dataType: "json",
         success: function (data) {

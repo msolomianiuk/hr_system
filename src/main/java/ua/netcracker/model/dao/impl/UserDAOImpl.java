@@ -145,6 +145,7 @@ public class UserDAOImpl implements UserDAO {
                     return rs.getInt(1);
                 }
             });
+            return count;
         }catch (Exception e){
             LOGGER.error("Error: " + e);
         }

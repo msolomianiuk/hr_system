@@ -1,21 +1,21 @@
 package ua.netcracker.model.service.impl;
 
 import org.apache.log4j.Logger;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import ua.netcracker.model.dao.*;
 import ua.netcracker.model.entity.*;
-import ua.netcracker.model.entity.Address;
-import ua.netcracker.model.service.*;
+import ua.netcracker.model.service.SendEmailService;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
-import java.util.*;
+import java.util.Collection;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
 
 @Service("SendEmail Service")
 public class SendEmailServiceImpl implements SendEmailService {
@@ -79,7 +79,7 @@ public class SendEmailServiceImpl implements SendEmailService {
     public void sendEmailAboutSuccessfulRegistration(User user, String password) {
         EmailTemplate emailTemplate = emailTemplateDAO.find(TEMPLATE_SUCCESS_REGISTRATION);
         String email = replacePatterns(emailTemplate.getTemplate(), user, password);
-        sendLetterToEmails(user.getEmail(), emailTemplate.getDescription(), email.replaceAll("\\{url\\}","http://31.131.25.206:8080/"));
+        sendLetterToEmails(user.getEmail(), emailTemplate.getDescription(), email.replaceAll("\\{url\\}","http://localhost:8080/"));
     }
 
     @Override

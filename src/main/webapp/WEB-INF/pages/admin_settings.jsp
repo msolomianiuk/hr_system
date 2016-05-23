@@ -27,6 +27,7 @@
 
     <!-- Bootstrap core CSS -->
     <script src="<c:url value="/static/js/custom/baseUrl.js"/>"></script>
+    <link href="<c:url value="/static/admin/css/datepicker.css"/>" rel="stylesheet">
     <link href="<c:url value="/static/admin/css/bootstrap.min.css"/>" rel="stylesheet">
 
     <link href="<c:url value="/static/admin/fonts/css/font-awesome.min.css"/>" rel="stylesheet">
@@ -100,6 +101,10 @@
                             <li><a href="personal"><i class="fa fa-list-ul"></i> Personal List </a></li>
                             <li><a href="interview_schedule"><i class="fa fa-calendar"></i> Interview Schedule </a></li>
                             <li><a href="admin_settings"><i class="fa fa-cogs"></i> System Setting </a></li>
+                            <li><a href="report"><i class="fa fa-calendar"></i> Reports
+                            </a>
+                            </li>
+                            <li><a href="template"><i class="fa fa-home"></i> Template </a></li>
                         </ul>
                     </div>
 
@@ -317,7 +322,7 @@
                                             </div>
                                             <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
                                                 <div class="TypeOfQuestionNew">
-                                                    <select  id="TypeOfQuestion">
+                                                    <select  id="TypeOfQuestion" class="status form-control select-and-text">
                                                         <option selected>Choose Type</option>
                                                     </select>
                                                 </div>
@@ -403,6 +408,7 @@
 <!-- bootstrap progress js -->
 <script src="<c:url value="/static/admin/js/progressbar/bootstrap-progressbar.min.js"/>"></script>
 <script src="<c:url value="/static/admin/js/nicescroll/jquery.nicescroll.min.js"/>"></script>
+<script src="<c:url value="/static/admin/js/bootstrap-datepicker.js"/>"></script>
 <script src="<c:url value="/static/admin/js/admnin_setting.js"/>"></script>
 <script src="<c:url value="/static/admin/js/selectSetting.js"/>"></script>
 <script src="<c:url value="/static/admin/js/SelectQuery.js"/>"></script>

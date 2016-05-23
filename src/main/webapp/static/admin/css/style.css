@@ -8,12 +8,13 @@
 }
 
 .ModelViewStudent {
-    width: 400px;
+    width: 450px;
     background-color: #ffffff;
     display: none;
     position: fixed;
     top: 111px;
     left: 36%;
+    border-radius: 35px;
 }
 .ModelStatus{
     width:400px;
@@ -89,4 +90,29 @@
     position: fixed;
     top: 111px;
     left: 36%;
+}
+
+.QuestionInModal{
+    margin-left: 25px;
+    font-size: 15pt;
+    color: #66cc33;
+}
+
+.AnswerInModal{
+    margin-left: 13px;
+    font-size: 15pt;
+}
+
+.Header_status{
+    text-align: center;
+
+}
+
+#StatusNewIn{
+    margin-top:30px;
+}
+
+.TextColorBlack {
+    color: black;
+    font-weight: bold;
 }

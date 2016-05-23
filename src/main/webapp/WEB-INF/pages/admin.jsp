@@ -8,6 +8,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
 <%@page session="true" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -55,6 +56,10 @@
                 <div class="navbar nav_title" style="border: 0;">
                     <a href="testAdmin" class="site_title"><i class="fa fa-paw"></i>
                         <span>Net<strong>Cracker</strong></span></a>
+                <security:authorize access="hasAnyRole('ROLE_HR','ROLE_BA','ROLE_DEV')" var="isUser"/>
+                    <c:if test="${isUser}">
+                        <p>Security</p>
+                    </c:if>
                 </div>
                 <div class="clearfix"></div>
 
@@ -87,6 +92,10 @@
                             </a>
                             </li>
                             <li><a href="admin/admin_settings"><i class="fa fa-cogs"></i> System Setting </a></li>
+                            <li><a href="admin/report"><i class="fa fa-calendar"></i> Reports
+                            </a>
+                            </li>
+                            <li><a href="admin/template"><i class="fa fa-home"></i> Template </a></li>
                         </ul>
                     </div>
                 </div>
@@ -142,17 +151,17 @@
                 <div class="animated flipInY col-md-4 col-sm-4 col-xs-4 tile_stats_count">
                     <div class="left"></div>
                     <div class="right">
-                        <span class="count_top"><i class="fa fa-users"></i> Total Students</span>
+                        <span class="count_top"><i class="fa fa-users"></i> Total Candidates</span>
 
-                        <div class="count CountView">50000</div>
+                        <div class="count CountView"></div>
                     </div>
                 </div>
                 <div class="animated flipInY col-md-4 col-sm-4 col-xs-4 tile_stats_count">
                     <div class="left"></div>
                     <div class="right">
-                        <span class="count_top"><i class="fa fa-user"></i> Total Users</span>
+                        <span class="count_top"><i class="fa fa-user"></i> Total Personal</span>
 
-                        <div class="count green">50</div>
+                        <div class="count CountWorkers green"></div>
                     </div>
                 </div>
                 <div class="animated flipInY col-md-4 col-sm-4 col-xs-4 tile_stats_count">
