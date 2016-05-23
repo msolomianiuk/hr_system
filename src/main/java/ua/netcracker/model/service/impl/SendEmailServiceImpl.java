@@ -1,21 +1,21 @@
 package ua.netcracker.model.service.impl;
 
 import org.apache.log4j.Logger;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import ua.netcracker.model.dao.*;
 import ua.netcracker.model.entity.*;
-import ua.netcracker.model.service.SendEmailService;
+import ua.netcracker.model.entity.Address;
+import ua.netcracker.model.service.*;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
-import java.util.Collection;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
+import java.util.*;
 
 @Service("SendEmail Service")
 public class SendEmailServiceImpl implements SendEmailService {
@@ -79,11 +79,13 @@ public class SendEmailServiceImpl implements SendEmailService {
     public void sendEmailAboutSuccessfulRegistration(User user, String password) {
         EmailTemplate emailTemplate = emailTemplateDAO.find(TEMPLATE_SUCCESS_REGISTRATION);
         String email = replacePatterns(emailTemplate.getTemplate(), user, password);
-        sendLetterToEmails(user.getEmail(), emailTemplate.getDescription(), email.replaceAll("\\{url\\}","http://localhost:8080/"));
+        sendLetterToEmails(user.getEmail(), emailTemplate.getDescription(), email.replaceAll("\\{url\\}",
+                "http://31.131.25.42:8080/hr_system-1.0-SNAPSHOT"));
     }
 
     @Override
     public void sendEmailToStudentsByStatus(Status status) {
+        LOGGER.debug("status === " + status);
         Collection<Candidate> candidates = candidateDAO.findCandidateByStatus(status.getStatus());
         EmailTemplate emailTemplate = getTemplateByCandidateStatus(status);
         for (Candidate candidate : candidates) {
@@ -91,6 +93,15 @@ public class SendEmailServiceImpl implements SendEmailService {
             String email = getEmailByCandidateStatus(emailTemplate.getTemplate(), user, candidate, status);
             sendLetterToEmails(user.getEmail(), emailTemplate.getDescription(), email);
         }
+    }
+
+    @Override
+    public void sendEmailToStudentByStatus(int idCandidate, Status status) {
+        Candidate candidate = candidateDAO.findByCandidateId(idCandidate);
+        EmailTemplate emailTemplate = getTemplateByCandidateStatus(status);
+        User user = userDAO.find(candidate.getUserId());
+        String email = getEmailByCandidateStatus(emailTemplate.getTemplate(), user, candidate, status);
+        sendLetterToEmails(user.getEmail(), emailTemplate.getDescription(), email);
     }
 
     @Override
@@ -116,16 +127,13 @@ public class SendEmailServiceImpl implements SendEmailService {
     }
 
     private String replacePatterns(String template, User user, String password) {
-        return replacePatterns(template, user).replaceAll("\\{password\\}", password);
+        return template.replaceAll("\\{name\\}", user.getName())
+                .replaceAll("\\{password\\}", password);
     }
 
-    private String replacePatterns(String template, User user) {
-        return template.replaceAll("\\{name\\}", user.getName());
-    }
-
-    private String replacePatterns(String template, User user, InterviewDaysDetails interviewDaysDetails, Address address) {
-        return replacePatterns(template, user).replaceAll("\\{address\\}", address.getAddress() + " " + address.getRoomCapacity())
-                .replaceAll("\\{time}\\}", interviewDaysDetails.getInterviewDate() + " " + interviewDaysDetails.getStartTime());
+    private String replacePatterns(String template, InterviewDaysDetails interviewDaysDetails, Address address) {
+        return template.replaceAll("\\{address\\}", address.getAddress())
+                .replaceAll("\\{time\\}", interviewDaysDetails.getInterviewDate() + ", " + interviewDaysDetails.getStartTime());
     }
 
     private EmailTemplate getTemplateByCandidateStatus(Status status) {
@@ -149,20 +157,23 @@ public class SendEmailServiceImpl implements SendEmailService {
     private String getEmailByCandidateStatus(String template, User user, Candidate candidate, Status status) {
         switch (status) {
             case Interview:
-                InterviewDaysDetails interviewDaysDetails = interviewDaysDetailsDAO.find(candidate.getInterviewDaysDetailsId());
-                Address address = addressDAO.find(interviewDaysDetails.getAddressId());
-                /**
-                 * Remind about coming interview a day before
-                 */
-                 sendReminderInterview(user, interviewDaysDetails, address);
-                return replacePatterns(template, user, interviewDaysDetails, address);
+                try {
+                    InterviewDaysDetails interviewDaysDetails = interviewDaysDetailsDAO.find(candidate.getInterviewDaysDetailsId());
+                    Address address = addressDAO.find(interviewDaysDetails.getAddressId());
+                    LOGGER.debug("interviewDaysDetails === " + interviewDaysDetails);
+                    /**
+                     * Remind about coming interview a day before
+                     */
+                    sendReminderInterview(user, interviewDaysDetails, address);
+                    return replacePatterns(template, interviewDaysDetails, address);
+                } catch (Exception e) {
+                    LOGGER.info("ERROR while sending email to Status.Interview!!! " + e.getMessage());
+                }
             case Interview_passed:
             case Job_accepted:
             case No_interview:
             case Rejected:
                 return template;
-                //no user name in template
-                //return replacePatterns(template, user);
             default:
                 LOGGER.info("No templates");
                 throw new IllegalArgumentException();
@@ -171,7 +182,7 @@ public class SendEmailServiceImpl implements SendEmailService {
 
     private void sendReminderInterview(User user, InterviewDaysDetails interviewDaysDetails, Address address) {
         EmailTemplate emailTemplate = emailTemplateDAO.find(TEMPLATE_COMING_INTERVIEW);
-        String email = replacePatterns(emailTemplate.getTemplate(), user, interviewDaysDetails, address);
+        String email = replacePatterns(emailTemplate.getTemplate(), interviewDaysDetails, address);
         MimeMessage mimeMessage = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage);
         try {
@@ -180,7 +191,6 @@ public class SendEmailServiceImpl implements SendEmailService {
             helper.setTo(templateMessage.getTo());
             helper.setFrom(templateMessage.getFrom());
             helper.setBcc(user.getEmail());
-            mailSender.send(mimeMessage);
             String[] date = interviewDaysDetails.getInterviewDate().split(" ");
             helper.setSentDate(new Date(new GregorianCalendar(Integer.valueOf(date[0]), Integer.valueOf(date[1]), Integer.valueOf(date[2]) - 1).getTimeInMillis()));
             mailSender.send(mimeMessage);
