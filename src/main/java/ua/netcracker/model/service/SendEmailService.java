@@ -12,6 +12,7 @@ public interface SendEmailService {
     void sendEmailAboutSuccessfulRegistration(User user, String password);
 
     void sendEmailToStudentsByStatus(Status status);
+    void sendEmailToStudentByStatus(int idCandidate, Status status);
     void sendEmailAboutCriticalError(String textError);
 
     void sendEmailRestorePassword(String email,String url);
