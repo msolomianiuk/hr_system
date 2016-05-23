@@ -574,11 +574,11 @@ public class AdminController {
     public ResponseEntity<Integer> sendEmailToCandidatesWithStatus(
             @RequestParam String candidateStatus
     ) {
-        Status status = null;
-        if (status == Status.valueOf(candidateStatus)) {
-            sendEmailService.sendEmailToStudentsByStatus(Status.valueOf(candidateStatus));
-            return new ResponseEntity<>(HttpStatus.OK);
+        Status status = Status.valueOf(candidateStatus);
+        if (status == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        sendEmailService.sendEmailToStudentsByStatus(Status.valueOf(candidateStatus));
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
