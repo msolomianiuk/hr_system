@@ -291,7 +291,7 @@
                             <option value="No_interview">No_interview</option>
                             <option value="Interview">Interview</option>
                             <option value="Interview_passed">Interview_passed</option>
-                            <option value="Interview_passed">Job_accepted</option>
+                            <option value="Job_accepted">Job_accepted</option>
                         </select>
                     </div>
                     <div class="col-md-4 col-lg-4 col-sm-12 col-xs-12">
