@@ -38,6 +38,11 @@ public class QuestionServiceImpl implements QuestionService {
         return questionDao.findAllMandatoryAndView(courseId);
     }
 
+    @Override
+    public Collection<Question> getAllByCourseId(int courseId) {
+        return questionDao.findAllByCourseId(courseId);
+    }
+
     ;
 
     @Override

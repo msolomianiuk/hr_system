@@ -108,7 +108,7 @@ public class Candidate implements Comparable<Candidate> {
     }
 
     public int compareTo(Candidate c) {
-        int result = this.user.getName().compareTo(c.user.getName());
+        int result = this.user.getName().concat(user.getSurname()).concat(user.getPatronymic()).compareTo(c.user.getName().concat(user.getSurname()).concat(user.getPatronymic()));
         return result;
     }
 }

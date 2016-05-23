@@ -57,5 +57,4 @@ function drawQuestionForm(questionsList) {
         $('.loading .questions_text').hide();
         $('.loading .answers_text').removeClass('hidden');
     }, 1000);
-    loadAnswers();
 }
