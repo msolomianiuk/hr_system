@@ -14,6 +14,8 @@ import java.util.Map;
 public interface InterviewDaysDetailsService {
     InterviewDaysDetails findById(int id);
 
+    InterviewDaysDetails findByDate(String date);
+
     List<InterviewDaysDetails> findAll();
 
     boolean add(InterviewDaysDetails interviewDaysDetails);
@@ -27,6 +29,8 @@ public interface InterviewDaysDetailsService {
     void removeByCourseId(int course_id);
 
     void remove(int id);
+
+    public String sortCandidateToDays(CourseSetting courseSetting);
 
     String getStartTimeofInterview(int id);
 
