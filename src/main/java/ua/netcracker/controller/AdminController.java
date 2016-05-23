@@ -334,6 +334,13 @@ public class AdminController {
         return ResponseEntity.ok(Integer.parseInt(id));
     }
 
+    @RequestMapping(value = "/sortCandidate", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<String> sortCandidatePerDays(
+    ) {
+        return ResponseEntity.ok(interviewDaysDetailsService.sortCandidateToDays(courseSettingService.getLastSetting()));
+    }
+
     @RequestMapping(value = "/template", method = RequestMethod.GET)
     public String getEmailTemplatePage() {
         return "template";

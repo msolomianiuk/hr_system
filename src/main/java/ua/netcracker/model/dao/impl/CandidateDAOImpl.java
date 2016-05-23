@@ -71,7 +71,7 @@ public class CandidateDAOImpl implements CandidateDAO {
 
     @Override
     public Collection<Candidate> findCandidateByStatus(String status) {
-        Collection<Candidate> listCandidate = null;
+        Collection<Candidate> listCandidate = new ArrayList<>();
         try {
             jdbcTemplate = new JdbcTemplate(dataSource);
             List<Map<String, Object>> rows = jdbcTemplate.
@@ -81,6 +81,7 @@ public class CandidateDAOImpl implements CandidateDAO {
                 candidate.setId((int) row.get("id"));
                 candidate.setUserId((int) row.get("user_id"));
                 candidate.setStatusId((int) row.get("status_id"));
+                if (row.get("interview_days_details_id")!=null)
                 candidate.setInterviewDaysDetailsId((int) row.get("interview_days_details_id"));
                 candidate.setCourseId((int) row.get("course_id"));
                 listCandidate.add(candidate);
