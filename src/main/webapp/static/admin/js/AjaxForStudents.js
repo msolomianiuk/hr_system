@@ -7,6 +7,25 @@ $(document).ready(function() {
 
     location_origin = "http://localhost:8080/hr_system-1.0-SNAPSHOT"
 
+
+    $(document).on("click", "#EmailGo", function () {
+        var candidateStatus = $("#Status_Email").val();
+
+        $.ajax({
+            url: location_origin + "/admin/service/sendEmailToStatus",
+            type: "GET",
+            dataType: "json",
+            data: {'candidateStatus': candidateStatus},
+            contentType: 'application/json',
+            mimeType: 'application/json',
+            success: functionForEmail,
+            error: function (data) {
+                console.log(data);
+            }
+        });
+
+    });
+
     $(document).on("click", ".getModalStudent", function () {
 
         var id = parseInt(($(this).attr("candidate_id")));
@@ -301,28 +320,43 @@ function funcForStudents (data){
                 break;
 
         }
+        var b = "";
+        for (var interview_index in studentIndex.interviewResults) {
+        b += '<div>'+
+                '<p>' + studentIndex.interviewResults[interview_index].mark + '</p>' +
+                '<p>' + studentIndex.interviewResults[interview_index].recommendation + '</p>'+
+            '</div>';
+        }
 
         $("#TableStudents").append('<tr>' +
-        '<td class="Recomendations"></td>'+
+        '<td class="Recomendations">'+b+'</td>'+
         '<td  class="'+ClassName+' TextColorBlack" status_id="'+ studentIndex.statusId +'">'+statusNew+'</td>' +
         '<td>'+studentIndex.user.name+'</td>' +
         '<td>'+studentIndex.user.surname+'</td>' +
         '<td>'+studentIndex.user.patronymic+'</td>' +
         '<td>'+studentIndex.user.email+'</td>' +
         '<td>'+
-            '<button candidate_id="'+ studentIndex.id +'" type="button" class="win getModalStudent btn btn-success">A</button>'+
+            '<button candidate_id="'+ studentIndex.id +'" data-toggle="modal" data-target = "#candidate-details" ' +
+                'type="button" class="btn btn-success candidateProfile">A</button>'+
             '<button candidate_id="'+ studentIndex.id +'" type="button" class="getModalStatus btn btn-danger">R</button>'+
         '</td>'+
         '</tr>');
 
 
+
+
         }
 
-   /* for (var interview_index in studentIndex.interviewResults) {
-        $(".Recomendations").append('<p>' + studentIndex.interviewResults[interview_index].mark + '</p>' +
-        '<p>' + studentIndex.interviewResults[interview_index].recommendation + '</p>');
 
-    }*/
+
+
+
+
+    $('.candidateProfile').on("click", function () {
+        var candidateId = $(this).attr('candidate_id');
+        loadCandidateById(candidateId);
+    });
+
 
 
     $("#hider").click(function(){
@@ -429,4 +463,8 @@ function getCandidateId(data){
     id_can = data;
 
     $("#UpdateStatus").attr('candidate_id',id_can);
+}
+
+function functionForEmail(data){
+    console.log("EmailGo");
 }

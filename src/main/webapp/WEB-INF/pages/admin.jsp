@@ -8,6 +8,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
 <%@page session="true" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -55,6 +56,10 @@
                 <div class="navbar nav_title" style="border: 0;">
                     <a href="testAdmin" class="site_title"><i class="fa fa-paw"></i>
                         <span>Net<strong>Cracker</strong></span></a>
+                <security:authorize access="hasAnyRole('ROLE_HR','ROLE_BA','ROLE_DEV')" var="isUser"/>
+                    <c:if test="${isUser}">
+                        <p>Security</p>
+                    </c:if>
                 </div>
                 <div class="clearfix"></div>
 

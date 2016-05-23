@@ -4,6 +4,22 @@
 
 $(document).ready(function () {
 
+    $('#reg_start_date').datepicker({
+        format: "yyyy-mm-dd"
+    });
+    $('#reg_end_date').datepicker({
+        format: "yyyy-mm-dd"
+    });
+    $('#int_start_date').datepicker({
+        format: "yyyy-mm-dd"
+    });
+    $('#interview_end_date').datepicker({
+        format: "yyyy-mm-dd"
+    });
+
+    $('#course_start_date').datepicker({
+        format: "yyyy-mm-dd"
+    });
 
     location_origin = "http://localhost:8080/hr_system-1.0-SNAPSHOT"
 

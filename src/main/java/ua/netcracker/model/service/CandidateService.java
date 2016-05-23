@@ -4,6 +4,7 @@ package ua.netcracker.model.service;
 import ua.netcracker.model.entity.*;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -81,5 +82,7 @@ public interface CandidateService {
     boolean updateInterviewResult(Integer candidateId, InterviewResult interviewResult);
 
     boolean saveInterviewResult(Integer candidateId, Integer interviewerId, Integer mark, String recomendation, String comment);
+
+    Collection<Candidate> filterCandidates(List<Answer> expected, Integer limit, Integer offset);
 
 }

@@ -15,6 +15,7 @@ public interface QuestionDAO extends DAO<Question> {
 
     Collection<Question> findAllMandatoryAndView(int courseId);
 
+    Collection<Question> findAllByCourseId(int courseId);
     int findTypeIdByValue(String value);
 
     boolean delete(Question question);
@@ -22,6 +23,8 @@ public interface QuestionDAO extends DAO<Question> {
     List<String> findAnswerVariants(Question question);
 
     List<Question> findType();
+
     int findQuantityQuestions();
+
     int findCourseId();
 }

@@ -40,6 +40,11 @@ public class CourseSettingServiceImpl implements CourseSettingService {
     }
 
     @Override
+    public Collection<Integer> getAllCourseId() {
+        return courseSettingDAO.getAllCourseId();
+    }
+
+    @Override
     public CourseSetting setCourseSetting(String registrationStartDate,
                                           String registrationEndDate,
                                           String interviewStartDate,
