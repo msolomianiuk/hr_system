@@ -6,8 +6,11 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 import ua.netcracker.model.dao.InterviewDaysDetailsDAO;
 import ua.netcracker.model.dao.impl.InterviewDaysDetailsDAOImpl;
+import ua.netcracker.model.entity.Candidate;
 import ua.netcracker.model.entity.CourseSetting;
 import ua.netcracker.model.entity.InterviewDaysDetails;
+import ua.netcracker.model.entity.Status;
+import ua.netcracker.model.service.CourseSettingService;
 import ua.netcracker.model.service.InterviewDaysDetailsService;
 import ua.netcracker.model.service.ReportService;
 import ua.netcracker.model.service.date.DateService;
@@ -20,6 +23,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -57,10 +61,18 @@ public class InterviewDaysDetailsServiceImpl implements InterviewDaysDetailsServ
     @Autowired
     private AddressServiceImpl addressService;
 
-    public InterviewDaysDetails setInterviewDateDetails(String id, String startTime, String endTime,int addressId){
-        if (!dateService.validTwoTimes(startTime,endTime)) {
-            startTime=null;
-            endTime=null;
+    @Autowired
+    private CandidateServiceImpl candidateService;
+
+    Status status;
+
+    @Autowired
+    CourseSettingService courseSettingService;
+
+    public InterviewDaysDetails setInterviewDateDetails(String id, String startTime, String endTime, int addressId) {
+        if (!dateService.validTwoTimes(startTime, endTime)) {
+            startTime = null;
+            endTime = null;
         }
         InterviewDaysDetails interviewDaysDetails = new InterviewDaysDetails();
         interviewDaysDetails.setId(Integer.parseInt(id));
@@ -70,7 +82,7 @@ public class InterviewDaysDetailsServiceImpl implements InterviewDaysDetailsServ
         if (interviewDaysDetails.getStartTime() != null && interviewDaysDetails.getEndTime() != null) {
             interviewDaysDetails.setCountStudents(dateService.quantityStudent(interviewDaysDetails));
             interviewDaysDetails.setCountPersonal(dateService.getPersonal(interviewDaysDetails));
-            if (addressService.findById(addressId).getRoomCapacity()<interviewDaysDetails.getCountPersonal()*2){
+            if (addressService.findById(addressId).getRoomCapacity() < interviewDaysDetails.getCountPersonal() * 2) {
                 interviewDaysDetails.setCountPersonal(-1);
             }
         }
@@ -108,19 +120,64 @@ public class InterviewDaysDetailsServiceImpl implements InterviewDaysDetailsServ
     }
 
     @Override
-    public void addDate(InterviewDaysDetails interviewDaysDetails){
+    public void addDate(InterviewDaysDetails interviewDaysDetails) {
         interviewDaysDetailsDAO.insertDate(interviewDaysDetails);
     }
 
-    public void addDateList(CourseSetting courseSetting){
+    public void addDateList(CourseSetting courseSetting) {
         InterviewDaysDetails interviewDaysDetails = new InterviewDaysDetails();
         int period = dateService.getPeriodDate(courseSetting);
         String currDate = courseSetting.getInterviewStartDate();
         interviewDaysDetails.setCourseId(courseSetting.getId());
         interviewDaysDetails.setInterviewDate(currDate);
-        for (int i = 0; i < period ; i++) {
+        for (int i = 0; i < period; i++) {
             interviewDaysDetails.setInterviewDate(String.valueOf(dateService.getDate(currDate).plusDays(i)));
             addDate(interviewDaysDetails);
+        }
+    }
+
+    @Override
+    public String sortCandidateToDays(CourseSetting courseSetting) {
+        CourseSetting lastCourseSetting = courseSettingService.getLastSetting();
+        String firstDayOfInterview = lastCourseSetting.getInterviewStartDate();
+        List<Candidate> candidateList = (ArrayList<Candidate>) candidateService.getCandidateByStatus(status.Interview.getStatus());
+        int countStudentsPerDay = dateService.studentPerDay();
+        int index = 0;
+        int countDays;
+        int remainder;
+        if (candidateList.size() > countStudentsPerDay) {
+            countDays = (candidateList.size() / countStudentsPerDay);
+            remainder = candidateList.size() % countStudentsPerDay;
+        } else {
+            countDays = 1;
+            remainder = 0;
+            countStudentsPerDay = candidateList.size();
+        }
+        if (candidateList.size() <= courseSettingService.getLastSetting().getStudentInterviewCount()) {
+            for (int i = 0; i < countDays; i++) {
+                for (int j = 0; j < countStudentsPerDay; j++) {
+//                    candidateService.updateCandidateStatus(candidateList.get(index).getId(), status.Interview_dated.getId());
+                    Candidate candidate = new Candidate();
+                    candidate.setId(candidateList.get(index).getId());
+                    candidate.setStatusId(status.Interview_dated.getId());
+                    candidate.setInterviewDaysDetailsId(findByDate(String.valueOf(dateService.getDate(firstDayOfInterview).plusDays(i))).getId());
+                    candidateService.updateCandidate(candidate);
+                    index++;
+                }
+            }
+            if (remainder!=0)
+            for (int i = 0; i < remainder; i++) {
+//                candidateService.updateCandidateStatus(candidateList.get(index).getId(), status.Interview_dated.getId());
+                Candidate candidate = new Candidate();
+                candidate.setId(candidateList.get(index).getId());
+                candidate.setStatusId(status.Interview_dated.getId());
+                candidate.setInterviewDaysDetailsId(findByDate(String.valueOf(dateService.getDate(firstDayOfInterview).plusDays(countDays))).getId());
+                candidateService.updateCandidate(candidate);
+                index++;
+            }
+            return "Success";
+        } else {
+            return "Limit Exceeded candidates";
         }
     }
 
@@ -143,6 +200,11 @@ public class InterviewDaysDetailsServiceImpl implements InterviewDaysDetailsServ
         String sql = "SELECT id FROM hr_system.interview_days_details WHERE date = " + "\'" + date + "\'";
         int id = (Integer) jdbcTemplateFactory.getJdbcTemplate(dataSource).queryForObject(sql, Integer.class);
         return id;
+    }
+
+    @Override
+    public InterviewDaysDetails findByDate(String date) {
+        return interviewDaysDetailsDAO.findByDate(date);
     }
 
     public List<Map<String, Object>> findAllInterviewDetailsAddress() {

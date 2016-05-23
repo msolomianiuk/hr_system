@@ -28,6 +28,20 @@ $(document).ready(function () {
 
     });
 
+    $('body').on('click', '#SortCandidate', function(){
+        $.ajax({
+            url: location_origin + "/admin/sortCandidate",
+            type: "GET",
+            dataType: "json",
+            contentType: 'application/json',
+            mimeType: 'application/json',
+            success: AlertError,
+            error: function (data) {
+                // console.log(data);
+            }
+        });
+
+    });
 
 
     $.ajax({
@@ -322,6 +336,11 @@ function updateAddress(data){
 function AlertError(data){
     alert(data.responseText);
     dataAlert=data;
+}
+
+function AlertSuccess(data){
+    alert(data.responseText);
+    dataSuccess=data;
 }
 
 function getCourseID(data){

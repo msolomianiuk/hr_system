@@ -86,7 +86,7 @@ public class DateService {
         return setting;
     }
 
-    private int studentPerDay() {
+    public int studentPerDay() {
         courseSetting = courseSettingService.getLastSetting();
 
         int maxStudentForInterview = courseSetting.getStudentInterviewCount();

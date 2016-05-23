@@ -33,6 +33,7 @@ public class InterviewDaysDetailsDAOImpl implements InterviewDaysDetailsDAO {
     private static final String REMOVE_SQL = "DELETE FROM \"hr_system\".interview_days_details WHERE id=?";
     private static final String FIND_ALL_SQL = "SELECT id, course_id, date, start_time, end_time, address_id FROM \"hr_system\".interview_days_details ORDER BY id";
     private static final String FIND_SQL = "SELECT id, course_id, date, start_time, end_time, address_id FROM \"hr_system\".interview_days_details WHERE id = ?";
+    private static final String FIND_SQL_BY_DATE = "SELECT id, course_id, date, start_time, end_time, address_id FROM \"hr_system\".interview_days_details WHERE date = ?";
     private static final String INSERT_SQL = "INSERT INTO \"hr_system\".interview_days_details(course_id, date, start_time, end_time, address_id, count_students, count_personal) VALUES (?, ?, ?, ?, ?, ?, ?);";
     private static final String INSERT_DATE_SQL = "INSERT INTO \"hr_system\".interview_days_details(course_id, date) VALUES (?, ?);";
 
@@ -47,6 +48,23 @@ public class InterviewDaysDetailsDAOImpl implements InterviewDaysDetailsDAO {
                         }
                     },
                     id);
+        } catch (Exception e){
+            LOGGER.error("Error: " + e);
+        }
+        return interviewDaysDetails;
+    }
+
+    @Override
+    public InterviewDaysDetails findByDate(String date) {
+        InterviewDaysDetails interviewDaysDetails = null;
+        try {
+            interviewDaysDetails = jdbcTemplateFactory.getJdbcTemplate(dataSource).queryForObject(FIND_SQL_BY_DATE,
+                    new RowMapper<InterviewDaysDetails>() {
+                        public InterviewDaysDetails mapRow(ResultSet rs, int rowNum) throws SQLException {
+                            return createInterviewWithResultSet(rs);
+                        }
+                    },
+                    date);
         } catch (Exception e){
             LOGGER.error("Error: " + e);
         }
