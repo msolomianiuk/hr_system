@@ -255,29 +255,6 @@
             </div>
 
 
-            <div class="panel panel-success">
-              <div class="panel-heading" role="button" data-toggle="collapse" href="#main-setting3"
-                   aria-expanded="true"
-                   aria-controls="main-setting3">
-                <h3 class="panel-title">Create Question</h3>
-              </div>
-              <div class="panel-body" id="main-setting3">
-
-              </div>
-            </div>
-
-
-            <div class="panel panel-success">
-              <div class="panel-heading" role="button" data-toggle="collapse" href="#main-setting4"
-                   aria-expanded="true" aria-controls="main-setting4">
-                <h3 class="panel-title">Main Setting</h3>
-              </div>
-              <div class="panel-body" id="main-setting4">
-                Some Main Settings
-              </div>
-            </div>
-
-
           </div>
         </div>
       </div>

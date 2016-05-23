@@ -57,6 +57,9 @@ public class AdminController {
     @Autowired
     private AnswerServiceImpl answerService;
 
+    @Autowired
+    private SendEmailService sendEmailService;
+
     @RequestMapping(value = "", method = RequestMethod.GET)
     public String mainPage() {
         return "admin";
@@ -543,5 +546,32 @@ public class AdminController {
         return ResponseEntity.ok(countStudents);
     }
 
+    @RequestMapping(value = "/personalCount", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<Integer> PersonalCount(
+    ) {
+        int countStudents = userService.getAllWorkers();
 
+        return ResponseEntity.ok(countStudents);
+    }
+    @RequestMapping(value = "/getStudent", method = RequestMethod.GET)
+    public ResponseEntity<Candidate> getCandidate(@RequestParam int id) {
+        Candidate candidate = candidateService.getCandidateById(id);
+        if (candidate == null) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(candidate, HttpStatus.OK);
+    }
+    @RequestMapping(value = "/service/sendEmailToStatus", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<Integer> sendEmailToCandidatesWithStatus(
+            @RequestParam String candidateStatus
+    ) {
+        Status status = null;
+        if (status == Status.valueOf(candidateStatus)) {
+            sendEmailService.sendEmailToStudentsByStatus(Status.valueOf(candidateStatus));
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
 }

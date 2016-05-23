@@ -9,6 +9,8 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import ua.netcracker.model.dao.CandidateDAO;
 import ua.netcracker.model.dao.InterviewResultDAO;
+import ua.netcracker.model.dao.UserDAO;
+import ua.netcracker.model.entity.*;
 import ua.netcracker.model.entity.Answer;
 import ua.netcracker.model.entity.Candidate;
 import ua.netcracker.model.entity.Status;
@@ -36,12 +38,17 @@ public class CandidateDAOImpl implements CandidateDAO {
     private static final String FIND_ALL_STATUS = "SELECT * FROM \"hr_system\".status";
     private static final String UPDATE_STATUS = "UPDATE \"hr_system\".candidate SET status_id=(?)" +
             "WHERE id=?";
-    private static final String PAGINATION = "SELECT u.name,u.email ,u.surname, u.patronymic, candidate.id, candidate.status_id, candidate.course_id " +
+    private static final String PAGINATION = "WITH padik AS " +
+            "(SELECT  DISTINCT ON(candidate.id) candidate.id,u.name,u.email ,u.surname, u.patronymic,candidate.status_id, candidate.course_id , ir.interviewer_id, ir.mark, ir.comment, r.value " +
             "FROM \"hr_system\".users u " +
-            "JOIN \"hr_system\".role_users_maps rol " +
-            "ON rol.user_id = u.id JOIN \"hr_system\".candidate candidate " +
-            "ON candidate.user_id = u.id WHERE rol.role_id = 5 " +
-            "ORDER BY candidate.course_id DESC, candidate.status_id DESC,  candidate.id LIMIT ";
+            "JOIN \"hr_system\".role_users_maps rol ON rol.user_id = u.id " +
+            "JOIN \"hr_system\".candidate candidate ON candidate.user_id = u.id " +
+            "LEFT OUTER JOIN \"hr_system\".interview_result ir on candidate.id = ir.candidate_id " +
+            "LEFT OUTER JOIN \"hr_system\".recommendation r on ir.recommendation_id = r.id " +
+            "WHERE rol.role_id = 5 ) " +
+            "SELECT  padik.id,padik.name,padik.email ,padik.surname, padik.patronymic,padik.status_id, padik.course_id , padik.interviewer_id, padik.mark, padik.comment, padik.value " +
+            "FROM padik " +
+            "ORDER BY padik.course_id DESC,padik.interviewer_id,padik.status_id DESC,  padik.id LIMIT ";
     private static final String LAST_ROWS = "SELECT id FROM \"hr_system\".candidate ORDER BY id DESC limit 1";
     private static final String FIND_ALL_MARKED_BY_CURRENT_INTERVIEWER =
             "SELECT c.id, c.status_id, ir.mark, ir.comment, ir.recommendation_id\n" +
@@ -51,9 +58,6 @@ public class CandidateDAOImpl implements CandidateDAO {
     private static final String FIND_PART = "SELECT * FROM \"hr_system\".candidate ORDER BY id OFFSET ";
     private static final String FIND_PART_BY_COURSE = "SELECT * FROM \"hr_system\".candidate WHERE course_id = ";
     private static final String SELECT_CANDIDATE_COUNT = "SELECT COUNT(*) FROM \"hr_system\".candidate WHERE course_id = ";
-
-
-    private User user;
 
     @Autowired
     private DataSource dataSource;
@@ -345,7 +349,6 @@ public class CandidateDAOImpl implements CandidateDAO {
     @Override
     public Collection<Candidate> pagination(Integer elementPage, Integer fromElement) {
 
-
         Collection<Candidate> listCandidates;
         try {
             jdbcTemplate = new JdbcTemplate(dataSource);
@@ -362,10 +365,36 @@ public class CandidateDAOImpl implements CandidateDAO {
                     candidate.setId(resultSet.getInt("id"));
                     candidate.setStatusId(resultSet.getInt("status_id"));
                     candidate.setCourseId(resultSet.getInt("course_id"));
+                    Collection<InterviewResult> list=null;
+                    try{
+                        list = jdbcTemplate.query("SELECT ir.interviewer_id, ir.mark, ir.comment, r.value " +
+                                "FROM \"hr_system\".users u " +
+                                "JOIN \"hr_system\".role_users_maps rol ON rol.user_id = u.id " +
+                                "JOIN \"hr_system\".candidate candidate ON candidate.user_id = u.id " +
+                                "FULL OUTER JOIN \"hr_system\".interview_result ir on candidate.id = ir.candidate_id " +
+                                "FULL OUTER JOIN \"hr_system\".recommendation r on ir.recommendation_id = r.id " +
+                                "WHERE rol.role_id = 5 and candidate.id = " + candidate.getId()
+                                , new RowMapper<InterviewResult>() {
+                            @Override
+                            public InterviewResult mapRow(ResultSet resultSet, int i) throws SQLException {
+                                InterviewResult interviewResult = new InterviewResult();
+                                interviewResult.setInterviewerId(resultSet.getInt("interviewer_id"));
+                                interviewResult.setMark(resultSet.getInt("mark"));
+                                interviewResult.setComment(resultSet.getString("comment"));
+                                interviewResult.setRecommendation(Recommendation.valueOf(resultSet.getString("value")));
+                                return interviewResult;
+                            }
+                        });
+
+                    }catch (Exception e){
+                        LOGGER.error(e);
+                    }
+                    candidate.setInterviewResults(list);
+
                     return candidate;
                 }
             });
-           return listCandidates;
+            return listCandidates;
         } catch (Exception e) {
             LOGGER.error("Error:" + e);
         }
@@ -410,23 +439,24 @@ public class CandidateDAOImpl implements CandidateDAO {
         try {
             jdbcTemplate = new JdbcTemplate(dataSource);
             listCandidates = jdbcTemplate.query(
-                    "SELECT candidate.id, u.name, surname, patronymic, email, " +
-                            "status_id, course_id, value , answer.question_id " +
+                    "WITH padik AS (SELECT  DISTINCT ON(candidate.id) candidate.id,u.name,u.email ,u.surname, u.patronymic,candidate.status_id, candidate.course_id , ir.interviewer_id, ir.mark, ir.comment, r.value " +
                             "FROM \"hr_system\".users u " +
                             "JOIN \"hr_system\".role_users_maps rol ON rol.user_id = u.id " +
                             "JOIN \"hr_system\".candidate candidate ON candidate.user_id = u.id " +
-                            "JOIN \"hr_system\".candidate_answer answer " +
-                            "ON candidate.id = answer.candidate_id " +
-                            "WHERE answer.question_id = 3 and " +
-                            "rol.role_id = 5 " +
+                            "LEFT OUTER JOIN \"hr_system\".interview_result ir on candidate.id = ir.candidate_id " +
+                            "LEFT OUTER JOIN \"hr_system\".recommendation r on ir.recommendation_id = r.id " +
+                            "LEFT OUTER JOIN \"hr_system\".status status on candidate.status_id = status.id " +
+                            "LEFT OUTER JOIN \"hr_system\".candidate_answer answer on candidate.id = answer.candidate_id "+
+                            "WHERE rol.role_id = 5  " +
                             "and( name LIKE '%"+find+"%' " +
                             "or surname LIKE '%"+find+"%' " +
                             "or patronymic LIKE '%"+find+"%' " +
                             "or email LIKE '%"+find+"%' " +
-                            "or value LIKE '%"+find+"%'" +
-                            "or candidate.id = "+d+") " +
-                            "ORDER BY candidate.course_id DESC, " +
-                            "candidate.status_id DESC,  candidate.id " +
+                            "or answer.value LIKE '%"+find+"%' " +
+                            "or status.value LIKE '%"+find+"%' "+
+                            "or candidate.id = "+d+"))SELECT * FROM padik  " +
+                            "ORDER BY padik.course_id DESC, " +
+                            "padik.status_id DESC,  padik.id " +
                             "limit "+elementPage+" offset "+fromElement,
                     new RowMapper<Candidate>() {
                         @Override
@@ -441,6 +471,33 @@ public class CandidateDAOImpl implements CandidateDAO {
                             candidate.setId(resultSet.getInt("id"));
                             candidate.setStatusId(resultSet.getInt("status_id"));
                             candidate.setCourseId(resultSet.getInt("course_id"));
+
+                            Collection<InterviewResult> list=null;
+                            try{
+                                list = jdbcTemplate.query("SELECT ir.interviewer_id, ir.mark, ir.comment, r.value " +
+                                        "FROM \"hr_system\".users u " +
+                                        "JOIN \"hr_system\".role_users_maps rol ON rol.user_id = u.id " +
+                                        "JOIN \"hr_system\".candidate candidate ON candidate.user_id = u.id " +
+                                        "FULL OUTER JOIN \"hr_system\".interview_result ir on candidate.id = ir.candidate_id " +
+                                        "FULL OUTER JOIN \"hr_system\".recommendation r on ir.recommendation_id = r.id " +
+                                        "WHERE rol.role_id = 5 and candidate.id = " + candidate.getId()
+                                        , new RowMapper<InterviewResult>() {
+                                    @Override
+                                    public InterviewResult mapRow(ResultSet resultSet, int i) throws SQLException {
+                                        InterviewResult interviewResult = new InterviewResult();
+                                        interviewResult.setInterviewerId(resultSet.getInt("interviewer_id"));
+                                        interviewResult.setMark(resultSet.getInt("mark"));
+                                        interviewResult.setComment(resultSet.getString("comment"));
+                                        interviewResult.setRecommendation(Recommendation.valueOf(resultSet.getString("value")));
+                                        return interviewResult;
+                                    }
+                                });
+
+                            }catch (Exception e){
+                                LOGGER.error(e);
+                            }
+                            candidate.setInterviewResults(list);
+
                             return candidate;
                         }
                     });
@@ -465,20 +522,22 @@ public class CandidateDAOImpl implements CandidateDAO {
         try {
             jdbcTemplate = new JdbcTemplate(dataSource);
             rows = jdbcTemplate.queryForObject(
-                    "SELECT COUNT(*) " +
+                    "WITH padik AS (SELECT  DISTINCT ON(candidate.id) *" +
                             "FROM \"hr_system\".users u " +
-                            "JOIN \"hr_system\".role_users_maps rol ON rol.user_id = u.id " +
-                            "JOIN \"hr_system\".candidate candidate ON candidate.user_id = u.id " +
-                            "JOIN \"hr_system\".candidate_answer answer " +
-                            "ON candidate.id = answer.candidate_id " +
-                            "WHERE answer.question_id = 3 and " +
-                            "rol.role_id = 5 " +
-                            "and( name LIKE '%" + find + "%' " +
-                            "or surname LIKE '%" + find + "%' " +
-                            "or patronymic LIKE '%" + find + "%' " +
-                            "or email LIKE '%" + find + "%' " +
-                            "or value LIKE '%" + find + "%'" +
-                            "or candidate.id = " + id + ")", new RowMapper<Long>() {
+                                    "JOIN \"hr_system\".role_users_maps rol ON rol.user_id = u.id " +
+                                    "JOIN \"hr_system\".candidate candidate ON candidate.user_id = u.id " +
+                                    "LEFT OUTER JOIN \"hr_system\".interview_result ir on candidate.id = ir.candidate_id " +
+                                    "LEFT OUTER JOIN \"hr_system\".recommendation r on ir.recommendation_id = r.id " +
+                                    "LEFT OUTER JOIN \"hr_system\".status status on candidate.status_id = status.id " +
+                                    "LEFT OUTER JOIN \"hr_system\".candidate_answer answer on candidate.id = answer.candidate_id "+
+                                    "WHERE rol.role_id = 5  " +
+                                    "and( name LIKE '%"+find+"%' " +
+                                    "or surname LIKE '%"+find+"%' " +
+                                    "or patronymic LIKE '%"+find+"%' " +
+                                    "or email LIKE '%"+find+"%' " +
+                                    "or answer.value LIKE '%"+find+"%' " +
+                                    "or status.value LIKE '%"+find+"%' "+
+                                    "or candidate.id = "+id+"))SELECT COUNT(*) FROM padik ", new RowMapper<Long>() {
                         @Override
                         public Long mapRow(ResultSet resultSet, int i) throws SQLException {
                             long row = resultSet.getLong("count");

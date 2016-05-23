@@ -245,7 +245,7 @@
                                 <div id="search" class="nav nav-sidebar">
                                     <div id="custom-search-input">
                                         <div class="input-group col-md-12">
-                                            <input type="text" id="fieldSearch" class="form-control" placeholder="Организации , адреса...">
+                                            <input type="text" id="fieldSearch" class="form-control" placeholder="Search ...">
                                         <span class="input-group-btn">
                                             <button id="buttonSearch" class="btn btn-info" type="button">
                                             </button>
@@ -261,6 +261,7 @@
                             <table id="StudentTable" class="table table-striped table-bordered clicked-tr">
                                 <thead>
                                 <tr>
+                                    <th>Recomendations</th>
                                     <th>Status</th>
                                     <th>Name</th>
                                     <th>Surname</th>
@@ -280,8 +281,24 @@
                 </div>
             </div>
 
-            <!-- footer content -->
+            <div class="panel panel-success">
+                <h3 class="panel-title">Edit Question parametres</h3>
 
+                <div class="panel-body" id="main-setting4">
+                    <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                        <select id="Status_Email" class="form-control">
+                            <option value="Rejected" selected>Rejected</option>
+                            <option value="No_interview">No_interview</option>
+                            <option value="Interview">Interview</option>
+                            <option value="Interview_passed">Interview_passed</option>
+                            <option value="Interview_passed">Job_accepted</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4 col-lg-4 col-sm-12 col-xs-12">
+                        <button type="button" id="EmailGo" class="btn btn-success">Click to change</button>
+                    </div>
+                </div>
+            </div>
             <footer>
                 <div class="copyright-info">
                     <p class="pull-right">Gentelella - Bootstrap Admin Template by <a href="https://colorlib.com">Colorlib</a>

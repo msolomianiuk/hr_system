@@ -138,7 +138,7 @@ function sendAjax() {
     for (var index in curData) {
         if (curData[index].status !== "new") {
             $.ajax({
-                url: "http://31.131.25.206:8080/hr_system-1.0-SNAPSHOT/admin/service/setEmailTemplates",
+                url: "http://localhost:8080/hr_system-1.0-SNAPSHOT/admin/service/setEmailTemplates",
                 type: "GET",
                 dataType: "json",
                 data: curData[index],

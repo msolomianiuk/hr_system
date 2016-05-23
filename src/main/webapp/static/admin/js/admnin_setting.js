@@ -4,8 +4,24 @@
 
 $(document).ready(function () {
 
+    $('#reg_start_date').datepicker({
+        format: "yyyy-mm-dd"
+    });
+    $('#reg_end_date').datepicker({
+        format: "yyyy-mm-dd"
+    });
+    $('#int_start_date').datepicker({
+        format: "yyyy-mm-dd"
+    });
+    $('#interview_end_date').datepicker({
+        format: "yyyy-mm-dd"
+    });
 
-    location_origin = "http://31.131.25.206:8080/hr_system-1.0-SNAPSHOT"
+    $('#course_start_date').datepicker({
+        format: "yyyy-mm-dd"
+    });
+
+    location_origin = "http://localhost:8080/hr_system-1.0-SNAPSHOT"
 
 
     var token = $("meta[name='_csrf']").attr("content");
@@ -266,7 +282,7 @@ $(document).ready(function () {
         var isMandatory = $("#IsMandatorySolo").val();
         var orderNumber = parseInt(($("#CaptionUpdate").attr("order_number")));
         var id = parseInt(($("#CaptionUpdate").attr("question_id")));
-        var isView = true;
+        var isView = $("#isView").val();
 
 
         $.ajax({
@@ -303,7 +319,7 @@ $(document).ready(function () {
         var isMandatory = $("#IsMandatorySolo").val();
         var orderNumber = parseInt(($("#CaptionUpdate").attr("order_number")));
         var id = parseInt(($("#CaptionUpdate").attr("question_id")));
-        var isView = true;
+        var isView = $("#isView").val();
         $.ajax({
             url: location_origin+"/update_question",
             type: "POST",
@@ -469,10 +485,14 @@ function getQuestion (data){
     '</div>'+
     '<div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">'+
     '<div class="TypeOfQuestionNew">'+
-    '<select  id="TypeOfQuestionSolo">'+
+    '<select id="TypeOfQuestionSolo" class="status form-control select-and-text">'+
     '<option selected>Choose Type</option>'+
     '</select>'+
-    '<select  id="IsMandatorySolo">'+
+    '<select  id="IsMandatorySolo"  class="status form-control select-and-text">'+
+    '<option>true</option>'+
+    '<option>false</option>'+
+    '</select>'+
+    '<select  id="isView"  class="status form-control select-and-text">'+
     '<option>true</option>'+
     '<option>false</option>'+
     '</select>'+

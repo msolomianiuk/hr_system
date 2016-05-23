@@ -172,7 +172,7 @@ public class QuestionDAOImpl implements QuestionDAO {
         try {
             SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(dataSource).
                     withTableName("\"hr_system\".question").
-                    usingColumns("caption", "type_id", "is_mandatory").
+                    usingColumns("caption", "type_id", "is_mandatory","is_view").
                     usingGeneratedKeyColumns("id");
             MapSqlParameterSource insertParameter = new MapSqlParameterSource();
             insertParameter.addValue("caption", question.getCaption());
