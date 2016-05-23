@@ -15,4 +15,5 @@ public interface SendEmailService {
     void sendEmailAboutCriticalError(String textError);
 
     void sendEmailRestorePassword(String email,String url);
+
 }
