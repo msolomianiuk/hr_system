@@ -119,15 +119,12 @@ public class Candidate implements Comparable<Candidate> {
 
         Candidate candidate = (Candidate) o;
 
-        if (id != candidate.id) return false;
-        return user != null ? user.equals(candidate.user) : candidate.user == null;
+        return id == candidate.id;
 
     }
 
     @Override
     public int hashCode() {
-        int result = id;
-        result = 31 * result + (user != null ? user.hashCode() : 0);
-        return result;
+        return id;
     }
 }
