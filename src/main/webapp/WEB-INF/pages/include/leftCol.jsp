@@ -59,10 +59,6 @@
                         <li><a href="<c:url value="/service/getPDF"/>"><i class="fa fa-file-pdf-o"></i> Print PDF</a>
                         </li>
                     </sec:authorize>
-                    <sec:authorize access="hasAnyRole('ROLE_HR')">
-                        <li><a href="<c:url value="/hr/students_list"/>"><i class="fa fa-list"></i>Students List</a>
-                        </li>
-                    </sec:authorize>
                     <sec:authorize access="hasAnyRole('ROLE_HR', 'ROLE_BA', 'ROLE_DEV')">
                         <li><a href="<c:url value="/${roleAddres}/interview_page"/>"><i class="fa fa-comments-o"></i>Interview
                             Page</a></li>
