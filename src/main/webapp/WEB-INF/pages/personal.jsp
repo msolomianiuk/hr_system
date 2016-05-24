@@ -249,7 +249,10 @@
   <div class="clearfix"></div>
   <div id="notif-group" class="tabbed_notifications"></div>
 </div>
-
+<script src="<c:url value="/static/js/datatables/jquery.dataTables.min.js"/>"></script>
+<script src="<c:url value="/static/js/datatables/dataTables.bootstrap.js"/>"></script>
+<script src="<c:url value="/static/js/datatables/dataTables.buttons.min.js"/>"></script>
+<script src="<c:url value="/static/js/datatables/buttons.bootstrap.min.js"/>"></script>
 <script src="<c:url value="/static/admin/js/bootstrap.min.js"/>"></script>
 <script src="<c:url value="/static/admin/js/AjaxForPersonal.js"/>"></script>
 
@@ -276,6 +279,7 @@
 <script src="<c:url value="/static/admin/js/datatables/vfs_fonts.js"/>"></script>
 <script src="<c:url value="/static/admin/js/datatables/buttons.html5.min.js"/>"></script>
 <script src="<c:url value="/static/admin/js/datatables/buttons.print.min.js"/>"></script>
+
 <%--<script src="<c:url value="/static/admin/js/datatables/dataTables.fixedHeader.min.js"/>"></script>--%>
 <%--<script src="<c:url value="/static/admin/js/datatables/dataTables.keyTable.min.js"/>"></script>--%>
 <%--<script src="<c:url value="/static/admin/js/datatables/dataTables.responsive.min.js"/>"></script>--%>
