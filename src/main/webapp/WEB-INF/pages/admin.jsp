@@ -26,7 +26,7 @@
 
     <%--<link href="css/bootstrap.min.css" rel="stylesheet">--%>
     <link rel="stylesheet" href="<c:url value="/static/admin/css/bootstrap.min.css"/>">
-
+    <link href="<c:url value="/static/admin/css/style.css"/>" rel="stylesheet">
     <%--<link href="fonts/css/font-awesome.min.css" rel="stylesheet">--%>
     <link rel="stylesheet" href="<c:url value="/static/admin/fonts/css/font-awesome.min.css"/>">
     <%--<link href="css/animate.min.css" rel="stylesheet">--%>
@@ -54,23 +54,22 @@
             <div class="left_col scroll-view">
 
                 <div class="navbar nav_title" style="border: 0;">
-                    <a href="testAdmin" class="site_title"><i class="fa fa-paw"></i>
+                    <a href="#" class="site_title"><i class="fa fa-paw"></i>
                         <span>Net<strong>Cracker</strong></span></a>
-                <security:authorize access="hasAnyRole('ROLE_HR')" var="isUserHr"/>
-                    <c:if test="${isUserHr}">
-                        <button type="button" class="btn-small btn-info"><a href="hr/interview_page">To Interview page</a></button>
-                    </c:if>
-                    <security:authorize access="hasAnyRole('ROLE_BA')" var="isUserBa"/>
-                    <c:if test="${isUserBa}">
-                        <button type="button" class="btn-small btn-info"><a href="ba/interview_page">To Interview page</a></button>
-                    </c:if>
-                    <security:authorize access="hasAnyRole('ROLE_DEV')" var="isUserDev"/>
-                    <c:if test="${isUserDev}">
-                        <button type="button" class="btn-small btn-info"><a href="dev/interview_page">To Interview page</a></button>
-                    </c:if>
                 </div>
                 <div class="clearfix"></div>
-
+                <security:authorize access="hasAnyRole('ROLE_HR')" var="isUserHr"/>
+                <c:if test="${isUserHr}">
+                    <button type="button" class="btn btn-sm btn-info sizeButton"><a class="Role_page" href="hr/interview_page">To Interview page</a></button>
+                </c:if>
+                <security:authorize access="hasAnyRole('ROLE_BA')" var="isUserBa"/>
+                <c:if test="${isUserBa}">
+                    <button type="button" class="btn btn-sm btn-info sizeButton"><a class="Role_page" href="ba/interview_page">To Interview page</a></button>
+                </c:if>
+                <security:authorize access="hasAnyRole('ROLE_DEV')" var="isUserDev"/>
+                <c:if test="${isUserDev}">
+                    <button type="button" class="btn btn-sm btn-info sizeButton"><a class="Role_page" href="dev/interview_page">To Interview page</a></button>
+                </c:if>
                 <!-- menu prile quick info -->
                 <div class="profile">
                     <div class="profile_pic">
@@ -163,8 +162,11 @@
                 </div>
             </div>
             <!-- /top tiles -->
-
-
+            <div class="row">
+                <div class="col-md-12 col-lg-12 col-xs-12 col-sm-12">
+                    <img src="<c:url value="/static/admin/images/Netcracker.png"/>" width="1000px" height="400px" alt="..." />
+                </div>
+            </div>
             <!-- footer content -->
 
 

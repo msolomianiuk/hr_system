@@ -56,7 +56,7 @@
             <div class="left_col scroll-view">
 
                 <div class="navbar nav_title" style="border: 0;">
-                    <a href="testAdmin" class="site_title"><i class="fa fa-paw"></i>
+                    <a href="#" class="site_title"><i class="fa fa-paw"></i>
                         <span>Net<strong>Cracker</strong></span></a>
                 </div>
                 <div class="clearfix"></div>
@@ -69,8 +69,7 @@
                     </div>
                     <div class="profile_info">
                         <span>Welcome,</span>
-
-                        <h2>Vasya Pupkin</h2>
+                        <h2><sec:authentication property="principal.name"/>&nbsp;<sec:authentication property="principal.surname"/></h2>
                     </div>
                 </div>
                 <!-- /menu prile quick info -->
