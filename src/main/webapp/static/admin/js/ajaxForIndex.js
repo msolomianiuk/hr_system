@@ -30,7 +30,7 @@ function getPeriodRegistration(data){
         $("#Registration").css('display', 'block');
     }
     if(0 == data){
-        $("#Registration").css('display', 'none');
+        $("#Registration").remove();
     }
 
 }

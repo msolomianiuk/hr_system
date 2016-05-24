@@ -52,7 +52,7 @@
         <div class="col-md-3 left_col">
             <div class="left_col scroll-view">
                 <div class="navbar nav_title" style="border: 0;">
-                    <a href="testAdmin" class="site_title"><i class="fa fa-paw"></i>
+                    <a href="#" class="site_title"><i class="fa fa-paw"></i>
                         <span>Net<strong>Cracker</strong></span></a>
                 </div>
                 <div class="clearfix"></div>
@@ -66,7 +66,7 @@
                     <div class="profile_info">
                         <span>Welcome,</span>
 
-                        <h2>Vasya Pupkin</h2>
+                        <h2><sec:authentication property="principal.name"/>&nbsp;<sec:authentication property="principal.surname"/></h2>
                     </div>
                 </div>
                 <!-- /menu prile quick info -->
@@ -111,17 +111,6 @@
                                 <span class=" fa fa-angle-down"></span>
                             </a>
                             <ul class="dropdown-menu dropdown-usermenu animated fadeInDown pull-right">
-                                <li><a href="javascript:;"> Profile</a>
-                                </li>
-                                <li>
-                                    <a href="javascript:;">
-                                        <span class="badge bg-red pull-right">50%</span>
-                                        <span>Settings</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="javascript:;">Help</a>
-                                </li>
                                 <li>
                                     <a href="logout"><i class="fa fa-sign-out pull-right"></i> Log Out</a>
                                 </li>
@@ -187,13 +176,7 @@
                     </div>
                 </div>
             </div>
-            <footer>
-                <div class="copyright-info">
-                    <p class="pull-right">Gentelella - Bootstrap Admin Template by <a href="https://colorlib.com">Colorlib</a>
-                    </p>
-                </div>
-                <div class="clearfix"></div>
-            </footer>
+
 
         </div>
     </div>
