@@ -290,7 +290,7 @@
                         </select>
                     </div>
                     <div class="col-md-4 col-lg-4 col-sm-12 col-xs-12">
-                        <button type="button" id="EmailGo" class="btn btn-success">Click to change</button>
+                        <button type="button" id="EmailGo" class="btn btn-success">Send Emails</button>
                     </div>
                 </div>
             </div>
@@ -338,6 +338,9 @@
             <p>You can make a lot of filters after click on button "Filters"</p>
             <p>If you want to see candidate profile you can click on button , where you can see "A", and if you want to add status you can click on
             button "R"</p>
+        </div>
+        <div class="Dovira">
+            <h1>If you have any questions and cant resolve it please reload the server</h1>
         </div>
     </div>
 </div>

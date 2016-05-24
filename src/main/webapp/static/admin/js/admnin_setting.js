@@ -176,9 +176,7 @@ $(document).ready(function () {
             contentType: 'application/json',
             mimeType: 'application/json',
             success: setSetting,
-            error: function (data) {
-                console.log(data);
-            }
+            error: erorFunctionSettings
         });
     });
     $("#ButtonPersonal").bind("click", function () {
@@ -362,11 +360,11 @@ function getSetting(data) {
 }
 
 function setSetting(data) {
-    alert("Course Setting UpDate. Reload Page");
+    location.reload();
 }
 
 function setPersonal(data) {
-    alert("HelloNewPersonal");
+
     personalData = data;
 }
 
@@ -555,6 +553,9 @@ function getTypeOfQuestionsForTable (data){
 }
 
 function updateQuestionWithAdd(data){
-    alert("You update Question");
     location.reload();
+}
+
+function erorFunctionSettings(data){
+    alert("Dates are not in order");
 }

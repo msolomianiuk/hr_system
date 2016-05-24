@@ -206,9 +206,7 @@ $(document).ready(function() {
             dataType: "json",
             data: {'find': find, 'elementPage': elementPage, "fromElement": currPage},
             success: funcForStudents,
-            error: function (data) {
-                console.log(data);
-            }
+            error: erorFunctionSearch
         });
 
     });
@@ -349,9 +347,21 @@ function funcForStudents (data){
         }
         var b = "";
         for (var interview_index in studentIndex.interviewResults) {
+
+           var a = studentIndex.interviewResults[interview_index].interviewerId;
+            switch(a) {
+                case 2:
+                    roleComment = "HR : ";
+                    break;
+                case 3:
+                    roleComment = "BA : ";
+                    break;
+                case 4:
+                    roleComment = "DEV : ";
+                    break;
+            }
         b += '<div>'+
-                '<p>' + studentIndex.interviewResults[interview_index].mark + '</p>' +
-                '<p>' + studentIndex.interviewResults[interview_index].recommendation + '</p>'+
+                '<p>'+ roleComment + studentIndex.interviewResults[interview_index].recommendation + '</p>'+
             '</div>';
         }
 
@@ -495,4 +505,8 @@ function getCandidateId(data){
 
 function functionForEmail(data){
     console.log("EmailGo");
+}
+
+function erorFunctionSearch(data){
+    alert("For this query No matches");
 }
