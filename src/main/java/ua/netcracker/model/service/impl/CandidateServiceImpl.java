@@ -275,8 +275,8 @@ public class CandidateServiceImpl implements CandidateService {
         return candidateDAO.pagination(limitRows, element);
     }
     @Override
-    public Integer getRows(){
-        return candidateDAO.getRows();
+    public Long getRows(List<Answer> expected){
+        return candidateDAO.getRows(expected);
     }
 
     @Override
