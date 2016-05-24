@@ -134,6 +134,7 @@ $(document).ready(function() {
                     url: location_origin + "/admin/getRows",
                     type: "GET",
                     dataType: "json",
+                    data:{'answersJsonString': JSON.stringify($('.candidate-profile form').serializeObject())},
                     contentType: 'application/json',
                     mimeType: 'application/json',
                     success: fistPaggination,
@@ -201,18 +202,19 @@ $(document).ready(function() {
     });
 
     $.ajax({
-
+    
         url: location_origin + "/admin/getRows",
         type: "GET",
         dataType: "json",
         contentType: 'application/json',
+        data:{'answersJsonString': JSON.stringify($('.candidate-profile form').serializeObject())},
         mimeType: 'application/json',
         success: fistPaggination,
         error: function (data) {
             console.log(data);
         }
     });
-
+    
     $.ajax({
         url: location_origin + "/admin/getFirst",
         type: "GET",
@@ -241,6 +243,18 @@ $("button#filter").on("click", function () {
         dataType: "json",
         data: {'elementPage': elementPage, 'fromElement': fromElement,'answersJsonString': JSON.stringify($('.candidate-profile form').serializeObject())},
         success: funcForStudents,
+        error: function (data) {
+            console.log(data);
+        }
+    });
+    $.ajax({
+        url: location_origin + "/admin/getRows",
+        type: "GET",
+        dataType: "json",
+        data:{'answersJsonString': JSON.stringify($('.candidate-profile form').serializeObject())},
+        contentType: 'application/json',
+        mimeType: 'application/json',
+        success: fistPaggination,
         error: function (data) {
             console.log(data);
         }

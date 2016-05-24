@@ -111,4 +111,23 @@ public class Candidate implements Comparable<Candidate> {
         int result = this.user.getName().concat(user.getSurname()).concat(user.getPatronymic()).compareTo(c.user.getName().concat(user.getSurname()).concat(user.getPatronymic()));
         return result;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Candidate candidate = (Candidate) o;
+
+        if (id != candidate.id) return false;
+        return user != null ? user.equals(candidate.user) : candidate.user == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id;
+        result = 31 * result + (user != null ? user.hashCode() : 0);
+        return result;
+    }
 }

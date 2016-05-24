@@ -3,10 +3,8 @@ package ua.netcracker.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -14,7 +12,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import ua.netcracker.model.entity.*;
 import ua.netcracker.model.service.*;
 import ua.netcracker.model.service.date.DateService;
-import ua.netcracker.model.service.impl.*;
+import ua.netcracker.model.service.impl.AnswerServiceImpl;
+import ua.netcracker.model.service.impl.CandidateServiceImpl;
+import ua.netcracker.model.service.impl.CourseSettingServiceImpl;
+import ua.netcracker.model.service.impl.QuestionServiceImpl;
 import ua.netcracker.model.utils.JsonParsing;
 
 import java.io.IOException;
@@ -504,10 +505,20 @@ public class AdminController {
     }
 
     @RequestMapping(value = "/getRows", method = RequestMethod.GET)
-    public ResponseEntity<Integer> getRows() {
-        int rows = candidateService.getRows();
-        if (rows==0) {
-            return new ResponseEntity<Integer>(HttpStatus.BAD_REQUEST);
+    public ResponseEntity<Long> getRows(@RequestParam String answersJsonString) {
+
+        Collection<Answer> answers = JsonParsing.parseJsonString(answersJsonString);
+
+        List<Answer> selected = new ArrayList<>();
+        for (Answer answer : answers) {
+            if (!(answer.getValue().isEmpty())) {
+                selected.add(answer);
+            }
+        }
+
+        Long rows = candidateService.getRows(selected);
+        if (rows == 0) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         return ResponseEntity.ok(rows);
     }
@@ -518,8 +529,6 @@ public class AdminController {
             @RequestParam String fromElement,
             @RequestParam String find
     ) {
-
-
 
 
         Collection<Candidate> candidates = candidateService.findCandidate(
