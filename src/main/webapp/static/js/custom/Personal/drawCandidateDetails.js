@@ -12,7 +12,9 @@ function drawCandidateDetails(candidate) {
     $('#candidate-details h4').append(candidate.id); // for modal only
     $('.candidate-details').attr('candidate-id', candidate.id);
     $('div.candidate-details h3').html(candidate.user.name+' '+candidate.user.surname+' '+candidate.user.patronymic);
-    $('div.candidate-details img').attr('src', $('div.candidate-details img').attr('src')+candidate.user.image);
+    if (candidate.user.image != null ){
+        $('div.candidate-details img').attr('src', $('div.candidate-details img').attr('src')+candidate.user.image);
+    }
     questionsList.forEach(function (question) {
         $('div.candidate-details ul').append("<li data-question="+question.id+">" +
         "<div class='question-caption'><strong>" +
