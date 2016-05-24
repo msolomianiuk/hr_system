@@ -467,7 +467,9 @@ public class AdminController {
     public ResponseEntity<List<Candidate>> paginationCandidate(
             @RequestParam String elementPage,
             @RequestParam String fromElement,
-            @RequestParam String answersJsonString) {
+            @RequestParam String answersJsonString,
+            @RequestParam String status1,
+            @RequestParam String status2) {
 
         Collection<Answer> answers = JsonParsing.parseJsonString(answersJsonString);
 
@@ -482,13 +484,27 @@ public class AdminController {
         if (filtered.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-     /*   Collection<Candidate> candidates = candidateService.pagination(
-                Integer.valueOf(elementPage),
-                Integer.valueOf(fromElement));
-        if (candidates.isEmpty()) {
-            return new ResponseEntity<Collection<Candidate>>(HttpStatus.BAD_REQUEST);
+
+        if (filtered.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } else if (!status1.equals("Select status")) {
+            Status st = Status.valueOf(status1);
+            for (Candidate candidate : filtered) {
+                candidateService.updateCandidateStatus(candidate.getId(), st.getId());
+            }
         }
-        return ResponseEntity.ok(candidates);*/
+
+        if (!status2.equals("Select status")) {
+            List<Candidate> students = (List<Candidate>) candidateService.getAllCandidates();
+            if (filtered.size() < students.size()) {
+                Status st2 = Status.valueOf(status2);
+                students.removeAll(filtered);
+                for (Candidate student : students) {
+                    candidateService.updateCandidateStatus(student.getId(), st2.getId());
+                }
+            }
+        }
+
           return new ResponseEntity<>(filtered, HttpStatus.OK);
     }
 
@@ -609,6 +625,17 @@ public class AdminController {
         }
         sendEmailService.sendEmailToStudentsByStatus(Status.valueOf(candidateStatus));
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+
+    @RequestMapping(value = "/getAllCourseId", method = RequestMethod.GET)
+    public ResponseEntity<Collection<Integer>> getAllCourseId() {
+
+        Collection<Integer> courseSettings = courseSettingService.getAllCourseId();
+        if (courseSettings == null) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(courseSettings, HttpStatus.OK);
     }
 
 }
