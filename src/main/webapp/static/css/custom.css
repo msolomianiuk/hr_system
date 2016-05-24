@@ -5519,3 +5519,7 @@ td.candidate-status-td select{
 .interview-comments, .candidate-details, .form-interview-result{
   display: none;
 }
+
+img.candidate-image{
+  width: 100%;
+}
