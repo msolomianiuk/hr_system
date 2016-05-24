@@ -35,7 +35,7 @@ $(document).ready(function () {
             dataType: "json",
             contentType: 'application/json',
             mimeType: 'application/json',
-            success: AlertError,
+            success: AlertSuccess,
             error: function (data) {
                 // console.log(data);
             }
@@ -339,8 +339,7 @@ function AlertError(data){
 }
 
 function AlertSuccess(data){
-    alert(data.responseText);
-    dataSuccess=data;
+    alert(data.body);
 }
 
 function getCourseID(data){

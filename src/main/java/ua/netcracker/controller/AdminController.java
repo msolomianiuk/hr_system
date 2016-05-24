@@ -336,9 +336,10 @@ public class AdminController {
 
     @RequestMapping(value = "/sortCandidate", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<String> sortCandidatePerDays(
+    public ResponseEntity sortCandidatePerDays(
     ) {
-        return ResponseEntity.ok(interviewDaysDetailsService.sortCandidateToDays(courseSettingService.getLastSetting()));
+       return ResponseEntity
+                .status(HttpStatus.ACCEPTED).body(ResponseEntity.ok(interviewDaysDetailsService.sortCandidateToDays(courseSettingService.getLastSetting())));
     }
 
     @RequestMapping(value = "/template", method = RequestMethod.GET)

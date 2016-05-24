@@ -58,6 +58,7 @@ public class CandidateDAOImpl implements CandidateDAO {
     private static final String FIND_PART = "SELECT * FROM \"hr_system\".candidate ORDER BY id OFFSET ";
     private static final String FIND_PART_BY_COURSE = "SELECT * FROM \"hr_system\".candidate WHERE course_id = ";
     private static final String SELECT_CANDIDATE_COUNT = "SELECT COUNT(*) FROM \"hr_system\".candidate WHERE course_id = ";
+    private static final String SELECT_CANDIDATE_COUNT_BY_INTERVIEWDID = "SELECT COUNT(*) FROM \"hr_system\".candidate WHERE interview_days_details_id = ";
 
     @Autowired
     private DataSource dataSource;
@@ -221,6 +222,23 @@ public class CandidateDAOImpl implements CandidateDAO {
         return 0;
     }
 
+    @Override
+    public Integer getCandidateCountByInterviewId(int interviewId) {
+        try {
+            jdbcTemplate = new JdbcTemplate(dataSource);
+            Integer count = jdbcTemplate.queryForObject(SELECT_CANDIDATE_COUNT_BY_INTERVIEWDID + interviewId, new RowMapper<Integer>() {
+                @Override
+                public Integer mapRow(ResultSet rs, int rowNum) throws SQLException {
+                    return rs.getInt(1);
+                }
+            });
+            return count;
+
+        } catch (Exception e) {
+            LOGGER.error("Error: " + e);
+        }
+        return 0;
+    }
 
 
 
