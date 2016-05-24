@@ -56,9 +56,17 @@
                 <div class="navbar nav_title" style="border: 0;">
                     <a href="testAdmin" class="site_title"><i class="fa fa-paw"></i>
                         <span>Net<strong>Cracker</strong></span></a>
-                <security:authorize access="hasAnyRole('ROLE_HR','ROLE_BA','ROLE_DEV')" var="isUser"/>
-                    <c:if test="${isUser}">
-                        <p>Security</p>
+                <security:authorize access="hasAnyRole('ROLE_HR')" var="isUserHr"/>
+                    <c:if test="${isUserHr}">
+                        <button type="button" class="btn-small btn-info"><a href="hr/interview_page">To Interview page</a></button>
+                    </c:if>
+                    <security:authorize access="hasAnyRole('ROLE_BA')" var="isUserBa"/>
+                    <c:if test="${isUserBa}">
+                        <button type="button" class="btn-small btn-info"><a href="ba/interview_page">To Interview page</a></button>
+                    </c:if>
+                    <security:authorize access="hasAnyRole('ROLE_DEV')" var="isUserDev"/>
+                    <c:if test="${isUserDev}">
+                        <button type="button" class="btn-small btn-info"><a href="dev/interview_page">To Interview page</a></button>
                     </c:if>
                 </div>
                 <div class="clearfix"></div>

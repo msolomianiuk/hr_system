@@ -83,21 +83,6 @@ public class StudentsRestController {
         }
 
 
-
-        //using SimpleFilter
-//        List<Candidate> students = (List<Candidate>) candidateService.getAllCandidates();
-//        List<Candidate> filtered = students;
-//
-//        if (students.isEmpty()) {
-//            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-//        }
-//        if (!selected.isEmpty()) {
-//            SimpleFilter filter = new SimpleFilter();
-//            filter.setExpected(selected);
-//            filtered = filter.filter(students);
-//        }
-
-
         return new ResponseEntity<>(filtered, HttpStatus.OK);
     }
 

@@ -310,6 +310,12 @@ public class CandidateServiceImpl implements CandidateService {
 
     @Override
     public Collection<Candidate> filterCandidates(List<Answer> expected, Integer limit, Integer offset) {
-        return candidateDAO.filterCandidates(expected, limit, offset);
+
+        int element = 0;
+        if ((offset-1)!=0){
+            element = (offset-1)*limit;
+        }
+
+        return candidateDAO.filterCandidates(expected, limit, element);
     }
 }

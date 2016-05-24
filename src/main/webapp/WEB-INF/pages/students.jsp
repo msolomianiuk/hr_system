@@ -194,13 +194,7 @@
                                 <div class="collapse" id="collapseFilters">
                                     <div class="well">
                                         <div class="row">
-                                            <%--<select id="study" class="form-control">--%>
-                                                <%--<option value="" disabled selected hidden>Select study</option>--%>
-                                                <%--<option value="">KPI</option>--%>
-                                                <%--<option value="">HAU</option>--%>
-                                                <%--<option value="">Shevchenko</option>--%>
-                                            <%--</select>--%>
-                                            <%--<div class="x_panel">--%>
+
                                                 <div class="x_content">`
                                                     <div class="candidate-profile row">
                                                         <%@ include file="include/filtering/filtersForm.jsp" %>
@@ -239,7 +233,8 @@
                                 </select>
                             </div>
                             <div class="col-md-4 col-lg-4 col-sm-4 col-xs-4">
-
+                                <img src="<c:url value="/static/admin/images/backToCategory.png"/>" class="back" alt="..." />
+                                <img src="<c:url value="/static/admin/images/znak10.png"/>"  class="tip" alt="..." />
                              </div>
                             <div class="col-md-4 col-sm-4 col-xs-4">
                                 <div id="search" class="nav nav-sidebar">
@@ -267,7 +262,7 @@
                                     <th>Surname</th>
                                     <th>Patronymic</th>
                                     <th>email</th>
-                                    <th>Redaction</th>
+                                    <th>Editing</th>
                                 </tr>
                                 </thead>
                                 <tbody id="TableStudents">
@@ -282,7 +277,7 @@
             </div>
 
             <div class="panel panel-success">
-                <h3 class="panel-title">Edit Question parametres</h3>
+                <h3 class="panel-title">Mail dispatch</h3>
 
                 <div class="panel-body" id="main-setting4">
                     <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">

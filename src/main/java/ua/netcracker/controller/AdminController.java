@@ -15,6 +15,7 @@ import ua.netcracker.model.entity.*;
 import ua.netcracker.model.service.*;
 import ua.netcracker.model.service.date.DateService;
 import ua.netcracker.model.service.impl.*;
+import ua.netcracker.model.utils.JsonParsing;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -461,17 +462,32 @@ public class AdminController {
 
     @RequestMapping(value = "/paginationCandidate", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<Collection<Candidate>> paginationCandidate(
+    public ResponseEntity<List<Candidate>> paginationCandidate(
             @RequestParam String elementPage,
-            @RequestParam String fromElement) {
+            @RequestParam String fromElement,
+            @RequestParam String answersJsonString) {
 
-        Collection<Candidate> candidates = candidateService.pagination(
+        Collection<Answer> answers = JsonParsing.parseJsonString(answersJsonString);
+
+        List<Answer> selected = new ArrayList<>();
+        for (Answer answer : answers) {
+            if (!(answer.getValue().isEmpty())) {
+                selected.add(answer);
+            }
+        }
+        List<Candidate> filtered = (List<Candidate>) candidateService.filterCandidates(selected, Integer.parseInt(elementPage), Integer.parseInt(fromElement));
+
+        if (filtered.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+     /*   Collection<Candidate> candidates = candidateService.pagination(
                 Integer.valueOf(elementPage),
                 Integer.valueOf(fromElement));
         if (candidates.isEmpty()) {
             return new ResponseEntity<Collection<Candidate>>(HttpStatus.BAD_REQUEST);
         }
-        return ResponseEntity.ok(candidates);
+        return ResponseEntity.ok(candidates);*/
+          return new ResponseEntity<>(filtered, HttpStatus.OK);
     }
 
 
@@ -501,6 +517,9 @@ public class AdminController {
             @RequestParam String fromElement,
             @RequestParam String find
     ) {
+
+
+
 
         Collection<Candidate> candidates = candidateService.findCandidate(
                 Integer.valueOf(elementPage),
@@ -581,4 +600,5 @@ public class AdminController {
         sendEmailService.sendEmailToStudentsByStatus(Status.valueOf(candidateStatus));
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
 }

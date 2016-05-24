@@ -7,7 +7,9 @@ $(document).ready(function() {
 
     location_origin = "http://localhost:8080/hr_system-1.0-SNAPSHOT"
 
-
+    $(document).on("click", ".back", function () {
+        location.reload();
+    });
     $(document).on("click", "#EmailGo", function () {
         var candidateStatus = $("#Status_Email").val();
 
@@ -144,7 +146,7 @@ $(document).ready(function() {
                     url: location_origin + "/admin/paginationCandidate",
                     type: "GET",
                     dataType: "json",
-                    data: {'elementPage': elementPage, 'fromElement': fromElement},
+                    data: {'elementPage': elementPage, 'fromElement': fromElement,'answersJsonString': JSON.stringify($('.candidate-profile form').serializeObject())},
                     success: funcForStudents,
                     error: function (data) {
                         console.log(data);
@@ -158,6 +160,7 @@ $(document).ready(function() {
 
         var find = $('#fieldSearch').val();
         elementPage = $("#Rows").val();
+
 
         if (findClock.count == 0) {
             fromElement = 1;
@@ -229,19 +232,17 @@ $(document).ready(function() {
 
 $("button#filter").on("click", function () {
     $('.loading').attr('style', 'display: flex');
+    elementPage = $("#Rows").val();
+    fromElement = 1;
+    currPage = parseInt(fromElement);
     $.ajax({
-        url: baseUrl + "/getStudents/filter",
+        url: location_origin + "/admin/paginationCandidate",
         type: "GET",
-        data: {'answersJsonString': JSON.stringify($('.candidate-profile form').serializeObject()), 'status': $('#status_select option:selected').text(), 'status2': $('#status_select_2 option:selected').text()},
         dataType: "json",
-        success: function(data){console.log(data)},
+        data: {'elementPage': elementPage, 'fromElement': fromElement,'answersJsonString': JSON.stringify($('.candidate-profile form').serializeObject())},
+        success: funcForStudents,
         error: function (data) {
-            setTimeout(function () { $('.loading').hide(); }, 1000);
-            new PNotify({
-                title: 'Some Problem',
-                text: 'There have been some problems!',
-                type: 'error'
-            });
+            console.log(data);
         }
     });
 });

@@ -116,3 +116,16 @@
     color: black;
     font-weight: bold;
 }
+
+.back{
+    height: 35px;
+    float: right;
+    width: 35px;
+}
+
+.tip{
+    height: 35px;
+    width: 35px;
+    float: right;
+    margin-right: 25px;
+}
