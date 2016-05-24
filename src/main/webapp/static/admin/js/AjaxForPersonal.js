@@ -111,8 +111,10 @@ function funcForAjax(data) {
             $('#hider').css('display','none');
         }
     });
-
-}
+    $('#TableBA').dataTable({});
+    $('#TableHR').dataTable({});
+    $('#TableDEV').dataTable({});
+    }
 
 
 function getCandidateId(data){
