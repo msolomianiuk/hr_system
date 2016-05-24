@@ -159,7 +159,7 @@ $(document).ready(function() {
                     url: location_origin + "/admin/paginationCandidate",
                     type: "GET",
                     dataType: "json",
-                    data: {'elementPage': elementPage, 'fromElement': fromElement,'answersJsonString': JSON.stringify($('.candidate-profile form').serializeObject())},
+                    data: {'elementPage': elementPage, 'fromElement': fromElement,'answersJsonString': JSON.stringify($('.candidate-profile form').serializeObject()), 'status1': $('#status_select option:selected').text(), 'status2': $('#status_select_2 option:selected').text()},
                     success: funcForStudents,
                     error: function (data) {
                         console.log(data);
@@ -251,7 +251,7 @@ $("button#filter").on("click", function () {
         url: location_origin + "/admin/paginationCandidate",
         type: "GET",
         dataType: "json",
-        data: {'elementPage': elementPage, 'fromElement': fromElement,'answersJsonString': JSON.stringify($('.candidate-profile form').serializeObject())},
+        data: {'elementPage': elementPage, 'fromElement': fromElement,'answersJsonString': JSON.stringify($('.candidate-profile form').serializeObject()), 'status1': $('#status_select option:selected').text(), 'status2': $('#status_select_2 option:selected').text()},
         success: funcForStudents,
         error: function (data) {
             console.log(data);
