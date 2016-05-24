@@ -7,6 +7,8 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%@page session="true" %>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -44,6 +46,9 @@
     <link href="<c:url value="/static/admin/js/datatables/scroller.bootstrap.min.css"/>" rel="stylesheet"
           type="text/css"/>
 
+    <script src="<c:url value="/static/admin/js/jquery.min.js"/>"></script>
+    <script src="<c:url value="/static/admin/js/report/jquery.validate.min.js"/>"></script>
+    <script src="<c:url value="/static/admin/js/nprogress.js"/>"></script>
 </head>
 
 <body class="nav-md">
@@ -66,7 +71,8 @@
                     <div class="profile_info">
                         <span>Welcome,</span>
 
-                        <h2><sec:authentication property="principal.name"/>&nbsp;<sec:authentication property="principal.surname"/></h2>
+                        <h2><sec:authentication property="principal.name"/>&nbsp;<sec:authentication
+                                property="principal.surname"/></h2>
                     </div>
                 </div>
                 <!-- /menu prile quick info -->
@@ -107,7 +113,7 @@
                         <li class="">
                             <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown"
                                aria-expanded="false">
-                                <img src="<c:url value="/static/admin/images/img.jpg"/>" alt="">John Doe
+                                <img src="<c:url value="/static/admin/images/img.jpg"/>" alt="">
                                 <span class=" fa fa-angle-down"></span>
                             </a>
                             <ul class="dropdown-menu dropdown-usermenu animated fadeInDown pull-right">
@@ -128,46 +134,51 @@
             <!-- top tiles -->
             <div class="row tile_count">
 
-                    <div class="x_panel">
-                        <div class="x_title">
-                            <h2> EmailTemplates </h2>
+                <div class="x_panel">
+                    <div class="x_title">
+                        <h2> Templates </h2>
 
-                            <div class="clearfix"></div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="panel panel-success">
+                        <div class="panel-heading" role="button" data-toggle="collapse" href="#main-setting1"
+                             aria-expanded="true" aria-controls="main-setting1">
+                            <h3 class="panel-title">Email Templates</h3>
+                            <p>Click on required email template</p>
                         </div>
-                        <div class="panel panel-success">
-                            <div class="panel-heading" role="button" data-toggle="collapse" href="#main-setting1"
-                                 aria-expanded="true" aria-controls="main-setting1">
-                                <h3 class="panel-title">Email Templates</h3>
-                            </div>
-                            <div class="panel-body" id="main-setting1">
-
-                                    <div class="main_form">
-                                        <div class="not_empty_form">
-                                            <button type="button" class="btn btn-success update_button">Update
-                                            </button>
-                                        </div>
-                                        <form class="template_form">
-                                        </form>
-                                        <form class="form-group">
-                                            <div class="col-md-10 immut_text">
-                                            </div>
-                                        </form>
-
-                                    </div>
-
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <form class="template_edit form-group">
-                                                <h3>Subject</h3>
-                                                <input type="text" class="text_description" size="45">
-
-                                                <h3>Email template</h3>
-                                                <textarea class="text_email_template" cols="45">flfkfkfkfkf</textarea>
-                                                <br>
-                                                <button type="button" class=" btn btn-success save_button">Save</button>
-                                                <button type="button" class="btn btn-success cancel_button">Cancel
+                        <div class="panel-body" id="main-setting1">
+                            <div class="main_form">
+                                <div class="template_form">
+                                </div>
+                                <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog"
+                                     aria-hidden="true">
+                                    <div class="modal-dialog modal-lg">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal"><span
+                                                        aria-hidden="true">×</span>
                                                 </button>
-                                            </form>
+                                                <h4 class="modal-title" id="myModalLabel1">You can update this
+                                                    template</h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form class="validate">
+                                                    <div class="email_subject">
+                                                    </div>
+                                                    <div class="email_text">
+                                                    </div>
+                                                </form>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-default" id ="btn-close" data-dismiss="modal">
+                                                    Close
+                                                </button>
+                                                <button type="button" class="btn btn-primary btn-update">Update
+                                                </button>
+                                                <button type="button" class="btn btn-primary btn-save">Save</button>
+                                                <button type="button" class="btn btn-primary btn-cancel">Cancel
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -177,10 +188,47 @@
                 </div>
             </div>
 
-
         </div>
     </div>
 </div>
+<script src="<c:url value="/static/admin/js/bootstrap.min.js"/>"></script>
+<script src="<c:url value="/static/admin/js/progressbar/bootstrap-progressbar.min.js"/>"></script>
+<script src="<c:url value="/static/admin/js/nicescroll/jquery.nicescroll.min.js"/>"></script>
+<%--<script src="<c:url value="/static/admin/js/admnin_setting.js"/>"></script>--%>
+<script src="<c:url value="/static/admin/js/selectSetting.js"/>"></script>
+<%--<script src="<c:url value="/static/admin/js/SelectQuery.js"/>"></script>--%>
+
+
+<!-- icheck -->
+<script src="<c:url value="/static/admin/js/icheck/icheck.min.js"/>"></script>
+
+<script src="<c:url value="/static/admin/js/custom.js"/>"></script>
+
+
+<!-- Datatables -->
+<!-- <script src="js/datatables/js/jquery.dataTables.js"></script>
+<script src="js/datatables/tools/js/dataTables.tableTools.js"></script> -->
+
+<!-- Datatables-->
+<script src="<c:url value="/static/admin/js/datatables/jquery.dataTables.min.js"/>"></script>
+<script src="<c:url value="/static/admin/js/datatables/dataTables.bootstrap.js"/>"></script>
+<script src="<c:url value="/static/admin/js/datatables/dataTables.buttons.min.js"/>"></script>
+<script src="<c:url value="/static/admin/js/datatables/buttons.bootstrap.min.js"/>"></script>
+<script src="<c:url value="/static/admin/js/datatables/jszip.min.js"/>"></script>
+<script src="<c:url value="/static/admin/js/datatables/pdfmake.min.js"/>"></script>
+<script src="<c:url value="/static/admin/js/datatables/vfs_fonts.js"/>"></script>
+<script src="<c:url value="/static/admin/js/datatables/buttons.html5.min.js"/>"></script>
+<script src="<c:url value="/static/admin/js/datatables/buttons.print.min.js"/>"></script>
+<script src="<c:url value="/static/admin/js/datatables/dataTables.fixedHeader.min.js"/>"></script>
+<script src="<c:url value="/static/admin/js/datatables/dataTables.keyTable.min.js"/>"></script>
+<script src="<c:url value="/static/admin/js/datatables/dataTables.responsive.min.js"/>"></script>
+<script src="<c:url value="/static/admin/js/datatables/responsive.bootstrap.min.js"/>"></script>
+<script src="<c:url value="/static/admin/js/datatables/dataTables.scroller.min.js"/>"></script>
+<%-- --%>
+
+
+<!-- pace -->
+<script src="<c:url value="/static/admin/js/pace/pace.min.js"/>"></script>
 </body>
 
 </html>

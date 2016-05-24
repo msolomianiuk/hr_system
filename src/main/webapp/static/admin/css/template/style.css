@@ -1,41 +1,30 @@
-.template_form {
-	/*color: #fff;*/
-	width: 150px;
-	float: left;
+body {
+	overflow-x: scroll;
 }
 
-.template_form label {
-	display: block;
-	background: rgba(0, 0, 0, 0.35);
-	padding: 5px;
+.modal-lg {
+	display: inline-table;
+	margin: 30px auto;
+	overflow: hidden;
 }
 
-.template_form label:hover {
-	background: rgba(100, 149, 237, 0.35);
-}
-
-.immut_text {
-	/*color: #fff;*/
-}
-
-.template_edit {
-	margin: 15px auto;
-	/*color: #000;*/
+.modal {
 	text-align: center;
 }
 
-.template_edit h3{
-	/*color:#fff;*/
+.btn-dark{
+	width: 95%;
+	white-space: normal;
 }
 
-.template_edit input {
-	margin-bottom: 15px;
+#btn-close{
+	margin-bottom: 0;
+}
+.error{
+	color: #f00;
+	float: left;
 }
 
-.template_edit {
-	display: none;
-}
-
-.not_empty_form{
-	display: none;
+h4{
+	clear: both;
 }
