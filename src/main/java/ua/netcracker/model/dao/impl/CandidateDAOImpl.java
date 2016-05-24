@@ -443,8 +443,6 @@ public class CandidateDAOImpl implements CandidateDAO {
 
             return rows;
         } else {
-
-
             String sql = "WITH padik AS " +
                     "(SELECT  DISTINCT ON(candidate.id) candidate.id,u.name,u.email ,u.surname, u.patronymic,candidate.status_id, candidate.course_id , ir.interviewer_id, ir.mark, ir.comment, r.value " +
                     "FROM \"hr_system\".users u " +
@@ -487,27 +485,7 @@ public class CandidateDAOImpl implements CandidateDAO {
 
             return rows;
 
-
         }
-
-//        Candidate candidate = new Candidate();
-//
-//        try {
-//            jdbcTemplate = new JdbcTemplate(dataSource);
-//            candidate = jdbcTemplate.queryForObject(LAST_ROWS, new RowMapper<Candidate>() {
-//                @Override
-//                public Candidate mapRow(ResultSet resultSet, int i) throws SQLException {
-//                    Candidate candidate = new Candidate();
-//                    candidate.setId(resultSet.getInt("id"));
-//                    return candidate;
-//                }
-//            });
-//
-//        } catch (Exception e) {
-//            LOGGER.error("Error: " + e);
-//        }
-//
-//        return candidate.getId();
     }
 
     @Override
