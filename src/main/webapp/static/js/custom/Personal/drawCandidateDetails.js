@@ -13,7 +13,7 @@ function drawCandidateDetails(candidate) {
     $('.candidate-details').attr('candidate-id', candidate.id);
     $('div.candidate-details h3').html(candidate.user.name+' '+candidate.user.surname+' '+candidate.user.patronymic);
     if (candidate.user.image != null ){
-        $('div.candidate-details img').attr('src', $('div.candidate-details img').attr('src')+candidate.user.image);
+        $('div.candidate-details img').attr('src', "/hr_system-1.0-SNAPSHOT/user/photos/"+candidate.user.image);
     }
     questionsList.forEach(function (question) {
         $('div.candidate-details ul').append("<li data-question="+question.id+">" +
