@@ -80,7 +80,7 @@ public class StudentsRestController {
                 }
             }
         }
-        
+
         return new ResponseEntity<>(filtered, HttpStatus.OK);
     }
 

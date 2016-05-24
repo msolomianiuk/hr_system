@@ -602,4 +602,15 @@ public class AdminController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+
+    @RequestMapping(value = "/getAllCourseId", method = RequestMethod.GET)
+    public ResponseEntity<Collection<Integer>> getAllCourseId() {
+
+        Collection<Integer> courseSettings = courseSettingService.getAllCourseId();
+        if (courseSettings == null) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(courseSettings, HttpStatus.OK);
+    }
+
 }

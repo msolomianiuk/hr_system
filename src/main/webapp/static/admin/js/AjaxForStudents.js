@@ -10,6 +10,18 @@ $(document).ready(function() {
     $(document).on("click", ".back", function () {
         location.reload();
     });
+    $(document).on("click", ".tip", function () {
+        $("#hider").css('display','block');
+        $(".ModalHelp").css('display','block');
+    });
+    $(document).on("click", ".closeModal", function () {
+        $("#hider").css('display','none');
+        $(".ModalHelp").css('display','none');
+    });
+    $(document).on("click", "#hider", function () {
+        $("#hider").css('display','none');
+        $(".ModalHelp").css('display','none');
+    });
     $(document).on("click", "#EmailGo", function () {
         var candidateStatus = $("#Status_Email").val();
 
@@ -338,8 +350,8 @@ function funcForStudents (data){
         '<td>'+studentIndex.user.email+'</td>' +
         '<td>'+
             '<button candidate_id="'+ studentIndex.id +'" data-toggle="modal" data-target = "#candidate-details" ' +
-                'type="button" class="btn btn-success candidateProfile">A</button>'+
-            '<button candidate_id="'+ studentIndex.id +'" type="button" class="getModalStatus btn btn-danger">R</button>'+
+                'type="button" title="Anketa" class="btn btn-success candidateProfile">A</button>'+
+            '<button title="Add Status" candidate_id="'+ studentIndex.id +'" type="button" class="getModalStatus btn btn-danger">R</button>'+
         '</td>'+
         '</tr>');
 
@@ -456,6 +468,7 @@ function rowsAfterFind(data){
 
 function functionUpdate(data){
     console.log("Update Status");
+    location.reload();
 }
 
 function getCandidateId(data){

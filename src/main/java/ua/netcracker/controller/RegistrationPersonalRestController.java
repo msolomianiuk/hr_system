@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
- * Created by Legion on 27.04.2016.
+ * Created by Серый on 27.04.2016.
  */
 @RestController
 public class RegistrationPersonalRestController {

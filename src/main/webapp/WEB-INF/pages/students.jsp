@@ -316,7 +316,31 @@
     <div id="notif-group" class="tabbed_notifications"></div>
 </div>
 <div id="hider"></div>
-<div class="ModelViewStudent"></div>
+<div class="ModalHelp">
+    <div class="HelpBlock">
+        <span class=" glyphicon glyphicon-remove closeModal" aria-hidden="true"></span>
+        <div class="StatusHelp">
+            <h5>You have such status to add students</h5>
+            <p>Rejected - If a student did not pass the criteria of filters </p>
+            <p>Ready - If a student pass the criteria of filters</p>
+            <p>No_interview - If you think that this student did not pass the criteria of yours filters </p>
+            <p>Interview - Let Student get a interview</p>
+            <p>Interview_dated - Student have a date for interview</p>
+            <p>Interview_process - Student come to interview</p>
+            <p>Interview_passed - Student was interviewed</p>
+            <p>Trainee_accepted - Let Student come to courses</p>
+            <p>Job_accepted - Let Student get a job</p>
+        </div>
+        <div class="Status_search">
+          <p>You can find candidate with such parametres "Status , id , NSP(Name,Surname,Patronymic),questions"</p>
+            <p>If you dont know statuses , you can find it in article "Status to add students";</p>
+            <p>If you dont know questions , you can click a button Filters under table and see all of them</p>
+            <p>You can make a lot of filters after click on button "Filters"</p>
+            <p>If you want to see candidate profile you can click on button , where you can see "A", and if you want to add status you can click on
+            button "R"</p>
+        </div>
+    </div>
+</div>
 <div class="ModelStatus">
     <h1 class="Header_status">Change status:</h1>
     <div id="StatusNewIn">

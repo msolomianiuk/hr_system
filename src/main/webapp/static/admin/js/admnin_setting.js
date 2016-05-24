@@ -416,13 +416,9 @@ function getCourseID(data){
 }
 
 function setQuestionWithAdd (data){
-    alert("Set with ADD Question");
-}
 
-function setQuestionWithoutAdd (data){
-    alert("Set with ADD Question");
+    location.reload();
 }
-
 
 
 function getQuestionTable(data){
@@ -560,4 +556,5 @@ function getTypeOfQuestionsForTable (data){
 
 function updateQuestionWithAdd(data){
     alert("You update Question");
+    location.reload();
 }

@@ -247,22 +247,22 @@
                                     <div class="col-md-4 col-sm-12 col-xs-12 col-lg-4">
                                         <div class="form-group">
                                             <label for="name_personal">Name:</label>
-                                            <input type="text" name="name_peronal" class="form-control"
+                                            <input type="text" name="name_peronal" pattern="^[а-яА-ЯёЁa-zA-Z0-9]+$" class="form-control"
                                                    id="name_personal">
                                         </div>
                                         <div class="form-group">
                                             <label for="sername_personal">Surname:</label>
-                                            <input type="text" name="sername_peronal" class="form-control"
+                                            <input type="text" name="sername_peronal" pattern="^[а-яА-ЯёЁa-zA-Z0-9]+$" class="form-control"
                                                    id="sername_personal">
                                         </div>
                                         <div class="form-group">
                                             <label for="patronymic_personal">Patronymic:</label>
-                                            <input type="text" name="patronymic_peronal" class="form-control"
+                                            <input type="text" name="patronymic_peronal" pattern="^[а-яА-ЯёЁa-zA-Z0-9]+$" class="form-control"
                                                    id="patronymic_personal">
                                         </div>
                                         <div class="form-group">
                                             <label for="email_personal">Email:</label>
-                                            <input type="email" name="email_peronal" class="form-control"
+                                            <input type="email" name="email_peronal" pattern="^[а-яА-ЯёЁa-zA-Z0-9]+$" class="form-control"
                                                    id="email_personal">
                                         </div>
                                         <div class="form-group">
