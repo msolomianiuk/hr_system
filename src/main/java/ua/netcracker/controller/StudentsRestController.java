@@ -48,7 +48,7 @@ public class StudentsRestController {
 
     @RequestMapping(value = "/getStudents/filter", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<List<Candidate>> filterStudents(@RequestParam String answersJsonString, @RequestParam String status, @RequestParam String status2) {
+    public ResponseEntity<List<Candidate>> filterStudents(@RequestParam String answersJsonString, @RequestParam String status, @RequestParam String status2, @RequestParam Integer limit, @RequestParam Integer offset) {
 
         Collection<Answer> answers = JsonParsing.parseJsonString(answersJsonString);
 
@@ -58,13 +58,12 @@ public class StudentsRestController {
                 selected.add(answer);
             }
         }
-        List<Candidate> filtered = (List<Candidate>) candidateService.filterCandidates(selected, 10, 0);
+
+        List<Candidate> filtered = (List<Candidate>) candidateService.filterCandidates(selected, limit, offset);
 
         if (filtered.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-
-        if (!status.equals("Select status")) {
+        } else if (!status.equals("Select status")) {
             Status st = Status.valueOf(status);
             for (Candidate candidate : filtered) {
                 candidateService.updateCandidateStatus(candidate.getId(), st.getId());
@@ -81,8 +80,7 @@ public class StudentsRestController {
                 }
             }
         }
-
-
+        
         return new ResponseEntity<>(filtered, HttpStatus.OK);
     }
 

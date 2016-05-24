@@ -50,6 +50,8 @@ public interface CandidateDAO extends DAO<Candidate> {
 
     Integer getCandidateCount(int courseId);
 
+    Integer getCandidateCountByInterviewId(int courseId);
+
     Collection<Candidate> filterCandidates(List<Answer> expected, Integer limit, Integer offset);
 
 

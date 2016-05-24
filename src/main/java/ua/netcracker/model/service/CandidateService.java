@@ -36,6 +36,8 @@ public interface CandidateService {
 
     Integer getCandidateCount();
 
+    Integer getCandidateCountByInterviewId(Integer interviewId);
+
     Candidate getCandidateByUserId(Integer userId);
 
 
