@@ -21,7 +21,7 @@ $(document).ready(function () {
         format: "yyyy-mm-dd"
     });
 
-    location_origin = "http://localhost:8080/hr_system-1.0-SNAPSHOT"
+    location_origin = "http://31.131.25.206:8080/hr_system-1.0-SNAPSHOT"
 
 
     var token = $("meta[name='_csrf']").attr("content");

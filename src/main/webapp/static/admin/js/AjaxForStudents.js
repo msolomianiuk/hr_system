@@ -5,7 +5,7 @@ currPage = 1;
 elementPage = 10;
 $(document).ready(function() {
 
-    location_origin = "http://localhost:8080/hr_system-1.0-SNAPSHOT"
+    location_origin = "http://31.131.25.206:8080/hr_system-1.0-SNAPSHOT"
 
     $(document).on("click", ".back", function () {
         location.reload();
