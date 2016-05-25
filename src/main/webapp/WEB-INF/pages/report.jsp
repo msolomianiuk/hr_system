@@ -52,6 +52,10 @@
 </head>
 
 <body class="nav-md">
+<div class="modals">
+    <!-- Modal -->
+    <%@ include file="include/uploadPhotoModal.jsp" %>
+</div>
 <div class="container body">
 
 
@@ -67,18 +71,7 @@
                 <div class="clearfix"></div>
 
                 <!-- menu prile quick info -->
-                <div class="profile">
-                    <div class="profile_pic">
-                        <img src="<c:url value="/static/admin/images/img.jpg"/>" alt="..."
-                             class="img-circle profile_img">
-                    </div>
-                    <div class="profile_info">
-                        <span>Welcome,</span>
-
-                        <h2><sec:authentication property="principal.name"/>&nbsp;<sec:authentication
-                                property="principal.surname"/></h2>
-                    </div>
-                </div>
+                <%@ include file="include/profilePicInf.jsp" %>
                 <!-- /menu prile quick info -->
 
                 <br/>
@@ -117,10 +110,11 @@
                         <li class="">
                             <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown"
                                aria-expanded="false">
-                                <img src="<c:url value="/static/admin/images/img.jpg"/>" alt="">
+                                <img src="<c:url value="${photo}"/>" alt="">
                                 <span class=" fa fa-angle-down"></span>
                             </a>
-                            <ul class="dropdown-menu dropdown-usermenu animated fadeInDown pull-right">                                    <a href="logout"><i class="fa fa-sign-out pull-right"></i> Log Out</a>
+                            <ul class="dropdown-menu dropdown-usermenu animated fadeInDown pull-right">
+                                <a href="<c:url value="/logout"/>"><i class="fa fa-sign-out pull-right"></i> Log Out</a>
                                 </li>
                             </ul>
                         </li>
