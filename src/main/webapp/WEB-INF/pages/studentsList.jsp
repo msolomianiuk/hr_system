@@ -35,20 +35,7 @@
             </select>
         </div>
         <!-- page content -->
-        <div class="right_col" role="main">
-            <!-- top tiles -->
-            <div class="x_panel">
-                <div class="x_title">
-                    <h2> Students List </h2>
-                    <div class="clearfix"></div>
-                </div>
-                <div class="x_content">
-                    <%@ include file="include/personal/candidateTableForHR.jsp"%>
-                </div>
-            </div>
-            <!-- footer content -->
-            <%@ include file="include/footer.jsp" %>
-        </div>
+
     </div>
 </div>
 <script src="<c:url value="/static/js/bootstrap.min.js"/>"></script>
@@ -77,7 +64,6 @@
 <script src="<c:url value="/static/js/custom/Personal/addInTableQuestions.js"/>"></script>
 <script src="<c:url value="/static/js/custom/Personal/addInTableCandidats.js"/>"></script>
 <script src="<c:url value="/static/js/custom/Personal/ajax/loadQuestionsView.js"/>"></script>
-<script src="<c:url value="/static/js/custom/Personal/ajax/loadCandidatsList.js"/>"></script>
 
 </body>
 </html>

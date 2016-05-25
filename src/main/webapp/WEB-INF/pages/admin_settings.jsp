@@ -60,7 +60,10 @@
 
 
 <body class="nav-md">
-
+<div class="modals">
+    <!-- Modal -->
+    <%@ include file="include/uploadPhotoModal.jsp" %>
+</div>
 <div class="container body">
 
 
@@ -70,22 +73,12 @@
             <div class="left_col scroll-view">
 
                 <div class="navbar nav_title" style="border: 0;">
-                    <a href="index.html" class="site_title"><i class="fa fa-paw"></i> <span>Net<strong>Cracker</strong></span></a>
+                    <a href="#" class="site_title"><i class="fa fa-paw"></i> <span>Net<strong>Cracker</strong></span></a>
                 </div>
                 <div class="clearfix"></div>
 
                 <!-- menu prile quick info -->
-                <div class="profile">
-                    <div class="profile_pic">
-                        <img src="<c:url value="/static/admin/images/img.jpg"/>" alt="..."
-                             class="img-circle profile_img">
-                    </div>
-                    <div class="profile_info">
-                        <span>Welcome,</span>
-
-                        <h2><sec:authentication property="principal.name"/>&nbsp;<sec:authentication property="principal.surname"/></h2>
-                    </div>
-                </div>
+                <%@ include file="include/profilePicInf.jsp" %>
                 <!-- /menu prile quick info -->
 
                 <br/>
@@ -128,21 +121,10 @@
                         <li class="">
                             <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown"
                                aria-expanded="false">
-                                <img src="<c:url value="/static/admin/images/img.jpg"/>" alt="">
+                                <img src="<c:url value="${photo}"/>" alt="">
                                 <span class=" fa fa-angle-down"></span>
                             </a>
                             <ul class="dropdown-menu dropdown-usermenu animated fadeInDown pull-right">
-                                <li><a href="javascript:;"> Profile</a>
-                                </li>
-                                <li>
-                                    <a href="javascript:;">
-                                        <span class="badge bg-red pull-right">50%</span>
-                                        <span>Settings</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="javascript:;">Help</a>
-                                </li>
                                 <li><a href="../logout"><i class="fa fa-sign-out pull-right"></i> Log Out</a>
                                 </li>
                             </ul>
@@ -247,22 +229,22 @@
                                     <div class="col-md-4 col-sm-12 col-xs-12 col-lg-4">
                                         <div class="form-group">
                                             <label for="name_personal">Name:</label>
-                                            <input type="text" name="name_peronal" class="form-control"
+                                            <input type="text" name="name_peronal" pattern="^[а-яА-ЯёЁa-zA-Z0-9]+$" class="form-control"
                                                    id="name_personal">
                                         </div>
                                         <div class="form-group">
                                             <label for="sername_personal">Surname:</label>
-                                            <input type="text" name="sername_peronal" class="form-control"
+                                            <input type="text" name="sername_peronal" pattern="^[а-яА-ЯёЁa-zA-Z0-9]+$" class="form-control"
                                                    id="sername_personal">
                                         </div>
                                         <div class="form-group">
                                             <label for="patronymic_personal">Patronymic:</label>
-                                            <input type="text" name="patronymic_peronal" class="form-control"
+                                            <input type="text" name="patronymic_peronal" pattern="^[а-яА-ЯёЁa-zA-Z0-9]+$" class="form-control"
                                                    id="patronymic_personal">
                                         </div>
                                         <div class="form-group">
                                             <label for="email_personal">Email:</label>
-                                            <input type="email" name="email_peronal" class="form-control"
+                                            <input type="email" name="email_peronal" pattern="^[а-яА-ЯёЁa-zA-Z0-9]+$" class="form-control"
                                                    id="email_personal">
                                         </div>
                                         <div class="form-group">
@@ -380,13 +362,7 @@
             </div>
             <!-- footer content -->
 
-            <footer>
-                <div class="copyright-info">
-                    <p class="pull-right">Gentelella - Bootstrap Admin Template by <a href="https://colorlib.com">Colorlib</a>
-                    </p>
-                </div>
-                <div class="clearfix"></div>
-            </footer>
+
             <!-- /footer content -->
         </div>
         <!-- /page content -->

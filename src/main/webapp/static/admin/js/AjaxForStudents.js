@@ -7,7 +7,21 @@ $(document).ready(function() {
 
     location_origin = "http://localhost:8080/hr_system-1.0-SNAPSHOT"
 
-
+    $(document).on("click", ".back", function () {
+        location.reload();
+    });
+    $(document).on("click", ".tip", function () {
+        $("#hider").css('display','block');
+        $(".ModalHelp").css('display','block');
+    });
+    $(document).on("click", ".closeModal", function () {
+        $("#hider").css('display','none');
+        $(".ModalHelp").css('display','none');
+    });
+    $(document).on("click", "#hider", function () {
+        $("#hider").css('display','none');
+        $(".ModalHelp").css('display','none');
+    });
     $(document).on("click", "#EmailGo", function () {
         var candidateStatus = $("#Status_Email").val();
 
@@ -132,6 +146,7 @@ $(document).ready(function() {
                     url: location_origin + "/admin/getRows",
                     type: "GET",
                     dataType: "json",
+                    data:{'answersJsonString': JSON.stringify($('.candidate-profile form').serializeObject())},
                     contentType: 'application/json',
                     mimeType: 'application/json',
                     success: fistPaggination,
@@ -144,7 +159,7 @@ $(document).ready(function() {
                     url: location_origin + "/admin/paginationCandidate",
                     type: "GET",
                     dataType: "json",
-                    data: {'elementPage': elementPage, 'fromElement': fromElement},
+                    data: {'elementPage': elementPage, 'fromElement': fromElement,'answersJsonString': JSON.stringify($('.candidate-profile form').serializeObject()), 'status1': $('#status_select option:selected').text(), 'status2': $('#status_select_2 option:selected').text()},
                     success: funcForStudents,
                     error: function (data) {
                         console.log(data);
@@ -158,6 +173,7 @@ $(document).ready(function() {
 
         var find = $('#fieldSearch').val();
         elementPage = $("#Rows").val();
+
 
         if (findClock.count == 0) {
             fromElement = 1;
@@ -190,26 +206,25 @@ $(document).ready(function() {
             dataType: "json",
             data: {'find': find, 'elementPage': elementPage, "fromElement": currPage},
             success: funcForStudents,
-            error: function (data) {
-                console.log(data);
-            }
+            error: erorFunctionSearch
         });
 
     });
 
     $.ajax({
-
+    
         url: location_origin + "/admin/getRows",
         type: "GET",
         dataType: "json",
         contentType: 'application/json',
+        data:{'answersJsonString': JSON.stringify($('.candidate-profile form').serializeObject())},
         mimeType: 'application/json',
         success: fistPaggination,
         error: function (data) {
             console.log(data);
         }
     });
-
+    
     $.ajax({
         url: location_origin + "/admin/getFirst",
         type: "GET",
@@ -229,19 +244,29 @@ $(document).ready(function() {
 
 $("button#filter").on("click", function () {
     $('.loading').attr('style', 'display: flex');
+    elementPage = $("#Rows").val();
+    fromElement = 1;
+    currPage = parseInt(fromElement);
     $.ajax({
-        url: baseUrl + "/getStudents/filter",
+        url: location_origin + "/admin/paginationCandidate",
         type: "GET",
-        data: {'answersJsonString': JSON.stringify($('.candidate-profile form').serializeObject()), 'status': $('#status_select option:selected').text(), 'status2': $('#status_select_2 option:selected').text()},
         dataType: "json",
-        success: function(data){console.log(data)},
+        data: {'elementPage': elementPage, 'fromElement': fromElement,'answersJsonString': JSON.stringify($('.candidate-profile form').serializeObject()), 'status1': $('#status_select option:selected').text(), 'status2': $('#status_select_2 option:selected').text()},
+        success: funcForStudents,
         error: function (data) {
-            setTimeout(function () { $('.loading').hide(); }, 1000);
-            new PNotify({
-                title: 'Some Problem',
-                text: 'There have been some problems!',
-                type: 'error'
-            });
+            console.log(data);
+        }
+    });
+    $.ajax({
+        url: location_origin + "/admin/getRows",
+        type: "GET",
+        dataType: "json",
+        data:{'answersJsonString': JSON.stringify($('.candidate-profile form').serializeObject())},
+        contentType: 'application/json',
+        mimeType: 'application/json',
+        success: fistPaggination,
+        error: function (data) {
+            console.log(data);
         }
     });
 });
@@ -322,9 +347,21 @@ function funcForStudents (data){
         }
         var b = "";
         for (var interview_index in studentIndex.interviewResults) {
+
+           var a = studentIndex.interviewResults[interview_index].interviewerId;
+            switch(a) {
+                case 2:
+                    roleComment = "HR : ";
+                    break;
+                case 3:
+                    roleComment = "BA : ";
+                    break;
+                case 4:
+                    roleComment = "DEV : ";
+                    break;
+            }
         b += '<div>'+
-                '<p>' + studentIndex.interviewResults[interview_index].mark + '</p>' +
-                '<p>' + studentIndex.interviewResults[interview_index].recommendation + '</p>'+
+                '<p>'+ roleComment + studentIndex.interviewResults[interview_index].recommendation + '</p>'+
             '</div>';
         }
 
@@ -337,8 +374,8 @@ function funcForStudents (data){
         '<td>'+studentIndex.user.email+'</td>' +
         '<td>'+
             '<button candidate_id="'+ studentIndex.id +'" data-toggle="modal" data-target = "#candidate-details" ' +
-                'type="button" class="btn btn-success candidateProfile">A</button>'+
-            '<button candidate_id="'+ studentIndex.id +'" type="button" class="getModalStatus btn btn-danger">R</button>'+
+                'type="button" title="Anketa" class="btn btn-success candidateProfile">A</button>'+
+            '<button title="Add Status" candidate_id="'+ studentIndex.id +'" type="button" class="getModalStatus btn btn-danger">R</button>'+
         '</td>'+
         '</tr>');
 
@@ -455,6 +492,7 @@ function rowsAfterFind(data){
 
 function functionUpdate(data){
     console.log("Update Status");
+    location.reload();
 }
 
 function getCandidateId(data){
@@ -467,4 +505,8 @@ function getCandidateId(data){
 
 function functionForEmail(data){
     console.log("EmailGo");
+}
+
+function erorFunctionSearch(data){
+    alert("For this query No matches");
 }

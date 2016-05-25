@@ -5395,4 +5395,9 @@ ul.notifications {
 
 .clicked-tr tbody tr:hover{
   opacity: 1;
-};
+}
+
+
+img.candidate-image{
+  width: 100%;
+}

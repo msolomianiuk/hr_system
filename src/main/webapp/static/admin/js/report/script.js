@@ -1,294 +1,216 @@
 /**
- * Created by Владимир on 04.05.2016.
+ * Created by Владимир on 22.05.2016.
  */
+var reports;
+var reportIndex;
 $(document).ready(function () {
     init();
-    var editField = $('.report_edit');
-    var mainForm = $('.main_form');
-    var textDescription = $('.text_description');
-    var textQuery = $('.text_query');
-    var showTable = $('.show_table');
-    var saveListButtons = $('.save_buttons');
-    var report;
-
-    var createButton = $('.create_button');
-    createButton.click(function () {
-        showElement(editField);
-        hideElement(mainForm);
-        hideElement(showTable);
-        textDescription.val("");
-        textQuery.val("");
-        report = null;
-    });
-    var updateButton = $('.update_button');
-    updateButton.click(function () {
-        showElement(editField);
-        hideElement(mainForm);
-        hideElement(showTable);
-        report = getReportByRadio();
-        textDescription.val(report.description);
-        textQuery.val(report.query);
-    });
-    var deleteButton = $('.delete_button');
-    deleteButton.click(function () {
-        hideElement(showTable);
-        var index = getIndexByRadio();
-        if (curData[index].status !== 'insert') {
-            curData[index].status = 'delete';
-            curData[index].show = false;
-        } else {
-            curData.splice(index, 1);
-        }
-        generateDescriptionList(curData);
-    });
-
-    $('.show_button').click(function () {
-        var index = getIndexByRadio();
-        var query = curData[index].query.toLowerCase();
-        if (query.indexOf('drop') === -1 && query.indexOf('insert') === -1 && query.indexOf('update') === -1) {
-            ajax("/service/createReport", function (data) {
-                showReport(data);
-                showElement(showTable);
-            }, function (data) {
-                alert("ERROR: bad request");
-                console.log(data);
-            }, {"query": curData[index].query, "description": curData[index].description});
-        } else {
-            alert("ban words: drop, insert, update");
-        }
-    });
-    var showAllButton = $(".show_all_button");
-    showAllButton.click(function () {
-        hideElement(showTable);
-        showElement(saveListButtons);
-        disableButton(showAllButton);
-        disableButton(createButton);
-        disableButton(deleteButton);
-        isShowAll = true;
-        sendAjax();
-        ajax("/service/getAllReportQuery", function (data) {
-            curData = data;
-            for (var index in curData) {
-                curData[index].status = "new";
+    $.validator.addMethod('checkSql', function (value, element) {
+        value = value.toLowerCase();
+        return this.optional(element) || (value.indexOf("create") === -1 && value.indexOf("drop") === -1 && value.indexOf("delete") === -1 && value.indexOf("update") === -1 && value.indexOf("alter") === -1)
+    }, "You can not use words - create, drop, delete, update, alter");
+    var validateForm = $(".validate").validate({
+        rules: {
+            description: "required",
+            query: {
+                required: true,
+                checkSql: true
             }
-            generateDescriptionList(curData);
-        }, function (data) {
-            console.log(data);
-        })
+        }
     });
-
-    $(".save_button").click(function () {
-        if (textQuery.val() && textDescription.val()) {
-            hideElement(editField);
-            showElement(mainForm);
-            if (report !== null) {
-                var index = getIndexById(report.id);
-                curData[index].description = textDescription.val();
-                curData[index].query = textQuery.val();
-                if (curData[index].status !== 'insert') {
-                    curData[index].status = 'update';
-                }
+    $(".btn-delete").on("click", function () {
+        reports[reportIndex].status = 'delete';
+        ajax("service/setReportQuery", function () {
+        }, function () {
+        }, reports[reportIndex]);
+        reports.splice(reportIndex, 1);
+        generateReportsList(reports);
+        generateDeveloperReportsList(reports);
+    });
+    $(".btn-update").on("click", function () {
+        var textQuery = $(".dev_panel_query");
+        textQuery.empty();
+        textQuery.append('<h4> Query:</h4> <textarea class = "form-control col-md-7 col-xs-12 query" row="3" name="query">' + reports[reportIndex].query + '</textarea>');
+        var textDescription = $(".dev_panel_description");
+        textDescription.empty();
+        textDescription.append('<h4> Brief Description:</h4><input type="text" class = "form-control col-md-7 col-xs-12 description" name = "description" value="' + reports[reportIndex].description + '">');
+        $(".btn-update").css({'display': 'none'});
+        $(".btn-delete").css({'display': 'none'});
+        $(".btn-save").css({'display': 'inline-block'});
+        $(".btn-cancel").css({'display': 'inline-block'});
+    });
+    $(".btn-save").on("click", function () {
+        if (validateForm.form()) {
+            $(".btn-update").css({'display': 'inline-block'});
+            $(".btn-delete").css({'display': 'inline-block'});
+            $(".btn-save").css({'display': 'none'});
+            $(".btn-cancel").css({'display': 'none'});
+            if (reportIndex !== -1) {
+                reports[reportIndex].status = 'update';
+                reports[reportIndex].description = $(".description").val();
+                reports[reportIndex].query = $(".query").val();
+                ajax("service/setReportQuery", function () {
+                }, function () {
+                }, reports[reportIndex]);
             } else {
-                maxID++;
-                var temp = {
-                    id: maxID,
-                    description: textDescription.val(),
-                    query: textQuery.val(),
-                    status: 'insert',
-                    show: true
-                }
-                if (curData == undefined) {
-                    curData = [];
-                }
-                curData.push(temp);
+                var report = {};
+                report.status = 'insert';
+                report.description = $(".description").val();
+                report.query = $(".query").val();
+                report.show = true;
+                report.id = -1;
+                ajax("service/setReportQuery", function () {
+                }, function () {
+                }, report);
+                reportIndex = reports.push(report) - 1;
             }
-            generateDescriptionList(curData);
-        } else {
-            alert("Not all fields are filled");
+            showDevModal();
+            generateReportsList(reports);
+            generateDeveloperReportsList(reports);
         }
     });
-    $(".cancel_button").click(function () {
-        hideElement(editField);
-        showElement(mainForm);
+    $(".btn-cancel").on("click", function () {
+        $(".btn-update").css({'display': 'inline-block'});
+        $(".btn-delete").css({'display': 'inline-block'});
+        $(".btn-save").css({'display': 'none'});
+        $(".btn-cancel").css({'display': 'none'});
+        showDevModal();
     });
-
-    $(".save_list_button").click(function () {
-        hideElement(saveListButtons);
-        enableButton(showAllButton);
-        enableButton(createButton);
-        enableButton(deleteButton);
-        checkChanges();
-        isShowAll = false;
-        sendAjax();
-        setTimeout(init, 500);
-        //setTimeout(init, 500);
-    });
-
-    $(".cancel_list_button").click(function () {
-        hideElement(saveListButtons);
-        enableButton(showAllButton);
-        enableButton(createButton);
-        enableButton(deleteButton);
-        isShowAll = false;
-        init();
-    });
-    //$(".export_button").click(function () {
-    //    var index = getIndexByRadio();
-    //    var now = new Date();
-    //    $("#table2excel").table2excel({
-    //        filename: curData[index].description + now.getFullYear()+':'+(now.getMonth()+1)+':'+now.getDate()
-    //    });
-    //
-    //});
-    $(window).on('beforeunload', function () {
-        sendAjax();
+    $(".btn-create").on("click", function () {
+        var textQuery = $(".dev_panel_query");
+        textQuery.empty();
+        textQuery.append('<label class="control-label col-md-3 col-sm-3 col-xs-12"> Query</label> <textarea class = "form-control col-md-7 col-xs-12 query" row="3" name="query"></textarea>');
+        var textDescription = $(".dev_panel_description");
+        textDescription.empty();
+        textDescription.append('<label class="control-label col-md-3 col-sm-3 col-xs-12"> Brief Description</label><input type="text" class = "form-control col-md-7 col-xs-12 description" name = "description" value="">');
+        $(".btn-update").css({'display': 'none'});
+        $(".btn-delete").css({'display': 'none'});
+        $(".btn-save").css({'display': 'inline-block'});
+        $(".btn-cancel").css({'display': 'inline-block'});
+        reportIndex = -1;
     });
 });
 
-var curData = [];
-var maxID = 0;
-var isShowAll = false;
-
 function init() {
-    ajax("/service/getReportQuery", ajaxSuccess, function (data) {
-        console.log(data);
-    });
-}
-
-function ajaxSuccess(data) {
-    curData = data;
-    for (var index in curData) {
-        curData[index].status = "new";
-    }
-    generateDescriptionList(curData);
-}
-
-function generateDescriptionList(data) {
-    var reportForm = $(".report_form");
-    reportForm.empty();
-    var isExist = false;
-    for (var index in data) {
-        if (data[index].status !== 'delete') {
-            reportForm.append(createRow(data[index].id, data[index].description, data[index].show));
-            isExist = true;
+    ajax("service/getReportQuery", function (data) {
+        reports = data;
+        for (var index in reports) {
+            reports[index].status = "new";
         }
-    }
-    $(".radio_button:first").prop("checked", true);
-    if (!isExist || data.length == 0) {
-        hideElement($(".not_empty_form"));
-        $(".immut_text").empty();
-    } else {
-        radioButtonsChange();
-        showElement($(".not_empty_form"));
-    }
-}
-function createRow(id, description, isShow) {
-    if (isShowAll)
-        return '<label><input type="radio" name = "description" class = "radio_button" value='
-            + id + ' hidden>' + description + '<input type="checkbox" name = "isShow" class = "checkbox" value='
-            + id + (isShow ? ' checked' : '') + '></label> <br>';
-    return '<label><input type="radio" name = "description" class = "radio_button" value='
-        + id + ' hidden>' + description + '</label> <br>';
-}
-function radioButtonsChange() {
-    var radioButtons = $(".radio_button");
-    showQuery(radioButtons);
-    radioButtons.change(function () {
-        showQuery(radioButtons);
+        generateReportsList(reports);
+        generateDeveloperReportsList(reports);
     });
+    ajax("service/getCourses", function (data) {
+        generateCourseList(data);
+    });
+    ajax("service/getStatuses", function (data) {
+        generateStatusList(data);
+    });
+}
+
+function generateReportsList(data) {
+    var report = $(".report_form");
+    report.empty();
+    for (var index in data) {
+        report.append('<div class="col-md-4 col-sm-4 col-xs-12 animated fadeInDown">' +
+        '<button type="button" class="btn btn-dark btn-lg show_button" style="white-space:normal"' +
+        'data-toggle = "modal" data-target = ".bs-example-modal-lg"' +
+        'value = "' + index + '">' +
+        data[index].description + '</button> </div>');
+    }
+    $(".show_button").on("click", function () {
+        $('.export_button').css({'display': 'inline-block'});
+        if ($(this).val() === "main") {
+            ajax("service/createMainReport", showReport, getReportError, {
+                courseId: $(".course_setting").val(),
+                status: $(".status").val()
+            });
+        }
+        else {
+            ajax("service/createReport", showReport, getReportError, {
+                query: reports[($(this).val())].query,
+                description: reports[$(this).val()].description
+            });
+        }
+    });
+}
+function generateDeveloperReportsList(data) {
+    var report = $(".report_developer_form");
+    report.empty();
+    for (var index in data) {
+        report.append('<div class="col-md-4 col-sm-4 col-xs-12 animated fadeInDown">' +
+        '<button type="button" class="btn btn-dark btn-lg dev_show_button" style="white-space:normal" ' +
+        'data-toggle = "modal" data-target = ".bs-example-modal-lg-dev" ' +
+        'value = "' + index + '">' +
+        data[index].description + '</button> </div>');
+    }
+    $(".dev_show_button").on("click", function () {
+        reportIndex = $(this).val();
+        showDevModal();
+    });
+}
+
+function showDevModal() {
+    var textQuery = $(".dev_panel_query");
+    textQuery.empty();
+    textQuery.append('<h4> Query: ' + reports[reportIndex].query + '</h4>');
+    var textDescription = $(".dev_panel_description");
+    textDescription.empty();
+    textDescription.append('<h4> Brief Description: ' + reports[reportIndex].description + '</h4>');
+    $(".btn-cancel").css({'display': 'none'});
+    $(".btn-save").css({'display': 'none'});
+    $(".btn-update").css({'display': 'inline-block'});
+    $(".btn-delete").css({'display': 'inline-block'});
+}
+
+function getReportError() {
+    var report = $(".report");
+    report.empty();
+    report.append("DB Error");
+    $('.export_button').css({'display': 'none'});
 }
 function showReport(data) {
     var report = $(".report");
     report.empty();
-    var table = '';
-    for (var i in data) {
-        table = table + '<tr>';
-        for (var j in data[i]) {
-            table = table + '<td>' + data[i][j] + '</td>';
+    if(data.length>1) {
+        var table = '';
+        for (var i in data) {
+            table += (i === 0 ? '<thead>' : '') + '<tr>';
+            for (var j in data[i]) {
+                if (i != 0) {
+                    table += '<td>' + (data[i][j] === null ? '' : data[i][j]) + '</td>';
+                } else {
+                    table += '<th>' + data[i][j] + '</th>';
+                }
+            }
+            table += (i === 0 ? '<thead>' : '') + '</tr>';
         }
-        table = table + '</tr>';
-    }
-    report.append(table);
-}
-function showQuery(radioButtons) {
-    hideElement($('.show_table'));
-    var text = $(".immut_text");
-    var radio = $("input:radio:checked");
-    radioButtons.parent().css({
-        'background': '#ccc'
-    });
-    radio.parent().css({
-        'background': '#d6e9c6'
-    });
-    text.empty();
-    text.append(curData[getIndexById(radio.val())].query);
-}
-
-function sendAjax() {
-    for (var index in curData) {
-        if (curData[index] !== "new") {
-            ajax("/service/setReportQuery", function () {
-                },
-                function (data) {
-                    console.log(data);
-                },
-                curData[index]
-            );
-        }
+        report.append(table);
+    }else{
+        report.html("Empty");
     }
 }
 
-function checkChanges() {
-    var checkboxes = $('input[type=checkbox]');
-    $(checkboxes).each(function () {
-        var index = getIndexById($(this).val());
-        if ($(this).prop('checked') !== curData[index].show) {
-            curData[index].status = "update";
-            curData[index].show = !curData[index].show;
-        }
-    });
-}
-
-function getReportByRadio() {
-    return curData[getIndexById($("input:radio:checked").val())];
-}
-
-function getIndexById(id) {
-    for (var index in curData) {
-        if (curData[index].id == id) {
-            return index;
-        }
+function generateCourseList(data) {
+    var courseList = $(".course_setting");
+    courseList.empty();
+    for (var index in data) {
+        courseList.append("<option>" + data[index] + "</option>");
     }
 }
 
-function getIndexByRadio() {
-    var id = $("input:radio:checked").val();
-    return getIndexById(id);
-}
-
-function showElement(el) {
-    el.css({
-        'display': 'block'
-    });
-}
-
-function hideElement(el) {
-    el.css({
-        'display': 'none'
-    });
-}
-
-function disableButton(but) {
-    but.prop("disabled", true);
-}
-
-function enableButton(but) {
-    but.prop("disabled", false);
+function generateStatusList(data) {
+    var statusList = $(".status");
+    statusList.empty();
+    statusList.append("<option>" + "ALL" + "</option>");
+    for (var index in data) {
+        statusList.append("<option>" + data[index] + "</option>");
+    }
 }
 
 function ajax(url, success, error, data) {
     $.ajax({
-        url: "http://localhost:8080/hr_system-1.0-SNAPSHOT/admin" + url,
+        url: "http://localhost:8080/hr_system-1.0-SNAPSHOT/admin/" + url,
         type: "GET",
         dataType: "json",
         contentType: 'application/json',

@@ -24,12 +24,6 @@ public class EmailTemplateServiceImpl implements EmailTemplateService {
     @Override
     public boolean manageEmailTemplate(EmailTemplate emailTemplate, String status) {
         switch (status) {
-            case "delete":
-                emailTemplateDao.remove(emailTemplate);
-                break;
-            case "insert":
-                emailTemplateDao.insert(emailTemplate);
-                break;
             case "update":
                 emailTemplateDao.update(emailTemplate);
                 break;

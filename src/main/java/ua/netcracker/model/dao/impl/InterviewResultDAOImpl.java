@@ -51,7 +51,7 @@ public class InterviewResultDAOImpl implements InterviewResultDAO {
                 interviewResult.setMark((int) row.get("mark"));
                 interviewResult.setComment((String) row.get("comment"));
                 interviewResult.setRecommendation(Recommendation.valueOf((String) row.get("value")));
-
+                interviewResult.setInterviewer(userDAO.find((int) row.get("interviewer_id")));
                 results.add(interviewResult);
             }
 

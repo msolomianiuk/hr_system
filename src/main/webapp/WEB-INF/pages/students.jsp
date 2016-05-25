@@ -54,8 +54,11 @@
 
 
 <body class="nav-md">
-
-<%@ include file="include/personal/modalCandidateDetails.jsp"%>
+<div class="modals">
+    <!-- Modal -->
+    <%@ include file="include/uploadPhotoModal.jsp" %>
+    <%@ include file="include/personal/modalCandidateDetails.jsp"%>
+</div>
 
 <div class="container body">
 
@@ -66,22 +69,12 @@
             <div class="left_col scroll-view">
 
                 <div class="navbar nav_title" style="border: 0;">
-                    <a href="index.html" class="site_title"><i class="fa fa-paw"></i> <span>Net<strong>Cracker</strong></span></a>
+                    <a href="#" class="site_title"><i class="fa fa-paw"></i> <span>Net<strong>Cracker</strong></span></a>
                 </div>
                 <div class="clearfix"></div>
 
                 <!-- menu prile quick info -->
-                <div class="profile">
-                    <div class="profile_pic">
-                        <img src="<c:url value="/static/admin/images/img.jpg"/>" alt="..."
-                             class="img-circle profile_img">
-                    </div>
-                    <div class="profile_info">
-                        <span>Welcome,</span>
-
-                        <h2><sec:authentication property="principal.name"/>&nbsp;<sec:authentication property="principal.surname"/></h2>
-                    </div>
-                </div>
+                <%@ include file="include/profilePicInf.jsp" %>
                 <!-- /menu prile quick info -->
 
                 <br/>
@@ -124,21 +117,10 @@
                         <li class="">
                             <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown"
                                aria-expanded="false">
-                                <img src="<c:url value="/static/admin/images/img.jpg"/>" alt="">
+                                <img src="<c:url value="${photo}"/>" alt="">
                                 <span class=" fa fa-angle-down"></span>
                             </a>
                             <ul class="dropdown-menu dropdown-usermenu animated fadeInDown pull-right">
-                                <li><a href="javascript:;"> Profile</a>
-                                </li>
-                                <li>
-                                    <a href="javascript:;">
-                                        <span class="badge bg-red pull-right">50%</span>
-                                        <span>Settings</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="javascript:;">Help</a>
-                                </li>
                                 <li><a href="../logout"><i class="fa fa-sign-out pull-right"></i> Log Out</a>
                                 </li>
                             </ul>
@@ -194,13 +176,7 @@
                                 <div class="collapse" id="collapseFilters">
                                     <div class="well">
                                         <div class="row">
-                                            <%--<select id="study" class="form-control">--%>
-                                                <%--<option value="" disabled selected hidden>Select study</option>--%>
-                                                <%--<option value="">KPI</option>--%>
-                                                <%--<option value="">HAU</option>--%>
-                                                <%--<option value="">Shevchenko</option>--%>
-                                            <%--</select>--%>
-                                            <%--<div class="x_panel">--%>
+
                                                 <div class="x_content">`
                                                     <div class="candidate-profile row">
                                                         <%@ include file="include/filtering/filtersForm.jsp" %>
@@ -239,7 +215,8 @@
                                 </select>
                             </div>
                             <div class="col-md-4 col-lg-4 col-sm-4 col-xs-4">
-
+                                <img src="<c:url value="/static/admin/images/backToCategory.png"/>" class="back" alt="..." />
+                                <img src="<c:url value="/static/admin/images/znak10.png"/>"  class="tip" alt="..." />
                              </div>
                             <div class="col-md-4 col-sm-4 col-xs-4">
                                 <div id="search" class="nav nav-sidebar">
@@ -267,7 +244,7 @@
                                     <th>Surname</th>
                                     <th>Patronymic</th>
                                     <th>email</th>
-                                    <th>Redaction</th>
+                                    <th>Editing</th>
                                 </tr>
                                 </thead>
                                 <tbody id="TableStudents">
@@ -282,7 +259,7 @@
             </div>
 
             <div class="panel panel-success">
-                <h3 class="panel-title">Edit Question parametres</h3>
+                <h3 class="panel-title">Mail dispatch</h3>
 
                 <div class="panel-body" id="main-setting4">
                     <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
@@ -291,21 +268,15 @@
                             <option value="No_interview">No_interview</option>
                             <option value="Interview">Interview</option>
                             <option value="Interview_passed">Interview_passed</option>
-                            <option value="Interview_passed">Job_accepted</option>
+                            <option value="Job_accepted">Job_accepted</option>
                         </select>
                     </div>
                     <div class="col-md-4 col-lg-4 col-sm-12 col-xs-12">
-                        <button type="button" id="EmailGo" class="btn btn-success">Click to change</button>
+                        <button type="button" id="EmailGo" class="btn btn-success">Send Emails</button>
                     </div>
                 </div>
             </div>
-            <footer>
-                <div class="copyright-info">
-                    <p class="pull-right">Gentelella - Bootstrap Admin Template by <a href="https://colorlib.com">Colorlib</a>
-                    </p>
-                </div>
-                <div class="clearfix"></div>
-            </footer>
+
             <!-- /footer content -->
         </div>
         <!-- /page content -->
@@ -321,7 +292,34 @@
     <div id="notif-group" class="tabbed_notifications"></div>
 </div>
 <div id="hider"></div>
-<div class="ModelViewStudent"></div>
+<div class="ModalHelp">
+    <div class="HelpBlock">
+        <span class=" glyphicon glyphicon-remove closeModal" aria-hidden="true"></span>
+        <div class="StatusHelp">
+            <h5>You have such status to add students</h5>
+            <p>Rejected - If a student did not pass the criteria of filters </p>
+            <p>Ready - If a student pass the criteria of filters</p>
+            <p>No_interview - If you think that this student did not pass the criteria of yours filters </p>
+            <p>Interview - Let Student get a interview</p>
+            <p>Interview_dated - Student have a date for interview</p>
+            <p>Interview_process - Student come to interview</p>
+            <p>Interview_passed - Student was interviewed</p>
+            <p>Trainee_accepted - Let Student come to courses</p>
+            <p>Job_accepted - Let Student get a job</p>
+        </div>
+        <div class="Status_search">
+          <p>You can find candidate with such parametres "Status , id , NSP(Name,Surname,Patronymic),questions"</p>
+            <p>If you dont know statuses , you can find it in article "Status to add students";</p>
+            <p>If you dont know questions , you can click a button Filters under table and see all of them</p>
+            <p>You can make a lot of filters after click on button "Filters"</p>
+            <p>If you want to see candidate profile you can click on button , where you can see "A", and if you want to add status you can click on
+            button "R"</p>
+        </div>
+        <div class="Dovira">
+            <h6>If you have any questions and cant resolve it please reload the server</h6>
+        </div>
+    </div>
+</div>
 <div class="ModelStatus">
     <h1 class="Header_status">Change status:</h1>
     <div id="StatusNewIn">

@@ -111,7 +111,7 @@ public class DateService {
     }
 
     public int getPersonal(InterviewDaysDetails interviewDaysDetails) {
-        return getSettingDay(interviewDaysDetails)[1];
+        return 2*getSettingDay(interviewDaysDetails)[1];
     }
 
     public int quantityStudent(InterviewDaysDetails interviewDaysDetails) {

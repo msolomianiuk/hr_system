@@ -5,6 +5,7 @@
     width:100%;height:100%;
     position:fixed;
     opacity:0.7;
+    z-index:2;
 }
 
 .ModelViewStudent {
@@ -15,6 +16,7 @@
     top: 111px;
     left: 36%;
     border-radius: 35px;
+    z-index:2;
 }
 .ModelStatus{
     width:400px;
@@ -23,23 +25,22 @@
     position:fixed;
     top:111px;
     left:36%;
+    border-radius: 39px;
+    z-index: 2;
+    height: 195px;
 }
 
 .ModelViewDays{
     width:400px;
-    height:400px;
     background-color: #ffffff;
     display:none;
     position:fixed;
     top:111px;
     left:500px;
+    z-index:2;
 }
 
-.TableNew{
-    overflow-y: scroll!important;
-    height: 400px!important;
-    overflow-x: hidden!important;
-}
+
 
 #StudentTable{
     margin-top:91px;
@@ -90,12 +91,14 @@
     position: fixed;
     top: 111px;
     left: 36%;
+    z-index:2;
 }
 
 .QuestionInModal{
     margin-left: 25px;
     font-size: 15pt;
     color: #66cc33;
+    z-index:2;
 }
 
 .AnswerInModal{
@@ -115,4 +118,65 @@
 .TextColorBlack {
     color: black;
     font-weight: bold;
+}
+
+.back{
+    height: 35px;
+    float: right;
+    width: 35px;
+}
+
+.tip{
+    height: 35px;
+    width: 35px;
+    float: right;
+    margin-right: 25px;
+}
+
+.ModalHelp{
+    width: 500px;
+    background-color: #ffffff;
+    display: none;
+    position: fixed;
+    top: 111px;
+    left: 36%;
+    z-index:2;
+}
+
+.StatusHelp{
+    text-align:left;
+}
+
+.Status_search{
+    text-align:left;
+}
+
+.HelpBlock{
+    margin-top:15px;
+    margin-left:15px;
+    margin-right:15px;
+    margin-bottom:15px;
+    overflow-x:hidden;
+    overflow-y: scroll;
+    height:500px;
+}
+
+.closeModal{
+    float:right;
+}
+
+#IsMandatorySolo{
+    margin-top:5px;
+}
+#isView{
+    margin-top:5px;
+}
+
+.sizeButton{
+    margin-left: 15px;
+    margin-top: 2px;
+}
+.Role_page{
+    text-decoration:none;
+    color:white;
 }

@@ -3,10 +3,8 @@ package ua.netcracker.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -14,7 +12,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import ua.netcracker.model.entity.*;
 import ua.netcracker.model.service.*;
 import ua.netcracker.model.service.date.DateService;
-import ua.netcracker.model.service.impl.*;
+import ua.netcracker.model.service.impl.AnswerServiceImpl;
+import ua.netcracker.model.service.impl.CandidateServiceImpl;
+import ua.netcracker.model.service.impl.CourseSettingServiceImpl;
+import ua.netcracker.model.service.impl.QuestionServiceImpl;
+import ua.netcracker.model.utils.JsonParsing;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -409,6 +411,36 @@ public class AdminController {
         return new ResponseEntity<>(report, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/service/createMainReport", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<Collection<Collection<String>>> createMainReport(@RequestParam String courseId,@RequestParam String status) {
+        Collection<Collection<String>> report = reportService.getReportByQuery(Integer.valueOf(courseId), status);
+        if (report.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(report, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/service/getCourses", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<Collection<Integer>> getCourses() {
+        Collection<Integer> coursesId = reportService.getCourses();
+        if (coursesId.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(coursesId, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/service/getStatuses", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<Map<Integer, String>> getStatuses() {
+        Map<Integer, String> statuses = reportService.getStatuses();
+        if (statuses.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(statuses, HttpStatus.OK);
+    }
+
     @RequestMapping(value = "/service/getReportInXlSX", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<byte[]> getReportInXlSX() {
@@ -481,17 +513,48 @@ public class AdminController {
 
     @RequestMapping(value = "/paginationCandidate", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<Collection<Candidate>> paginationCandidate(
+    public ResponseEntity<List<Candidate>> paginationCandidate(
             @RequestParam String elementPage,
-            @RequestParam String fromElement) {
+            @RequestParam String fromElement,
+            @RequestParam String answersJsonString,
+            @RequestParam String status1,
+            @RequestParam String status2) {
 
-        Collection<Candidate> candidates = candidateService.pagination(
-                Integer.valueOf(elementPage),
-                Integer.valueOf(fromElement));
-        if (candidates.isEmpty()) {
-            return new ResponseEntity<Collection<Candidate>>(HttpStatus.BAD_REQUEST);
+        Collection<Answer> answers = JsonParsing.parseJsonString(answersJsonString);
+
+        List<Answer> selected = new ArrayList<>();
+        for (Answer answer : answers) {
+            if (!(answer.getValue().isEmpty())) {
+                selected.add(answer);
+            }
         }
-        return ResponseEntity.ok(candidates);
+        List<Candidate> filtered = (List<Candidate>) candidateService.filterCandidates(selected, Integer.parseInt(elementPage), Integer.parseInt(fromElement));
+
+        if (filtered.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+
+        if (filtered.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } else if (!status1.equals("Select status")) {
+            Status st = Status.valueOf(status1);
+            for (Candidate candidate : filtered) {
+                candidateService.updateCandidateStatus(candidate.getId(), st.getId());
+            }
+        }
+
+        if (!status2.equals("Select status")) {
+            List<Candidate> students = (List<Candidate>) candidateService.getAllCandidates();
+            if (filtered.size() < students.size()) {
+                Status st2 = Status.valueOf(status2);
+                students.removeAll(filtered);
+                for (Candidate student : students) {
+                    candidateService.updateCandidateStatus(student.getId(), st2.getId());
+                }
+            }
+        }
+
+          return new ResponseEntity<>(filtered, HttpStatus.OK);
     }
 
 
@@ -507,10 +570,20 @@ public class AdminController {
     }
 
     @RequestMapping(value = "/getRows", method = RequestMethod.GET)
-    public ResponseEntity<Integer> getRows() {
-        int rows = candidateService.getRows();
-        if (rows==0) {
-            return new ResponseEntity<Integer>(HttpStatus.BAD_REQUEST);
+    public ResponseEntity<Long> getRows(@RequestParam String answersJsonString) {
+
+        Collection<Answer> answers = JsonParsing.parseJsonString(answersJsonString);
+
+        List<Answer> selected = new ArrayList<>();
+        for (Answer answer : answers) {
+            if (!(answer.getValue().isEmpty())) {
+                selected.add(answer);
+            }
+        }
+
+        Long rows = candidateService.getRows(selected);
+        if (rows == 0) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         return ResponseEntity.ok(rows);
     }
@@ -521,6 +594,7 @@ public class AdminController {
             @RequestParam String fromElement,
             @RequestParam String find
     ) {
+
 
         Collection<Candidate> candidates = candidateService.findCandidate(
                 Integer.valueOf(elementPage),
@@ -601,4 +675,16 @@ public class AdminController {
         sendEmailService.sendEmailToStudentsByStatus(Status.valueOf(candidateStatus));
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+
+    @RequestMapping(value = "/getAllCourseId", method = RequestMethod.GET)
+    public ResponseEntity<Collection<Integer>> getAllCourseId() {
+
+        Collection<Integer> courseSettings = courseSettingService.getAllCourseId();
+        if (courseSettings == null) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(courseSettings, HttpStatus.OK);
+    }
+
 }
