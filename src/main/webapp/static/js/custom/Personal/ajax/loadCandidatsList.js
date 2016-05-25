@@ -1,14 +1,16 @@
 
 function loadCandidatesList() {
+    var listSize = 10;
     $.ajax({
-        url: baseUrl + "/hr/service/getCandidatsList",
+        url: baseUrl + "/hr/service/getCandidateCount",
         type: "GET",
         dataType: "json",
         contentType: 'application/json',
         mimeType: 'application/json',
         success:  function(data) {
-            addInTableCandidates(data);
-            initTrigger();
+            for (var i=0; i<((parseInt(data/listSize))+1); i++){
+                getCandidatsListWithTo((i*listSize), listSize);
+            }
             $('.loading').attr('style', 'display: none');
         },
         error: function (data) {
@@ -16,6 +18,29 @@ function loadCandidatesList() {
         }
     });
 }
+
+function getCandidatsListWithTo(offset, limit){
+    $.ajax({
+        url: baseUrl + "/hr/service/getCandidatsListWithTo",
+        type: "GET",
+        data: {
+            'offset' : offset,
+            'limit' : limit
+        },
+        dataType: "json",
+        contentType: 'application/json',
+        mimeType: 'application/json',
+        success:  function(data) {
+            console.log(data);
+            addInTableCandidates(data);
+            initTrigger();
+        },
+        error: function (data) {
+            console.log(data);
+        }
+    });
+}
+
 var statusAllList;
 function getAllStatus() {
     $.ajax({

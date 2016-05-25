@@ -51,7 +51,10 @@
 
 
 <body class="nav-md">
-
+<div class="modals">
+  <!-- Modal -->
+  <%@ include file="include/uploadPhotoModal.jsp" %>
+</div>
 <div class="container body">
 
 
@@ -66,15 +69,7 @@
         <div class="clearfix"></div>
 
         <!-- menu prile quick info -->
-        <div class="profile">
-          <div class="profile_pic">
-            <img src="<c:url value="/static/admin/images/img.jpg"/>" alt="..." class="img-circle profile_img">
-          </div>
-          <div class="profile_info">
-            <span>Welcome,</span>
-            <h2><sec:authentication property="principal.name"/>&nbsp;<sec:authentication property="principal.surname"/></h2>
-          </div>
-        </div>
+        <%@ include file="include/profilePicInf.jsp" %>
         <!-- /menu prile quick info -->
 
         <br />
@@ -116,7 +111,7 @@
           <ul class="nav navbar-nav navbar-right">
             <li class="">
               <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                <img src="<c:url value="/static/admin/images/img.jpg"/>" alt="">
+                <img src="<c:url value="${photo}"/>" alt="">
                 <span class=" fa fa-angle-down"></span>
               </a>
               <ul class="dropdown-menu dropdown-usermenu animated fadeInDown pull-right">
@@ -249,7 +244,10 @@
   <div class="clearfix"></div>
   <div id="notif-group" class="tabbed_notifications"></div>
 </div>
-
+<script src="<c:url value="/static/js/datatables/jquery.dataTables.min.js"/>"></script>
+<script src="<c:url value="/static/js/datatables/dataTables.bootstrap.js"/>"></script>
+<script src="<c:url value="/static/js/datatables/dataTables.buttons.min.js"/>"></script>
+<script src="<c:url value="/static/js/datatables/buttons.bootstrap.min.js"/>"></script>
 <script src="<c:url value="/static/admin/js/bootstrap.min.js"/>"></script>
 <script src="<c:url value="/static/admin/js/AjaxForPersonal.js"/>"></script>
 
@@ -276,6 +274,7 @@
 <script src="<c:url value="/static/admin/js/datatables/vfs_fonts.js"/>"></script>
 <script src="<c:url value="/static/admin/js/datatables/buttons.html5.min.js"/>"></script>
 <script src="<c:url value="/static/admin/js/datatables/buttons.print.min.js"/>"></script>
+
 <%--<script src="<c:url value="/static/admin/js/datatables/dataTables.fixedHeader.min.js"/>"></script>--%>
 <%--<script src="<c:url value="/static/admin/js/datatables/dataTables.keyTable.min.js"/>"></script>--%>
 <%--<script src="<c:url value="/static/admin/js/datatables/dataTables.responsive.min.js"/>"></script>--%>

@@ -392,6 +392,36 @@ public class AdminController {
         return new ResponseEntity<>(report, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/service/createMainReport", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<Collection<Collection<String>>> createMainReport(@RequestParam String courseId,@RequestParam String status) {
+        Collection<Collection<String>> report = reportService.getReportByQuery(Integer.valueOf(courseId), status);
+        if (report.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(report, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/service/getCourses", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<Collection<Integer>> getCourses() {
+        Collection<Integer> coursesId = reportService.getCourses();
+        if (coursesId.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(coursesId, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/service/getStatuses", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<Map<Integer, String>> getStatuses() {
+        Map<Integer, String> statuses = reportService.getStatuses();
+        if (statuses.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(statuses, HttpStatus.OK);
+    }
+
     @RequestMapping(value = "/service/getReportInXlSX", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<byte[]> getReportInXlSX() {
