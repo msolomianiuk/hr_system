@@ -35,7 +35,7 @@ $(document).ready(function () {
             dataType: "json",
             contentType: 'application/json',
             mimeType: 'application/json',
-            success: AlertSuccess,
+            success: AlertSuccess2,
             error: function (data) {
                 // console.log(data);
             }
@@ -85,9 +85,10 @@ $(document).ready(function () {
             contentType: 'application/json',
             mimeType: 'application/json',
             success: addAddress,
-            error: function (data) {
-                // console.log(data);
-            }
+            error: AlertSuccess,
+            //     function (data) {
+            //     // console.log(data);
+            // }
         });
 
     });
@@ -105,9 +106,10 @@ $(document).ready(function () {
             contentType: 'application/json',
             mimeType: 'application/json',
             success: updateAddress,
-            error: function (data) {
+            error: AlertSuccess,
+                // function (data) {
                 // console.log(data);
-            }
+            // }
         });
 
     });
@@ -173,7 +175,7 @@ $(document).ready(function () {
         var id  = parseInt(($(this).attr("daysInterview_id")));
 
         $.ajax({
-            url: location_origin + "/admin/getInterviewDetailsById",
+            url: location_origin + "/admin/getInterviewDetailsAddressById",
             type: "GET",
             dataType: "json",
             data:{'id':id},
@@ -200,7 +202,7 @@ $(document).ready(function () {
             contentType: 'application/json',
             mimeType: 'application/json',
             success: updateAddress,
-            error: AlertError
+            error: AlertSuccess,
         });
 
     });
@@ -299,7 +301,7 @@ function getAddressSolo(data){
 }
 
 function addAddress(data){
-    alert("U add address");
+    alert("Success");
     $("#AddressAdd").val("");
     $("#RoomCapacity").val("");
     $("#TableAddress").empty();
@@ -317,7 +319,7 @@ function addAddress(data){
 }
 
 function updateAddress(data){
-    alert("Update is success")
+    alert("Success")
 
     $("#TableAddressFull").empty();
     $.ajax({
@@ -339,11 +341,17 @@ function AlertError(data){
 }
 
 function AlertSuccess(data){
-    alert(data.body);
+    alert(data.responseText);
+    // dataAlert2=data;
 }
 
 function getCourseID(data){
     CurseID = data;
+}
+
+function AlertSuccess2(data){
+    alert(data.body);
+    // dataAlert2=data;
 }
 
 function getSettingInterviewDays(data){
@@ -399,11 +407,11 @@ function getInterviewsSolo (data){
     $(".ModelViewDays").empty();
 
 
-    $(".ModelViewDays").append('<h3 style="text-align:center;">'+data.interviewDate+'</h3>');
+    $(".ModelViewDays").append('<h3 style="text-align:center;">'+data.date+'</h3>');
     $(".ModelViewDays").append('<div class="col-md-12 col-lg-12 col-sm-12 col-xs-12">'+
     '<div class="form-group">'+
     '<select id="SelectorAddress">'+
-    '<option selected>Address</selected>'+
+    '<option selected>'+ data.address+'</selected>'+
     '<select>'+
     '</div>'+
     '<div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">'+
@@ -425,8 +433,8 @@ function getInterviewsSolo (data){
         $("#StartInterview").mask("99:99");
         $("#EndInterview").mask("99:99");
     
-    $("#StartInterview").attr("value", data.startTime);
-    $("#EndInterview").attr("value", data.endTime);
+    $("#StartInterview").attr("value", data.start_time);
+    $("#EndInterview").attr("value", data.end_time);
 
     $.ajax({
         url: location_origin + "/admin/address_list",

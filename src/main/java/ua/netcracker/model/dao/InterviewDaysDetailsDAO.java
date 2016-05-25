@@ -11,4 +11,5 @@ public interface InterviewDaysDetailsDAO extends DAO<InterviewDaysDetails> {
     boolean insertDate(InterviewDaysDetails interviewDaysDetails);
 
     InterviewDaysDetails findByDate(String Date);
+
 }

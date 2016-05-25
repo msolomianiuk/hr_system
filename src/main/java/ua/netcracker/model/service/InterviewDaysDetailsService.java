@@ -32,6 +32,8 @@ public interface InterviewDaysDetailsService {
 
     public String sortCandidateToDays(CourseSetting courseSetting);
 
+    public boolean timeIsFree(InterviewDaysDetails interviewDaysDetails);
+
     String getStartTimeofInterview(int id);
 
     String getEndTimeofInterview(int id);
@@ -43,4 +45,6 @@ public interface InterviewDaysDetailsService {
     InterviewDaysDetails setInterviewDateDetails(String id,String startTime, String endTime,int addressId);
 
     List<Map<String, Object>> findAllInterviewDetailsAddress();
+
+    Map<String, Object> findInterviewDetailsAddressById(Integer id);
 }

@@ -23,6 +23,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -42,6 +45,14 @@ public class InterviewDaysDetailsServiceImpl implements InterviewDaysDetailsServ
                     " ON hr_system.interview_days_details.address_id=hr_system.address.id" +
                     " WHERE course_id = ? " +
                     " ORDER BY hr_system.interview_days_details.date ";
+    private static final String INTERVIEW_DETAILS_ADDRESS_BY_ID_SQL =
+            "SELECT hr_system.interview_days_details.id, date, start_time, end_time, hr_system.address.address, hr_system.address.room_capacity, count_students, count_personal" +
+                    " FROM hr_system.interview_days_details" +
+                    " LEFT JOIN hr_system.address" +
+                    " ON hr_system.interview_days_details.address_id=hr_system.address.id" +
+                    " WHERE hr_system.interview_days_details.id = ? " +
+                    " ORDER BY hr_system.interview_days_details.date ";
+
     private static final String REMOVE_SQL_BY_COURSE_ID = "DELETE FROM \"hr_system\".interview_days_details WHERE course_id = ?";
 
     @Autowired
@@ -71,22 +82,13 @@ public class InterviewDaysDetailsServiceImpl implements InterviewDaysDetailsServ
     CourseSettingService courseSettingService;
 
     public InterviewDaysDetails setInterviewDateDetails(String id, String startTime, String endTime, int addressId) {
-        if (!dateService.validTwoTimes(startTime, endTime)) {
-            startTime = null;
-            endTime = null;
-        }
         InterviewDaysDetails interviewDaysDetails = new InterviewDaysDetails();
         interviewDaysDetails.setId(Integer.parseInt(id));
         interviewDaysDetails.setStartTime(startTime);
         interviewDaysDetails.setEndTime(endTime);
         interviewDaysDetails.setAddressId(addressId);
-        if (interviewDaysDetails.getStartTime() != null && interviewDaysDetails.getEndTime() != null) {
-            interviewDaysDetails.setCountStudents(dateService.quantityStudent(interviewDaysDetails));
-            interviewDaysDetails.setCountPersonal(dateService.getPersonal(interviewDaysDetails));
-            if (addressService.findById(addressId).getRoomCapacity() < interviewDaysDetails.getCountPersonal() * 2) {
-                interviewDaysDetails.setCountPersonal(-1);
-            }
-        }
+        interviewDaysDetails.setCountStudents(dateService.quantityStudent(interviewDaysDetails));
+        interviewDaysDetails.setCountPersonal(dateService.getPersonal(interviewDaysDetails));
         return interviewDaysDetails;
     }
 
@@ -172,7 +174,8 @@ public class InterviewDaysDetailsServiceImpl implements InterviewDaysDetailsServ
                 return "Success";
 
             } else {
-                return "Limit Exceeded candidates";
+                return "Limit Exceeded candidates! " + "You have "+ countFree + " free places, but you want add "
+                        + candidateList.size()+ " candidates";
             }
         } else {
             return "Please filled all date settings";
@@ -190,6 +193,32 @@ public class InterviewDaysDetailsServiceImpl implements InterviewDaysDetailsServ
         }
         return  isFilled;
     }
+
+    public boolean timeIsFree(InterviewDaysDetails interviewDaysDetails){
+        interviewDaysDetails.setInterviewDate(findById(interviewDaysDetails.getId()).getInterviewDate());
+        List<Map<String, Object>> listInterviewDate = findAllInterviewDetailsAddress();
+        LocalTime startInterview = LocalTime.parse(interviewDaysDetails.getStartTime());
+        LocalTime endInterview = LocalTime.parse(interviewDaysDetails.getEndTime());
+        LocalTime compareStartTime;
+        LocalTime compareEndTime;
+        boolean isFree = true;
+        for (Map<String, Object> row :
+                listInterviewDate) {
+            if (row.get("date").equals(interviewDaysDetails.getInterviewDate()))
+                if (row.get("address")!=null)
+                if (row.get("address").equals(addressService.findById(interviewDaysDetails.getAddressId()).getAddress())) {
+                    compareStartTime = LocalTime.parse(row.get("start_time").toString());
+                    compareEndTime = LocalTime.parse(row.get("end_time").toString());
+                    if ((startInterview.isAfter(compareStartTime)& startInterview.isBefore(compareEndTime))|
+                            (endInterview.isAfter(compareStartTime)& endInterview.isBefore(compareEndTime)) |
+                                    (startInterview.isBefore(compareStartTime) & endInterview.isAfter(compareEndTime))){
+                        isFree = false;
+                }
+        }
+    }
+        return isFree;
+    }
+
 
     @Override
     public String getStartTimeofInterview(int id) {
@@ -219,5 +248,9 @@ public class InterviewDaysDetailsServiceImpl implements InterviewDaysDetailsServ
 
     public List<Map<String, Object>> findAllInterviewDetailsAddress() {
         return jdbcTemplateFactory.getJdbcTemplate(dataSource).queryForList(INTERVIEW_DETAILS_ADDRESS_SQL,courseSettingService.getLastSetting().getId());
+    }
+
+    public Map<String, Object> findInterviewDetailsAddressById(Integer id) {
+        return jdbcTemplateFactory.getJdbcTemplate(dataSource).queryForMap(INTERVIEW_DETAILS_ADDRESS_BY_ID_SQL,id);
     }
 }

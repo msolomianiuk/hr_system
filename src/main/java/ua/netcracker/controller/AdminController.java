@@ -191,6 +191,7 @@ public class AdminController {
         return ResponseEntity.ok(interviewDaysDetailsService.findAllInterviewDetailsAddress());
     }
 
+
     @RequestMapping(value = "/getInterviewDetailsByDate", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<InterviewDaysDetails> getInterviewDetailsByDate(
@@ -217,6 +218,14 @@ public class AdminController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+    @RequestMapping(value = "/getInterviewDetailsAddressById", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> getInterviewDetailsAddressById(
+            @RequestParam String id
+    ) {
+        return ResponseEntity.ok(interviewDaysDetailsService.findInterviewDetailsAddressById(Integer.parseInt(id)));
+    }
+
     @RequestMapping(value = "/interview_details_update", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity updateInterviewDaysDetails(
@@ -231,20 +240,23 @@ public class AdminController {
                 end_time,
                 addressService.findByAddress(address_id).getId()
         );
-        if (interviewDaysDetails.getCountPersonal()==-1){
+        if (dateService.validTwoTimes(start_time, end_time)) {
+//            if (interviewDaysDetailsService.timeIsFree(interviewDaysDetails)) {
+                if (addressService.findById(interviewDaysDetails.getAddressId()).getRoomCapacity() > interviewDaysDetails.getCountPersonal() * 2) {
+                    interviewDaysDetailsService.update(interviewDaysDetails);
+                    return ResponseEntity
+                            .status(HttpStatus.ACCEPTED).body(ResponseEntity.ok("Success"));
+                } else {
+                    return ResponseEntity
+                            .status(HttpStatus.BAD_REQUEST).body("This room can not accommodate all the people");
+                }
+//            } else
+//                return ResponseEntity
+//                        .status(HttpStatus.BAD_REQUEST).body("This room at this time is busy");
+        } else
             return ResponseEntity
-                    .status(HttpStatus.FORBIDDEN)
-                    .body("This room can not accommodate all the people");
-        }else {
-            if (interviewDaysDetails.getStartTime() != null && interviewDaysDetails.getEndTime() != null) {
-                interviewDaysDetailsService.update(interviewDaysDetails);
-                return ResponseEntity.ok(interviewDaysDetails);
-            } else {
-                return ResponseEntity
-                        .status(HttpStatus.FORBIDDEN)
-                        .body("Please, enter the valid time");
-            }
-        }
+                    .status(HttpStatus.BAD_REQUEST).body("Please, enter valid time!");
+
     }
 
     @RequestMapping(value = "/date_list", method = RequestMethod.GET)
@@ -292,37 +304,44 @@ public class AdminController {
 
     @RequestMapping(value = "/address_insert", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<Address> setAddress(
-            @RequestParam String address,
+    public ResponseEntity setAddress(
+           @RequestParam String address,
             @RequestParam String roomCapacity
     ) {
-        Address addressEntity = new Address();
-        addressEntity.setAddress(address);
-        addressEntity.setRoomCapacity(Integer.parseInt(roomCapacity));
-        addressService.insert(addressEntity);
-        if (addressEntity == null) {
-            return ResponseEntity.accepted().body(addressEntity);
+        try {
+            Address addressEntity = new Address();
+            addressEntity.setAddress(address);
+            addressEntity.setRoomCapacity(Integer.parseInt(roomCapacity));
+            addressService.insert(addressEntity);
+        } catch (NumberFormatException e){
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST).body("Room capacity must be number!");
         }
-        return ResponseEntity.ok(addressEntity);
+        return ResponseEntity
+                .status(HttpStatus.ACCEPTED).body(ResponseEntity.ok("Success!"));
     }
+
 
     @RequestMapping(value = "/address_update", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<Address> updateAddress(
+    public ResponseEntity updateAddress(
             @RequestParam String id,
             @RequestParam String address,
             @RequestParam String roomCapacity
     ) {
-        Address addressEntity = new Address(
-                Integer.parseInt(id),
-                address,
-                Integer.parseInt(roomCapacity)
-        );
-        addressService.saveOrUpdate(addressEntity);
-        if (addressEntity == null) {
-            return ResponseEntity.accepted().body(addressEntity);
+        try {
+            Address addressEntity = new Address(
+                    Integer.parseInt(id),
+                    address,
+                    Integer.parseInt(roomCapacity)
+            );
+            addressService.saveOrUpdate(addressEntity);
+        }catch (NumberFormatException e){
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST).body("Room capacity must be number!");
         }
-        return ResponseEntity.ok(addressEntity);
+        return ResponseEntity
+                .status(HttpStatus.ACCEPTED).body(ResponseEntity.ok("Success!"));
     }
 
     @RequestMapping(value = "/address_delete", method = RequestMethod.GET)
