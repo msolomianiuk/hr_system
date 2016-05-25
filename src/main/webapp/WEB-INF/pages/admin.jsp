@@ -157,7 +157,7 @@
             <!-- /top tiles -->
             <div class="row">
                 <div class="col-md-12 col-lg-12 col-xs-12 col-sm-12">
-                    <img src="<c:url value="/static/admin/images/Netcracker.png"/>" width="1000px" height="400px" alt="..." />
+                    <img class="netcacker-img" src="<c:url value="/static/admin/images/Netcracker.png"/>" width="100%" alt="..." />
                 </div>
             </div>
             <!-- footer content -->

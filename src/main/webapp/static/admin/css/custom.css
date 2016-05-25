@@ -5401,3 +5401,15 @@ ul.notifications {
 img.candidate-image{
   width: 100%;
 }
+
+img.netcacker-img{
+  width: 100%;
+}
+
+
+@media only screen and (max-device-width: 600px) {
+  #StudentTablem, #datatable-ba tr, #datatable-hr tr, #datatable-dev tr, #datatableIn{
+    font-size: 0.5em;
+  }
+
+}

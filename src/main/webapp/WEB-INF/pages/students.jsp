@@ -242,7 +242,6 @@
                                     <th>Status</th>
                                     <th>Name</th>
                                     <th>Surname</th>
-                                    <th>Patronymic</th>
                                     <th>email</th>
                                     <th>Editing</th>
                                 </tr>
