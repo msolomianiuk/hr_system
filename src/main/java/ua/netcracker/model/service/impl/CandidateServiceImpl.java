@@ -54,7 +54,7 @@ public class CandidateServiceImpl implements CandidateService {
     private InterviewResultDAO interviewResultDAO;
     @Autowired
     private SendEmailService sendEmailService;
-    
+
     @Override
     public Candidate getCandidateById(Integer id) {
         Candidate candidate = candidateDAO.findByCandidateId(id);
@@ -302,12 +302,31 @@ public class CandidateServiceImpl implements CandidateService {
                                         String recomendation,
                                         String comment
     ) {
-        InterviewResult interviewResult = new InterviewResult();
-        interviewResult.setComment(comment);
-        interviewResult.setInterviewerId(interviewerId);
-        interviewResult.setMark(mark);
-        interviewResult.setRecommendation(Recommendation.valueOf(recomendation));
-        return interviewResultDAO.createInterviewResult(candidateId, interviewResult);
+        boolean flag = true;
+        ArrayList<InterviewResult> interviewResults = (ArrayList<InterviewResult>) interviewResultDAO.findResultsByCandidateId(candidateId);
+        if(interviewResults.size()!=0){
+           for(int i=0;i<interviewResults.size();i++){
+               User interviewer = interviewResults.get(i).getInterviewer();
+               User newInterviewer = userDAO.find(interviewerId);
+
+               for(Role role:interviewer.getRoles()){
+                   if(!newInterviewer.getRoles().contains(role)){
+                       flag = true;
+                   }else{
+                       flag = false;
+                   }
+               }
+           }
+        }
+        if(flag == true){
+            InterviewResult interviewResult = new InterviewResult();
+            interviewResult.setComment(comment);
+            interviewResult.setInterviewerId(interviewerId);
+            interviewResult.setMark(mark);
+            interviewResult.setRecommendation(Recommendation.valueOf(recomendation));
+            return interviewResultDAO.createInterviewResult(candidateId, interviewResult);
+        }
+        return flag;
     }
 
     @Override
