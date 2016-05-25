@@ -48,6 +48,7 @@
 
     <script src="<c:url value="/static/admin/js/jquery.min.js"/>"></script>
     <script src="<c:url value="/static/admin/js/report/jquery.validate.min.js"/>"></script>
+    <script src="<c:url value="/static/admin/js/textarea/autosize.min.js"/>"></script>
     <script src="<c:url value="/static/admin/js/nprogress.js"/>"></script>
 </head>
 

@@ -15,6 +15,7 @@ $(document).ready(function () {
         var textTemplate = $(".email_text");
         textTemplate.empty();
         textTemplate.append('<h4>Template Text</h4> <textarea class = "form-control col-md-7 col-xs-12 template" name ="template" row="3">' + templates[templateIndex].template + '</textarea>');
+        autosize($('textarea'));
         var textSubject = $(".email_subject");
         textSubject.empty();
         textSubject.append('<h4>Subject</h4> <input type="text" class = "form-control col-md-7 col-xs-12 description" name = "description" value="' + templates[templateIndex].description + '"></p>');
@@ -68,7 +69,6 @@ function generateEmailTemplateList(data) {
     }
     $(".show_button").on("click", function () {
         templateIndex = $(this).val();
-        console.log(templateIndex);
         showModal();
     });
 }

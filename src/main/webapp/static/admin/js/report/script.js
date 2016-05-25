@@ -60,6 +60,7 @@ $(document).ready(function () {
                 report.show = true;
                 report.id = -1;
                 ajax("service/setReportQuery", function () {
+                    getAllReports();
                 }, function () {
                 }, report);
                 reportIndex = reports.push(report) - 1;
@@ -80,6 +81,7 @@ $(document).ready(function () {
         var textQuery = $(".dev_panel_query");
         textQuery.empty();
         textQuery.append('<label class="control-label col-md-3 col-sm-3 col-xs-12"> Query</label> <textarea class = "form-control col-md-7 col-xs-12 query" row="3" name="query"></textarea>');
+        autosize($('textarea'));
         var textDescription = $(".dev_panel_description");
         textDescription.empty();
         textDescription.append('<label class="control-label col-md-3 col-sm-3 col-xs-12"> Brief Description</label><input type="text" class = "form-control col-md-7 col-xs-12 description" name = "description" value="">');
@@ -91,7 +93,7 @@ $(document).ready(function () {
     });
 });
 
-function init() {
+function getAllReports(){
     ajax("service/getReportQuery", function (data) {
         reports = data;
         for (var index in reports) {
@@ -100,6 +102,10 @@ function init() {
         generateReportsList(reports);
         generateDeveloperReportsList(reports);
     });
+}
+
+function init() {
+    getAllReports();
     ajax("service/getCourses", function (data) {
         generateCourseList(data);
     });
@@ -188,6 +194,7 @@ function showReport(data) {
         report.append(table);
     }else{
         report.html("Empty");
+        $('.export_button').css({'display': 'none'});
     }
 }
 
