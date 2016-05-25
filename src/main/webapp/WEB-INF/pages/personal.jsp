@@ -225,19 +225,25 @@
 
 </div>
 <div id="hider"></div>
-<div class="ModalPersonal">
-  <div class="col-md-4 col-lg-4 col-sm-4 col-xs-4">
-    <select id="Status" class="form-control">
-      <option value="" selected>Choose to change Role</option>
-      <option value="ROLE_ADMIN">ROLE_ADMIN</option>
-      <option value="ROLE_HR">ROLE_HR</option>
-      <option value="ROLE_BA">ROLE_BA</option>
-      <option value="ROLE_DEV">ROLE_DEV</option>
-      <option value="ROLE_STUDENT">ROLE_STUDENT</option>
-    </select>
-    <button type="button" id="UpdateStatus" class="btn btn-success">Click to change</button>
+<div class="ModalPersonal center">
+  <div class="RoleAdding">
+  <h3>Change role</h3>
+    <div class="col-md-6 col-lg-6 col-sm-6 col-xs-6">
+      <select id="Status" class="form-control">
+        <option value="" selected>Choose to change Role</option>
+        <option value="ROLE_ADMIN">ROLE_ADMIN</option>
+        <option value="ROLE_HR">ROLE_HR</option>
+        <option value="ROLE_BA">ROLE_BA</option>
+        <option value="ROLE_DEV">ROLE_DEV</option>
+        <option value="ROLE_STUDENT">ROLE_STUDENT</option>
+      </select>
+      </div>
+    <div class="col-md-4 col-lg-4 col-sm-4 col-xs-4">
+      <button type="button" id="UpdateStatus" class="btn btn-success">Click to change</button>
+    </div>
   </div>
 </div>
+
 <div id="custom_notifications" class="custom-notifications dsp_none">
   <ul class="list-unstyled notifications clearfix" data-tabbed_notifications="notif-group">
   </ul>

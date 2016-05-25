@@ -217,7 +217,7 @@
                                 </div>
                                 <div class="panel-body" id="main-setting2">
                                     <div class="col-md-4 col-sm-12 col-xs-12 col-lg-4">
-                                        <p>Choithe role:</p>
+                                        <p>Choose role:</p>
                                         <select class="selectpicker" id="PersonalRole">
                                             <option>Admin</option>
                                             <option>BA</option>

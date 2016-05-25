@@ -1,6 +1,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -34,6 +35,10 @@
         <!-- page content -->
         <div class="right_col" role="main">
             <!-- top tiles -->
+            <security:authorize access="hasAnyRole('ROLE_ADMIN')" var="isUserHr"/>
+            <c:if test="${isUserHr}">
+                <button type="button" class="btn btn-sm btn-info sizeButton"><a class="Role_page" href="../admin">To admin page</a></button>
+            </c:if>
             <div class="x_panel">
                 <div class="x_title">
                     <h2> Interview Page </h2>

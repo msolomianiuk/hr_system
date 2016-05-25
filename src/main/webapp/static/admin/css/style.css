@@ -92,6 +92,8 @@
     top: 111px;
     left: 36%;
     z-index:2;
+    border-radius:38px;
+    height: 122px;
 }
 
 .QuestionInModal{
@@ -160,7 +162,12 @@
     overflow-y: scroll;
     height:500px;
 }
-
+.RoleAdding{
+    margin-top:15px;
+    margin-left:15px;
+    margin-right:15px;
+    margin-bottom:15px;
+}
 .closeModal{
     float:right;
 }
@@ -179,4 +186,8 @@
 .Role_page{
     text-decoration:none;
     color:white;
+}
+
+.center{
+    text-align: center;
 }

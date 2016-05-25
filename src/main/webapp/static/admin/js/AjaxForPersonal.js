@@ -126,5 +126,6 @@ function getCandidateId(data){
 }
 
 function functionForUpdateRole(data){
+    location.reload();
     console.log("Update Role");
 }
