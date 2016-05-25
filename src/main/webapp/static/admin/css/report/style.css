@@ -1,76 +1,41 @@
 body {
     overflow-x: scroll;
 }
-.report_form {
-    color: #73879C;
-    width: 18%;
-    float: left;
-    margin-top: 5px;
+
+.modal-lg {
+    display: inline-table;
+    margin: 30px auto;
+    overflow: hidden;
 }
 
-.report_form label {
-    height: 35px;
+.modal {
     text-align: center;
-    display: block;
-    background: #ccc;
-    padding: 5px;
-    border-radius: 3px;
+}
+.export_button{
+    margin-bottom: 5px;
+    color:#fff;
+}
+.btn-default{
+    margin-bottom: 0;
+}
+.error{
+    color: #f00;
+    float: left;
+}
+.btn-create{
+    margin-left:10px;
 }
 
-.report_form label:hover {
-    background-color: #1ABB9C;
+/*#btn-close{*/
+    /*margin-bottom: 0;*/
+/*}*/
+#btn-close1{
+    margin-bottom: 0;
 }
 
-.report_edit {
-    margin: 15px auto;
-    float:left;
+.btn-dark{
+    width: 95%;
 }
-
-
-.report_edit input {
-    margin-bottom: 15px;
-}
-
-
-.report_edit {
-    display: none;
-}
-
-.not_empty_form{
-    display: none;
-}
-
-.show_table{
-    display:none;
-}
-
-.save_buttons{
-    display:none;
-    position: absolute;
-    bottom: 27px;
-    right: 395px;
-}
-
-.main_form {
-    margin-left: 50px;
-}
-.btn {
-    display: inline-block;
-    background-color: #1ABB9C;
-    border-color: mintcream;
-}
-.create_button{
-    float:left;
-    margin-left: 150px;
-}
-.form-group {
-    margin-top: 5px;
-    margin-bottom: 10px;
-    float: right;
-    width: 80%;
-}
-
-.text_description, .text_query{
-    width: 45%;
-    margin-bottom: 10px;
+h4{
+    clear: both;
 }
