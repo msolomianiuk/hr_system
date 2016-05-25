@@ -310,11 +310,40 @@ public class CandidateServiceImpl implements CandidateService {
                User newInterviewer = userDAO.find(interviewerId);
 
                for(Role role:interviewer.getRoles()){
-                   if(!newInterviewer.getRoles().contains(role)){
-                       flag = true;
-                   }else{
-                       flag = false;
-                   }
+                  switch (role){
+                      case ROLE_BA:{
+                          if (!newInterviewer.getRoles().contains(Role.ROLE_BA)){
+                              if(!newInterviewer.getRoles().contains(Role.ROLE_HR)){
+                                  flag = true;
+                              }else{
+                                  flag = false;
+                              }
+                          }else{
+                              flag = false;
+                          }
+                          break;
+                      }
+                      case ROLE_HR:{
+                          if (!newInterviewer.getRoles().contains(Role.ROLE_HR)){
+                              if(!newInterviewer.getRoles().contains(Role.ROLE_BA)){
+                                  flag = true;
+                              }else{
+                                  flag = false;
+                              }
+                          }else{
+                              flag = false;
+                          }
+                          break;
+                      }
+                      case ROLE_DEV:{
+                          if (!newInterviewer.getRoles().contains(Role.ROLE_BA)){
+                              flag = true;
+                          }else{
+                              flag = false;
+                          }
+                          break;
+                      }
+                  }
                }
            }
         }
