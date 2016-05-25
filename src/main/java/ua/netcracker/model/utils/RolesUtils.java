@@ -45,5 +45,4 @@ public class RolesUtils {
         }
         return url;
     }
-
 }

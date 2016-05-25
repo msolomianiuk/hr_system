@@ -201,18 +201,18 @@
               <div class="panel-body" id="Interview_Days_Details-setting">
                 <div class="col-md-12 col-lg-12 col-sm-12 col-xs-12">
                   <div class="row">
-                    <div class="col-md-4 col-lg-4 col-sm-4 col-xs-4">
-                      <div style="height:25px;"></div>
-                      <select id="Days" class="form-control">
+                    <%--<div class="col-md-4 col-lg-4 col-sm-4 col-xs-4">--%>
+                      <%--<div style="height:25px;"></div>--%>
+                      <%--<select id="Days" class="form-control">--%>
 
-                      </select>
-                      <div style="height:25px;"></div>
-                    </div>
-                    <div class="col-md-4 col-lg-4 col-sm-4 col-xs-4">
-                      <div style="height:25px;"></div>
-                      <button type="button" id="UpdateDateinSelect" class="btn btn-success">Add Date</button>
-                      <div style="height:25px;"></div>
-                    </div>
+                      <%--</select>--%>
+                      <%--<div style="height:25px;"></div>--%>
+                    <%--</div>--%>
+                    <%--<div class="col-md-4 col-lg-4 col-sm-4 col-xs-4">--%>
+                      <%--<div style="height:25px;"></div>--%>
+                      <%--<button type="button" id="UpdateDateinSelect" class="btn btn-success">Add Date</button>--%>
+                      <%--<div style="height:25px;"></div>--%>
+                    <%--</div>--%>
                     <div class="col-md-4 col-lg-4 col-sm-4 col-xs-4">
                       <div style="height:25px;"></div>
                       <button type="button" id="SortCandidate" class="btn btn-success">Appoint a day interviewing for candidates</button>
