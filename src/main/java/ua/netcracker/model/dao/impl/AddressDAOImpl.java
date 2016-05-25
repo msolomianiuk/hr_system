@@ -57,6 +57,7 @@ public class AddressDAOImpl implements AddressDAO {
 
     @Override
     public boolean insert(Address address) {
+        isDigit(address.getAddress());
         try {
             return jdbcTemplateFactory.getJdbcTemplate(dataSource).update(INSERT_SQL,
                     address.getAddress(),
@@ -79,6 +80,7 @@ public class AddressDAOImpl implements AddressDAO {
 
     @Override
     public boolean update(Address address) {
+        isDigit(address.getAddress());
         try{
         return jdbcTemplateFactory.getJdbcTemplate(dataSource).update(UPDATE_SQL,
                 address.getAddress(),
@@ -132,5 +134,12 @@ public class AddressDAOImpl implements AddressDAO {
         return address;
     }
 
-
+    private static boolean isDigit(String s) throws NumberFormatException {
+        try {
+            Integer.parseInt(s);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
 }
