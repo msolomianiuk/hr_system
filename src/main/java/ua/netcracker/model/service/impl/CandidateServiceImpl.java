@@ -182,7 +182,7 @@ public class CandidateServiceImpl implements CandidateService {
     }
 
     @Override
-    public Candidate saveAnswers(String answersJsonString) {
+    public Candidate saveAnswers(String answersJsonString) throws NullPointerException{
         Collection<Answer> listAnswers = JsonParsing.parseJsonString(answersJsonString);
         Candidate candidate = getCurrentCandidate();
         if (candidate.getId() == 0) {
@@ -205,7 +205,7 @@ public class CandidateServiceImpl implements CandidateService {
     }
 
     @Override
-    public Candidate getCurrentCandidate() {
+    public Candidate getCurrentCandidate() throws NullPointerException{
         userId = 0;
         try {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -222,7 +222,11 @@ public class CandidateServiceImpl implements CandidateService {
 
     @Override
     public void deleteAnswers(Candidate candidate) {
-        answersDAO.deleteAnswers(candidate.getId());
+       try{
+           answersDAO.deleteAnswers(candidate.getId());
+       }catch (DataAccessException e){
+           LOGGER.error("Method: deleteAnswers" + " Error: " + e);
+       }
     }
 
 

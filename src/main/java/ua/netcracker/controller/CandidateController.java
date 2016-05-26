@@ -54,7 +54,7 @@ public class CandidateController {
 
     @RequestMapping(value = "/service/saveAnswers", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity<Candidate> setAnswers(@RequestParam String answersJsonString) {
+    public ResponseEntity<Candidate> setAnswers(@RequestParam String answersJsonString) throws NullPointerException{
 
         return ResponseEntity.ok(candidateService.saveAnswers(answersJsonString));
     }
