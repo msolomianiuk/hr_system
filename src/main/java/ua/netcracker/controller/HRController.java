@@ -42,7 +42,7 @@ public class HRController {
 
     @RequestMapping(value = "hr/service/getCandidateById", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<Candidate> getCandidate(@RequestParam int id) {
+    public ResponseEntity<Candidate> getCandidate(@RequestParam int id) throws NullPointerException{
         Candidate candidate = candidateService.getCandidateById(id);
         if (candidate == null) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);

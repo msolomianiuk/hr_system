@@ -13,8 +13,6 @@ import java.util.Map;
 public interface CandidateService {
     Collection<Candidate> getCandidateByStatus(String status);
 
-    void saveInterviewResult(Candidate candidate, InterviewResult interviewResult);
-
     Collection<Candidate> getAllCandidates();
 
     Collection<Candidate> getAllCandidatesIsView();
@@ -67,7 +65,7 @@ public interface CandidateService {
 
     boolean updateCandidateStatus(Integer candidateID, Integer newStatusID);
 
-    public Collection<Candidate> findCandidate(Integer limitRows, Integer fromElement, String find);
+    public Collection<Candidate> getCandidate(Integer limitRows, Integer fromElement, String find);
 
     Collection<Candidate> getAllMarkedByCurrentInterviewer(User user);
 

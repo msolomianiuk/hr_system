@@ -2,6 +2,8 @@ package ua.netcracker.model.dao.impl;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -22,6 +24,7 @@ import java.util.*;
 @Repository("candidateDao")
 public class CandidateDAOImpl implements CandidateDAO {
     private static final Logger LOGGER = Logger.getLogger(CandidateDAOImpl.class);
+
     private static final String FIND_INTERVIEW_DAYS_DETAILS_ID =
             "SELECT interview_days_details FROM \"hr_system\".candidate WHERE id = ?";
     private static final String FIND_BY_ID = "SELECT * FROM \"hr_system\".candidate WHERE id = ";
@@ -29,24 +32,13 @@ public class CandidateDAOImpl implements CandidateDAO {
     private static final String FIND_ALL_BY_COURSE = "SELECT * FROM \"hr_system\".candidate WHERE course_id = ";
     private static final String FIND_STATUS_BY_ID = "SELECT * FROM \"hr_system\".status WHERE id = ?";
     private static final String FIND_BY_USER_ID = "SELECT * FROM \"hr_system\".candidate WHERE user_id = ?";
-    private static final String UPDATE = "UPDATE \"hr_system\".candidate SET(status_id,interview_days_details_id)=(?,?) " +
-            " WHERE id = ? ";
+    private static final String UPDATE =
+            "UPDATE \"hr_system\".candidate SET(status_id,interview_days_details_id)=(?,?) " +
+                    " WHERE id = ? ";
     private static final String FIND_BY_STATUS = "SELECT * FROM \"hr_system\".candidate WHERE status_id =?";
     private static final String FIND_ALL_STATUS = "SELECT * FROM \"hr_system\".status";
     private static final String UPDATE_STATUS = "UPDATE \"hr_system\".candidate SET status_id=(?)" +
             "WHERE id=?";
-    private static final String PAGINATION = "WITH padik AS " +
-            "(SELECT  DISTINCT ON(candidate.id) candidate.id,u.name,u.email ,u.surname, u.patronymic,candidate.status_id, candidate.course_id , ir.interviewer_id, ir.mark, ir.comment, r.value " +
-            "FROM \"hr_system\".users u " +
-            "JOIN \"hr_system\".role_users_maps rol ON rol.user_id = u.id " +
-            "JOIN \"hr_system\".candidate candidate ON candidate.user_id = u.id " +
-            "LEFT OUTER JOIN \"hr_system\".interview_result ir on candidate.id = ir.candidate_id " +
-            "LEFT OUTER JOIN \"hr_system\".recommendation r on ir.recommendation_id = r.id " +
-            "WHERE rol.role_id = 5 ) " +
-            "SELECT  padik.id,padik.name,padik.email ,padik.surname, padik.patronymic,padik.status_id, padik.course_id , padik.interviewer_id, padik.mark, padik.comment, padik.value " +
-            "FROM padik " +
-            "ORDER BY padik.course_id DESC,padik.interviewer_id,padik.status_id DESC,  padik.id LIMIT ";
-    private static final String LAST_ROWS = "SELECT id FROM \"hr_system\".candidate ORDER BY id DESC LIMIT 1";
     private static final String FIND_ALL_MARKED_BY_CURRENT_INTERVIEWER =
             "SELECT c.id, c.status_id, ir.mark, ir.comment, ir.recommendation_id\n" +
                     "FROM \"hr_system\".candidate c\n" +
@@ -54,8 +46,10 @@ public class CandidateDAOImpl implements CandidateDAO {
                     "WHERE ir.interviewer_id = ?;";
     private static final String FIND_PART = "SELECT * FROM \"hr_system\".candidate ORDER BY id OFFSET ";
     private static final String FIND_PART_BY_COURSE = "SELECT * FROM \"hr_system\".candidate WHERE course_id = ";
-    private static final String SELECT_CANDIDATE_COUNT = "SELECT COUNT(*) FROM \"hr_system\".candidate WHERE course_id = ";
-    private static final String SELECT_CANDIDATE_COUNT_BY_INTERVIEWDID = "SELECT COUNT(*) FROM \"hr_system\".candidate WHERE interview_days_details_id = ";
+    private static final String SELECT_CANDIDATE_COUNT =
+            "SELECT COUNT(*) FROM \"hr_system\".candidate WHERE course_id = ";
+    private static final String SELECT_CANDIDATE_COUNT_BY_INTERVIEWDID =
+            "SELECT COUNT(*) FROM \"hr_system\".candidate WHERE interview_days_details_id = ";
 
     @Autowired
     private DataSource dataSource;
@@ -65,30 +59,6 @@ public class CandidateDAOImpl implements CandidateDAO {
     private InterviewResultDAO interviewResultDAO;
     @Autowired
     private SendEmailService sendEmailService;
-
-    @Override
-    public Collection<Candidate> findCandidateByStatus(String status) {
-        Collection<Candidate> listCandidate = new ArrayList<>();
-        try {
-            jdbcTemplate = new JdbcTemplate(dataSource);
-            List<Map<String, Object>> rows = jdbcTemplate.
-                    queryForList(FIND_BY_STATUS, Status.valueOf(status).getId());
-            for (Map<String, Object> row : rows) {
-                Candidate candidate = new Candidate();
-                candidate.setId((int) row.get("id"));
-                candidate.setUserId((int) row.get("user_id"));
-                candidate.setStatusId((int) row.get("status_id"));
-                if (row.get("interview_days_details_id") != null)
-                    candidate.setInterviewDaysDetailsId((int) row.get("interview_days_details_id"));
-                candidate.setCourseId((int) row.get("course_id"));
-                listCandidate.add(candidate);
-            }
-        } catch (Exception e) {
-            LOGGER.error("Error: " + e);
-        }
-
-        return listCandidate;
-    }
 
     @Override
     public int findInterviewDetailsByCandidateId(Integer candidateId) {
@@ -103,21 +73,21 @@ public class CandidateDAOImpl implements CandidateDAO {
                             try {
                                 details = rs.getInt("interview_days_details");
                             } catch (SQLException e) {
-                                LOGGER.info("SQLState: " + e.getSQLState() + " Message: " + e.getMessage());
+                                LOGGER.info("Method: findInterviewDetailsByCandidateId" + " SQL State: "
+                                        + e.getSQLState() + " Message: " + e.getMessage());
                                 LOGGER.debug(e.getStackTrace(), e);
                             }
                             return details;
                         }
                     }, candidateId);
-        } catch (Exception e) {
-            LOGGER.error("Error: " + e);
+        } catch (DataAccessException e) {
+            LOGGER.error("Method: findInterviewDetailsByCandidateId" + " Error: " + e);
         }
         return interviewDaysDetails;
     }
 
-
     @Override
-    public Candidate findByCandidateId(Integer candidateId) {
+    public Candidate findByCandidateId(Integer candidateId) throws NullPointerException {
         Candidate candidate = null;
         try {
             jdbcTemplate = new JdbcTemplate(dataSource);
@@ -131,23 +101,28 @@ public class CandidateDAOImpl implements CandidateDAO {
                                 candidate.setStatusId(rs.getInt("status_id"));
                                 candidate.setCourseId(rs.getInt("course_id"));
                             } catch (SQLException e) {
-                                LOGGER.info("SQLState: " + e.getSQLState() + " Message: " + e.getMessage());
+                                LOGGER.info("Method: findByCandidateId" + " SQL State: " + e.getSQLState()
+                                        + " Message: " + e.getMessage());
                                 LOGGER.debug(e.getStackTrace(), e);
                             }
                             return candidate;
                         }
                     }
             );
-        } catch (Exception e) {
-            LOGGER.error("Error: " + e);
+        } catch (DataAccessException e) {
+            LOGGER.error("Method: findByCandidateId" + " Error: " + e);
         }
         return candidate;
 
     }
 
+    @Override
+    public Collection<Candidate> findAll() {
+        return findCandidates(FIND_ALL);
+    }
 
     @Override
-    public Status findStatusById(Integer statusId) {
+    public Status findStatusById(Integer statusId) throws IllegalArgumentException {
         String value = null;
         try {
             jdbcTemplate = new JdbcTemplate(dataSource);
@@ -158,22 +133,53 @@ public class CandidateDAOImpl implements CandidateDAO {
                             try {
                                 value = rs.getString("value");
                             } catch (SQLException e) {
-                                LOGGER.info("SQLState: " + e.getSQLState() + " Message: " + e.getMessage());
+                                LOGGER.info("Method: findStatusById" + " SQL State: " + e.getSQLState()
+                                        + " Message: " + e.getMessage());
                                 LOGGER.debug(e.getStackTrace(), e);
                             }
                             return value;
                         }
                     }, statusId
             );
-        } catch (Exception e) {
-            LOGGER.error("Error: " + e);
+        } catch (DataAccessException e) {
+            LOGGER.error("Method: findStatusById" + " Error: " + e);
         }
         return Status.valueOf(value);
     }
 
+    @Override
+    public Collection<Candidate> findCandidateByStatus(String status) {
+        Collection<Candidate> listCandidate = new ArrayList<>();
+        try {
+            jdbcTemplate = new JdbcTemplate(dataSource);
+            List<Map<String, Object>> rows = jdbcTemplate.
+                    queryForList(FIND_BY_STATUS, Status.valueOf(status).getId());
+            for (Map<String, Object> row : rows) {
+                Candidate candidate = new Candidate();
+                candidate.setId((int) row.get("id"));
+                candidate.setUserId((int) row.get("user_id"));
+                candidate.setStatusId((int) row.get("status_id"));
+                try {
+                    candidate.setStatus(findStatusById(candidate.getStatusId()));
+                } catch (IllegalArgumentException e) {
+                    LOGGER.info("Method: findCandidateByStatus" + e.getStackTrace()
+                            + " Message: " + e.getMessage());
+                    LOGGER.debug(e.getStackTrace(), e);
+                }
+                if (row.get("interview_days_details_id") != null)
+                    candidate.setInterviewDaysDetailsId((int) row.get("interview_days_details_id"));
+                candidate.setCourseId((int) row.get("course_id"));
+                listCandidate.add(candidate);
+            }
+        } catch (DataAccessException e) {
+            LOGGER.error("Method: findCandidateByStatus" + " Error: " + e);
+        }
+        return listCandidate;
+    }
+
+
     public Candidate findByUserId(Integer userId) {
         Candidate candidate = new Candidate();
-
         try {
             jdbcTemplate = new JdbcTemplate(dataSource);
             List<Map<String, Object>> rows = jdbcTemplate.queryForList(FIND_BY_USER_ID, userId);
@@ -181,10 +187,17 @@ public class CandidateDAOImpl implements CandidateDAO {
                 candidate.setId((int) row.get("id"));
                 candidate.setUserId((int) row.get("user_Id"));
                 candidate.setStatusId((int) row.get("status_id"));
+                try {
+                    candidate.setStatus(findStatusById(candidate.getStatusId()));
+                } catch (IllegalArgumentException e) {
+                    LOGGER.info("Method: findByUserId" + e.getStackTrace()
+                            + " Message: " + e.getMessage());
+                    LOGGER.debug(e.getStackTrace(), e);
+                }
                 candidate.setCourseId((int) row.get("course_id"));
             }
-        } catch (Exception e) {
-            LOGGER.error("Error: " + e);
+        } catch (DataAccessException e) {
+            LOGGER.error("Method: findByUserId" + " Error: " + e);
         }
 
         return candidate;
@@ -196,46 +209,6 @@ public class CandidateDAOImpl implements CandidateDAO {
     }
 
     @Override
-    public Collection<Candidate> findPartByCourse(Integer courseId, Integer with, Integer to) {
-        return findCandidates(FIND_PART_BY_COURSE + courseId + " ORDER BY status_id DESC OFFSET " + with + " LIMIT " + to);
-    }
-
-    @Override
-    public Integer getCandidateCount(int courseId) {
-        try {
-            jdbcTemplate = new JdbcTemplate(dataSource);
-            Integer count = jdbcTemplate.queryForObject(SELECT_CANDIDATE_COUNT + courseId, new RowMapper<Integer>() {
-                @Override
-                public Integer mapRow(ResultSet rs, int rowNum) throws SQLException {
-                    return rs.getInt(1);
-                }
-            });
-            return count;
-
-        } catch (Exception e) {
-            LOGGER.error("Error: " + e);
-        }
-        return 0;
-    }
-
-    @Override
-    public Integer getCandidateCountByInterviewId(int interviewId) {
-        try {
-            jdbcTemplate = new JdbcTemplate(dataSource);
-            Integer count = jdbcTemplate.queryForObject(SELECT_CANDIDATE_COUNT_BY_INTERVIEWDID + interviewId, new RowMapper<Integer>() {
-                @Override
-                public Integer mapRow(ResultSet rs, int rowNum) throws SQLException {
-                    return rs.getInt(1);
-                }
-            });
-            return count;
-
-        } catch (Exception e) {
-            LOGGER.error("Error: " + e);
-        }
-        return 0;
-    }
-
     public boolean saveCandidate(Candidate candidate) {
         try {
             simpleJdbcInsert = new SimpleJdbcInsert(dataSource).
@@ -248,40 +221,38 @@ public class CandidateDAOImpl implements CandidateDAO {
             insertParameter.addValue("course_id", candidate.getCourseId());
             simpleJdbcInsert.execute(insertParameter);
             return true;
-        } catch (Exception e) {
-            LOGGER.error("Error: " + e);
+        } catch (InvalidDataAccessApiUsageException e) {
+            LOGGER.error("Method: saveCandidate" + " Error: " + e);
             sendEmailService.sendEmailAboutCriticalError("ERROR in saveCandidate\n" + e.getMessage());
         }
-
         return false;
     }
 
     @Override
     public Map<Integer, String> findAllStatus() {
-        Map<Integer, String> status = new HashMap<>();
+        Map<Integer, String> statusMap = new HashMap<>();
         jdbcTemplate = new JdbcTemplate(dataSource);
         try {
             List<Map<String, Object>> rows = jdbcTemplate.queryForList(FIND_ALL_STATUS);
             for (Map row : rows) {
-                status.put((int) row.get("id"), row.get("value").toString());
+                statusMap.put((int) row.get("id"), row.get("value").toString());
             }
-        } catch (Exception e) {
-            LOGGER.error("Error: " + e);
+        } catch (DataAccessException e) {
+            LOGGER.error("Method: findAllStatus" + " Error: " + e);
         }
-        return status;
+        return statusMap;
     }
 
     @Override
-    public boolean updateCandidateStatus(Integer candidateID, Integer newStatusID) {
+    public boolean updateCandidateStatus(Integer candidateId, Integer newStatusId) {
         try {
             jdbcTemplate = new JdbcTemplate(dataSource);
-            jdbcTemplate.update(UPDATE_STATUS, newStatusID, candidateID);
+            jdbcTemplate.update(UPDATE_STATUS, newStatusId, candidateId);
             return true;
-        } catch (Exception e) {
-            LOGGER.error("Error:" + e);
+        } catch (DataAccessException e) {
+            LOGGER.error("Method: updateCandidateStatus" + " Error: " + e);
         }
         return false;
-
     }
 
     @Override
@@ -289,53 +260,38 @@ public class CandidateDAOImpl implements CandidateDAO {
         Collection<Candidate> listCandidates = new ArrayList<>();
         try {
             jdbcTemplate = new JdbcTemplate(dataSource);
-            List<Map<String, Object>> rows = jdbcTemplate.queryForList(FIND_ALL_MARKED_BY_CURRENT_INTERVIEWER, user.getId());
+            List<Map<String, Object>> rows = jdbcTemplate.queryForList(FIND_ALL_MARKED_BY_CURRENT_INTERVIEWER,
+                    user.getId());
             for (Map row : rows) {
                 Candidate candidate = new Candidate();
                 candidate.setId((int) row.get("id"));
                 candidate.setStatusId((int) row.get("status_id"));
+                try {
+                    candidate.setStatus(findStatusById(candidate.getStatusId()));
+                } catch (IllegalArgumentException e) {
+                    LOGGER.info("Method: getAllMarked" + e.getStackTrace()
+                            + " Message: " + e.getMessage());
+                    LOGGER.debug(e.getStackTrace(), e);
+                }
                 candidate.setCourseId((int) row.get("course_id"));
                 candidate.setInterviewResults(interviewResultDAO.findResultsByCandidateId(candidate.getId()));
                 listCandidates.add(candidate);
             }
         } catch (Exception e) {
-            LOGGER.error("Error: " + e);
+            LOGGER.error("Method: getAllMarked" + " Error: " + e);
         }
         return listCandidates;
     }
 
     @Override
-    public Candidate find(int id) {
-        return null;
-    }
-
-    @Override
-    public boolean insert(Candidate entity) {
-        return false;
-    }
-
-
-    @Override
-    public boolean update(Candidate candidate) {
-        try {
-            jdbcTemplate = new JdbcTemplate(dataSource);
-            jdbcTemplate.update(UPDATE, candidate.getStatusId(), candidate.getInterviewDaysDetailsId(), candidate.getId());
-            return true;
-        } catch (Exception e) {
-            LOGGER.error("Error:" + e);
-            sendEmailService.sendEmailAboutCriticalError("ERROR in saveOrUpdateAnswers\n" + e.getMessage());
-        }
-        return false;
-    }
-
-
-    @Override
-    public Collection<Candidate> findAll() {
-        return findCandidates(FIND_ALL);
-    }
-
     public Collection<Candidate> findPart(Integer with, Integer to) {
         return findCandidates(FIND_PART + with + " LIMIT " + to);
+    }
+
+    @Override
+    public Collection<Candidate> findPartByCourse(Integer courseId, Integer with, Integer to) {
+        return findCandidates(FIND_PART_BY_COURSE + courseId + " ORDER BY status_id DESC OFFSET " +
+                with + " LIMIT " + to);
     }
 
     private Collection<Candidate> findCandidates(String sql) {
@@ -348,16 +304,100 @@ public class CandidateDAOImpl implements CandidateDAO {
                 candidate.setId((int) row.get("id"));
                 candidate.setUserId((int) row.get("user_id"));
                 candidate.setStatusId((int) row.get("status_id"));
-                candidate.setStatus(findStatusById(candidate.getStatusId()));
+                try {
+                    candidate.setStatus(findStatusById(candidate.getStatusId()));
+                } catch (IllegalArgumentException e) {
+                    LOGGER.info("Method: findCandidates " + e.getStackTrace()
+                            + " Message: " + e.getMessage());
+                    LOGGER.debug(e.getStackTrace(), e);
+                }
                 candidate.setCourseId((int) row.get("course_id"));
                 listCandidates.add(candidate);
             }
-        } catch (Exception e) {
-            LOGGER.error("Error:" + e);
+        } catch (DataAccessException e) {
+            LOGGER.error("Method: findCandidates" + " Error: " + e);
         }
-
         return listCandidates;
+    }
 
+    //Розібратися з цією 1 і 0
+    @Override
+    public Integer getCandidateCount(int courseId) {
+        try {
+            jdbcTemplate = new JdbcTemplate(dataSource);
+            Integer count = jdbcTemplate.queryForObject(SELECT_CANDIDATE_COUNT + courseId, new RowMapper<Integer>() {
+                @Override
+                public Integer mapRow(ResultSet rs, int rowNum) {
+                    int count = 0;
+                    try {
+                        count = rs.getInt(1);
+                    } catch (SQLException e) {
+                        LOGGER.info("Method: findCandidates " + " SQL State: " + e.getSQLState()
+                                + " Message: " + e.getMessage());
+                        LOGGER.debug(e.getStackTrace(), e);
+                    }
+                    return count;
+                }
+            });
+            return count;
+
+        } catch (DataAccessException e) {
+            LOGGER.error("Method: getCandidateCount" + " Error: " + e);
+        }
+        return 0;
+    }
+
+    //теж саме з 1
+    @Override
+    public Integer getCandidateCountByInterviewId(int interviewId) {
+        try {
+            jdbcTemplate = new JdbcTemplate(dataSource);
+            Integer count = jdbcTemplate.queryForObject(SELECT_CANDIDATE_COUNT_BY_INTERVIEWDID + interviewId,
+                    new RowMapper<Integer>() {
+                @Override
+                public Integer mapRow(ResultSet rs, int rowNum) {
+                    int count = 0;
+                    try {
+                        count = rs.getInt(1);
+                    } catch (SQLException e) {
+                        LOGGER.info("Method: getCandidateCountByInterviewId " + " SQL State: " + e.getSQLState()
+                                + " Message: " + e.getMessage());
+                        LOGGER.debug(e.getStackTrace(), e);
+                    }
+                    return count;
+                }
+            });
+            return count;
+
+        } catch (DataAccessException e) {
+            LOGGER.error("Method: getCandidateCountByInterviewId" + " Error: " + e);
+        }
+        return 0;
+    }
+
+    @Override
+    public boolean update(Candidate candidate) {
+        try {
+            jdbcTemplate = new JdbcTemplate(dataSource);
+            jdbcTemplate.update(UPDATE, candidate.getStatusId(), candidate.getInterviewDaysDetailsId(),
+                    candidate.getId());
+            return true;
+        } catch (DataAccessException e) {
+            LOGGER.error("Method: update" + " Error: " + e);
+            sendEmailService.sendEmailAboutCriticalError("ERROR in saveOrUpdateAnswers\n" + e.getMessage());
+        }
+        return false;
+    }
+
+
+    @Override
+    public Candidate find(int id) {
+        return null;
+    }
+
+    @Override
+    public boolean insert(Candidate entity) {
+        return false;
     }
 
 

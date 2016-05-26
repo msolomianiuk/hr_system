@@ -79,7 +79,7 @@ public class AdminController {
         return ResponseEntity.ok(HttpStatus.ACCEPTED);
     }
 
-    @RequestMapping(value = "/add_role" , method = RequestMethod.GET)
+    @RequestMapping(value = "/add_role", method = RequestMethod.GET)
     public ResponseEntity addUserRole(@RequestParam Integer userID, @RequestParam String role) {
 
         User user = userService.get(userID);
@@ -162,7 +162,8 @@ public class AdminController {
             @RequestParam String id
     ) {
 
-        Collection candidate = answerService.getAnswerCandidate(Integer.parseInt(id));
+        Collection candidate = candidateService.getAllCandidateAnswers(candidateService.
+                getCandidateById(Integer.parseInt(id)));
 
         Collection collection = new ArrayList();
         collection.add(candidate);
@@ -176,7 +177,8 @@ public class AdminController {
             @RequestParam String id
     ) {
 
-        Collection candidate = answerService.getAnswerCandidate(Integer.parseInt(id));
+        Collection candidate = candidateService.getAllCandidateAnswers(candidateService.
+                getCandidateById(Integer.parseInt(id)));
 
         Collection collection = new ArrayList();
         collection.add(candidate);
@@ -242,14 +244,14 @@ public class AdminController {
         );
         if (dateService.validTwoTimes(start_time, end_time)) {
 //            if (interviewDaysDetailsService.timeIsFree(interviewDaysDetails)) {
-                if (addressService.findById(interviewDaysDetails.getAddressId()).getRoomCapacity() > interviewDaysDetails.getCountPersonal() * 2) {
-                    interviewDaysDetailsService.update(interviewDaysDetails);
-                    return ResponseEntity
-                            .status(HttpStatus.ACCEPTED).body(ResponseEntity.ok("Success"));
-                } else {
-                    return ResponseEntity
-                            .status(HttpStatus.BAD_REQUEST).body("This room can not accommodate all the people");
-                }
+            if (addressService.findById(interviewDaysDetails.getAddressId()).getRoomCapacity() > interviewDaysDetails.getCountPersonal() * 2) {
+                interviewDaysDetailsService.update(interviewDaysDetails);
+                return ResponseEntity
+                        .status(HttpStatus.ACCEPTED).body(ResponseEntity.ok("Success"));
+            } else {
+                return ResponseEntity
+                        .status(HttpStatus.BAD_REQUEST).body("This room can not accommodate all the people");
+            }
 //            } else
 //                return ResponseEntity
 //                        .status(HttpStatus.BAD_REQUEST).body("This room at this time is busy");
@@ -261,12 +263,12 @@ public class AdminController {
 
     @RequestMapping(value = "/date_list", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<List<Map<String,Object>>> getDateList() {
-        List<Map<String,Object>> dateList =  dateService.getDateList(courseSettingService.getLastSetting());
+    public ResponseEntity<List<Map<String, Object>>> getDateList() {
+        List<Map<String, Object>> dateList = dateService.getDateList(courseSettingService.getLastSetting());
         if (dateList.isEmpty()) {
-            return new ResponseEntity<List<Map<String,Object>>>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<List<Map<String, Object>>>(HttpStatus.NO_CONTENT);
         }
-        return new ResponseEntity<List<Map<String,Object>>>(dateList, HttpStatus.OK);
+        return new ResponseEntity<List<Map<String, Object>>>(dateList, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/add_date", method = RequestMethod.GET)
@@ -305,7 +307,7 @@ public class AdminController {
     @RequestMapping(value = "/address_insert", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity setAddress(
-           @RequestParam String address,
+            @RequestParam String address,
             @RequestParam String roomCapacity
     ) {
         try {
@@ -313,7 +315,7 @@ public class AdminController {
             addressEntity.setAddress(address);
             addressEntity.setRoomCapacity(Integer.parseInt(roomCapacity));
             addressService.insert(addressEntity);
-        } catch (NumberFormatException e){
+        } catch (NumberFormatException e) {
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST).body("Room capacity must be number!");
         }
@@ -336,7 +338,7 @@ public class AdminController {
                     Integer.parseInt(roomCapacity)
             );
             addressService.saveOrUpdate(addressEntity);
-        }catch (NumberFormatException e){
+        } catch (NumberFormatException e) {
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST).body("Room capacity must be number!");
         }
@@ -349,7 +351,7 @@ public class AdminController {
     public ResponseEntity removeAddress(
             @RequestParam String id
     ) {
-           addressService.delete(Integer.parseInt(id));
+        addressService.delete(Integer.parseInt(id));
         return ResponseEntity.ok(Integer.parseInt(id));
     }
 
@@ -357,7 +359,7 @@ public class AdminController {
     @ResponseBody
     public ResponseEntity sortCandidatePerDays(
     ) {
-       return ResponseEntity
+        return ResponseEntity
                 .status(HttpStatus.ACCEPTED).body(ResponseEntity.ok(interviewDaysDetailsService.sortCandidateToDays(courseSettingService.getLastSetting())));
     }
 
@@ -401,7 +403,7 @@ public class AdminController {
 
     @RequestMapping(value = "/service/createReport", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<Collection<Collection<String>>> getReport(@RequestParam String query,@RequestParam String description) {
+    public ResponseEntity<Collection<Collection<String>>> getReport(@RequestParam String query, @RequestParam String description) {
         Collection<Collection<String>> report = reportService.getReportByQuery(query, description);
         if (report.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -411,7 +413,7 @@ public class AdminController {
 
     @RequestMapping(value = "/service/createMainReport", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<Collection<Collection<String>>> createMainReport(@RequestParam String courseId,@RequestParam String status) {
+    public ResponseEntity<Collection<Collection<String>>> createMainReport(@RequestParam String courseId, @RequestParam String status) {
         Collection<Collection<String>> report = reportService.getReportByQuery(Integer.valueOf(courseId), status);
         if (report.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -552,7 +554,7 @@ public class AdminController {
             }
         }
 
-          return new ResponseEntity<>(filtered, HttpStatus.OK);
+        return new ResponseEntity<>(filtered, HttpStatus.OK);
     }
 
 
@@ -585,6 +587,7 @@ public class AdminController {
         }
         return ResponseEntity.ok(rows);
     }
+
     @RequestMapping(value = "/findCandidate", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<Collection<Candidate>> findCandidate(
@@ -594,7 +597,7 @@ public class AdminController {
     ) {
 
 
-        Collection<Candidate> candidates = candidateService.findCandidate(
+        Collection<Candidate> candidates = candidateService.getCandidate(
                 Integer.valueOf(elementPage),
                 Integer.valueOf(fromElement),
                 find);
@@ -603,17 +606,19 @@ public class AdminController {
         }
         return ResponseEntity.ok(candidates);
     }
+
     @RequestMapping(value = "/rowsFind", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<String> rowsFind(
             @RequestParam String find
     ) {
         long rows = paginationServiceImp.rowsFind(find);
-        if (rows==0) {
+        if (rows == 0) {
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
         }
         return ResponseEntity.ok(String.valueOf(rows));
     }
+
     @RequestMapping(value = "/candidate_id", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<String> candidateId(
@@ -625,6 +630,7 @@ public class AdminController {
         }
         return ResponseEntity.ok(id);
     }
+
     @RequestMapping(value = "/user_id", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<String> userId(
@@ -653,14 +659,16 @@ public class AdminController {
 
         return ResponseEntity.ok(countStudents);
     }
+
     @RequestMapping(value = "/getStudent", method = RequestMethod.GET)
-    public ResponseEntity<Candidate> getCandidate(@RequestParam int id) {
+    public ResponseEntity<Candidate> getCandidate(@RequestParam int id) throws NullPointerException {
         Candidate candidate = candidateService.getCandidateById(id);
         if (candidate == null) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(candidate, HttpStatus.OK);
     }
+
     @RequestMapping(value = "/service/sendEmailToStatus", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<Integer> sendEmailToCandidatesWithStatus(
