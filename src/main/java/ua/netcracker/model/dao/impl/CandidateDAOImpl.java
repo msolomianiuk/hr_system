@@ -11,6 +11,7 @@ import ua.netcracker.model.dao.CandidateDAO;
 import ua.netcracker.model.dao.InterviewResultDAO;
 import ua.netcracker.model.entity.*;
 import ua.netcracker.model.service.SendEmailService;
+import ua.netcracker.model.service.impl.PaginationServiceImp;
 
 import javax.sql.DataSource;
 import java.sql.ResultSet;
@@ -59,7 +60,8 @@ public class CandidateDAOImpl implements CandidateDAO {
     private DataSource dataSource;
     private JdbcTemplate jdbcTemplate;
     private SimpleJdbcInsert simpleJdbcInsert;
-
+    @Autowired
+    private PaginationServiceImp paginationServiceImp;
     @Autowired
     private InterviewResultDAO interviewResultDAO;
     @Autowired
@@ -413,83 +415,9 @@ public class CandidateDAOImpl implements CandidateDAO {
 
     }
 
-    @Override
-    public Long getRows(List<Answer> expected) {
-        if (expected.isEmpty()) {
-
-            Long rows = null;
-            try {
-                jdbcTemplate = new JdbcTemplate(dataSource);
-                rows = jdbcTemplate.queryForObject(
-                        "WITH padik AS (SELECT  DISTINCT ON(candidate.id) *" +
-                                "FROM \"hr_system\".users u " +
-                                "JOIN \"hr_system\".role_users_maps rol ON rol.user_id = u.id " +
-                                "JOIN \"hr_system\".candidate candidate ON candidate.user_id = u.id " +
-                                "LEFT OUTER JOIN \"hr_system\".interview_result ir ON candidate.id = ir.candidate_id " +
-                                "LEFT OUTER JOIN \"hr_system\".recommendation r ON ir.recommendation_id = r.id " +
-                                "LEFT OUTER JOIN \"hr_system\".status status ON candidate.status_id = status.id " +
-                                "LEFT OUTER JOIN \"hr_system\".candidate_answer answer ON candidate.id = answer.candidate_id " +
-                                "WHERE rol.role_id = 5  " +
-                                ")SELECT COUNT(*) FROM padik ", new RowMapper<Long>() {
-                            @Override
-                            public Long mapRow(ResultSet resultSet, int i) throws SQLException {
-                                Long row = resultSet.getLong("count");
-                                return row;
-                            }
-                        });
-            } catch (Exception e) {
-                LOGGER.error("Error:" + e);
-            }
-
-            return rows;
-        } else {
-            String sql = "WITH padik AS " +
-                    "(SELECT  DISTINCT ON(candidate.id) candidate.id,u.name,u.email ,u.surname, u.patronymic,candidate.status_id, candidate.course_id , ir.interviewer_id, ir.mark, ir.comment, r.value " +
-                    "FROM \"hr_system\".users u " +
-                    "JOIN \"hr_system\".role_users_maps rol ON rol.user_id = u.id " +
-                    "JOIN \"hr_system\".candidate candidate ON candidate.user_id = u.id " +
-                    "LEFT OUTER JOIN \"hr_system\".interview_result ir on candidate.id = ir.candidate_id " +
-                    "LEFT OUTER JOIN \"hr_system\".recommendation r on ir.recommendation_id = r.id " +
-                    "WHERE rol.role_id = 5 ) " +
-                    "SELECT COUNT(*) " +
-                    "FROM padik WHERE padik.id IN ";
-
-            for (Answer answer : expected) {
-                sql = sql.concat("(SELECT candidate_id " +
-                        " FROM \"hr_system\".candidate_answer" +
-                        " WHERE question_id = " + answer.getQuestionId() + " AND value LIKE '%" +
-                        answer.getValue() + "%' AND candidate_id IN ");
-            }
-
-            sql = sql.substring(0, sql.length() - 20);
-
-            for (int i = 0; i < expected.size(); i++) {
-                sql = sql.concat(")");
-            }
-
-//            sql = sql.concat(" ORDER BY padik.course_id DESC,padik.interviewer_id,padik.status_id DESC");
-
-            Long rows = null;
-            try {
-                jdbcTemplate = new JdbcTemplate(dataSource);
-                rows = jdbcTemplate.queryForObject(sql, new RowMapper<Long>() {
-                            @Override
-                            public Long mapRow(ResultSet resultSet, int i) throws SQLException {
-                                Long row = resultSet.getLong("count");
-                                return row;
-                            }
-                        });
-            } catch (Exception e) {
-                LOGGER.error("Error:" + e);
-            }
-
-            return rows;
-
-        }
-    }
 
     @Override
-    public Collection<Candidate> findForSerach(Integer elementPage, Integer fromElement, String find) {
+    public Collection<Candidate> findForSearch(Integer elementPage, Integer fromElement, String find) {
 
         int d = 2000000000;
         try {
@@ -616,7 +544,7 @@ public class CandidateDAOImpl implements CandidateDAO {
     @Override
     public Collection<Candidate> filterCandidates(List<Answer> expected, Integer limit, Integer offset) {
         if (expected.isEmpty()) {
-            return pagination(limit, offset);
+            return paginationServiceImp.pagination(limit, offset);
         }
 
         String sql = "WITH padik AS " +

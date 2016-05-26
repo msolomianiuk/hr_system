@@ -4,17 +4,15 @@ package ua.netcracker.model.service;
 import ua.netcracker.model.entity.*;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 
 /**
- * @author Alyona Bilous 05/05/2016
+ * @author Alex
  */
 
 public interface CandidateService {
     Collection<Candidate> getCandidateByStatus(String status);
 
-    //
     void saveInterviewResult(Candidate candidate, InterviewResult interviewResult);
 
     Collection<Candidate> getAllCandidates();
@@ -31,7 +29,6 @@ public interface CandidateService {
 
     Collection<Candidate> getPartByCourse(Integer courseId, Integer with, Integer to);
 
-    //
     Candidate getCandidateById(Integer id);
 
     Integer getCandidateCount();
@@ -39,7 +36,6 @@ public interface CandidateService {
     Integer getCandidateCountByInterviewId(Integer interviewId);
 
     Candidate getCandidateByUserId(Integer userId);
-
 
     Status getStatusById(Integer statusId);
 
@@ -71,10 +67,6 @@ public interface CandidateService {
 
     boolean updateCandidateStatus(Integer candidateID, Integer newStatusID);
 
-    public Collection<Candidate> pagination(Integer elementPage, Integer fromElement);
-
-    Long getRows(List<Answer> expected);
-
     public Collection<Candidate> findCandidate(Integer limitRows, Integer fromElement, String find);
 
     Collection<Candidate> getAllMarkedByCurrentInterviewer(User user);
@@ -84,7 +76,5 @@ public interface CandidateService {
     boolean updateInterviewResult(Integer candidateId, InterviewResult interviewResult);
 
     boolean saveInterviewResult(Integer candidateId, Integer interviewerId, Integer mark, String recomendation, String comment);
-
-    Collection<Candidate> filterCandidates(List<Answer> expected, Integer limit, Integer offset);
 
 }

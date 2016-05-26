@@ -13,7 +13,7 @@ import ua.netcracker.model.entity.Answer;
 import ua.netcracker.model.entity.Candidate;
 import ua.netcracker.model.entity.Status;
 import ua.netcracker.model.service.CandidateService;
-import ua.netcracker.model.service.impl.Pagination;
+import ua.netcracker.model.service.impl.PaginationServiceImp;
 import ua.netcracker.model.utils.JsonParsing;
 
 import java.util.ArrayList;
@@ -30,7 +30,7 @@ public class StudentsRestController {
     private CandidateDAO candidateDAO;
 
     @Autowired
-    private Pagination pagination;
+    private PaginationServiceImp paginationServiceImp;
 
     @RequestMapping(value = "/getStudents", method = RequestMethod.GET)
     public ResponseEntity<List<Candidate>> listAllStudents() {
@@ -59,7 +59,7 @@ public class StudentsRestController {
             }
         }
 
-        List<Candidate> filtered = (List<Candidate>) candidateService.filterCandidates(selected, limit, offset);
+        List<Candidate> filtered = (List<Candidate>) paginationServiceImp.filterCandidates(selected, limit, offset);
 
         if (filtered.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);

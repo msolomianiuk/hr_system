@@ -12,10 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import ua.netcracker.model.entity.*;
 import ua.netcracker.model.service.*;
 import ua.netcracker.model.service.date.DateService;
-import ua.netcracker.model.service.impl.AnswerServiceImpl;
-import ua.netcracker.model.service.impl.CandidateServiceImpl;
-import ua.netcracker.model.service.impl.CourseSettingServiceImpl;
-import ua.netcracker.model.service.impl.QuestionServiceImpl;
+import ua.netcracker.model.service.impl.*;
 import ua.netcracker.model.utils.JsonParsing;
 
 import java.io.IOException;
@@ -28,7 +25,8 @@ import java.util.Map;
 @Controller
 @RequestMapping(value = "/admin", method = RequestMethod.GET)
 public class AdminController {
-
+    @Autowired
+    private PaginationServiceImp paginationServiceImp;
     @Autowired
     private QuestionServiceImpl questionService;
 
@@ -528,7 +526,7 @@ public class AdminController {
                 selected.add(answer);
             }
         }
-        List<Candidate> filtered = (List<Candidate>) candidateService.filterCandidates(selected, Integer.parseInt(elementPage), Integer.parseInt(fromElement));
+        List<Candidate> filtered = (List<Candidate>) paginationServiceImp.filterCandidates(selected, Integer.parseInt(elementPage), Integer.parseInt(fromElement));
 
         if (filtered.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -560,11 +558,11 @@ public class AdminController {
 
     @RequestMapping(value = "/getFirst", method = RequestMethod.GET)
     public ResponseEntity<Collection<Candidate>> getCandidate() {
-        Collection<Candidate> candidates = candidateService.pagination(
+        Collection<Candidate> candidates = paginationServiceImp.pagination(
                 Integer.valueOf(10),
                 Integer.valueOf(1));
         if (candidates.isEmpty()) {
-            return new ResponseEntity<Collection<Candidate>>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         return ResponseEntity.ok(candidates);
     }
@@ -581,7 +579,7 @@ public class AdminController {
             }
         }
 
-        Long rows = candidateService.getRows(selected);
+        Long rows = paginationServiceImp.getRows(selected);
         if (rows == 0) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }

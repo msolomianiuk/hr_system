@@ -18,10 +18,13 @@ import ua.netcracker.model.service.QuestionService;
 import ua.netcracker.model.service.SendEmailService;
 import ua.netcracker.model.utils.JsonParsing;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- * @author Alyona Bilous 05/05/2016
+ * @author Alex
  */
 @Service("Candidate Service")
 public class CandidateServiceImpl implements CandidateService {
@@ -40,6 +43,8 @@ public class CandidateServiceImpl implements CandidateService {
 
     }
 
+    @Autowired
+    private PaginationServiceImp paginationServiceImp;
     @Autowired
     private QuestionService questionService;
     @Autowired
@@ -170,8 +175,8 @@ public class CandidateServiceImpl implements CandidateService {
     public Collection<Answer> getAnswerByQuestionId(Candidate candidate, int questionId) {
         ArrayList<Answer> resultAnswer = new ArrayList<>();
         ArrayList<Answer> answers = (ArrayList<Answer>) getAllCandidateAnswers(candidate);
-        for (Answer answer : answers){
-            if (answer.getQuestionId() == questionId){
+        for (Answer answer : answers) {
+            if (answer.getQuestionId() == questionId) {
                 resultAnswer.add(answer);
             }
         }
@@ -263,29 +268,17 @@ public class CandidateServiceImpl implements CandidateService {
         return answersDAO.findAllIsView(candidate, listQuestions);
     }
 
-    @Override
-    public Collection<Candidate> pagination(Integer limitRows, Integer fromElement) {
-        int element = 0;
-        if ((fromElement-1)!=0){
-            element = (fromElement-1)*limitRows;
-        }
-        return candidateDAO.pagination(limitRows, element);
-    }
-    @Override
-    public Long getRows(List<Answer> expected){
-        return candidateDAO.getRows(expected);
-    }
 
     @Override
-    public Collection<Candidate> findCandidate (Integer limitRows, Integer fromElement, String find){
+    public Collection<Candidate> findCandidate(Integer limitRows, Integer fromElement, String find) {
         int element = 0;
-        if ((fromElement-1)!=0){
-            element = (fromElement-1)*limitRows;
+        if ((fromElement - 1) != 0) {
+            element = (fromElement - 1) * limitRows;
         }
-        return candidateDAO.findForSerach(limitRows, element, find);
+        return candidateDAO.findForSearch(limitRows, element, find);
     }
 
-    public long rowsFind(String find){
+    public long rowsFind(String find) {
         return candidateDAO.rowsFind(find);
     }
 
@@ -296,58 +289,58 @@ public class CandidateServiceImpl implements CandidateService {
     }
 
     @Override
-    public boolean saveInterviewResult (Integer candidateId,
-                                        Integer interviewerId,
-                                        Integer mark,
-                                        String recomendation,
-                                        String comment
+    public boolean saveInterviewResult(Integer candidateId,
+                                       Integer interviewerId,
+                                       Integer mark,
+                                       String recomendation,
+                                       String comment
     ) {
         boolean flag = true;
         ArrayList<InterviewResult> interviewResults = (ArrayList<InterviewResult>) interviewResultDAO.findResultsByCandidateId(candidateId);
-        if(interviewResults.size()!=0){
-           for(int i=0;i<interviewResults.size();i++){
-               User interviewer = interviewResults.get(i).getInterviewer();
-               User newInterviewer = userDAO.find(interviewerId);
+        if (interviewResults.size() != 0) {
+            for (int i = 0; i < interviewResults.size(); i++) {
+                User interviewer = interviewResults.get(i).getInterviewer();
+                User newInterviewer = userDAO.find(interviewerId);
 
-               for(Role role:interviewer.getRoles()){
-                  switch (role){
-                      case ROLE_BA:{
-                          if (!newInterviewer.getRoles().contains(Role.ROLE_BA)){
-                              if(!newInterviewer.getRoles().contains(Role.ROLE_HR)){
-                                  flag = true;
-                              }else{
-                                  flag = false;
-                              }
-                          }else{
-                              flag = false;
-                          }
-                          break;
-                      }
-                      case ROLE_HR:{
-                          if (!newInterviewer.getRoles().contains(Role.ROLE_HR)){
-                              if(!newInterviewer.getRoles().contains(Role.ROLE_BA)){
-                                  flag = true;
-                              }else{
-                                  flag = false;
-                              }
-                          }else{
-                              flag = false;
-                          }
-                          break;
-                      }
-                      case ROLE_DEV:{
-                          if (!newInterviewer.getRoles().contains(Role.ROLE_BA)){
-                              flag = true;
-                          }else{
-                              flag = false;
-                          }
-                          break;
-                      }
-                  }
-               }
-           }
+                for (Role role : interviewer.getRoles()) {
+                    switch (role) {
+                        case ROLE_BA: {
+                            if (!newInterviewer.getRoles().contains(Role.ROLE_BA)) {
+                                if (!newInterviewer.getRoles().contains(Role.ROLE_HR)) {
+                                    flag = true;
+                                } else {
+                                    flag = false;
+                                }
+                            } else {
+                                flag = false;
+                            }
+                            break;
+                        }
+                        case ROLE_HR: {
+                            if (!newInterviewer.getRoles().contains(Role.ROLE_HR)) {
+                                if (!newInterviewer.getRoles().contains(Role.ROLE_BA)) {
+                                    flag = true;
+                                } else {
+                                    flag = false;
+                                }
+                            } else {
+                                flag = false;
+                            }
+                            break;
+                        }
+                        case ROLE_DEV: {
+                            if (!newInterviewer.getRoles().contains(Role.ROLE_BA)) {
+                                flag = true;
+                            } else {
+                                flag = false;
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
         }
-        if(flag == true){
+        if (flag == true) {
             InterviewResult interviewResult = new InterviewResult();
             interviewResult.setComment(comment);
             interviewResult.setInterviewerId(interviewerId);
@@ -358,14 +351,5 @@ public class CandidateServiceImpl implements CandidateService {
         return flag;
     }
 
-    @Override
-    public Collection<Candidate> filterCandidates(List<Answer> expected, Integer limit, Integer offset) {
 
-        int element = 0;
-        if ((offset-1)!=0){
-            element = (offset-1)*limit;
-        }
-
-        return candidateDAO.filterCandidates(expected, limit, element);
-    }
 }

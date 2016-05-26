@@ -36,9 +36,8 @@ public interface CandidateDAO extends DAO<Candidate> {
 
     public Collection<Candidate> pagination(Integer elementPage, Integer fromElement);
 
-    Long getRows(List<Answer> expected);
 
-    public Collection<Candidate> findForSerach (Integer elementPage, Integer fromElement, String find);
+    public Collection<Candidate> findForSearch(Integer elementPage, Integer fromElement, String find);
 
     public long rowsFind(String find);
 
