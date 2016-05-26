@@ -275,13 +275,8 @@ public class CandidateServiceImpl implements CandidateService {
         if ((fromElement - 1) != 0) {
             element = (fromElement - 1) * limitRows;
         }
-        return candidateDAO.findForSearch(limitRows, element, find);
+        return paginationServiceImp.findForSearch(limitRows, element, find);
     }
-
-    public long rowsFind(String find) {
-        return candidateDAO.rowsFind(find);
-    }
-
 
     @Override
     public Collection<Candidate> getPartByCourse(Integer courseId, Integer with, Integer to) {

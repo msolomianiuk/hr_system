@@ -608,7 +608,7 @@ public class AdminController {
     public ResponseEntity<String> rowsFind(
             @RequestParam String find
     ) {
-        long rows = candidateService.rowsFind(find);
+        long rows = paginationServiceImp.rowsFind(find);
         if (rows==0) {
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
         }

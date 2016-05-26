@@ -1,13 +1,11 @@
 package ua.netcracker.model.dao;
 
 
-import ua.netcracker.model.entity.Answer;
 import ua.netcracker.model.entity.Candidate;
 import ua.netcracker.model.entity.Status;
 import ua.netcracker.model.entity.User;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -34,12 +32,6 @@ public interface CandidateDAO extends DAO<Candidate> {
 
     boolean updateCandidateStatus(Integer candidateID, Integer newStatusID);
 
-    public Collection<Candidate> pagination(Integer elementPage, Integer fromElement);
-
-
-    public Collection<Candidate> findForSearch(Integer elementPage, Integer fromElement, String find);
-
-    public long rowsFind(String find);
 
     Collection<Candidate> getAllMarked(User user);
 
@@ -50,8 +42,5 @@ public interface CandidateDAO extends DAO<Candidate> {
     Integer getCandidateCount(int courseId);
 
     Integer getCandidateCountByInterviewId(int courseId);
-
-    Collection<Candidate> filterCandidates(List<Answer> expected, Integer limit, Integer offset);
-
 
 }
