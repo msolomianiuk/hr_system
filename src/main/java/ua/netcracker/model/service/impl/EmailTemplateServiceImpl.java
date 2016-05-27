@@ -22,14 +22,7 @@ public class EmailTemplateServiceImpl implements EmailTemplateService {
     }
 
     @Override
-    public boolean manageEmailTemplate(EmailTemplate emailTemplate, String status) {
-        switch (status) {
-            case "update":
-                emailTemplateDao.update(emailTemplate);
-                break;
-            default:
-                return false;
-        }
-        return true;
+    public boolean updateEmailTemplate(EmailTemplate emailTemplate) {
+        return emailTemplateDao.update(emailTemplate);
     }
 }

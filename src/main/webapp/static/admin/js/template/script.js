@@ -28,10 +28,9 @@ $(document).ready(function () {
             $(".btn-update").css({'display': 'inline-block'});
             $(".btn-save").css({'display': 'none'});
             $(".btn-cancel").css({'display': 'none'});
-            templates[templateIndex].status = 'update';
             templates[templateIndex].description = $(".description").val();
             templates[templateIndex].template = $(".template").val();
-            ajax("service/setEmailTemplates", function () {
+            ajax("service/updateEmailTemplate", function () {
             }, function () {
             }, templates[templateIndex]);
             showModal();
@@ -49,9 +48,6 @@ $(document).ready(function () {
 function init() {
     ajax("service/getEmailTemplates", function (data) {
         templates = data;
-        for (var index in templates) {
-            templates[index].status = "new";
-        }
         generateEmailTemplateList(templates);
     });
 }
@@ -87,7 +83,7 @@ function showModal() {
 
 function ajax(url, success, error, data) {
     $.ajax({
-        url: "http://31.131.25.206:8080/hr_system-1.0-SNAPSHOT/admin/" + url,
+        url: "http://localhost:8080/hr_system-1.0-SNAPSHOT/admin/" + url,
         type: "GET",
         dataType: "json",
         contentType: 'application/json',

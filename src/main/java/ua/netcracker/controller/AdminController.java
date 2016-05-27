@@ -240,15 +240,15 @@ public class AdminController {
                 addressService.findByAddress(address_id).getId()
         );
         if (dateService.validTwoTimes(start_time, end_time)) {
-            if (addressService.findById(interviewDaysDetails.getAddressId()).getRoomCapacity() > interviewDaysDetails.getCountPersonal() * 2) {
-                interviewDaysDetailsService.update(interviewDaysDetails);
-                return ResponseEntity
-                        .status(HttpStatus.ACCEPTED).body(ResponseEntity.ok("Success"));
-            } else {
-                return ResponseEntity
-                        .status(HttpStatus.BAD_REQUEST).body("This room can not accommodate all the people");
-            }
-        } else
+                if (addressService.findById(interviewDaysDetails.getAddressId()).getRoomCapacity() > interviewDaysDetails.getCountPersonal() * 2) {
+                    interviewDaysDetailsService.update(interviewDaysDetails);
+                    return ResponseEntity
+                            .status(HttpStatus.ACCEPTED).body(ResponseEntity.ok("Success"));
+                } else {
+                    return ResponseEntity
+                            .status(HttpStatus.BAD_REQUEST).body("This room can not accommodate all the people");
+                }
+       } else
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST).body("Please, enter valid time!");
 
@@ -366,7 +366,7 @@ public class AdminController {
         return "report";
     }
 
-    @RequestMapping(value = "/service/getReportQuery", method = RequestMethod.GET)
+    @RequestMapping(value = "/service/getAllShowReportQuery", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<Collection<ReportQuery>> getAllShowReports() {
         Collection<ReportQuery> reports = reportService.getAllShowReports();
@@ -376,19 +376,50 @@ public class AdminController {
         return new ResponseEntity<>(reports, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/service/setReportQuery", method = RequestMethod.GET)
+    @RequestMapping(value = "/service/updateReportQuery", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<ReportQuery> setReport(@RequestParam String id,
-                                                 @RequestParam String description,
-                                                 @RequestParam String query,
-                                                 @RequestParam String show,
-                                                 @RequestParam String status) {
+    public ResponseEntity<ReportQuery> updateReport(@RequestParam String id,
+                                                    @RequestParam String description,
+                                                    @RequestParam String query,
+                                                    @RequestParam String show) {
         ReportQuery reportQuery = new ReportQuery();
         reportQuery.setId(Integer.valueOf(id));
         reportQuery.setQuery(query);
         reportQuery.setDescription(description);
         reportQuery.setShow(Boolean.valueOf(show));
-        if (reportService.manageReportQuery(reportQuery, status)) {
+        if (reportService.updateReportQuery(reportQuery)) {
+            return new ResponseEntity<>(reportQuery, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    @RequestMapping(value = "/service/deleteReportQuery", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<ReportQuery> deleteReport(@RequestParam String id,
+                                                    @RequestParam String description,
+                                                    @RequestParam String query,
+                                                    @RequestParam String show) {
+        ReportQuery reportQuery = new ReportQuery();
+        reportQuery.setId(Integer.valueOf(id));
+        reportQuery.setQuery(query);
+        reportQuery.setDescription(description);
+        reportQuery.setShow(Boolean.valueOf(show));
+        if (reportService.deleteReportQuery(reportQuery)) {
+            return new ResponseEntity<>(reportQuery, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    @RequestMapping(value = "/service/insertReportQuery", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<ReportQuery> insertReport(@RequestParam String description,
+                                                    @RequestParam String query,
+                                                    @RequestParam String show) {
+        ReportQuery reportQuery = new ReportQuery();
+        reportQuery.setQuery(query);
+        reportQuery.setDescription(description);
+        reportQuery.setShow(Boolean.valueOf(show));
+        if (reportService.insertReportQuery(reportQuery)) {
             return new ResponseEntity<>(reportQuery, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -404,10 +435,20 @@ public class AdminController {
         return new ResponseEntity<>(report, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/service/createMainReport", method = RequestMethod.GET)
+    @RequestMapping(value = "/service/createReportByCourse", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<Collection<Collection<String>>> createMainReport(@RequestParam String courseId, @RequestParam String status) {
-        Collection<Collection<String>> report = reportService.getReportByQuery(Integer.valueOf(courseId), status);
+    public ResponseEntity<Collection<Collection<String>>> createReportByCourse(@RequestParam String courseId) {
+        Collection<Collection<String>> report = reportService.getStudentsByCourseId(Integer.valueOf(courseId));
+        if (report.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(report, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/service/createReportByCourseAndStatus", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<Collection<Collection<String>>> createReportByCourseAndStatus(@RequestParam String courseId, @RequestParam String status) {
+        Collection<Collection<String>> report = reportService.getStudentsByCourseIdAndStatus(Integer.valueOf(courseId),status) ;
         if (report.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -467,18 +508,16 @@ public class AdminController {
         return new ResponseEntity<>(emailTemplates, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/service/setEmailTemplates", method = RequestMethod.GET)
+    @RequestMapping(value = "/service/updateEmailTemplate", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<EmailTemplate> setAllEmailTemplates(@RequestParam String id,
-                                                              @RequestParam String description,
-                                                              @RequestParam String template,
-                                                              @RequestParam String status) {
+    public ResponseEntity<EmailTemplate> updateEmailTemplate(@RequestParam String id,
+                                                             @RequestParam String description,
+                                                             @RequestParam String template) {
         EmailTemplate emailTemplate = new EmailTemplate();
         emailTemplate.setTemplate(template);
         emailTemplate.setDescription(description);
         emailTemplate.setId(Integer.valueOf(id));
-        if (emailTemplateService.manageEmailTemplate(emailTemplate, status)) {
-
+        if (emailTemplateService.updateEmailTemplate(emailTemplate)) {
             return new ResponseEntity<>(HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -606,7 +645,7 @@ public class AdminController {
             @RequestParam String find
     ) {
         long rows = paginationServiceImp.rowsFind(find);
-        if (rows == 0) {
+        if (rows==0) {
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
         }
         return ResponseEntity.ok(String.valueOf(rows));

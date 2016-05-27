@@ -261,7 +261,7 @@
                                                             data-dismiss="modal">Delete
                                                     </button>
                                                     <button type="button" class="btn btn-primary btn-save">Save</button>
-                                                    <button type="button" class="btn btn-primary btn-cancel">Cancel
+                                                    <%--<button type="button" class="btn btn-primary btn-cancel">Cancel--%>
                                                     </button>
                                                 </div>
                                             </div>

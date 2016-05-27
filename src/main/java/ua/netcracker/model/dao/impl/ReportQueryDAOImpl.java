@@ -116,7 +116,7 @@ public class ReportQueryDAOImpl implements ReportQueryDAO {
     }
 
     @Override
-    public boolean remove(ReportQuery reportQuery) {
+    public boolean delete(ReportQuery reportQuery) {
         try {
             JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
             jdbcTemplate.update(SQL_DELETE, new Object[]{reportQuery.getId()});
@@ -124,41 +124,6 @@ public class ReportQueryDAOImpl implements ReportQueryDAO {
         } catch (DataAccessException ex) {
             LOGGER.trace(ex);
             return false;
-        }
-    }
-
-    @Override
-    public Collection<String> getDescriptions() {
-        try {
-            JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-            Collection<String> descriptions = new ArrayList<>();
-            List<Map<String, Object>> rows = jdbcTemplate.queryForList(SQL_GET_DESCRIPTIONS);
-            for (Map row : rows) {
-                String description = (String) row.get("description");
-                descriptions.add(description);
-            }
-            return descriptions;
-        } catch (DataAccessException ex) {
-            LOGGER.trace(ex);
-            return new ArrayList<>();
-        }
-    }
-
-    @Override
-    public ReportQuery getReportQueryByDescription(String description) {
-        try {
-            JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-            ReportQuery reportQuery = jdbcTemplate.queryForObject(SQL_GET_REPORT_QUERY_BY_DESCRIPTION, new Object[]{description}, new RowMapper<ReportQuery>() {
-                        @Override
-                        public ReportQuery mapRow(ResultSet resultSet, int i) throws SQLException {
-                            return getReportQuery(resultSet);
-                        }
-                    }
-            );
-            return reportQuery;
-        } catch (DataAccessException ex) {
-            LOGGER.trace(ex);
-            return new ReportQuery();
         }
     }
 

@@ -12,7 +12,9 @@ import java.util.Map;
  * Created by Владимир on 06.05.2016.
  */
 public interface ReportService {
-    Collection<Collection<String>> getReportByQuery(int courseId, String status);
+    Collection<Collection<String>> getStudentsByCourseId(int courseId);
+
+    Collection<Collection<String>> getStudentsByCourseIdAndStatus(int courseId, String status);
 
     Collection<Collection<String>> getReportByQuery(String sql, String description);
 
@@ -24,7 +26,11 @@ public interface ReportService {
 
     Collection<ReportQuery> getAllReports();
 
-    boolean manageReportQuery(ReportQuery reportQuery, String status);
+    boolean updateReportQuery(ReportQuery reportQuery);
+
+    boolean deleteReportQuery(ReportQuery reportQuery);
+
+    boolean insertReportQuery(ReportQuery reportQuery);
 
     Collection<Integer> getCourses();
 

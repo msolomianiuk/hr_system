@@ -12,7 +12,6 @@ import java.util.Collection;
  */
 public interface DAO<T> {
     Collection<T> findAll();
-
     /**
      * Find entity by primary key
      *
