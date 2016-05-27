@@ -55,9 +55,6 @@ public class AdminController {
     private ReportService reportService;
 
     @Autowired
-    private AnswerServiceImpl answerService;
-
-    @Autowired
     private SendEmailService sendEmailService;
 
     @RequestMapping(value = "", method = RequestMethod.GET)
