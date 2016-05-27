@@ -182,7 +182,7 @@ public class CandidateServiceImpl implements CandidateService {
     }
 
     @Override
-    public Candidate saveAnswers(String answersJsonString) throws NullPointerException{
+    public Candidate saveAnswers(String answersJsonString) throws NullPointerException {
         Collection<Answer> listAnswers = JsonParsing.parseJsonString(answersJsonString);
         Candidate candidate = getCurrentCandidate();
         if (candidate.getId() == 0) {
@@ -205,7 +205,7 @@ public class CandidateServiceImpl implements CandidateService {
     }
 
     @Override
-    public Candidate getCurrentCandidate() throws NullPointerException{
+    public Candidate getCurrentCandidate() throws NullPointerException {
         userId = 0;
         try {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -222,11 +222,11 @@ public class CandidateServiceImpl implements CandidateService {
 
     @Override
     public void deleteAnswers(Candidate candidate) {
-       try{
-           answersDAO.deleteAnswers(candidate.getId());
-       }catch (DataAccessException e){
-           LOGGER.error("Method: deleteAnswers" + " Error: " + e);
-       }
+        try {
+            answersDAO.deleteAnswers(candidate.getId());
+        } catch (DataAccessException e) {
+            LOGGER.error("Method: deleteAnswers" + " Error: " + e);
+        }
     }
 
 
@@ -345,42 +345,43 @@ public class CandidateServiceImpl implements CandidateService {
         return flag;
     }
 
+    private Collection<Role> getSortRoles(Role role) {
+        Collection<Role> listSortRoles = new ArrayList<>();
+        switch (role) {
+            case ROLE_BA: {
+                listSortRoles.add(role);
+                listSortRoles.add(Role.ROLE_HR);
+                break;
+            }
+            case ROLE_HR: {
+                listSortRoles.add(role);
+                listSortRoles.add(Role.ROLE_BA);
+                break;
+            }
+            case ROLE_DEV: {
+                listSortRoles.add(role);
+                listSortRoles.add(Role.ROLE_BA);
+                listSortRoles.add(Role.ROLE_HR);
+                break;
+            }
+        }
+        return listSortRoles;
+    }
+
     private boolean isPostInterviewResult(Collection<Role> rolesInterviewerFirst, Collection<Role> rolesInterviewerLast) {
         boolean flag = true;
         for (Role role : rolesInterviewerFirst) {
-            switch (role) {
-                case ROLE_BA: {
-                    if (!rolesInterviewerLast.contains(Role.ROLE_BA)) {
-                        if (!rolesInterviewerLast.contains(Role.ROLE_HR)) {
-                            flag = true;
-                        } else {
-                            flag = false;
-                        }
-                    } else {
-                        flag = false;
-                    }
-                    break;
+            ArrayList<Role> listSortRoles = (ArrayList) getSortRoles(role);
+            int count = listSortRoles.size();
+            for (int i = 0; i < listSortRoles.size(); i++) {
+                if (!rolesInterviewerLast.contains(listSortRoles.get(i))) {
+                    count--;
                 }
-                case ROLE_HR: {
-                    if (!rolesInterviewerLast.contains(Role.ROLE_HR)) {
-                        if (!rolesInterviewerLast.contains(Role.ROLE_BA)) {
-                            flag = true;
-                        } else {
-                            flag = false;
-                        }
-                    } else {
-                        flag = false;
-                    }
-                    break;
-                }
-                case ROLE_DEV: {
-                    if (!rolesInterviewerLast.contains(Role.ROLE_BA)) {
-                        flag = true;
-                    } else {
-                        flag = false;
-                    }
-                    break;
-                }
+            }
+            if (count == 0) {
+                flag = true;
+            } else {
+                flag = false;
             }
         }
         return flag;
