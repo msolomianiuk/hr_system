@@ -12,7 +12,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import ua.netcracker.model.entity.*;
 import ua.netcracker.model.service.*;
 import ua.netcracker.model.service.date.DateService;
-import ua.netcracker.model.service.impl.*;
+import ua.netcracker.model.service.impl.CandidateServiceImpl;
+import ua.netcracker.model.service.impl.CourseSettingServiceImpl;
+import ua.netcracker.model.service.impl.PaginationServiceImp;
+import ua.netcracker.model.service.impl.QuestionServiceImpl;
 import ua.netcracker.model.utils.JsonParsing;
 
 import java.io.IOException;
@@ -170,17 +173,14 @@ public class AdminController {
 
     @RequestMapping(value = "/get_candidate", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<Collection> setCandidate(
+    public ResponseEntity<Collection<Answer>> setCandidate(
             @RequestParam String id
     ) {
 
-        Collection candidate = candidateService.getAllCandidateAnswers(candidateService.
+        Collection<Answer> candidateAnswer = candidateService.getAllCandidateAnswers(candidateService.
                 getCandidateById(Integer.parseInt(id)));
 
-        Collection collection = new ArrayList();
-        collection.add(candidate);
-
-        return ResponseEntity.ok(collection);
+        return ResponseEntity.ok(candidateAnswer);
 
     }
 
@@ -196,7 +196,7 @@ public class AdminController {
     public ResponseEntity<InterviewDaysDetails> getInterviewDetailsByDate(
             @RequestParam String id
     ) {
-        InterviewDaysDetails interviewDaysDetails = null;
+        InterviewDaysDetails interviewDaysDetails;
         interviewDaysDetails = interviewDaysDetailsService.findById(interviewDaysDetailsService.getIdbyDate(id));
         if (interviewDaysDetails != null) {
             return ResponseEntity.ok(interviewDaysDetails);
@@ -209,7 +209,7 @@ public class AdminController {
     public ResponseEntity<InterviewDaysDetails> getInterviewDetailsById(
             @RequestParam String id
     ) {
-        InterviewDaysDetails interviewDaysDetails = null;
+        InterviewDaysDetails interviewDaysDetails;
         interviewDaysDetails = interviewDaysDetailsService.findById(Integer.parseInt(id));
         if (interviewDaysDetails != null) {
             return ResponseEntity.ok(interviewDaysDetails);
@@ -240,7 +240,6 @@ public class AdminController {
                 addressService.findByAddress(address_id).getId()
         );
         if (dateService.validTwoTimes(start_time, end_time)) {
-//            if (interviewDaysDetailsService.timeIsFree(interviewDaysDetails)) {
             if (addressService.findById(interviewDaysDetails.getAddressId()).getRoomCapacity() > interviewDaysDetails.getCountPersonal() * 2) {
                 interviewDaysDetailsService.update(interviewDaysDetails);
                 return ResponseEntity
@@ -249,9 +248,6 @@ public class AdminController {
                 return ResponseEntity
                         .status(HttpStatus.BAD_REQUEST).body("This room can not accommodate all the people");
             }
-//            } else
-//                return ResponseEntity
-//                        .status(HttpStatus.BAD_REQUEST).body("This room at this time is busy");
         } else
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST).body("Please, enter valid time!");
@@ -263,9 +259,9 @@ public class AdminController {
     public ResponseEntity<List<Map<String, Object>>> getDateList() {
         List<Map<String, Object>> dateList = dateService.getDateList(courseSettingService.getLastSetting());
         if (dateList.isEmpty()) {
-            return new ResponseEntity<List<Map<String, Object>>>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        return new ResponseEntity<List<Map<String, Object>>>(dateList, HttpStatus.OK);
+        return new ResponseEntity<>(dateList, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/add_date", method = RequestMethod.GET)
@@ -284,9 +280,9 @@ public class AdminController {
     public ResponseEntity<List<Address>> getAllAddress() {
         List<Address> addressList = (List<Address>) addressService.findAllSetting();
         if (addressList.isEmpty()) {
-            return new ResponseEntity<List<Address>>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        return new ResponseEntity<List<Address>>(addressList, HttpStatus.OK);
+        return new ResponseEntity<>(addressList, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/address_getAddress", method = RequestMethod.GET)
@@ -296,9 +292,9 @@ public class AdminController {
     ) {
         Address address = addressService.findById(Integer.parseInt(id));
         if (address == null) {
-            return new ResponseEntity<Address>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        return new ResponseEntity<Address>(address, HttpStatus.OK);
+        return new ResponseEntity<>(address, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/address_insert", method = RequestMethod.GET)
