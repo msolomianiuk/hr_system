@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import ua.netcracker.model.dao.UserDAO;
 import ua.netcracker.model.entity.Candidate;
 import ua.netcracker.model.entity.Question;
 import ua.netcracker.model.entity.User;
@@ -36,13 +35,11 @@ public class HRController {
     @Autowired
     private CandidateService candidateService;
     @Autowired
-    private UserDAO userDAO;
-    @Autowired
     private UserService userService;
 
     @RequestMapping(value = "hr/service/getCandidateById", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<Candidate> getCandidate(@RequestParam int id) throws NullPointerException{
+    public ResponseEntity<Candidate> getCandidate(@RequestParam int id) throws NullPointerException {
         Candidate candidate = candidateService.getCandidateById(id);
         if (candidate == null) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -63,11 +60,11 @@ public class HRController {
     @RequestMapping(value = "hr/service/getCandidatsList", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<Collection<Candidate>> getCandidatesList() {
-        Collection<Candidate> listCandidates = candidateService.getAllCandidatesIsView();
+        Collection<Candidate> listCandidates = candidateService.getAllCandidates();
         if (listCandidates.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        return new ResponseEntity<Collection<Candidate>>(listCandidates, HttpStatus.OK);
+        return new ResponseEntity<>(listCandidates, HttpStatus.OK);
     }
 
     @RequestMapping(value = "hr/service/getQuestionViewList", method = RequestMethod.GET)
@@ -77,7 +74,7 @@ public class HRController {
         if (listQuestion.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        return new ResponseEntity<Collection<Question>>(listQuestion, HttpStatus.OK);
+        return new ResponseEntity<>(listQuestion, HttpStatus.OK);
     }
 
     @RequestMapping(value = "hr/service/getAllStatus", method = RequestMethod.GET)
@@ -87,7 +84,7 @@ public class HRController {
         if (listStatus.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        return new ResponseEntity<Map<Integer, String>>(listStatus, HttpStatus.OK);
+        return new ResponseEntity<>(listStatus, HttpStatus.OK);
     }
 
     @RequestMapping(value = "hr/service/getAllMarked", method = RequestMethod.GET)
@@ -101,7 +98,7 @@ public class HRController {
         if (candidateList.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        return new ResponseEntity<Collection<Candidate>>(candidateList, HttpStatus.OK);
+        return new ResponseEntity<>(candidateList, HttpStatus.OK);
     }
 
     @RequestMapping(value = "hr/service/getCandidatsListWithTo", method = RequestMethod.GET)
@@ -112,7 +109,7 @@ public class HRController {
         if (listCandidates.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        return new ResponseEntity<Collection<Candidate>>(listCandidates, HttpStatus.OK);
+        return new ResponseEntity<>(listCandidates, HttpStatus.OK);
     }
 
     @RequestMapping(value = "hr/service/setCandidateStatus", method = RequestMethod.GET)

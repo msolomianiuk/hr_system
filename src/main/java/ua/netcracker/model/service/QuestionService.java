@@ -27,9 +27,9 @@ public interface QuestionService {
 
     boolean remove(Question question);
 
-    public List<String> parseListJson(List<String> list);
+    public Collection<String> parseListJson(List<String> list);
 
-    public List<Question> getTypeOfQuestion();
+    public Collection<Question> getTypeOfQuestion();
 
     public int getQuantityQuestions();
 

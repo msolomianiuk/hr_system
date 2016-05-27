@@ -240,15 +240,15 @@ public class AdminController {
                 addressService.findByAddress(address_id).getId()
         );
         if (dateService.validTwoTimes(start_time, end_time)) {
-                if (addressService.findById(interviewDaysDetails.getAddressId()).getRoomCapacity() > interviewDaysDetails.getCountPersonal() * 2) {
-                    interviewDaysDetailsService.update(interviewDaysDetails);
-                    return ResponseEntity
-                            .status(HttpStatus.ACCEPTED).body(ResponseEntity.ok("Success"));
-                } else {
-                    return ResponseEntity
-                            .status(HttpStatus.BAD_REQUEST).body("This room can not accommodate all the people");
-                }
-       } else
+            if (addressService.findById(interviewDaysDetails.getAddressId()).getRoomCapacity() > interviewDaysDetails.getCountPersonal() * 2) {
+                interviewDaysDetailsService.update(interviewDaysDetails);
+                return ResponseEntity
+                        .status(HttpStatus.ACCEPTED).body(ResponseEntity.ok("Success"));
+            } else {
+                return ResponseEntity
+                        .status(HttpStatus.BAD_REQUEST).body("This room can not accommodate all the people");
+            }
+        } else
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST).body("Please, enter valid time!");
 
@@ -448,7 +448,7 @@ public class AdminController {
     @RequestMapping(value = "/service/createReportByCourseAndStatus", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<Collection<Collection<String>>> createReportByCourseAndStatus(@RequestParam String courseId, @RequestParam String status) {
-        Collection<Collection<String>> report = reportService.getStudentsByCourseIdAndStatus(Integer.valueOf(courseId),status) ;
+        Collection<Collection<String>> report = reportService.getStudentsByCourseIdAndStatus(Integer.valueOf(courseId), status);
         if (report.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -535,7 +535,7 @@ public class AdminController {
 
     @RequestMapping(value = "/get_question", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<Question> getQuestion(@RequestParam String id) {
+    public ResponseEntity<Question> getQuestion(@RequestParam String id) throws NullPointerException {
         Question question = questionService.get(Integer.parseInt(id));
         if (question == null) {
             return (ResponseEntity<Question>) ResponseEntity.EMPTY;
@@ -645,7 +645,7 @@ public class AdminController {
             @RequestParam String find
     ) {
         long rows = paginationServiceImp.rowsFind(find);
-        if (rows==0) {
+        if (rows == 0) {
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
         }
         return ResponseEntity.ok(String.valueOf(rows));

@@ -15,8 +15,6 @@ public interface CandidateService {
 
     Collection<Candidate> getAllCandidates();
 
-    Collection<Candidate> getAllCandidatesIsView();
-
     Collection<Candidate> getPartCandidatesWithAnswer(Integer with, Integer to);
 
     Collection<Candidate> getPartCandidatesIsViewWithAnswer(Integer with, Integer to);

@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ua.netcracker.model.dao.CandidateDAO;
 import ua.netcracker.model.entity.Answer;
 import ua.netcracker.model.entity.Candidate;
 import ua.netcracker.model.entity.Status;
@@ -26,8 +25,6 @@ public class StudentsRestController {
 
     @Autowired
     private CandidateService candidateService;
-    @Autowired
-    private CandidateDAO candidateDAO;
 
     @Autowired
     private PaginationServiceImp paginationServiceImp;
@@ -40,15 +37,17 @@ public class StudentsRestController {
 
 
         if (students.isEmpty()) {
-            return new ResponseEntity<List<Candidate>>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        return new ResponseEntity<List<Candidate>>(students, HttpStatus.OK);
+        return new ResponseEntity<>(students, HttpStatus.OK);
     }
 
 
     @RequestMapping(value = "/getStudents/filter", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<List<Candidate>> filterStudents(@RequestParam String answersJsonString, @RequestParam String status, @RequestParam String status2, @RequestParam Integer limit, @RequestParam Integer offset) {
+    public ResponseEntity<List<Candidate>> filterStudents(@RequestParam String answersJsonString,
+                                                          @RequestParam String status, @RequestParam String status2,
+                                                          @RequestParam Integer limit, @RequestParam Integer offset) {
 
         Collection<Answer> answers = JsonParsing.parseJsonString(answersJsonString);
 

@@ -59,11 +59,6 @@ public class CandidateServiceImpl implements CandidateService {
     }
 
     @Override
-    public Collection<Candidate> getAllCandidatesIsView() {
-        return getPartCandidatesIsViewWithAnswer(null, null);
-    }
-
-    @Override
     public Collection<Candidate> getPartCandidatesWithAnswer(Integer with, Integer to) {
         Collection<Candidate> listCandidates = new ArrayList<>();
         try {
@@ -211,7 +206,8 @@ public class CandidateServiceImpl implements CandidateService {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             if (!(auth instanceof AnonymousAuthenticationToken)) {
                 UserAuthenticationDetails userDetails =
-                        (UserAuthenticationDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+                        (UserAuthenticationDetails) SecurityContextHolder.getContext().
+                                getAuthentication().getPrincipal();
                 userId = userDetails.getUserId();
             }
         } catch (Exception e) {
@@ -315,12 +311,8 @@ public class CandidateServiceImpl implements CandidateService {
 
 
     @Override
-    public boolean saveInterviewResult(Integer candidateId,
-                                       Integer interviewerId,
-                                       Integer mark,
-                                       String recommendation,
-                                       String comment
-    ) {
+    public boolean saveInterviewResult(Integer candidateId, Integer interviewerId, Integer mark,
+                                       String recommendation, String comment) {
         boolean flag = true;
         try {
             ArrayList<InterviewResult> interviewResults = (ArrayList<InterviewResult>) interviewResultDAO.

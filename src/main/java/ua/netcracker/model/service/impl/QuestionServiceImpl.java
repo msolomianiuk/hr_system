@@ -29,7 +29,7 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public Question get(int id) {
+    public Question get(int id) throws NullPointerException {
         return questionDao.find(id);
     }
 
@@ -43,7 +43,6 @@ public class QuestionServiceImpl implements QuestionService {
         return questionDao.findAllByCourseId(courseId);
     }
 
-    ;
 
     @Override
     public boolean save(Question question) {
@@ -66,17 +65,17 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public int getCourseId() {
+    public int getCourseId() throws NullPointerException {
         return questionDao.findCourseId();
     }
 
     @Override
-    public int getQuantityQuestions() {
+    public int getQuantityQuestions() throws NullPointerException {
         return questionDao.findQuantityQuestions();
     }
 
     @Override
-    public List<Question> getTypeOfQuestion() {
+    public Collection<Question> getTypeOfQuestion() {
         return questionDao.findType();
     }
 
