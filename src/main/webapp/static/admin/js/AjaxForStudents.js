@@ -286,7 +286,7 @@ function funcForStudents (data){
         status = studentIndex.statusId;
 
         if(status == 1 ){
-            status = "Rejected";
+            statusNew = "Rejected";
         }
         if(status == 2 ){
             statusNew = "Ready";

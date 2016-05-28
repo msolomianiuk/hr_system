@@ -145,7 +145,7 @@ public class PaginationDAOImpl {
 
     public Collection<Candidate> paginationCandidates(Integer elementPage, Integer fromElement) {
 
-        Collection<Candidate> listCandidates;
+        Collection<Candidate> listCandidates = new ArrayList<>();
         try {
             jdbcTemplate = new JdbcTemplate(dataSource);
             listCandidates = jdbcTemplate.query(PAGINATION + elementPage + " offset " + fromElement, new RowMapper<Candidate>() {
@@ -161,19 +161,19 @@ public class PaginationDAOImpl {
                     candidate.setId(resultSet.getInt("id"));
                     candidate.setStatusId(resultSet.getInt("status_id"));
                     candidate.setCourseId(resultSet.getInt("course_id"));
-                    Collection<InterviewResult> list = new ArrayList<>();
+                    Collection<InterviewResult> list;
                     list = interviewResultDAO.findResultsByCandidateId(candidate.getId());
                     candidate.setInterviewResults(list);
 
                     return candidate;
                 }
             });
-            return listCandidates;
+
         } catch (Exception e) {
             LOGGER.error("Error:" + e);
         }
 
-        return null;
+        return listCandidates;
 
     }
 
