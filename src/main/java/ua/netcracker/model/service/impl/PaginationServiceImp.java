@@ -285,7 +285,11 @@ public class PaginationServiceImp {
         sql = sql.concat(" ORDER BY cand.course_id DESC,cand.interviewer_id,cand.status_id DESC," +
                 " cand.id LIMIT " + limit + " offset " + offset);
 
-        Collection<Candidate> listCandidates = new ArrayList<>();
+        return getCandidatesListFromSqlQuery(sql);
+    }
+
+    private List<Candidate> getCandidatesListFromSqlQuery(String sql) {
+        List<Candidate> listCandidates = new ArrayList<>();
         try {
             jdbcTemplate = new JdbcTemplate(dataSource);
             listCandidates = jdbcTemplate.query(sql, new RowMapper<Candidate>() {
@@ -365,8 +369,7 @@ public class PaginationServiceImp {
             rows = jdbcTemplate.queryForObject(sql, new RowMapper<Long>() {
                 @Override
                 public Long mapRow(ResultSet resultSet, int i) throws SQLException {
-                    Long row = resultSet.getLong("count");
-                    return row;
+                    return resultSet.getLong("count");
                 }
             });
         } catch (Exception e) {
