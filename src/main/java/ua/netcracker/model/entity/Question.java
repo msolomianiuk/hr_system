@@ -2,7 +2,7 @@ package ua.netcracker.model.entity;
 
 import org.springframework.stereotype.Component;
 
-import java.util.List;
+import java.util.Collection;
 
 
 @Component
@@ -15,7 +15,7 @@ public class Question {
 
     private String type;
 
-    private List<String> answerVariants;
+    private Collection<String> answerVariants;
 
     private int courseID;
 
@@ -59,11 +59,11 @@ public class Question {
         this.type = type;
     }
 
-    public List<String> getAnswerVariants() {
+    public Collection<String> getAnswerVariants() {
         return answerVariants;
     }
 
-    public void setAnswerVariants(List<String> answerVariants) {
+    public void setAnswerVariants(Collection<String> answerVariants) {
         this.answerVariants = answerVariants;
     }
 

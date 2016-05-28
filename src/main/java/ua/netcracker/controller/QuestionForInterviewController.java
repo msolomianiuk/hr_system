@@ -26,7 +26,7 @@ public class QuestionForInterviewController {
         if (questionForInterview == null) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        return new ResponseEntity<Collection<QuestionForInterview>>(questionForInterview, HttpStatus.OK);
+        return new ResponseEntity<>(questionForInterview, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/service/addQuestion", method = RequestMethod.GET)

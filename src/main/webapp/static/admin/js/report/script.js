@@ -20,7 +20,7 @@ $(document).ready(function () {
     });
     $(".btn-delete").on("click", function () {
         reports[reportIndex].status = 'delete';
-        ajax("service/setReportQuery", function () {
+        ajax("service/deleteReportQuery", function () {
         }, function () {
         }, reports[reportIndex]);
         reports.splice(reportIndex, 1);
@@ -37,32 +37,30 @@ $(document).ready(function () {
         $(".btn-update").css({'display': 'none'});
         $(".btn-delete").css({'display': 'none'});
         $(".btn-save").css({'display': 'inline-block'});
-        $(".btn-cancel").css({'display': 'inline-block'});
+        //$(".btn-cancel").css({'display': 'inline-block'});
     });
     $(".btn-save").on("click", function () {
         if (validateForm.form()) {
             $(".btn-update").css({'display': 'inline-block'});
             $(".btn-delete").css({'display': 'inline-block'});
             $(".btn-save").css({'display': 'none'});
-            $(".btn-cancel").css({'display': 'none'});
+            //$(".btn-cancel").css({'display': 'none'});
             if (reportIndex !== -1) {
-                reports[reportIndex].status = 'update';
                 reports[reportIndex].description = $(".description").val();
                 reports[reportIndex].query = $(".query").val();
-                ajax("service/setReportQuery", function () {
+                ajax("service/updateReportQuery", function () {
                 }, function () {
                 }, reports[reportIndex]);
             } else {
                 var report = {};
-                report.status = 'insert';
                 report.description = $(".description").val();
                 report.query = $(".query").val();
                 report.show = true;
-                report.id = -1;
-                ajax("service/setReportQuery", function () {
+                reportIndex = reports.push(report) - 1;
+                ajax("service/insertReportQuery", function () {
+                    getAllReports();
                 }, function () {
                 }, report);
-                reportIndex = reports.push(report) - 1;
             }
             showDevModal();
             generateReportsList(reports);
@@ -73,33 +71,35 @@ $(document).ready(function () {
         $(".btn-update").css({'display': 'inline-block'});
         $(".btn-delete").css({'display': 'inline-block'});
         $(".btn-save").css({'display': 'none'});
-        $(".btn-cancel").css({'display': 'none'});
+        //$(".btn-cancel").css({'display': 'none'});
         showDevModal();
     });
     $(".btn-create").on("click", function () {
         var textQuery = $(".dev_panel_query");
         textQuery.empty();
         textQuery.append('<label class="control-label col-md-3 col-sm-3 col-xs-12"> Query</label> <textarea class = "form-control col-md-7 col-xs-12 query" row="3" name="query"></textarea>');
+        autosize($('textarea'));
         var textDescription = $(".dev_panel_description");
         textDescription.empty();
         textDescription.append('<label class="control-label col-md-3 col-sm-3 col-xs-12"> Brief Description</label><input type="text" class = "form-control col-md-7 col-xs-12 description" name = "description" value="">');
         $(".btn-update").css({'display': 'none'});
         $(".btn-delete").css({'display': 'none'});
         $(".btn-save").css({'display': 'inline-block'});
-        $(".btn-cancel").css({'display': 'inline-block'});
+        //$(".btn-cancel").css({'display': 'inline-block'});
         reportIndex = -1;
     });
 });
 
-function init() {
-    ajax("service/getReportQuery", function (data) {
+function getAllReports() {
+    ajax("service/getAllShowReportQuery", function (data) {
         reports = data;
-        for (var index in reports) {
-            reports[index].status = "new";
-        }
         generateReportsList(reports);
         generateDeveloperReportsList(reports);
     });
+}
+
+function init() {
+    getAllReports();
     ajax("service/getCourses", function (data) {
         generateCourseList(data);
     });
@@ -121,10 +121,17 @@ function generateReportsList(data) {
     $(".show_button").on("click", function () {
         $('.export_button').css({'display': 'inline-block'});
         if ($(this).val() === "main") {
-            ajax("service/createMainReport", showReport, getReportError, {
-                courseId: $(".course_setting").val(),
-                status: $(".status").val()
-            });
+            var status = $(".status").val();
+            if (status === "ALL") {
+                ajax("service/createReportByCourse", showReport, getReportError, {
+                    courseId: $(".course_setting").val()
+                });
+            } else {
+                ajax("service/createReportByCourseAndStatus", showReport, getReportError, {
+                    courseId: $(".course_setting").val(),
+                    status: status
+                });
+            }
         }
         else {
             ajax("service/createReport", showReport, getReportError, {
@@ -157,7 +164,7 @@ function showDevModal() {
     var textDescription = $(".dev_panel_description");
     textDescription.empty();
     textDescription.append('<h4> Brief Description: ' + reports[reportIndex].description + '</h4>');
-    $(".btn-cancel").css({'display': 'none'});
+    //$(".btn-cancel").css({'display': 'none'});
     $(".btn-save").css({'display': 'none'});
     $(".btn-update").css({'display': 'inline-block'});
     $(".btn-delete").css({'display': 'inline-block'});
@@ -172,7 +179,7 @@ function getReportError() {
 function showReport(data) {
     var report = $(".report");
     report.empty();
-    if(data.length>1) {
+    if (data.length > 1) {
         var table = '';
         for (var i in data) {
             table += (i === 0 ? '<thead>' : '') + '<tr>';
@@ -186,8 +193,9 @@ function showReport(data) {
             table += (i === 0 ? '<thead>' : '') + '</tr>';
         }
         report.append(table);
-    }else{
+    } else {
         report.html("Empty");
+        $('.export_button').css({'display': 'none'});
     }
 }
 

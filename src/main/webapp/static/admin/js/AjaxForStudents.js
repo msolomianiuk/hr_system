@@ -294,25 +294,25 @@ function funcForStudents (data){
             statusNew = "Ready";
         }
         if(status == 3 ){
-            statusNew = "No_interview";
+            statusNew = "No interview";
         }
         if(status == 4 ){
             statusNew = "Interview";
         }
         if(status == 5 ){
-            statusNew = "Interview_dated";
+            statusNew = "Interview dated";
         }
         if(status == 6 ){
-            statusNew = "Interview_process";
+            statusNew = "Interview process";
         }
         if(status == 7 ){
-            statusNew = "Interview_passed";
+            statusNew = "Interview passed";
         }
         if(status == 8 ){
-            statusNew = "Trainee_accepted";
+            statusNew = "Trainee accepted";
         }
         if(status == 9 ){
-            statusNew = "Job_accepted";
+            statusNew = "Job accepted";
         }
 
         var ClassName = " ";
@@ -372,7 +372,6 @@ function funcForStudents (data){
         '<td  class="'+ClassName+' TextColorBlack" status_id="'+ studentIndex.statusId +'">'+statusNew+'</td>' +
         '<td>'+studentIndex.user.name+'</td>' +
         '<td>'+studentIndex.user.surname+'</td>' +
-        '<td>'+studentIndex.user.patronymic+'</td>' +
         '<td>'+studentIndex.user.email+'</td>' +
         '<td>'+
             '<button candidate_id="'+ studentIndex.id +'" data-toggle="modal" data-target = "#candidate-details" ' +

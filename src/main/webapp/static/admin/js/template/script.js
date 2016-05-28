@@ -15,6 +15,7 @@ $(document).ready(function () {
         var textTemplate = $(".email_text");
         textTemplate.empty();
         textTemplate.append('<h4>Template Text</h4> <textarea class = "form-control col-md-7 col-xs-12 template" name ="template" row="3">' + templates[templateIndex].template + '</textarea>');
+        autosize($('textarea'));
         var textSubject = $(".email_subject");
         textSubject.empty();
         textSubject.append('<h4>Subject</h4> <input type="text" class = "form-control col-md-7 col-xs-12 description" name = "description" value="' + templates[templateIndex].description + '"></p>');
@@ -27,10 +28,9 @@ $(document).ready(function () {
             $(".btn-update").css({'display': 'inline-block'});
             $(".btn-save").css({'display': 'none'});
             $(".btn-cancel").css({'display': 'none'});
-            templates[templateIndex].status = 'update';
             templates[templateIndex].description = $(".description").val();
             templates[templateIndex].template = $(".template").val();
-            ajax("service/setEmailTemplates", function () {
+            ajax("service/updateEmailTemplate", function () {
             }, function () {
             }, templates[templateIndex]);
             showModal();
@@ -48,9 +48,6 @@ $(document).ready(function () {
 function init() {
     ajax("service/getEmailTemplates", function (data) {
         templates = data;
-        for (var index in templates) {
-            templates[index].status = "new";
-        }
         generateEmailTemplateList(templates);
     });
 }
@@ -68,7 +65,6 @@ function generateEmailTemplateList(data) {
     }
     $(".show_button").on("click", function () {
         templateIndex = $(this).val();
-        console.log(templateIndex);
         showModal();
     });
 }

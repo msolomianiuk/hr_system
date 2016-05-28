@@ -8,12 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ua.netcracker.model.dao.CandidateDAO;
 import ua.netcracker.model.entity.Answer;
 import ua.netcracker.model.entity.Candidate;
 import ua.netcracker.model.entity.Status;
 import ua.netcracker.model.service.CandidateService;
-import ua.netcracker.model.service.impl.Pagination;
+import ua.netcracker.model.service.impl.PaginationServiceImp;
 import ua.netcracker.model.utils.JsonParsing;
 
 import java.util.ArrayList;
@@ -26,11 +25,9 @@ public class StudentsRestController {
 
     @Autowired
     private CandidateService candidateService;
-    @Autowired
-    private CandidateDAO candidateDAO;
 
     @Autowired
-    private Pagination pagination;
+    private PaginationServiceImp paginationServiceImp;
 
     @RequestMapping(value = "/getStudents", method = RequestMethod.GET)
     public ResponseEntity<List<Candidate>> listAllStudents() {
@@ -40,15 +37,17 @@ public class StudentsRestController {
 
 
         if (students.isEmpty()) {
-            return new ResponseEntity<List<Candidate>>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        return new ResponseEntity<List<Candidate>>(students, HttpStatus.OK);
+        return new ResponseEntity<>(students, HttpStatus.OK);
     }
 
 
     @RequestMapping(value = "/getStudents/filter", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<List<Candidate>> filterStudents(@RequestParam String answersJsonString, @RequestParam String status, @RequestParam String status2, @RequestParam Integer limit, @RequestParam Integer offset) {
+    public ResponseEntity<List<Candidate>> filterStudents(@RequestParam String answersJsonString,
+                                                          @RequestParam String status, @RequestParam String status2,
+                                                          @RequestParam Integer limit, @RequestParam Integer offset) {
 
         Collection<Answer> answers = JsonParsing.parseJsonString(answersJsonString);
 
@@ -59,7 +58,7 @@ public class StudentsRestController {
             }
         }
 
-        List<Candidate> filtered = (List<Candidate>) candidateService.filterCandidates(selected, limit, offset);
+        List<Candidate> filtered = (List<Candidate>) paginationServiceImp.filterCandidates(selected, limit, offset);
 
         if (filtered.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);

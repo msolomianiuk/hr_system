@@ -14,7 +14,7 @@
 <head>
     <title></title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-    <script src='<c:url value="/static/admin/js/report/jquery.table2excel.js"/>'></script>
+    <%--<script src='<c:url value="/static/admin/js/report/jquery.table2excel.js"/>'></script>--%>
     <script src='<c:url value="/static/admin/js/report/script.js"/>'></script>
     <link rel="stylesheet" href='<c:url value="/static/admin/css/report/style.css"/>'/>
 
@@ -45,9 +45,7 @@
           type="text/css"/>
     <script src="<c:url value="/static/admin/js/jquery.min.js"/>"></script>
     <script src="<c:url value="/static/admin/js/report/jquery.validate.min.js"/>"></script>
-    <script src="<c:url value="/static/admin/js/nprogress.js"/>"></script>
-    <script src="<c:url value="/static/admin/js/jquery.min.js"/>"></script>
-    <script src="<c:url value="/static/admin/js/report/jquery.validate.min.js"/>"></script>
+    <script src="<c:url value="/static/admin/js/textarea/autosize.min.js"/>"></script>
     <script src="<c:url value="/static/admin/js/nprogress.js"/>"></script>
 </head>
 
@@ -113,9 +111,8 @@
                                 <img src="<c:url value="${photo}"/>" alt="">
                                 <span class=" fa fa-angle-down"></span>
                             </a>
-                            <ul class="dropdown-menu dropdown-usermenu animated fadeInDown pull-right">
+                            <ul class="dropdown-menu dropdown-usermenu animated fadeInDown pull-right">                                    <a href="logout"><i class="fa fa-sign-out pull-right"></i> Log Out</a>
                                 <a href="<c:url value="/logout"/>"><i class="fa fa-sign-out pull-right"></i> Log Out</a>
-                                </li>
                             </ul>
                         </li>
                     </ul>
@@ -264,7 +261,7 @@
                                                             data-dismiss="modal">Delete
                                                     </button>
                                                     <button type="button" class="btn btn-primary btn-save">Save</button>
-                                                    <button type="button" class="btn btn-primary btn-cancel">Cancel
+                                                    <%--<button type="button" class="btn btn-primary btn-cancel">Cancel--%>
                                                     </button>
                                                 </div>
                                             </div>
