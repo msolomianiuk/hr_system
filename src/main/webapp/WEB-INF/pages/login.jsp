@@ -86,7 +86,7 @@
                                 </div>
                                 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                             </form>
-                            <div class="form-group registration">
+                            <div id="Registration" class="form-group registration">
                                 <a href="<c:url value="/registration"/>">Registration</a>
                             </div>
                             <div class="form-group registration">
@@ -108,8 +108,9 @@
 <%@ include file="include/footer.jsp" %>
 
 <!-- Javascript -->
-<script src="<c:url value="/static/js/jquery.min.js"/>"/>
-<script src="<c:url value="/static/js/bootstrap.min.js"/>"/>
+<script src="<c:url value="/static/admin/js/jquery.min.js"/>"></script>
+<script src="<c:url value="/static/admin/js/bootstrap.min.js"/>"></script>
+<script src="<c:url value="/static/admin/js/ajaxForIndex.js"/>"></script>
 <script src="<c:url value="/static/js/scripts.js"/>"/>
 
 <!--[if lt IE 10]>

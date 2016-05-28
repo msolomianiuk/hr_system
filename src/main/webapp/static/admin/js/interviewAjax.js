@@ -3,7 +3,8 @@
  */
 $(document).ready(function () {
 
-    location_origin = "http://localhost:8080/hr_system-1.0-SNAPSHOT"
+    location_origin = "http://localhost:8080/hr_system-1.0-SNAPSHOT";
+    /*location_origin = "http://31.131.25.206:8080/hr_system-1.0-SNAPSHOT"*/
 
     //var token = $("meta[name='_csrf']").attr("content");
     //var header = $("meta[name='_csrf_header']").attr("content");
@@ -85,7 +86,7 @@ $(document).ready(function () {
             contentType: 'application/json',
             mimeType: 'application/json',
             success: addAddress,
-            error: AlertSuccess,
+            error: AlertSuccess
             //     function (data) {
             //     // console.log(data);
             // }
@@ -106,7 +107,7 @@ $(document).ready(function () {
             contentType: 'application/json',
             mimeType: 'application/json',
             success: updateAddress,
-            error: AlertSuccess,
+            error: AlertSuccess
                 // function (data) {
                 // console.log(data);
             // }
@@ -202,7 +203,7 @@ $(document).ready(function () {
             contentType: 'application/json',
             mimeType: 'application/json',
             success: updateAddress,
-            error: AlertSuccess,
+            error: AlertSuccess
         });
 
     });
