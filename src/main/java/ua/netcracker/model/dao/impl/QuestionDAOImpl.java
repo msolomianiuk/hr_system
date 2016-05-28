@@ -57,11 +57,13 @@ public class QuestionDAOImpl implements QuestionDAO {
             "INNER JOIN \"hr_system\".type t ON q.type_id = t.id " +
             "WHERE q.id = ?; ";
 
-    private static final String UPDATE_QUESTION = "UPDATE \"hr_system\".question SET caption = ?, type_id = ?, is_mandatory = ?, " +
-            "is_view = ? WHERE id = ?;";
+    private static final String UPDATE_QUESTION =
+            "UPDATE \"hr_system\".question SET caption = ?, type_id = ?, is_mandatory = ?, " +
+                    "is_view = ? WHERE id = ?;";
 
-    private static final String UPDATE_QUESTION_COURSE_MAPS = "UPDATE \"hr_system\".question_course_maps SET course_id = ?, " +
-            "order_number = ? WHERE question_id = ?;";
+    private static final String UPDATE_QUESTION_COURSE_MAPS =
+            "UPDATE \"hr_system\".question_course_maps SET course_id = ?, " +
+                    "order_number = ? WHERE question_id = ?;";
 
     private static final String LAST_ID_QUESTION = "SELECT id FROM \"hr_system\".question ORDER BY id DESC limit 1";
 
@@ -69,11 +71,13 @@ public class QuestionDAOImpl implements QuestionDAO {
 
     private static final String DELETE_QUESTION = "DELETE FROM \"hr_system\".question WHERE id = ?";
 
-    private static final String SELECT_ANSWER_VARIANTS = "SELECT value FROM \"hr_system\".question_addition WHERE question_id = ?";
+    private static final String SELECT_ANSWER_VARIANTS =
+            "SELECT value FROM \"hr_system\".question_addition WHERE question_id = ?";
 
     private static final String SELECT_TYPE_VALUE = "SELECT value FROM \"hr_system\".type";
 
-    private static final String DELETE_ANSWER_VARIANTS = "DELETE FROM \"hr_system\".question_addition WHERE question_id = ?";
+    private static final String DELETE_ANSWER_VARIANTS =
+            "DELETE FROM \"hr_system\".question_addition WHERE question_id = ?";
     private JdbcTemplate jdbcTemplate;
     @Autowired
     private DataSource dataSource;
@@ -326,12 +330,14 @@ public class QuestionDAOImpl implements QuestionDAO {
 
             jdbcTemplate.update(DELETE_ANSWER_VARIANTS, question.getId());
             try {
-                jdbcTemplate.update(UPDATE_QUESTION, question.getCaption(), findTypeIdByValue(question.getType()), question.isMandatory(),
+                jdbcTemplate.update(UPDATE_QUESTION, question.getCaption(), findTypeIdByValue(question.getType()),
+                        question.isMandatory(),
                         question.isView(), question.getId());
             } catch (NullPointerException e) {
                 LOGGER.error("Method: update" + " Error: " + e);
             }
-            jdbcTemplate.update(UPDATE_QUESTION_COURSE_MAPS, question.getCourseID(), question.getOrderNumber(), question.getId());
+            jdbcTemplate.update(UPDATE_QUESTION_COURSE_MAPS, question.getCourseID(), question.getOrderNumber(),
+                    question.getId());
 
             if (question.getAnswerVariants() != null) {
                 for (int i = 0; i < question.getAnswerVariants().size(); i++) {
