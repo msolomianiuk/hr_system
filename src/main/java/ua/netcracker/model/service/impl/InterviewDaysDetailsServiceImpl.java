@@ -2,6 +2,7 @@ package ua.netcracker.model.service.impl;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.StringArrayPropertyEditor;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 import ua.netcracker.model.dao.InterviewDaysDetailsDAO;
@@ -38,20 +39,20 @@ import java.util.Map;
 public class InterviewDaysDetailsServiceImpl implements InterviewDaysDetailsService {
     static final Logger LOGGER = Logger.getLogger(InterviewDaysDetailsServiceImpl.class);
 
-    private static final String INTERVIEW_DETAILS_ADDRESS_SQL =
-            "SELECT hr_system.interview_days_details.id, date, start_time, end_time, hr_system.address.address, hr_system.address.room_capacity, count_students, count_personal" +
-                    " FROM hr_system.interview_days_details" +
-                    " LEFT JOIN hr_system.address" +
-                    " ON hr_system.interview_days_details.address_id=hr_system.address.id" +
-                    " WHERE course_id = ? " +
-                    " ORDER BY hr_system.interview_days_details.date ";
-    private static final String INTERVIEW_DETAILS_ADDRESS_BY_ID_SQL =
-            "SELECT hr_system.interview_days_details.id, date, start_time, end_time, hr_system.address.address, hr_system.address.room_capacity, count_students, count_personal" +
-                    " FROM hr_system.interview_days_details" +
-                    " LEFT JOIN hr_system.address" +
-                    " ON hr_system.interview_days_details.address_id=hr_system.address.id" +
-                    " WHERE hr_system.interview_days_details.id = ? " +
-                    " ORDER BY hr_system.interview_days_details.date ";
+//    private static final String INTERVIEW_DETAILS_ADDRESS_SQL =
+//            "SELECT hr_system.interview_days_details.id, date, start_time, end_time, hr_system.address.address, hr_system.address.room_capacity, count_students, count_personal" +
+//                    " FROM hr_system.interview_days_details" +
+//                    " LEFT JOIN hr_system.address" +
+//                    " ON hr_system.interview_days_details.address_id=hr_system.address.id" +
+//                    " WHERE course_id = ? " +
+//                    " ORDER BY hr_system.interview_days_details.date ";
+//    private static final String INTERVIEW_DETAILS_ADDRESS_BY_ID_SQL =
+//            "SELECT hr_system.interview_days_details.id, date, start_time, end_time, hr_system.address.address, hr_system.address.room_capacity, count_students, count_personal" +
+//                    " FROM hr_system.interview_days_details" +
+//                    " LEFT JOIN hr_system.address" +
+//                    " ON hr_system.interview_days_details.address_id=hr_system.address.id" +
+//                    " WHERE hr_system.interview_days_details.id = ? " +
+//                    " ORDER BY hr_system.interview_days_details.date ";
 
     private static final String REMOVE_SQL_BY_COURSE_ID = "DELETE FROM \"hr_system\".interview_days_details WHERE course_id = ?";
 
@@ -145,37 +146,42 @@ public class InterviewDaysDetailsServiceImpl implements InterviewDaysDetailsServ
             int countCandidateWithStatusInterviewDate = candidateService.getCandidateByStatus(status.Interview_dated.getStatus()).size();
             CourseSetting lastCourseSetting = courseSettingService.getLastSetting();
             int countFree = lastCourseSetting.getStudentInterviewCount() - countCandidateWithStatusInterviewDate;
-            String firstDayOfInterview = lastCourseSetting.getInterviewStartDate();
             List<Candidate> candidateList = (ArrayList<Candidate>) candidateService.getCandidateByStatus(status.Interview.getStatus());
-            int countStudentsPerDay = dateService.studentPerDay();
+            int countMaxCandidatePerDay = dateService.studentPerDay();
+            LocalDate dayOfInterview = LocalDate.parse(lastCourseSetting.getInterviewStartDate());
             int index = 0;
-            int countDays = 0;
-            int remainder = 0;
+            int countDays;
+            int remainder;
             if (countFree >= candidateList.size()) {
-                countDays = (countCandidateWithStatusInterviewDate / countStudentsPerDay);
-                remainder = countCandidateWithStatusInterviewDate % countStudentsPerDay;
+                countDays = countCandidateWithStatusInterviewDate / countMaxCandidatePerDay;
+                remainder = countCandidateWithStatusInterviewDate % countMaxCandidatePerDay;
                 if (remainder == 0) {
                     if (countDays != 0)
-                        firstDayOfInterview = String.valueOf(dateService.getDate(firstDayOfInterview).plusDays(countDays + 1));
+                        dayOfInterview = dayOfInterview.plusDays(countDays + 1);
                 } else {
-                    firstDayOfInterview = String.valueOf(dateService.getDate(firstDayOfInterview).plusDays(countDays));
+                    dayOfInterview = dayOfInterview.plusDays(countDays);
                 }
-                int iterDay = 0;
+                InterviewDaysDetails interviewDaysDetails = findByDate(String.valueOf(dayOfInterview));
+                int countCandidatesPerDay = candidateService.getCandidateCountByInterviewId(interviewDaysDetails.getId());
                 while (index < candidateList.size()) {
-                    if ((countStudentsPerDay - candidateService.getCandidateCountByInterviewId(getIdbyDate(String.valueOf(dateService.getDate(firstDayOfInterview).plusDays(iterDay))))) == 0)
-                        iterDay++;
+                    if ((countMaxCandidatePerDay - countCandidatesPerDay) == 0) {
+                        dayOfInterview = dayOfInterview.plusDays(1);
+                        interviewDaysDetails = findByDate(String.valueOf(dayOfInterview));
+                        countCandidatesPerDay = candidateService.getCandidateCountByInterviewId(interviewDaysDetails.getId());
+                    }
                     Candidate candidate = new Candidate();
                     candidate.setId(candidateList.get(index).getId());
                     candidate.setStatusId(status.Interview_dated.getId());
-                    candidate.setInterviewDaysDetailsId(findByDate(String.valueOf(dateService.getDate(firstDayOfInterview).plusDays(iterDay))).getId());
+                    candidate.setInterviewDaysDetailsId(interviewDaysDetails.getId());
                     candidateService.updateCandidate(candidate);
                     index++;
+                    countCandidatesPerDay++;
                 }
                 return "Success";
 
             } else {
-                return "Limit Exceeded candidates! " + "You have "+ countFree + " free places, but you want add "
-                        + candidateList.size()+ " candidates";
+                return "Limit Exceeded candidates! " + "You have " + countFree + " free places, but you want add "
+                        + candidateList.size() + " candidates";
             }
         } else {
             return "Please filled all date settings";
@@ -183,18 +189,18 @@ public class InterviewDaysDetailsServiceImpl implements InterviewDaysDetailsServ
 
     }
 
-    private boolean isFiled(){
+    private boolean isFiled() {
         List<Map<String, Object>> listInterviewDate = findAllInterviewDetailsAddress();
         boolean isFilled = true;
         String r;
         for (Map<String, Object> row :
                 listInterviewDate) {
-            if (row.get("start_time")==null | row.get("end_time")==null) isFilled = false;
+            if (row.get("start_time") == null | row.get("end_time") == null) isFilled = false;
         }
-        return  isFilled;
+        return isFilled;
     }
 
-    public boolean timeIsFree(InterviewDaysDetails interviewDaysDetails){
+    public boolean timeIsFree(InterviewDaysDetails interviewDaysDetails) {
         interviewDaysDetails.setInterviewDate(findById(interviewDaysDetails.getId()).getInterviewDate());
         List<Map<String, Object>> listInterviewDate = findAllInterviewDetailsAddress();
         LocalTime startInterview = LocalTime.parse(interviewDaysDetails.getStartTime());
@@ -205,40 +211,18 @@ public class InterviewDaysDetailsServiceImpl implements InterviewDaysDetailsServ
         for (Map<String, Object> row :
                 listInterviewDate) {
             if (row.get("date").equals(interviewDaysDetails.getInterviewDate()))
-                if (row.get("address")!=null)
-                if (row.get("address").equals(addressService.findById(interviewDaysDetails.getAddressId()).getAddress())) {
-                    compareStartTime = LocalTime.parse(row.get("start_time").toString());
-                    compareEndTime = LocalTime.parse(row.get("end_time").toString());
-                    if ((startInterview.isAfter(compareStartTime)& startInterview.isBefore(compareEndTime))|
-                            (endInterview.isAfter(compareStartTime)& endInterview.isBefore(compareEndTime)) |
-                                    (startInterview.isBefore(compareStartTime) & endInterview.isAfter(compareEndTime))){
-                        isFree = false;
-                }
+                if (row.get("address") != null)
+                    if (row.get("address").equals(addressService.findById(interviewDaysDetails.getAddressId()).getAddress())) {
+                        compareStartTime = LocalTime.parse(row.get("start_time").toString());
+                        compareEndTime = LocalTime.parse(row.get("end_time").toString());
+                        if ((startInterview.isAfter(compareStartTime) & startInterview.isBefore(compareEndTime)) |
+                                (endInterview.isAfter(compareStartTime) & endInterview.isBefore(compareEndTime)) |
+                                (startInterview.isBefore(compareStartTime) & endInterview.isAfter(compareEndTime))) {
+                            isFree = false;
+                        }
+                    }
         }
-    }
         return isFree;
-    }
-
-
-    @Override
-    public String getStartTimeofInterview(int id) {
-        return interviewDaysDetailsDAO.find(id).getStartTime();
-    }
-
-    @Override
-    public String getEndTimeofInterview(int id) {
-        return interviewDaysDetailsDAO.find(id).getEndTime();
-    }
-
-    @Override
-    public String getDateofInterview(int id) {
-        return interviewDaysDetailsDAO.find(id).getInterviewDate();
-    }
-
-    public int getIdbyDate(String date) {
-        String sql = "SELECT id FROM hr_system.interview_days_details WHERE date = " + "\'" + date + "\'";
-        int id = (Integer) jdbcTemplateFactory.getJdbcTemplate(dataSource).queryForObject(sql, Integer.class);
-        return id;
     }
 
     @Override
@@ -247,10 +231,10 @@ public class InterviewDaysDetailsServiceImpl implements InterviewDaysDetailsServ
     }
 
     public List<Map<String, Object>> findAllInterviewDetailsAddress() {
-        return jdbcTemplateFactory.getJdbcTemplate(dataSource).queryForList(INTERVIEW_DETAILS_ADDRESS_SQL,courseSettingService.getLastSetting().getId());
+        return interviewDaysDetailsDAO.findAllInterviewDetailsAddress();
     }
 
     public Map<String, Object> findInterviewDetailsAddressById(Integer id) {
-        return jdbcTemplateFactory.getJdbcTemplate(dataSource).queryForMap(INTERVIEW_DETAILS_ADDRESS_BY_ID_SQL,id);
+        return interviewDaysDetailsDAO.findInterviewDetailsAddressById(id);
     }
 }

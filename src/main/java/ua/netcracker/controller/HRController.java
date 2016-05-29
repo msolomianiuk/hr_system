@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import ua.netcracker.model.entity.Candidate;
 import ua.netcracker.model.entity.Question;
+import ua.netcracker.model.entity.Status;
 import ua.netcracker.model.entity.User;
 import ua.netcracker.model.service.CandidateService;
 import ua.netcracker.model.service.CourseSettingService;
@@ -117,7 +118,7 @@ public class HRController {
     public boolean setCandidateStatus(@RequestParam Integer candidateId,
                                       @RequestParam Integer statusId
     ) {
-        return candidateService.updateCandidateStatus(candidateId, statusId);
+        return candidateService.updateCandidateStatus(candidateId, Status.values()[statusId-1]);
     }
 
     @RequestMapping(value = "hr/service/getCandidateCount", method = RequestMethod.GET)

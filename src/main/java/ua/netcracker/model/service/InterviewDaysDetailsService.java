@@ -30,17 +30,9 @@ public interface InterviewDaysDetailsService {
 
     void remove(int id);
 
-    public String sortCandidateToDays(CourseSetting courseSetting);
+    String sortCandidateToDays(CourseSetting courseSetting);
 
-    public boolean timeIsFree(InterviewDaysDetails interviewDaysDetails);
-
-    String getStartTimeofInterview(int id);
-
-    String getEndTimeofInterview(int id);
-
-    String getDateofInterview(int id);
-
-    int getIdbyDate(String date);
+    boolean timeIsFree(InterviewDaysDetails interviewDaysDetails);
 
     InterviewDaysDetails setInterviewDateDetails(String id,String startTime, String endTime,int addressId);
 

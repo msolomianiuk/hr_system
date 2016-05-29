@@ -9,12 +9,16 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import ua.netcracker.model.dao.InterviewDaysDetailsDAO;
 import ua.netcracker.model.entity.InterviewDaysDetails;
+import ua.netcracker.model.service.CourseSettingService;
 import ua.netcracker.model.utils.JdbcTemplateFactory;
 
 import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by MaXim on 01.05.2016.
@@ -29,6 +33,9 @@ public class InterviewDaysDetailsDAOImpl implements InterviewDaysDetailsDAO {
     @Autowired
     private DataSource dataSource;
 
+    @Autowired
+    CourseSettingService courseSettingService;
+
     private static final String UPDATE_SQL = "UPDATE hr_system.interview_days_details SET start_time=?, end_time=?, address_id=?, count_students=?, count_personal=? WHERE id = ?";
     private static final String REMOVE_SQL = "DELETE FROM \"hr_system\".interview_days_details WHERE id=?";
     private static final String FIND_ALL_SQL = "SELECT id, course_id, date, start_time, end_time, address_id FROM \"hr_system\".interview_days_details ORDER BY id";
@@ -36,6 +43,20 @@ public class InterviewDaysDetailsDAOImpl implements InterviewDaysDetailsDAO {
     private static final String FIND_SQL_BY_DATE = "SELECT id, course_id, date, start_time, end_time, address_id FROM \"hr_system\".interview_days_details WHERE date = ?";
     private static final String INSERT_SQL = "INSERT INTO \"hr_system\".interview_days_details(course_id, date, start_time, end_time, address_id, count_students, count_personal) VALUES (?, ?, ?, ?, ?, ?, ?);";
     private static final String INSERT_DATE_SQL = "INSERT INTO \"hr_system\".interview_days_details(course_id, date) VALUES (?, ?);";
+    private static final String INTERVIEW_DETAILS_ADDRESS_SQL =
+            "SELECT hr_system.interview_days_details.id, date, start_time, end_time, hr_system.address.address, hr_system.address.room_capacity, count_students, count_personal" +
+                    " FROM hr_system.interview_days_details" +
+                    " LEFT JOIN hr_system.address" +
+                    " ON hr_system.interview_days_details.address_id=hr_system.address.id" +
+                    " WHERE course_id = ? " +
+                    " ORDER BY hr_system.interview_days_details.date ";
+    private static final String INTERVIEW_DETAILS_ADDRESS_BY_ID_SQL =
+            "SELECT hr_system.interview_days_details.id, date, start_time, end_time, hr_system.address.address, hr_system.address.room_capacity, count_students, count_personal" +
+                    " FROM hr_system.interview_days_details" +
+                    " LEFT JOIN hr_system.address" +
+                    " ON hr_system.interview_days_details.address_id=hr_system.address.id" +
+                    " WHERE hr_system.interview_days_details.id = ? " +
+                    " ORDER BY hr_system.interview_days_details.date ";
 
     @Override
     public InterviewDaysDetails find(int id) {
@@ -143,6 +164,28 @@ public class InterviewDaysDetailsDAOImpl implements InterviewDaysDetailsDAO {
             LOGGER.error("Error: " + e);
         }
         return interviewList;
+    }
+
+    @Override
+    public List<Map<String, Object>> findAllInterviewDetailsAddress() {
+        List list = new ArrayList();
+        try{
+        list = jdbcTemplateFactory.getJdbcTemplate(dataSource).queryForList(INTERVIEW_DETAILS_ADDRESS_SQL, courseSettingService.getLastSetting().getId());
+        } catch (Exception e){
+            LOGGER.error("Error: " + e);
+        }
+        return list;
+    }
+
+    @Override
+    public Map<String, Object> findInterviewDetailsAddressById(Integer id) {
+        Map map = new HashMap();
+        try {
+            map = jdbcTemplateFactory.getJdbcTemplate(dataSource).queryForMap(INTERVIEW_DETAILS_ADDRESS_BY_ID_SQL, id);
+        } catch (Exception e){
+            LOGGER.error("Error: " + e);
+        }
+        return map;
     }
 
     private InterviewDaysDetails createInterviewWithResultSet(ResultSet rs) throws SQLException {

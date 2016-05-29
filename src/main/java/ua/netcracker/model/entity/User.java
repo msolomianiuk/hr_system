@@ -26,7 +26,7 @@ public class User implements Serializable {
 
     private String patronymic;
 
-    private List<Role> roles;
+    private Collection<Role> roles;
 
     private String image;
 

@@ -74,7 +74,7 @@ public class AdminController {
     @RequestMapping(value = "/candidate/update_status", method = RequestMethod.GET)
     public ResponseEntity updateCandidateStatus(@RequestParam Integer candidateID, @RequestParam String status) {
 
-        candidateService.updateCandidateStatus(candidateID, Status.valueOf(status).getId());
+        candidateService.updateCandidateStatus(candidateID, Status.valueOf(status));
 
         return ResponseEntity.ok(HttpStatus.ACCEPTED);
     }
@@ -196,8 +196,8 @@ public class AdminController {
     public ResponseEntity<InterviewDaysDetails> getInterviewDetailsByDate(
             @RequestParam String id
     ) {
-        InterviewDaysDetails interviewDaysDetails;
-        interviewDaysDetails = interviewDaysDetailsService.findById(interviewDaysDetailsService.getIdbyDate(id));
+        InterviewDaysDetails interviewDaysDetails = null;
+        interviewDaysDetails = interviewDaysDetailsService.findById(interviewDaysDetailsService.findByDate(id).getId());
         if (interviewDaysDetails != null) {
             return ResponseEntity.ok(interviewDaysDetails);
         }
@@ -564,14 +564,10 @@ public class AdminController {
 
         if (filtered.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-
-        if (filtered.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } else if (!status1.equals("Select status")) {
             Status st = Status.valueOf(status1);
             for (Candidate candidate : filtered) {
-                candidateService.updateCandidateStatus(candidate.getId(), st.getId());
+                candidateService.updateCandidateStatus(candidate.getId(), st);
             }
         }
 
@@ -581,7 +577,7 @@ public class AdminController {
                 Status st2 = Status.valueOf(status2);
                 students.removeAll(filtered);
                 for (Candidate student : students) {
-                    candidateService.updateCandidateStatus(student.getId(), st2.getId());
+                    candidateService.updateCandidateStatus(student.getId(), st2);
                 }
             }
         }
