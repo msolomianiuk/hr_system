@@ -252,10 +252,10 @@ public class CandidateDAOImpl implements CandidateDAO {
     }
 
     @Override
-    public boolean updateCandidateStatus(Integer candidateId, Integer newStatusId) {
+    public boolean updateCandidateStatus(Integer candidateId, Status newStatus) {
         try {
             jdbcTemplate = new JdbcTemplate(dataSource);
-            jdbcTemplate.update(UPDATE_STATUS, newStatusId, candidateId);
+            jdbcTemplate.update(UPDATE_STATUS, newStatus.getId(), candidateId);
             return true;
         } catch (DataAccessException e) {
             LOGGER.error("Method: updateCandidateStatus" + " Error: " + e);

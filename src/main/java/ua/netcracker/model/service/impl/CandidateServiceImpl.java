@@ -263,8 +263,8 @@ public class CandidateServiceImpl implements CandidateService {
     }
 
     @Override
-    public boolean updateCandidateStatus(Integer candidateID, Integer newStatusID) {
-        return candidateDAO.updateCandidateStatus(candidateID, newStatusID);
+    public boolean updateCandidateStatus(Integer candidateID, Status newStatus) {
+        return candidateDAO.updateCandidateStatus(candidateID, newStatus);
     }
 
     @Override

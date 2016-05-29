@@ -74,7 +74,7 @@ public class AdminController {
     @RequestMapping(value = "/candidate/update_status", method = RequestMethod.GET)
     public ResponseEntity updateCandidateStatus(@RequestParam Integer candidateID, @RequestParam String status) {
 
-        candidateService.updateCandidateStatus(candidateID, Status.valueOf(status).getId());
+        candidateService.updateCandidateStatus(candidateID, Status.valueOf(status));
 
         return ResponseEntity.ok(HttpStatus.ACCEPTED);
     }
@@ -567,7 +567,7 @@ public class AdminController {
         } else if (!status1.equals("Select status")) {
             Status st = Status.valueOf(status1);
             for (Candidate candidate : filtered) {
-                candidateService.updateCandidateStatus(candidate.getId(), st.getId());
+                candidateService.updateCandidateStatus(candidate.getId(), st);
             }
         }
 
@@ -577,7 +577,7 @@ public class AdminController {
                 Status st2 = Status.valueOf(status2);
                 students.removeAll(filtered);
                 for (Candidate student : students) {
-                    candidateService.updateCandidateStatus(student.getId(), st2.getId());
+                    candidateService.updateCandidateStatus(student.getId(), st2);
                 }
             }
         }

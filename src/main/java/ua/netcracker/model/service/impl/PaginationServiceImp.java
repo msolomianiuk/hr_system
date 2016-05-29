@@ -32,14 +32,14 @@ public class PaginationServiceImp {
         return candidateDAO.findForSearch(elementPage, fromElement, find);
     }
 
-    public Collection<Candidate> filterCandidates(List<Answer> expected, Integer limit, Integer offset) {
+    public Collection<Candidate> filterCandidates(List<Answer> expected, Integer limit, Integer element) {
 
-        int element = 0;
-        if ((offset - 1) != 0) {
-            element = (offset - 1) * limit;
+        int offset = 0;
+        if ((element - 1) != 0) {
+            offset = (element - 1) * limit;
         }
 
-        return candidateDAO.filtration(expected, limit, element);
+        return candidateDAO.filtration(expected, limit, offset);
     }
 
     public Collection<Candidate> pagination(Integer limitRows, Integer fromElement) {

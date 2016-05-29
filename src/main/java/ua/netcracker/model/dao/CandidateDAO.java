@@ -32,8 +32,7 @@ public interface CandidateDAO extends DAO<Candidate> {
 
     Map<Integer, String> findAllStatus();
 
-    boolean updateCandidateStatus(Integer candidateID, Integer newStatusID);
-
+    boolean updateCandidateStatus(Integer candidateId, Status newStatus);
 
     Collection<Candidate> getAllMarked(User user);
 
