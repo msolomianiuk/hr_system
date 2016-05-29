@@ -53,12 +53,22 @@ public class CourseSettingServiceImpl implements CourseSettingService {
                                           String interviewTimeForStudent,
                                           String studentForInterviewCount,
                                           String studentForCourseCount) {
-        return validDate(registrationStartDate, registrationEndDate,
-                interviewStartDate, interviewEndDate, courseStartDate,
-                interviewTimeForStudent, studentForInterviewCount, studentForCourseCount);
+
+        if (validDate(registrationStartDate, registrationEndDate,
+                interviewStartDate, interviewEndDate, courseStartDate)) {
+
+            return getCourseSetting(registrationStartDate, registrationEndDate,
+                    interviewStartDate, interviewEndDate,
+                    courseStartDate, interviewTimeForStudent,
+                    studentForInterviewCount, studentForCourseCount);
+        } else {
+            return null;
+        }
     }
 
-    private CourseSetting validDate(String registrationStartDate, String registrationEndDate, String interviewStartDate, String interviewEndDate, String courseStartDate, String interviewTimeForStudent, String studentForInterviewCount, String studentForCourseCount) {
+    private boolean validDate(String registrationStartDate, String registrationEndDate,
+                              String interviewStartDate, String interviewEndDate,
+                              String courseStartDate) {
         try {
             if (dateValidator(registrationStartDate) && dateValidator(registrationEndDate) &&
                     dateValidator(interviewStartDate) && dateValidator(interviewEndDate) &&
@@ -69,37 +79,44 @@ public class CourseSettingServiceImpl implements CourseSettingService {
                         courseStartDate.equals(registrationStartDate) || courseStartDate.equals(registrationEndDate) ||
                         courseStartDate.equals(interviewStartDate) || courseStartDate.equals(interviewEndDate)
                         ) {
-                    return null;
+                    return false;
                 } else {
-                    if (dateService.getDate(courseStartDate).isAfter(dateService.getDate(interviewEndDate)) &&
-                            dateService.getDate(courseStartDate).isAfter(dateService.getDate(interviewStartDate)) &&
-                            dateService.getDate(courseStartDate).isAfter(dateService.getDate(registrationEndDate)) &&
-                            dateService.getDate(courseStartDate).isAfter(dateService.getDate(registrationStartDate)) &&
+                    if (validate(courseStartDate, interviewEndDate) &&
+                            validate(courseStartDate, interviewStartDate) &&
+                            validate(courseStartDate, registrationEndDate) &&
+                            validate(courseStartDate, registrationStartDate) &&
 
-                            dateService.getDate(interviewEndDate).isAfter(dateService.getDate(interviewStartDate)) &&
-                            dateService.getDate(interviewEndDate).isAfter(dateService.getDate(registrationEndDate)) &&
-                            dateService.getDate(interviewEndDate).isAfter(dateService.getDate(registrationStartDate)) &&
+                            validate(interviewEndDate, interviewStartDate) &&
+                            validate(interviewEndDate, registrationEndDate) &&
+                            validate(interviewEndDate, registrationStartDate) &&
 
-                            dateService.getDate(interviewStartDate).isAfter(dateService.getDate(registrationEndDate)) &&
-                            dateService.getDate(interviewStartDate).isAfter(dateService.getDate(registrationStartDate)) &&
+                            validate(interviewStartDate, registrationEndDate) &&
+                            validate(interviewStartDate, registrationStartDate) &&
 
-                            dateService.getDate(registrationEndDate).isAfter(dateService.getDate(registrationStartDate))) {
+                            validate(registrationEndDate, registrationStartDate)) {
 
-                        return getCourseSetting(registrationStartDate, registrationEndDate,
-                                interviewStartDate, interviewEndDate,
-                                courseStartDate, interviewTimeForStudent,
-                                studentForInterviewCount, studentForCourseCount);
+                        return true;
+
                     }
                 }
             }
         } catch (Exception e) {
             LOGGER.error(e);
         }
-        return null;
+        return false;
     }
 
-    private CourseSetting getCourseSetting(String registrationStartDate, String registrationEndDate, String interviewStartDate, String interviewEndDate, String courseStartDate, String interviewTimeForStudent, String studentForInterviewCount, String studentForCourseCount) {
+    public boolean validate(String start, String end) {
+        return dateService.getDate(start).isAfter(dateService.getDate(end));
+    }
+
+    private CourseSetting getCourseSetting(String registrationStartDate, String registrationEndDate,
+                                           String interviewStartDate, String interviewEndDate,
+                                           String courseStartDate, String interviewTimeForStudent,
+                                           String studentForInterviewCount, String studentForCourseCount) {
+
         CourseSetting courseSetting = new CourseSetting();
+
         courseSetting.setId(dateService.getCurrentYear() * 100 + dateService.getCurrentMonth());
 
         courseSetting.setRegistrationStartDate(registrationStartDate);
@@ -132,7 +149,7 @@ public class CourseSettingServiceImpl implements CourseSettingService {
         courseSettingDAO.insert(courseSetting);
     }
 
-    private void update (CourseSetting courseSetting){
+    private void update(CourseSetting courseSetting) {
         courseSettingDAO.update(courseSetting);
     }
 

@@ -646,7 +646,7 @@ public class AdminController {
     ) {
         long rows = paginationServiceImp.rowsFind(find);
         if (rows == 0) {
-            return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         return ResponseEntity.ok(String.valueOf(rows));
     }

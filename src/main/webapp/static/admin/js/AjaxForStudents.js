@@ -176,18 +176,11 @@ $(document).ready(function() {
         var find = $('#fieldSearch').val();
         elementPage = $("#Rows").val();
 
-
-        if (findClock.count == 0) {
-            fromElement = 1;
-            currPage = parseInt(fromElement);
-            findClock.count = 1;
-        }
+        fromElement = 1;
+        currPage = parseInt(fromElement);
 
 
-        if (findClock.count > 1) {
-            fromElement = $(this).text();
-            currPage = parseInt(fromElement);
-        }
+
 
 
         $.ajax({

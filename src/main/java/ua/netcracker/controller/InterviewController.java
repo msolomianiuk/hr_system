@@ -15,7 +15,7 @@ import ua.netcracker.model.service.CandidateService;
  * Created by Alex on 11.05.2016.
  */
 @Controller
-public class InterviewController  {
+public class InterviewController {
     @Autowired
     private CandidateService candidateService;
 
