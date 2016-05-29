@@ -207,7 +207,7 @@ $(document).ready(function() {
     });
 
     $.ajax({
-
+    
         url: location_origin + "/admin/getRows",
         type: "GET",
         dataType: "json",
@@ -219,7 +219,7 @@ $(document).ready(function() {
             console.log(data);
         }
     });
-
+    
     $.ajax({
         url: location_origin + "/admin/getFirst",
         type: "GET",
@@ -343,15 +343,15 @@ function funcForStudents (data){
         var b = "";
         for (var interview_index in studentIndex.interviewResults) {
 
-           var a = studentIndex.interviewResults[interview_index].interviewer.roles[0];
+           var a = studentIndex.interviewResults[interview_index].interviewerRole;
             switch(a) {
-                case "ROLE_HR":
+                case 2:
                     roleComment = "HR : ";
                     break;
-                case "ROLE_BA":
+                case 3:
                     roleComment = "BA : ";
                     break;
-                case "ROLE_DEV":
+                case 4:
                     roleComment = "DEV : ";
                     break;
             }

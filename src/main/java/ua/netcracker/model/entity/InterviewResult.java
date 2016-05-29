@@ -14,11 +14,21 @@ public class InterviewResult {
 
     private String comment;
 
+    private Integer interviewerRole;
+
     private Recommendation recommendation;
     private User interviewer;
 
     public InterviewResult() {
 
+    }
+
+    public Integer getInterviewerRole() {
+        return interviewerRole;
+    }
+
+    public void setInterviewerRole(Integer interviewerRole) {
+        this.interviewerRole = interviewerRole;
     }
 
     public Integer getInterviewerId() {
