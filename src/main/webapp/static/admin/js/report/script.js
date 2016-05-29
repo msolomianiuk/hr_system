@@ -3,8 +3,13 @@
  */
 var reports;
 var reportIndex;
+var delReports;
+var isValidQuery = true;
 $(document).ready(function () {
     init();
+    $.validator.addMethod('checkQuery', function (value, element) {
+        return this.optional(element) || isValidQuery;
+    }, "This is bad query calls DB ERROR. Change it and click Save!!!");
     $.validator.addMethod('checkSql', function (value, element) {
         value = value.toLowerCase();
         return this.optional(element) || (value.indexOf("create") === -1 && value.indexOf("drop") === -1 && value.indexOf("delete") === -1 && value.indexOf("update") === -1 && value.indexOf("alter") === -1)
@@ -14,13 +19,14 @@ $(document).ready(function () {
             description: "required",
             query: {
                 required: true,
-                checkSql: true
+                checkSql: true,
+                checkQuery: true
             }
         }
     });
     $(".btn-delete").on("click", function () {
-        reports[reportIndex].status = 'delete';
-        ajax("service/deleteReportQuery", function () {
+        reports[reportIndex].show = false;
+        ajax("service/updateReportQuery", function () {
         }, function () {
         }, reports[reportIndex]);
         reports.splice(reportIndex, 1);
@@ -37,14 +43,22 @@ $(document).ready(function () {
         $(".btn-update").css({'display': 'none'});
         $(".btn-delete").css({'display': 'none'});
         $(".btn-save").css({'display': 'inline-block'});
-        //$(".btn-cancel").css({'display': 'inline-block'});
     });
     $(".btn-save").on("click", function () {
+        isValidQuery = true;
+        validateForm.form();
+        ajax("service/checkQuery", function (data){
+            isValidQuery = data;
+            saveHandler();
+        }, function (data) {
+            saveHandler();
+        }, {sql: $(".query").val()});
+    });
+    function saveHandler() {
         if (validateForm.form()) {
             $(".btn-update").css({'display': 'inline-block'});
             $(".btn-delete").css({'display': 'inline-block'});
             $(".btn-save").css({'display': 'none'});
-            //$(".btn-cancel").css({'display': 'none'});
             if (reportIndex !== -1) {
                 reports[reportIndex].description = $(".description").val();
                 reports[reportIndex].query = $(".query").val();
@@ -66,15 +80,17 @@ $(document).ready(function () {
             generateReportsList(reports);
             generateDeveloperReportsList(reports);
         }
-    });
+        isValidQuery = true;
+    }
+
     $(".btn-cancel").on("click", function () {
         $(".btn-update").css({'display': 'inline-block'});
         $(".btn-delete").css({'display': 'inline-block'});
         $(".btn-save").css({'display': 'none'});
-        //$(".btn-cancel").css({'display': 'none'});
         showDevModal();
     });
     $(".btn-create").on("click", function () {
+        $('#myModalLabel1').text("Yo can create report");
         var textQuery = $(".dev_panel_query");
         textQuery.empty();
         textQuery.append('<label class="control-label col-md-3 col-sm-3 col-xs-12"> Query</label> <textarea class = "form-control col-md-7 col-xs-12 query" row="3" name="query"></textarea>');
@@ -85,10 +101,49 @@ $(document).ready(function () {
         $(".btn-update").css({'display': 'none'});
         $(".btn-delete").css({'display': 'none'});
         $(".btn-save").css({'display': 'inline-block'});
-        //$(".btn-cancel").css({'display': 'inline-block'});
         reportIndex = -1;
     });
-});
+    $(".btn-show-deleted-reports").on("click", function () {
+        ajax('service/getDeletedReports', function (data) {
+            delReports = data;
+            generateDelReportList(delReports)
+        }, function () {
+            $('deleted_reports').html('Empty');
+        });
+    });
+
+})
+;
+
+function generateDelReportList(data) {
+    var reportList = $('.deleted_reports');
+    reportList.empty();
+    if (data === undefined || data.length === 0) {
+        reportList.append('Empty');
+        return;
+    }
+    var table = '<table class = "table-striped table-bordered" style="width:95%;"><tr><th>Report Name</th><th>Report Body</th><th></th></tr>';
+    for (var index in data) {
+        table += '<tr><td>' + data[index].description + "</td><td>" + data[index].query + '</td><td><button value =' + index + ' class = "btn btn-success btn-return">Return</button></td></tr>';
+    }
+    table += '</table>';
+    reportList.append(table);
+    $('.btn-return').on('click', function () {
+        var index = $(this).val();
+        delReports[index].show = true;
+        ajax("service/updateReportQuery", function () {
+        }, function () {
+        }, delReports[index]);
+        if (reports === undefined) {
+            reports = [];
+        }
+        reports.push(delReports[index]);
+        delReports.splice(index, 1);
+        generateDelReportList(delReports);
+        generateDeveloperReportsList(reports);
+        generateReportsList(reports);
+    });
+}
 
 function getAllReports() {
     ajax("service/getAllShowReportQuery", function (data) {
@@ -111,6 +166,10 @@ function init() {
 function generateReportsList(data) {
     var report = $(".report_form");
     report.empty();
+    if (data === undefined || data.length === 0) {
+        report.append('Empty');
+        return;
+    }
     for (var index in data) {
         report.append('<div class="col-md-4 col-sm-4 col-xs-12 animated fadeInDown">' +
         '<button type="button" class="btn btn-dark btn-lg show_button" style="white-space:normal"' +
@@ -144,6 +203,10 @@ function generateReportsList(data) {
 function generateDeveloperReportsList(data) {
     var report = $(".report_developer_form");
     report.empty();
+    if (data === undefined || data.length === 0) {
+        report.append('Empty');
+        return;
+    }
     for (var index in data) {
         report.append('<div class="col-md-4 col-sm-4 col-xs-12 animated fadeInDown">' +
         '<button type="button" class="btn btn-dark btn-lg dev_show_button" style="white-space:normal" ' +
@@ -154,6 +217,7 @@ function generateDeveloperReportsList(data) {
     $(".dev_show_button").on("click", function () {
         reportIndex = $(this).val();
         showDevModal();
+        $('#myModalLabel1').text("You can update or delete this report");
     });
 }
 
@@ -218,7 +282,7 @@ function generateStatusList(data) {
 
 function ajax(url, success, error, data) {
     $.ajax({
-        url: "http://localhost:8080/hr_system-1.0-SNAPSHOT/admin/" + url,
+        url: baseUrl + "/admin/" + url,
         type: "GET",
         dataType: "json",
         contentType: 'application/json',
