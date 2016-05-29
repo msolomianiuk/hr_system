@@ -33,9 +33,9 @@ public class InterviewController  {
     public boolean setStudentInterviewResult(@RequestParam Integer candidateId,
                                              @RequestParam Integer interviewerId,
                                              @RequestParam Integer mark,
-                                             @RequestParam String recommendation,
+                                             @RequestParam String recomendation,
                                              @RequestParam String comment
     ) {
-        return candidateService.saveInterviewResult(candidateId, interviewerId, mark, recommendation, comment);
+        return candidateService.saveInterviewResult(candidateId, interviewerId, mark, recomendation, comment);
     }
 }
