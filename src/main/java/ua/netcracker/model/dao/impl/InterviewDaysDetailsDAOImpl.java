@@ -36,7 +36,7 @@ public class InterviewDaysDetailsDAOImpl implements InterviewDaysDetailsDAO {
     private static final String FIND_SQL_BY_DATE = "SELECT id, course_id, date, start_time, end_time, address_id FROM \"hr_system\".interview_days_details WHERE date = ?";
     private static final String INSERT_SQL = "INSERT INTO \"hr_system\".interview_days_details(course_id, date, start_time, end_time, address_id, count_students, count_personal) VALUES (?, ?, ?, ?, ?, ?, ?);";
     private static final String INSERT_DATE_SQL = "INSERT INTO \"hr_system\".interview_days_details(course_id, date) VALUES (?, ?);";
-
+    private static final String FIND_BY_ID = "SELECT id FROM hr_system.interview_days_details WHERE date = ";
     @Override
     public InterviewDaysDetails find(int id) {
         InterviewDaysDetails interviewDaysDetails = null;
@@ -143,6 +143,17 @@ public class InterviewDaysDetailsDAOImpl implements InterviewDaysDetailsDAO {
             LOGGER.error("Error: " + e);
         }
         return interviewList;
+    }
+
+    @Override
+    public int getIdbyDate(String date){
+        String sql = FIND_SQL_BY_DATE + "\'" + date + "\'";
+        try {
+            return (Integer) jdbcTemplateFactory.getJdbcTemplate(dataSource).queryForObject(sql, Integer.class);
+        } catch (Exception e){
+            LOGGER.error("Error: " + e);
+        }
+        return 0;
     }
 
     private InterviewDaysDetails createInterviewWithResultSet(ResultSet rs) throws SQLException {

@@ -12,4 +12,5 @@ public interface InterviewDaysDetailsDAO extends DAO<InterviewDaysDetails> {
 
     InterviewDaysDetails findByDate(String Date);
 
+    int getIdbyDate(String date);
 }

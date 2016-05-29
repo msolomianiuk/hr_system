@@ -200,7 +200,7 @@ public class AdminController {
             @RequestParam String id
     ) {
         InterviewDaysDetails interviewDaysDetails = null;
-        interviewDaysDetails = interviewDaysDetailsService.findById(interviewDaysDetailsService.getIdbyDate(id));
+        interviewDaysDetails = interviewDaysDetailsService.findById(interviewDaysDetailsService.findByDate(id).getId());
         if (interviewDaysDetails != null) {
             return ResponseEntity.ok(interviewDaysDetails);
         }
