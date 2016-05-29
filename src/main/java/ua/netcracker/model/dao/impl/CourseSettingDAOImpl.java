@@ -44,6 +44,8 @@ public class CourseSettingDAOImpl implements CourseSettingDAO<CourseSetting> {
     private static final String LAST_SETTING = "SELECT * FROM \"hr_system\".course_setting ORDER BY id DESC limit 1";
 
     private static final String FIND_ALL_COURSE_ID = "SELECT id FROM \"hr_system\".course_setting";
+    private static final String FIND_ALL_COURSE_ID_DESK = "SELECT id FROM \"hr_system\".course_setting ORDER BY id DESC";
+
     static final Logger LOGGER = Logger.getLogger(CourseSettingDAOImpl.class);
 
     @Autowired()
@@ -105,6 +107,21 @@ public class CourseSettingDAOImpl implements CourseSettingDAO<CourseSetting> {
     public Collection<Integer> getAllCourseId() {
         List<Integer> courseId = new ArrayList<>();
         List<Map<String, Object>> rows = jdbcTemplate.queryForList(FIND_ALL_COURSE_ID);
+        try {
+            for (Map row : rows) {
+                courseId.add((int) row.get("id"));
+            }
+        }catch (Exception e){
+            LOGGER.error(e);
+            return courseId;
+        }
+        return courseId;
+    }
+
+    @Override
+    public Collection<Integer> getAllCourseIdDesk() {
+        List<Integer> courseId = new ArrayList<>();
+        List<Map<String, Object>> rows = jdbcTemplate.queryForList(FIND_ALL_COURSE_ID_DESK);
         try {
             for (Map row : rows) {
                 courseId.add((int) row.get("id"));

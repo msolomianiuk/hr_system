@@ -11,4 +11,5 @@ public interface CourseSettingDAO<CourseSetting> extends DAO<CourseSetting> {
 
     Collection<Integer> getAllCourseId();
 
+    Collection<Integer> getAllCourseIdDesk();
 }

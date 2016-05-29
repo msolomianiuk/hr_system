@@ -2,8 +2,8 @@ package ua.netcracker.model.dao.impl;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import ua.netcracker.model.dao.AnswersDAO;
 import ua.netcracker.model.entity.Answer;
@@ -11,8 +11,6 @@ import ua.netcracker.model.entity.Candidate;
 import ua.netcracker.model.entity.Question;
 
 import javax.sql.DataSource;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -48,24 +46,12 @@ public class AnswersDAOImpl implements AnswersDAO {
             for (Map<String, Object> row : rows) {
                 Answer answer = createAnswer(row);
                 answers.add(answer);
-
             }
-        } catch (Exception e) {
-            LOGGER.error("Error: " + e);
+        } catch (DataAccessException e) {
+            LOGGER.error("Method: findAll" + " Error: " + e);
         }
         return answers;
 
-    }
-
-    private Answer createAnswer(Map<String, Object> row) {
-        Answer answer = new Answer();
-        if (row.get("value") != null) {
-            answer.setQuestionId((int) row.get("question_id"));
-            answer.setValue((String) row.get("value"));
-        } else {
-            answer.setValue(null);
-        }
-        return answer;
     }
 
     @Override
@@ -82,11 +68,22 @@ public class AnswersDAOImpl implements AnswersDAO {
                         answers.add(answer);
                     }
                 }
-            } catch (Exception e) {
-                LOGGER.error("Error: " + e);
+            } catch (DataAccessException e) {
+                LOGGER.error("Method: findAllIsView" + " Error: " + e);
             }
         }
         return answers;
+    }
+
+    private Answer createAnswer(Map<String, Object> row) {
+        Answer answer = new Answer();
+        if (row.get("value") != null) {
+            answer.setQuestionId((int) row.get("question_id"));
+            answer.setValue((String) row.get("value"));
+        } else {
+            answer.setValue(null);
+        }
+        return answer;
     }
 
 
@@ -96,8 +93,8 @@ public class AnswersDAOImpl implements AnswersDAO {
             for (Answer answer : candidate.getAnswers()) {
                 executeSaveAnswer(candidate.getId(), answer);
             }
-        } catch (Exception e) {
-            LOGGER.error("Error: " + e);
+        } catch (DataAccessException e) {
+            LOGGER.error("Method: saveAll" + " Error: " + e);
         }
     }
 
@@ -106,8 +103,8 @@ public class AnswersDAOImpl implements AnswersDAO {
         try {
             JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
             jdbcTemplate.update(DELETE_ALL, candidateId);
-        } catch (Exception e) {
-            LOGGER.error("Error: " + e);
+        } catch (DataAccessException e) {
+            LOGGER.error("Method: deleteAnswers" + " Error: " + e);
         }
 
     }
@@ -118,11 +115,30 @@ public class AnswersDAOImpl implements AnswersDAO {
         try {
             JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
             jdbcTemplate.update(INSERT, candidateId, answer.getQuestionId(), answer.getValue());
-        } catch (Exception e) {
-            LOGGER.error("Error: " + e);
+        } catch (DataAccessException e) {
+            LOGGER.error("Method: executeSaveAnswer" + " Error: " + e);
         }
     }
 
+    @Override
+    public boolean update(Candidate candidate) {
+        try {
+            Collection<Answer> answers = findAll(candidate.getId());
+            if (answers.size() == 0) {
+                saveAll(candidate);
+            } else {
+
+                deleteAnswers(candidate.getId());
+                answers = candidate.getAnswers();
+                for (Answer answer : answers) {
+                    executeSaveAnswer(candidate.getId(), answer);
+                }
+            }
+        } catch (DataAccessException e) {
+            LOGGER.error("Method: update" + " Error: " + e);
+        }
+        return false;
+    }
 
     @Override
     public Collection<Candidate> findAll() {
@@ -139,51 +155,5 @@ public class AnswersDAOImpl implements AnswersDAO {
         return false;
     }
 
-    @Override
-    public boolean update(Candidate candidate) {
-        try {
-            Collection<Answer> answers = findAll(candidate.getId());
-            if (answers.size() == 0) {
-                saveAll(candidate);
-            } else {
 
-                JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-                deleteAnswers(candidate.getId());
-                answers = candidate.getAnswers();
-                for (Answer answer : answers) {
-                    executeSaveAnswer(candidate.getId(),answer);
-                        //jdbcTemplate.update(UPDATE, answer.getValue(), answer.getQuestionId(), candidate.getId());
-                }
-            }
-        } catch (Exception e) {
-            LOGGER.error("Error: " + e);
-        }
-        return false;
-    }
-
-    public Collection getCandidateAnswer(int id) {
-        Collection collectionAnswers;
-
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-
-        collectionAnswers = jdbcTemplate.query(SELECT_ANSWER + id, new RowMapper() {
-            @Override
-            public Object mapRow(ResultSet resultSet, int i) throws SQLException {
-                Collection answerCollection = new ArrayList();
-                Answer answer = new Answer();
-                Question question = new Question();
-
-                answer.setValue(resultSet.getString("value"));
-                question.setCaption(resultSet.getString("caption"));
-                answer.setQuestionId(resultSet.getInt("question_id"));
-
-                answerCollection.add(answer.getQuestionId());
-                answerCollection.add(answer.getValue());
-                answerCollection.add(question.getCaption());
-                return answerCollection;
-            }
-        });
-        return collectionAnswers;
-
-    }
 }

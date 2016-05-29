@@ -71,16 +71,11 @@ public class SendEmailServiceImpl implements SendEmailService {
     }
 
     @Override
-    public void sendLetterToEmails(Collection<String> toEmails, String subject, String text) {
-        sendLetterToEmails(toEmails.toArray(new String[0]), subject, text);
-    }
-
-    @Override
     public void sendEmailAboutSuccessfulRegistration(User user, String password) {
         EmailTemplate emailTemplate = emailTemplateDAO.find(TEMPLATE_SUCCESS_REGISTRATION);
         String email = replacePatterns(emailTemplate.getTemplate(), user, password);
         sendLetterToEmails(user.getEmail(), emailTemplate.getDescription(), email.replaceAll("\\{url\\}",
-                "http://31.131.25.42:8080/hr_system-1.0-SNAPSHOT"));
+                "http://31.131.25.206:8080/hr_system-1.0-SNAPSHOT"));
     }
 
     @Override
@@ -93,15 +88,6 @@ public class SendEmailServiceImpl implements SendEmailService {
             String email = getEmailByCandidateStatus(emailTemplate.getTemplate(), user, candidate, status);
             sendLetterToEmails(user.getEmail(), emailTemplate.getDescription(), email);
         }
-    }
-
-    @Override
-    public void sendEmailToStudentByStatus(int idCandidate, Status status) {
-        Candidate candidate = candidateDAO.findByCandidateId(idCandidate);
-        EmailTemplate emailTemplate = getTemplateByCandidateStatus(status);
-        User user = userDAO.find(candidate.getUserId());
-        String email = getEmailByCandidateStatus(emailTemplate.getTemplate(), user, candidate, status);
-        sendLetterToEmails(user.getEmail(), emailTemplate.getDescription(), email);
     }
 
     @Override
@@ -127,7 +113,7 @@ public class SendEmailServiceImpl implements SendEmailService {
     }
 
     private String replacePatterns(String template, User user, String password) {
-        return template.replaceAll("\\{name\\}", user.getName())
+        return template.replaceAll("\\{name\\}", user.getEmail())
                 .replaceAll("\\{password\\}", password);
     }
 

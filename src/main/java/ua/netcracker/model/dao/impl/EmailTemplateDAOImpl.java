@@ -31,10 +31,6 @@ public class EmailTemplateDAOImpl implements EmailTemplateDAO {
     private static final String SQL_FIND_BY_ID = "SELECT * FROM \"hr_system\".email_template WHERE id = (?);";
     private static final String SQL_INSERT = "INSERT INTO \"hr_system\".email_template (description, template) VALUES (?, ?)";
     private static final String SQL_UPDATE = "UPDATE \"hr_system\".email_template SET description=?, template=? WHERE id = (?);";
-    private static final String SQL_DELETE = "DELETE FROM \"hr_system\".email_template WHERE id = (?);";
-    private static final String SQL_GET_DESCRIPTIONS = "SELECT description FROM \"hr_system\".email_template;";
-    private static final String SQL_GET_EMAIL_TEMPLATE_BY_DESCRIPTION = "SELECT * FROM \"hr_system\".email_template WHERE decription = (?);";
-
 
     @Override
     public Collection<EmailTemplate> findAll() {
@@ -107,54 +103,6 @@ public class EmailTemplateDAOImpl implements EmailTemplateDAO {
         } catch (DataAccessException ex) {
             LOGGER.trace(ex);
             return false;
-        }
-    }
-
-    @Override
-    public boolean remove(EmailTemplate emailTemplate) {
-        try {
-            JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-            jdbcTemplate.update(SQL_DELETE, new Object[]{emailTemplate.getId()
-            });
-            return true;
-        } catch (DataAccessException ex) {
-            LOGGER.trace(ex);
-            return false;
-        }
-    }
-
-    @Override
-    public Collection<String> getDescriptions() {
-        try {
-            JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-            Collection<String> descriptions = new ArrayList<>();
-            List<Map<String, Object>> rows = jdbcTemplate.queryForList(SQL_GET_DESCRIPTIONS);
-            for (Map row : rows) {
-                String description = (String) row.get("description");
-                descriptions.add(description);
-            }
-            return descriptions;
-        } catch (DataAccessException ex) {
-            LOGGER.trace(ex);
-            return new ArrayList<>();
-        }
-    }
-
-    @Override
-    public EmailTemplate getEmailTemplateByDescription(String description) {
-        try {
-            JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-            EmailTemplate emailTemplate = jdbcTemplate.queryForObject(SQL_GET_EMAIL_TEMPLATE_BY_DESCRIPTION, new Object[]{description}, new RowMapper<EmailTemplate>() {
-                        @Override
-                        public EmailTemplate mapRow(ResultSet resultSet, int i) throws SQLException {
-                            return getEmailTemplate(resultSet);
-                        }
-                    }
-            );
-            return emailTemplate;
-        } catch (DataAccessException ex) {
-            LOGGER.trace(ex);
-            return new EmailTemplate();
         }
     }
 }

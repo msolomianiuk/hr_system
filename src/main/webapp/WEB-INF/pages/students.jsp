@@ -242,7 +242,6 @@
                                     <th>Status</th>
                                     <th>Name</th>
                                     <th>Surname</th>
-                                    <th>Patronymic</th>
                                     <th>email</th>
                                     <th>Editing</th>
                                 </tr>
@@ -266,7 +265,7 @@
                         <select id="Status_Email" class="form-control">
                             <option value="Rejected" selected>Rejected</option>
                             <option value="No_interview">No_interview</option>
-                            <option value="Interview">Interview</option>
+                            <option value="Interview_dated">Interview_dated</option>
                             <option value="Interview_passed">Interview_passed</option>
                             <option value="Job_accepted">Job_accepted</option>
                         </select>

@@ -10,5 +10,6 @@ import java.util.Collection;
  */
 public interface EmailTemplateService {
     Collection<EmailTemplate> getAllEmailTemplates();
-    boolean manageEmailTemplate(EmailTemplate emailTemplate, String status);
+
+    boolean updateEmailTemplate(EmailTemplate emailTemplate);
 }

@@ -2,6 +2,7 @@ package ua.netcracker.model.dao.impl;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import ua.netcracker.model.dao.InterviewResultDAO;
@@ -30,9 +31,8 @@ public class InterviewResultDAOImpl implements InterviewResultDAO {
                     "on i.recommendation_id = r.id where i.candidate_id =?";
     private static final String FIND_COMMENT =
             "Select response from \"hr_system\".interview_result where i.candidate_id = ?";
-//    private static final String FIND_ALL = "Select * from \"hr_system\".interview_result where candidate_id = ?";
     private static final String FIND_ALL = "Select ir.interviewer_id, ir.mark, ir.comment, r.value from \"hr_system\".interview_result ir " +
-        "inner join \"hr_system\".recommendation r on ir.recommendation_id = r.id where ir.candidate_id = ?";
+            "inner join \"hr_system\".recommendation r on ir.recommendation_id = r.id where ir.candidate_id = ?";
     private static final String CREATE = "Insert into \"hr_system\".interview_result " +
             "(interviewer_id, candidate_id, mark, comment, recommendation_id) values (?, ?, ?, ?, ?)";
     private static final String UPDATE = "UPDATE \"hr_system\".interview_result SET " +
@@ -51,12 +51,16 @@ public class InterviewResultDAOImpl implements InterviewResultDAO {
                 interviewResult.setMark((int) row.get("mark"));
                 interviewResult.setComment((String) row.get("comment"));
                 interviewResult.setRecommendation(Recommendation.valueOf((String) row.get("value")));
-                interviewResult.setInterviewer(userDAO.find((int) row.get("interviewer_id")));
+                try{
+                    interviewResult.setInterviewer(userDAO.find((int) row.get("interviewer_id")));
+                }catch (NullPointerException e){
+                    LOGGER.error("Method: findResultsByCandidateId" + " Error: " + e);
+                }
                 results.add(interviewResult);
             }
 
-        } catch (Exception e) {
-            LOGGER.error("Error: " + e);
+        } catch (DataAccessException e) {
+            LOGGER.error("Method: findResultsByCandidateId" + " Error: " + e);
         }
         return results;
     }
@@ -67,18 +71,17 @@ public class InterviewResultDAOImpl implements InterviewResultDAO {
 
     @Override
     public Map<Integer, Integer> findMarks(Integer candidateId) {
-        Map<Integer, Integer> mark = new HashMap<>();
+        Map<Integer, Integer> marks = new HashMap<>();
         try {
             JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
             List<Map<String, Object>> rows = jdbcTemplate.queryForList(FIND_MARK, candidateId);
             for (Map<String, Object> row : rows) {
-                mark.put((int) row.get("interviewer_id"), (int) row.get("mark"));
+                marks.put((int) row.get("interviewer_id"), (int) row.get("mark"));
             }
-        } catch (Exception e) {
-            LOGGER.error("Error: " + e);
+        } catch (DataAccessException e) {
+            LOGGER.error("Method: findMarks" + " Error: " + e);
         }
-
-        return mark;
+        return marks;
     }
 
     @Override
@@ -91,8 +94,8 @@ public class InterviewResultDAOImpl implements InterviewResultDAO {
             for (Map<String, Object> row : rows) {
                 recommendations.put((int) row.get("interviewer_id"), (String) row.get("value"));
             }
-        } catch (Exception e) {
-            LOGGER.error("Error: " + e);
+        } catch (DataAccessException e) {
+            LOGGER.error("Method: findRecommendations" + " Error: " + e);
         }
         return recommendations;
     }
@@ -106,8 +109,8 @@ public class InterviewResultDAOImpl implements InterviewResultDAO {
             for (Map<String, Object> row : rows) {
                 comments.put((int) row.get("interviewer_id"), (String) row.get("value"));
             }
-        } catch (Exception e) {
-            LOGGER.error("Error: " + e);
+        } catch (DataAccessException e) {
+            LOGGER.error("Method: findComments" + " Error: " + e);
         }
         return comments;
     }
@@ -120,8 +123,8 @@ public class InterviewResultDAOImpl implements InterviewResultDAO {
                     interviewResult.getMark(), interviewResult.getComment(),
                     interviewResult.getRecommendation().getId());
             return true;
-        } catch (Exception e) {
-            LOGGER.error("Error:" + e);
+        } catch (DataAccessException e) {
+            LOGGER.error("Method: createInterviewResult" + " Error: " + e);
         }
         return false;
     }
@@ -134,8 +137,8 @@ public class InterviewResultDAOImpl implements InterviewResultDAO {
                     interviewResult.getRecommendation().getId(),
                     interviewResult.getInterviewerId(), candidate_id);
             return true;
-        } catch (Exception e) {
-            LOGGER.error("Error:" + e);
+        } catch (DataAccessException e) {
+            LOGGER.error("Method: updateInterviewResult" + " Error: " + e);
         }
         return false;
     }

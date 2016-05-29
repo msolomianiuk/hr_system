@@ -3,7 +3,6 @@ package ua.netcracker.model.dao;
 import ua.netcracker.model.entity.Question;
 
 import java.util.Collection;
-import java.util.List;
 
 /**
  * Created by Alex on 26.04.2016.
@@ -20,9 +19,9 @@ public interface QuestionDAO extends DAO<Question> {
 
     boolean delete(Question question);
 
-    List<String> findAnswerVariants(Question question);
+    Collection<String> findAnswerVariants(Question question);
 
-    List<Question> findType();
+    Collection<Question> findType();
 
     int findQuantityQuestions();
 
