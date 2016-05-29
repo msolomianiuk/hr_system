@@ -39,20 +39,20 @@ import java.util.Map;
 public class InterviewDaysDetailsServiceImpl implements InterviewDaysDetailsService {
     static final Logger LOGGER = Logger.getLogger(InterviewDaysDetailsServiceImpl.class);
 
-    private static final String INTERVIEW_DETAILS_ADDRESS_SQL =
-            "SELECT hr_system.interview_days_details.id, date, start_time, end_time, hr_system.address.address, hr_system.address.room_capacity, count_students, count_personal" +
-                    " FROM hr_system.interview_days_details" +
-                    " LEFT JOIN hr_system.address" +
-                    " ON hr_system.interview_days_details.address_id=hr_system.address.id" +
-                    " WHERE course_id = ? " +
-                    " ORDER BY hr_system.interview_days_details.date ";
-    private static final String INTERVIEW_DETAILS_ADDRESS_BY_ID_SQL =
-            "SELECT hr_system.interview_days_details.id, date, start_time, end_time, hr_system.address.address, hr_system.address.room_capacity, count_students, count_personal" +
-                    " FROM hr_system.interview_days_details" +
-                    " LEFT JOIN hr_system.address" +
-                    " ON hr_system.interview_days_details.address_id=hr_system.address.id" +
-                    " WHERE hr_system.interview_days_details.id = ? " +
-                    " ORDER BY hr_system.interview_days_details.date ";
+//    private static final String INTERVIEW_DETAILS_ADDRESS_SQL =
+//            "SELECT hr_system.interview_days_details.id, date, start_time, end_time, hr_system.address.address, hr_system.address.room_capacity, count_students, count_personal" +
+//                    " FROM hr_system.interview_days_details" +
+//                    " LEFT JOIN hr_system.address" +
+//                    " ON hr_system.interview_days_details.address_id=hr_system.address.id" +
+//                    " WHERE course_id = ? " +
+//                    " ORDER BY hr_system.interview_days_details.date ";
+//    private static final String INTERVIEW_DETAILS_ADDRESS_BY_ID_SQL =
+//            "SELECT hr_system.interview_days_details.id, date, start_time, end_time, hr_system.address.address, hr_system.address.room_capacity, count_students, count_personal" +
+//                    " FROM hr_system.interview_days_details" +
+//                    " LEFT JOIN hr_system.address" +
+//                    " ON hr_system.interview_days_details.address_id=hr_system.address.id" +
+//                    " WHERE hr_system.interview_days_details.id = ? " +
+//                    " ORDER BY hr_system.interview_days_details.date ";
 
     private static final String REMOVE_SQL_BY_COURSE_ID = "DELETE FROM \"hr_system\".interview_days_details WHERE course_id = ?";
 
@@ -200,22 +200,6 @@ public class InterviewDaysDetailsServiceImpl implements InterviewDaysDetailsServ
         return isFilled;
     }
 
-//    private LocalDate getFreeDay(){
-//        int countMaxCandidatePerDay = dateService.studentPerDay();
-//        LocalDate dayOfInterview = LocalDate.parse(courseSettingService.getLastSetting().getInterviewStartDate());
-//        int interviewId = getIdbyDate(String.valueOf(dayOfInterview));
-//        int countCandidatePerDay = candidateService.getCandidateCountByInterviewId(interviewId);
-//        boolean find = false;
-//        while (!find){
-//            if ((countMaxCandidatePerDay-countCandidatePerDay)!=0) find = true;
-//            else {
-//                dayOfInterview = dayOfInterview.plusDays(1);
-//                interviewId = getIdbyDate(String.valueOf(dayOfInterview));
-//                countCandidatePerDay = candidateService.getCandidateCountByInterviewId(interviewId);
-//            }
-//        }
-//    }
-
     public boolean timeIsFree(InterviewDaysDetails interviewDaysDetails) {
         interviewDaysDetails.setInterviewDate(findById(interviewDaysDetails.getId()).getInterviewDate());
         List<Map<String, Object>> listInterviewDate = findAllInterviewDetailsAddress();
@@ -241,36 +225,16 @@ public class InterviewDaysDetailsServiceImpl implements InterviewDaysDetailsServ
         return isFree;
     }
 
-
-    @Override
-    public String getStartTimeofInterview(int id) {
-        return interviewDaysDetailsDAO.find(id).getStartTime();
-    }
-
-    @Override
-    public String getEndTimeofInterview(int id) {
-        return interviewDaysDetailsDAO.find(id).getEndTime();
-    }
-
-    @Override
-    public String getDateofInterview(int id) {
-        return interviewDaysDetailsDAO.find(id).getInterviewDate();
-    }
-
-    public int getIdbyDate(String date) {
-        return interviewDaysDetailsDAO.getIdbyDate(date);
-    }
-
     @Override
     public InterviewDaysDetails findByDate(String date) {
         return interviewDaysDetailsDAO.findByDate(date);
     }
 
     public List<Map<String, Object>> findAllInterviewDetailsAddress() {
-        return jdbcTemplateFactory.getJdbcTemplate(dataSource).queryForList(INTERVIEW_DETAILS_ADDRESS_SQL, courseSettingService.getLastSetting().getId());
+        return interviewDaysDetailsDAO.findAllInterviewDetailsAddress();
     }
 
     public Map<String, Object> findInterviewDetailsAddressById(Integer id) {
-        return jdbcTemplateFactory.getJdbcTemplate(dataSource).queryForMap(INTERVIEW_DETAILS_ADDRESS_BY_ID_SQL, id);
+        return interviewDaysDetailsDAO.findInterviewDetailsAddressById(id);
     }
 }

@@ -2,6 +2,9 @@ package ua.netcracker.model.dao;
 
 import ua.netcracker.model.entity.InterviewDaysDetails;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * Created by MaXim on 01.05.2016.
  */
@@ -12,5 +15,7 @@ public interface InterviewDaysDetailsDAO extends DAO<InterviewDaysDetails> {
 
     InterviewDaysDetails findByDate(String Date);
 
-    int getIdbyDate(String date);
+    List<Map<String, Object>> findAllInterviewDetailsAddress();
+
+    Map<String, Object> findInterviewDetailsAddressById(Integer id);
 }
