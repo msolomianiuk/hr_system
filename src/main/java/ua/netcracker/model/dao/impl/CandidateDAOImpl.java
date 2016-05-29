@@ -488,27 +488,7 @@ public class CandidateDAOImpl implements CandidateDAO {
                             candidate.setStatusId(resultSet.getInt("status_id"));
                             candidate.setCourseId(resultSet.getInt("course_id"));
 
-                            Collection<InterviewResult> list = null;
-                            try {
-                                list = jdbcTemplate.query("SELECT * FROM \"hr_system\".users u " +
-                                        "JOIN \"hr_system\".role_users_maps rol ON rol.user_id = u.id " +
-                                        "FULL OUTER JOIN \"hr_system\".interview_result ir on ir.interviewer_id = u.id " +
-                                        "where ir.candidate_id = " + candidate.getId()
-                                        , new RowMapper<InterviewResult>() {
-                                    @Override
-                                    public InterviewResult mapRow(ResultSet resultSet, int i) throws SQLException {
-                                        InterviewResult interviewResult = new InterviewResult();
-                                        interviewResult.setInterviewerId(resultSet.getInt("role_id"));
-                                        interviewResult.setMark(resultSet.getInt("mark"));
-                                        interviewResult.setComment(resultSet.getString("comment"));
-                                        interviewResult.setRecommendation(Recommendation.values()[resultSet.getInt("recommendation_id") - 1]);
-                                        return interviewResult;
-                                    }
-                                });
-
-                            } catch (Exception e) {
-                                LOGGER.error(e);
-                            }
+                            Collection<InterviewResult> list = interviewResultDAO.findResultsByCandidateId(candidate.getId());
                             candidate.setInterviewResults(list);
 
                             return candidate;
@@ -529,7 +509,7 @@ public class CandidateDAOImpl implements CandidateDAO {
         try {
             String sql = PAGINATION + "ORDER BY cand.course_id DESC,cand.interviewer_id,cand.status_id DESC, cand.id LIMIT ";
             jdbcTemplate = new JdbcTemplate(dataSource);
-            listCandidates = jdbcTemplate.query(sql + elementPage + " offset " + fromElement, new RowMapper<Candidate>() {
+            listCandidates.addAll(jdbcTemplate.query(sql + elementPage + " offset " + fromElement, new RowMapper<Candidate>() {
                 @Override
                 public Candidate mapRow(ResultSet resultSet, int i) throws SQLException {
                     Candidate candidate = new Candidate();
@@ -542,32 +522,13 @@ public class CandidateDAOImpl implements CandidateDAO {
                     candidate.setId(resultSet.getInt("id"));
                     candidate.setStatusId(resultSet.getInt("status_id"));
                     candidate.setCourseId(resultSet.getInt("course_id"));
-                    Collection<InterviewResult> list = null;
-                    try {
-                        list = jdbcTemplate.query("SELECT * FROM \"hr_system\".users u " +
-                                "JOIN \"hr_system\".role_users_maps rol ON rol.user_id = u.id " +
-                                "FULL OUTER JOIN \"hr_system\".interview_result ir on ir.interviewer_id = u.id " +
-                                "where ir.candidate_id = " + candidate.getId()
-                                , new RowMapper<InterviewResult>() {
-                            @Override
-                            public InterviewResult mapRow(ResultSet resultSet, int i) throws SQLException {
-                                InterviewResult interviewResult = new InterviewResult();
-                                interviewResult.setInterviewerId(resultSet.getInt("role_id"));
-                                interviewResult.setMark(resultSet.getInt("mark"));
-                                interviewResult.setComment(resultSet.getString("comment"));
-                                interviewResult.setRecommendation(Recommendation.values()[resultSet.getInt("recommendation_id") - 1]);
-                                return interviewResult;
-                            }
-                        });
+                    Collection<InterviewResult> list = interviewResultDAO.findResultsByCandidateId(candidate.getId());
 
-                    } catch (Exception e) {
-                        LOGGER.error(e);
-                    }
                     candidate.setInterviewResults(list);
 
                     return candidate;
                 }
-            });
+            }));
 
         } catch (Exception e) {
             LOGGER.error("Error:" + e);
@@ -594,36 +555,13 @@ public class CandidateDAOImpl implements CandidateDAO {
                     candidate.setId(resultSet.getInt("id"));
                     candidate.setStatusId(resultSet.getInt("status_id"));
                     candidate.setCourseId(resultSet.getInt("course_id"));
-                    Collection<InterviewResult> list = null;
-                    try {
-                        list = jdbcTemplate.query("SELECT ir.interviewer_id, ir.mark, ir.comment, r.value " +
-                                        "FROM \"hr_system\".users u " +
-                                        "JOIN \"hr_system\".role_users_maps rol ON rol.user_id = u.id " +
-                                        "JOIN \"hr_system\".candidate candidate ON candidate.user_id = u.id " +
-                                        "FULL OUTER JOIN \"hr_system\".interview_result ir on candidate.id = ir.candidate_id " +
-                                        "FULL OUTER JOIN \"hr_system\".recommendation r on ir.recommendation_id = r.id " +
-                                        "WHERE rol.role_id = 5 and candidate.id = " + candidate.getId()
-                                , new RowMapper<InterviewResult>() {
-                                    @Override
-                                    public InterviewResult mapRow(ResultSet resultSet, int i) throws SQLException {
-                                        InterviewResult interviewResult = new InterviewResult();
-                                        interviewResult.setInterviewerId(resultSet.getInt("interviewer_id"));
-                                        interviewResult.setMark(resultSet.getInt("mark"));
-                                        interviewResult.setComment(resultSet.getString("comment"));
-                                        interviewResult.setRecommendation(Recommendation.values()[resultSet.getInt("recommendation_id") - 1]);
-                                        return interviewResult;
-                                    }
-                                });
+                    Collection<InterviewResult> list = interviewResultDAO.findResultsByCandidateId(candidate.getId());
 
-                    } catch (Exception e) {
-                        LOGGER.error(e);
-                    }
                     candidate.setInterviewResults(list);
 
                     return candidate;
                 }
             });
-            return listCandidates;
         } catch (Exception e) {
             LOGGER.error("Error:" + e);
         }
