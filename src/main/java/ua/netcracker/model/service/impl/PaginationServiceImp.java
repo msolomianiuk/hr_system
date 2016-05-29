@@ -4,7 +4,7 @@ package ua.netcracker.model.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.support.PagedListHolder;
 import org.springframework.stereotype.Service;
-import ua.netcracker.model.dao.impl.PaginationDAOImpl;
+import ua.netcracker.model.dao.CandidateDAO;
 import ua.netcracker.model.entity.Answer;
 import ua.netcracker.model.entity.Candidate;
 
@@ -17,19 +17,19 @@ import java.util.*;
 public class PaginationServiceImp {
 
     @Autowired
-    private PaginationDAOImpl paginationDAO;
+    private CandidateDAO candidateDAO;
 
 
     public Long getRows(List<Answer> expected) {
-        return paginationDAO.getRows(expected);
+        return candidateDAO.getRows(expected);
     }
 
     public long rowsFind(String find) {
-        return paginationDAO.rowsFind(find);
+        return candidateDAO.rowsFind(find);
     }
 
     public Collection<Candidate> findForSearch(Integer elementPage, Integer fromElement, String find) {
-        return paginationDAO.findForSearch(elementPage, fromElement, find);
+        return candidateDAO.findForSearch(elementPage, fromElement, find);
     }
 
     public Collection<Candidate> filterCandidates(List<Answer> expected, Integer limit, Integer offset) {
@@ -39,7 +39,7 @@ public class PaginationServiceImp {
             element = (offset - 1) * limit;
         }
 
-        return paginationDAO.filtration(expected, limit, element);
+        return candidateDAO.filtration(expected, limit, element);
     }
 
     public Collection<Candidate> pagination(Integer limitRows, Integer fromElement) {
@@ -47,11 +47,10 @@ public class PaginationServiceImp {
         if ((fromElement - 1) != 0) {
             element = (fromElement - 1) * limitRows;
         }
-        return paginationDAO.paginationCandidates(limitRows, element);
+        return candidateDAO.paginationCandidates(limitRows, element);
     }
 
     public List paginationList(List entity, String nextPage, PagedListHolder pagedListHolder) {
-
 
         ArrayList list = (ArrayList) entity;
 
