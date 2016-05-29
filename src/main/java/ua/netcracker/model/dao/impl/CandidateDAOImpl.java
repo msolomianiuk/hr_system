@@ -48,7 +48,7 @@ public class CandidateDAOImpl implements CandidateDAO {
             "SELECT COUNT(*) FROM \"hr_system\".candidate WHERE course_id = ";
     private static final String SELECT_CANDIDATE_COUNT_BY_INTERVIEWDID =
             "SELECT COUNT(*) FROM \"hr_system\".candidate WHERE interview_days_details_id = ";
-    private static final String PAGINATION = "WITH padik AS " +
+    private static final String PAGINATION = "WITH cand AS " +
             "(SELECT  DISTINCT ON(candidate.id) candidate.id,u.name,u.email ,u.surname, u.patronymic,candidate.status_id, candidate.course_id , ir.interviewer_id, ir.mark, ir.comment, r.value " +
             "FROM \"hr_system\".users u " +
             "JOIN \"hr_system\".role_users_maps rol ON rol.user_id = u.id " +
@@ -56,9 +56,8 @@ public class CandidateDAOImpl implements CandidateDAO {
             "LEFT OUTER JOIN \"hr_system\".interview_result ir on candidate.id = ir.candidate_id " +
             "LEFT OUTER JOIN \"hr_system\".recommendation r on ir.recommendation_id = r.id " +
             "WHERE rol.role_id = 5 ) " +
-            "SELECT  padik.id,padik.name,padik.email ,padik.surname, padik.patronymic,padik.status_id, padik.course_id , padik.interviewer_id, padik.mark, padik.comment, padik.value " +
-            "FROM padik " +
-            "ORDER BY padik.course_id DESC,padik.interviewer_id,padik.status_id DESC,  padik.id LIMIT ";
+            "SELECT  cand.id,cand.name,cand.email ,cand.surname, cand.patronymic,cand.status_id, cand.course_id , cand.interviewer_id, cand.mark, cand.comment, cand.value " +
+            "FROM cand ";
 
     @Autowired
     private DataSource dataSource;
@@ -578,6 +577,60 @@ public class CandidateDAOImpl implements CandidateDAO {
 
     }
 
+    private List<Candidate> getCandidatesListFromSqlQuery(String sql) {
+        List<Candidate> listCandidates = new ArrayList<>();
+        try {
+            jdbcTemplate = new JdbcTemplate(dataSource);
+            listCandidates = jdbcTemplate.query(sql, new RowMapper<Candidate>() {
+                @Override
+                public Candidate mapRow(ResultSet resultSet, int i) throws SQLException {
+                    Candidate candidate = new Candidate();
+                    User user = new User();
+                    user.setName(resultSet.getString("name"));
+                    user.setSurname(resultSet.getString("surname"));
+                    user.setPatronymic(resultSet.getString("patronymic"));
+                    user.setEmail(resultSet.getString("email"));
+                    candidate.setUser(user);
+                    candidate.setId(resultSet.getInt("id"));
+                    candidate.setStatusId(resultSet.getInt("status_id"));
+                    candidate.setCourseId(resultSet.getInt("course_id"));
+                    Collection<InterviewResult> list = null;
+                    try {
+                        list = jdbcTemplate.query("SELECT ir.interviewer_id, ir.mark, ir.comment, r.value " +
+                                        "FROM \"hr_system\".users u " +
+                                        "JOIN \"hr_system\".role_users_maps rol ON rol.user_id = u.id " +
+                                        "JOIN \"hr_system\".candidate candidate ON candidate.user_id = u.id " +
+                                        "FULL OUTER JOIN \"hr_system\".interview_result ir on candidate.id = ir.candidate_id " +
+                                        "FULL OUTER JOIN \"hr_system\".recommendation r on ir.recommendation_id = r.id " +
+                                        "WHERE rol.role_id = 5 and candidate.id = " + candidate.getId()
+                                , new RowMapper<InterviewResult>() {
+                                    @Override
+                                    public InterviewResult mapRow(ResultSet resultSet, int i) throws SQLException {
+                                        InterviewResult interviewResult = new InterviewResult();
+                                        interviewResult.setInterviewerId(resultSet.getInt("interviewer_id"));
+                                        interviewResult.setMark(resultSet.getInt("mark"));
+                                        interviewResult.setComment(resultSet.getString("comment"));
+                                        interviewResult.setRecommendation(Recommendation.values()[resultSet.getInt("recommendation_id") - 1]);
+                                        return interviewResult;
+                                    }
+                                });
+
+                    } catch (Exception e) {
+                        LOGGER.error(e);
+                    }
+                    candidate.setInterviewResults(list);
+
+                    return candidate;
+                }
+            });
+            return listCandidates;
+        } catch (Exception e) {
+            LOGGER.error("Error:" + e);
+        }
+
+        return listCandidates;
+    }
+
     @Override
     public Collection<Candidate> filtration(List<Answer> expected, Integer limit, Integer offset) {
         if (expected.isEmpty()) {
@@ -604,60 +657,6 @@ public class CandidateDAOImpl implements CandidateDAO {
                 " cand.id LIMIT " + limit + " offset " + offset);
 
         return getCandidatesListFromSqlQuery(sql);
-    }
-
-    private List<Candidate> getCandidatesListFromSqlQuery(String sql) {
-        List<Candidate> listCandidates = new ArrayList<>();
-        try {
-            jdbcTemplate = new JdbcTemplate(dataSource);
-            listCandidates = jdbcTemplate.query(sql, new RowMapper<Candidate>() {
-                @Override
-                public Candidate mapRow(ResultSet resultSet, int i) throws SQLException {
-                    Candidate candidate = new Candidate();
-                    User user = new User();
-                    user.setName(resultSet.getString("name"));
-                    user.setSurname(resultSet.getString("surname"));
-                    user.setPatronymic(resultSet.getString("patronymic"));
-                    user.setEmail(resultSet.getString("email"));
-                    candidate.setUser(user);
-                    candidate.setId(resultSet.getInt("id"));
-                    candidate.setStatusId(resultSet.getInt("status_id"));
-                    candidate.setCourseId(resultSet.getInt("course_id"));
-                    Collection<InterviewResult> list = null;
-                    try {
-                        list = jdbcTemplate.query("SELECT ir.interviewer_id, ir.mark, ir.comment, r.value " +
-                                "FROM \"hr_system\".users u " +
-                                "JOIN \"hr_system\".role_users_maps rol ON rol.user_id = u.id " +
-                                "JOIN \"hr_system\".candidate candidate ON candidate.user_id = u.id " +
-                                "FULL OUTER JOIN \"hr_system\".interview_result ir on candidate.id = ir.candidate_id " +
-                                "FULL OUTER JOIN \"hr_system\".recommendation r on ir.recommendation_id = r.id " +
-                                "WHERE rol.role_id = 5 and candidate.id = " + candidate.getId()
-                                , new RowMapper<InterviewResult>() {
-                            @Override
-                            public InterviewResult mapRow(ResultSet resultSet, int i) throws SQLException {
-                                InterviewResult interviewResult = new InterviewResult();
-                                interviewResult.setInterviewerId(resultSet.getInt("interviewer_id"));
-                                interviewResult.setMark(resultSet.getInt("mark"));
-                                interviewResult.setComment(resultSet.getString("comment"));
-                                interviewResult.setRecommendation(Recommendation.values()[resultSet.getInt("recommendation_id") - 1]);
-                                return interviewResult;
-                            }
-                        });
-
-                    } catch (Exception e) {
-                        LOGGER.error(e);
-                    }
-                    candidate.setInterviewResults(list);
-
-                    return candidate;
-                }
-            });
-            return listCandidates;
-        } catch (Exception e) {
-            LOGGER.error("Error:" + e);
-        }
-
-        return listCandidates;
     }
 
     @Override

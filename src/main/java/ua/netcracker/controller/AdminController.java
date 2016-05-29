@@ -564,10 +564,6 @@ public class AdminController {
 
         if (filtered.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-
-        if (filtered.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } else if (!status1.equals("Select status")) {
             Status st = Status.valueOf(status1);
             for (Candidate candidate : filtered) {
