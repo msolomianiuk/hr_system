@@ -9,7 +9,7 @@ $(document).ready(function () {
     init();
     $.validator.addMethod('checkQuery', function (value, element) {
         return this.optional(element) || isValidQuery;
-    }, "This is bad query calls DB ERROR. Change it and click Save!!!");
+    }, "Bad query causes a DB ERROR. Change it and click Save!!!");
     $.validator.addMethod('checkSql', function (value, element) {
         value = value.toLowerCase();
         return this.optional(element) || (value.indexOf("create") === -1 && value.indexOf("drop") === -1 && value.indexOf("delete") === -1 && value.indexOf("update") === -1 && value.indexOf("alter") === -1)
@@ -47,7 +47,7 @@ $(document).ready(function () {
     $(".btn-save").on("click", function () {
         isValidQuery = true;
         validateForm.form();
-        ajax("service/checkQuery", function (data){
+        ajax("service/checkQuery", function (data) {
             isValidQuery = data;
             saveHandler();
         }, function (data) {
@@ -182,14 +182,16 @@ function generateReportsList(data) {
         if ($(this).val() === "main") {
             var status = $(".status").val();
             if (status === "ALL") {
-                ajax("service/createReportByCourse", showReport, getReportError, {
-                    courseId: $(".course_setting").val()
-                });
+                ajax("service/createReportByCourse",
+                    showReport, getReportError, {
+                        courseId: $(".course_setting").val()
+                    });
             } else {
-                ajax("service/createReportByCourseAndStatus", showReport, getReportError, {
-                    courseId: $(".course_setting").val(),
-                    status: status
-                });
+                ajax("service/createReportByCourseAndStatus",
+                    showReport, getReportError, {
+                        courseId: $(".course_setting").val(),
+                        status: status
+                    });
             }
         }
         else {
@@ -228,7 +230,6 @@ function showDevModal() {
     var textDescription = $(".dev_panel_description");
     textDescription.empty();
     textDescription.append('<h4> Brief Description: ' + reports[reportIndex].description + '</h4>');
-    //$(".btn-cancel").css({'display': 'none'});
     $(".btn-save").css({'display': 'none'});
     $(".btn-update").css({'display': 'inline-block'});
     $(".btn-delete").css({'display': 'inline-block'});
