@@ -48,10 +48,6 @@ public class CandidateDAOImpl implements CandidateDAO {
             "SELECT COUNT(*) FROM \"hr_system\".candidate WHERE course_id = ";
     private static final String SELECT_CANDIDATE_COUNT_BY_INTERVIEWDID =
             "SELECT COUNT(*) FROM \"hr_system\".candidate WHERE interview_days_details_id = ";
-    private static final String SUBQUERIES = "SELECT * FROM \"hr_system\".users u " +
-            "JOIN \"hr_system\".role_users_maps rol ON rol.user_id = u.id " +
-            "FULL OUTER JOIN \"hr_system\".interview_result ir on ir.interviewer_id = u.id " +
-            "where ir.candidate_id = ";
     private static final String SORT = " ORDER BY cand.course_id DESC,cand.interviewer_id,cand.status_id DESC, cand.id LIMIT ";
     private static final String PAGINATION = "WITH cand AS " +
             "(SELECT  DISTINCT ON(candidate.id) candidate.id,u.name,u.email ,u.surname, u.patronymic,"
