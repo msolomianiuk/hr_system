@@ -552,24 +552,29 @@ public class CandidateDAOImpl implements CandidateDAO {
                 @Override
                 public Candidate mapRow(ResultSet resultSet, int i) throws SQLException {
                     Candidate candidate = new Candidate();
-                    User user = new User();
-                    user.setName(resultSet.getString("name"));
-                    user.setSurname(resultSet.getString("surname"));
-                    user.setPatronymic(resultSet.getString("patronymic"));
-                    user.setEmail(resultSet.getString("email"));
-                    candidate.setUser(user);
-                    candidate.setId(resultSet.getInt("id"));
-                    candidate.setStatusId(resultSet.getInt("status_id"));
-                    candidate.setCourseId(resultSet.getInt("course_id"));
-                    Collection<InterviewResult> list = interviewResultDAO.findResultsByCandidateId(candidate.getId());
+                    try {
+                        User user = new User();
+                        user.setName(resultSet.getString("name"));
+                        user.setSurname(resultSet.getString("surname"));
+                        user.setPatronymic(resultSet.getString("patronymic"));
+                        user.setEmail(resultSet.getString("email"));
+                        candidate.setUser(user);
+                        candidate.setId(resultSet.getInt("id"));
+                        candidate.setStatusId(resultSet.getInt("status_id"));
+                        candidate.setCourseId(resultSet.getInt("course_id"));
+                        Collection<InterviewResult> list = interviewResultDAO.findResultsByCandidateId(candidate.getId());
 
-                    candidate.setInterviewResults(list);
-
+                        candidate.setInterviewResults(list);
+                    } catch (SQLException e) {
+                        LOGGER.info("Method: getCandidatesListFromSqlQuery" + " SQL State: " + e.getSQLState()
+                                + " Message: " + e.getMessage());
+                        LOGGER.debug(e.getStackTrace(), e);
+                    }
                     return candidate;
                 }
             });
-        } catch (Exception e) {
-            LOGGER.error("Error:" + e);
+        } catch (DataAccessException e) {
+            LOGGER.error("Method: getCandidatesListFromSqlQuery" + " Error: " + e);
         }
 
         return listCandidates;
@@ -586,6 +591,7 @@ public class CandidateDAOImpl implements CandidateDAO {
         //cut off the last "AND candidate_id IN "
         sql = sql.substring(0, sql.length() - 20);
 
+        //add missing parentheses
         for (int i = 0; i < expected.size(); i++) {
             sql = sql.concat(")");
         }
@@ -600,7 +606,6 @@ public class CandidateDAOImpl implements CandidateDAO {
         }
 
         String sql = PAGINATION.concat(" WHERE cand.id IN ");
-
 
         sql = appendQueryByAnswers(sql, expected);
 
@@ -626,11 +631,19 @@ public class CandidateDAOImpl implements CandidateDAO {
             rows = jdbcTemplate.queryForObject(sql, new RowMapper<Long>() {
                 @Override
                 public Long mapRow(ResultSet resultSet, int i) throws SQLException {
-                    return resultSet.getLong("count");
+                    long rows = 0;
+                    try {
+                        rows = resultSet.getLong("count");
+                    } catch (SQLException e) {
+                        LOGGER.info("Method: getRows" + " SQL State: " + e.getSQLState()
+                                + " Message: " + e.getMessage());
+                        LOGGER.debug(e.getStackTrace(), e);
+                    }
+                    return rows;
                 }
             });
-        } catch (Exception e) {
-            LOGGER.error("Error:" + e);
+        } catch (DataAccessException e) {
+            LOGGER.error("Method: getRows" + " Error: " + e);
         }
 
         return rows;

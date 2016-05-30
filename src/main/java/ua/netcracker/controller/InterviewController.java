@@ -11,14 +11,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import ua.netcracker.model.entity.Candidate;
 import ua.netcracker.model.service.CandidateService;
 
-/**
- * Created by Alex on 11.05.2016.
- */
+
 @Controller
 public class InterviewController {
     @Autowired
     private CandidateService candidateService;
 
+//  Get candidate by candidate ID
     @RequestMapping(value = "/service/getStudent", method = RequestMethod.GET)
     public ResponseEntity<Candidate> getCandidate(@RequestParam int id) {
         Candidate candidate = candidateService.getCandidateById(id);
@@ -28,6 +27,7 @@ public class InterviewController {
         return new ResponseEntity<>(candidate, HttpStatus.OK);
     }
 
+//  Save in DB candidate`s interview result
     @RequestMapping(value = "/service/setStudentInterviewResult", method = RequestMethod.GET)
     @ResponseBody
     public boolean setStudentInterviewResult(@RequestParam Integer candidateId,
