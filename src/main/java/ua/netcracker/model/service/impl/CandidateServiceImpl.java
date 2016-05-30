@@ -186,21 +186,19 @@ public class CandidateServiceImpl implements CandidateService {
             candidate.setStatusId(Status.Ready.getId());
             candidate.setCourseId(courseSettingService.getLastSetting().getId());
             saveCandidate(candidate);
-            try {
-                candidate = getCandidateById(userId);
-            } catch (NullPointerException e) {
-                LOGGER.info("Method: saveAnswers " + e.getStackTrace()
-                        + " Message: " + e.getMessage());
-                LOGGER.debug(e.getStackTrace(), e);
-            }
+            candidate = getCurrentCandidate();
+            candidate.setAnswers(listAnswers);
+            answersDAO.saveAll(candidate);
+        } else {
+            candidate.setAnswers(listAnswers);
+            saveOrUpdateAnswers(candidate);
         }
-        candidate.setAnswers(listAnswers);
-        saveOrUpdateAnswers(candidate);
         return candidate;
     }
 
     @Override
     public Candidate getCurrentCandidate() throws NullPointerException {
+        Candidate candidate = null;
         userId = 0;
         try {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -210,10 +208,11 @@ public class CandidateServiceImpl implements CandidateService {
                                 getAuthentication().getPrincipal();
                 userId = userDetails.getUserId();
             }
+            candidate = getCandidateByUserId(userId);
         } catch (Exception e) {
             LOGGER.error("Method: getCurrentCandidate" + " Error: " + e);
         }
-        return getCandidateByUserId(userId);
+        return candidate;
     }
 
     @Override
