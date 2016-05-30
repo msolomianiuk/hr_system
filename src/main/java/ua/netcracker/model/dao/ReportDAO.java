@@ -13,4 +13,6 @@ public interface ReportDAO {
     Collection<Collection<String>> getStudentsByCourseId(int courseId);
 
     Collection<Collection<String>>  getStudentsByCourseIdAndStatusId(int courseId, int statusId);
+
+    boolean checkQuery(String sql);
 }

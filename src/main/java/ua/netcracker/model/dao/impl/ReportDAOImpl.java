@@ -66,4 +66,16 @@ public class ReportDAOImpl implements ReportDAO {
     public Collection<Collection<String>> getStudentsByCourseIdAndStatusId(int courseId, int statusId) {
         return getReport(SQL_MAIN_REPORT + courseId + " AND c.status_id = " + statusId + ";");
     }
+
+    @Override
+    public boolean checkQuery(String sql) {
+        try {
+            JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+           jdbcTemplate.queryForList(sql);
+            return true;
+        } catch (Exception ex) {
+            LOGGER.trace("User request ", ex);
+            return false;
+        }
+    }
 }

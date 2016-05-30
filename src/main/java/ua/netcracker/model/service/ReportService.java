@@ -35,4 +35,8 @@ public interface ReportService {
     Collection<Integer> getCourses();
 
     Map<Integer, String> getStatuses();
+
+    Collection<ReportQuery> getDeletedReports();
+
+    boolean checkQuery(String sql);
 }

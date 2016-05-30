@@ -133,4 +133,14 @@ public class ReportServiceImpl implements ReportService {
     public Map<Integer, String> getStatuses() {
         return candidate.findAllStatus();
     }
+
+    @Override
+    public Collection<ReportQuery> getDeletedReports() {
+        return reportQueryDao.findAllByImportant(false);
+    }
+
+    @Override
+    public boolean checkQuery(String sql) {
+        return checkSQL(sql)?reportDao.checkQuery(sql):false;
+    }
 }

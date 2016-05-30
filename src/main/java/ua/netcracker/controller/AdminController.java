@@ -376,6 +376,23 @@ public class AdminController {
         return new ResponseEntity<>(reports, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/service/getDeletedReports", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<Collection<ReportQuery>> getDeletedReports() {
+        Collection<ReportQuery> reports = reportService.getDeletedReports();
+        if (reports.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(reports, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/service/checkQuery", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<Boolean> checkQuery(@RequestParam String sql) {
+        boolean isValidQuery = reportService.checkQuery(sql);
+        return new ResponseEntity<>(isValidQuery, HttpStatus.OK);
+    }
+
     @RequestMapping(value = "/service/updateReportQuery", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<ReportQuery> updateReport(@RequestParam String id,
