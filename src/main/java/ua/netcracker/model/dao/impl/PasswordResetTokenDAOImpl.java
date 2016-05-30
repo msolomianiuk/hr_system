@@ -2,7 +2,6 @@ package ua.netcracker.model.dao.impl;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -57,13 +56,17 @@ public class PasswordResetTokenDAOImpl implements PasswordResetTokenDAO {
 
     @Override
     public Collection<PasswordResetToken> findAll() {
-        List<PasswordResetToken> tokens = jdbcTemplate.query(SQL_FIND_ALL, new RowMapper<PasswordResetToken>() {
-            @Override
-            public PasswordResetToken mapRow(ResultSet rs, int rowNumber) throws SQLException {
-                return createTokenWithResultSet(rs);
-            }
-        });
-
+        List<PasswordResetToken> tokens = null;
+        try {
+            tokens = jdbcTemplate.query(SQL_FIND_ALL, new RowMapper<PasswordResetToken>() {
+                @Override
+                public PasswordResetToken mapRow(ResultSet rs, int rowNumber) throws SQLException {
+                    return createTokenWithResultSet(rs);
+                }
+            });
+        } catch (Exception e) {
+            LOGGER.error(e);
+        }
         return tokens;
     }
 
@@ -79,7 +82,7 @@ public class PasswordResetTokenDAOImpl implements PasswordResetTokenDAO {
                         }
                     }, id);
         } catch (Exception e) {
-            LOGGER.info(e);
+            LOGGER.error(e);
         }
         return token;
     }
@@ -95,24 +98,28 @@ public class PasswordResetTokenDAOImpl implements PasswordResetTokenDAO {
                 entity.setId(key.intValue());
                 return true;
             }
-        } catch (DuplicateKeyException ex) {
-            return false;
+        } catch (Exception e) {
+            LOGGER.error(e);
         }
         return false;
     }
 
     @Override
     public boolean update(PasswordResetToken entity) {
-        if (jdbcTemplate.update(SQL_UPDATE, entity.getUserId(), entity.getToken(), entity.getId()) == 1) {
-            return true;
+        try {
+            return jdbcTemplate.update(SQL_UPDATE, entity.getUserId(), entity.getToken(), entity.getId()) == 1;
+        } catch (Exception e) {
+            LOGGER.error(e);
         }
         return false;
     }
 
     @Override
     public boolean remove(int id) {
-        if (jdbcTemplate.update(SQL_REMOVE, id) == 1) {
-            return true;
+        try {
+            return jdbcTemplate.update(SQL_REMOVE, id) == 1;
+        } catch (Exception e) {
+            LOGGER.error(e);
         }
         return false;
     }
@@ -130,7 +137,7 @@ public class PasswordResetTokenDAOImpl implements PasswordResetTokenDAO {
                     }, userId);
 
         } catch (Exception e) {
-            LOGGER.info(e);
+            LOGGER.error(e);
         }
         return token;
     }

@@ -7,6 +7,7 @@ import ua.netcracker.model.dao.PasswordResetTokenDAO;
 import ua.netcracker.model.dao.UserDAO;
 import ua.netcracker.model.entity.PasswordResetToken;
 import ua.netcracker.model.entity.User;
+import ua.netcracker.model.securiry.SHA256PasswordEncoder;
 import ua.netcracker.model.service.PasswordResetService;
 import ua.netcracker.model.service.RegistrationService;
 import ua.netcracker.model.service.SendEmailService;
@@ -38,6 +39,9 @@ public class PasswordResetServiceImpl implements PasswordResetService {
 
     @Autowired
     ValidationService validationService;
+
+    @Autowired
+    private SHA256PasswordEncoder passwordEncoder;
 
     @Override
     public boolean sendToken(String email, String sitePath) {
@@ -79,7 +83,7 @@ public class PasswordResetServiceImpl implements PasswordResetService {
             if (user != null) {
                 PasswordResetToken prt = passwordResetTokenDAO.findByUserId(user.getId());
                 if (prt != null && prt.getToken().equals(token)) {
-                    user.setPassword(registrationService.sha256Password(password));
+                    user.setPassword(passwordEncoder.encode(password));
                     if (userDAO.update(user) && passwordResetTokenDAO.remove(prt.getId())) {
                         LOGGER.info("success update password for email=" + email);
                         return true;
