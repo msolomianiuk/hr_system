@@ -239,19 +239,13 @@ public class AdminController {
                 end_time,
                 addressService.findByAddress(address_id).getId()
         );
-        if (dateService.validTwoTimes(start_time, end_time)) {
-            if (addressService.findById(interviewDaysDetails.getAddressId()).getRoomCapacity() > interviewDaysDetails.getCountPersonal() * 2) {
-                interviewDaysDetailsService.update(interviewDaysDetails);
-                return ResponseEntity
-                        .status(HttpStatus.ACCEPTED).body(ResponseEntity.ok("Success"));
-            } else {
-                return ResponseEntity
-                        .status(HttpStatus.BAD_REQUEST).body("This room can not accommodate all the people");
-            }
-        } else
+        String result = interviewDaysDetailsService.update(interviewDaysDetails);
+        if (result.equals("Success"))
             return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST).body("Please, enter valid time!");
-
+                        .status(HttpStatus.ACCEPTED).body(ResponseEntity.ok("Success"));
+        else
+            return ResponseEntity
+                        .status(HttpStatus.BAD_REQUEST).body(result);
     }
 
     @RequestMapping(value = "/date_list", method = RequestMethod.GET)
@@ -344,8 +338,11 @@ public class AdminController {
     public ResponseEntity removeAddress(
             @RequestParam String id
     ) {
-        addressService.delete(Integer.parseInt(id));
+        if (addressService.delete(Integer.parseInt(id)))
         return ResponseEntity.ok(Integer.parseInt(id));
+                else
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST).body("This address is used. You can not remove it.");
     }
 
     @RequestMapping(value = "/sortCandidate", method = RequestMethod.GET)

@@ -21,7 +21,6 @@ import ua.netcracker.model.utils.JsonParsing;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -79,36 +78,7 @@ public class CandidateServiceImpl implements CandidateService {
         return listCandidates;
     }
 
-    @Override
-    public Collection<Candidate> getPartCandidatesIsViewWithAnswer(Integer with, Integer to) {
-        Collection<Candidate> listCandidates = new ArrayList<>();
-        try {
-            for (Candidate candidate : getPartCandidatesWithAnswer(with, to)) {
-                Collection<Answer> listAnswers = answersDAO.findAllIsView(candidate, questionService.
-                        getAllIsView(courseSettingService.getLastSetting().getId()));
-                candidate.setAnswers(listAnswers);
-                listCandidates.add(candidate);
-            }
-        } catch (DataAccessException e) {
-            LOGGER.error("Method: getPartCandidatesIsViewWithAnswer" + " Error: " + e);
-        }
-        return listCandidates;
-    }
 
-    @Override
-    public Collection<Candidate> getAllByCourse(Integer courseId) {
-        return candidateDAO.findAllByCourse(courseId);
-    }
-
-    @Override
-    public Collection<Answer> getAnswersIsView(Candidate candidate, Collection<Question> listQuestions) {
-        return answersDAO.findAllIsView(candidate, listQuestions);
-    }
-
-    @Override
-    public Collection<Candidate> getPartByCourse(Integer courseId, Integer with, Integer to) {
-        return candidateDAO.findPartByCourse(courseId, with, to);
-    }
 
     @Override
     public Candidate getCandidateById(Integer id) throws NullPointerException {
@@ -244,18 +214,6 @@ public class CandidateServiceImpl implements CandidateService {
         }
         return resultAnswer;
     }
-
-    @Override
-    public Map<Integer, String> getAllStatus() {
-        Map<Integer, String> statusMap = new HashMap<>();
-        try {
-            statusMap = candidateDAO.findAllStatus();
-        } catch (DataAccessException e) {
-            LOGGER.error("Method: getAllStatus" + " Error: " + e);
-        }
-        return statusMap;
-    }
-
     @Override
     public boolean updateCandidateStatus(Integer candidateID, Status newStatus) {
         return candidateDAO.updateCandidateStatus(candidateID, newStatus);
@@ -272,28 +230,6 @@ public class CandidateServiceImpl implements CandidateService {
             listCandidates.addAll(paginationService.findForSearch(limitRows, element, find));
         } catch (DataAccessException e) {
             LOGGER.error("Method: getCandidate" + " Error: " + e);
-        }
-        return listCandidates;
-    }
-
-    @Override
-    public Collection<Candidate> getAllMarkedByCurrentInterviewer(User user) {
-        Collection<Candidate> listCandidates = new ArrayList<>();
-        try {
-            listCandidates.addAll(candidateDAO.getAllMarked(user));
-        } catch (DataAccessException e) {
-            LOGGER.error("Method: getAllMarkedByCurrentInterviewer" + " Error: " + e);
-        }
-        return listCandidates;
-    }
-
-    @Override
-    public Collection<Candidate> getPartCandidates(Integer with, Integer to) {
-        Collection<Candidate> listCandidates = new ArrayList<>();
-        try {
-            listCandidates.addAll(candidateDAO.findPart(with, to));
-        } catch (DataAccessException e) {
-            LOGGER.error("Method: getPartCandidates" + " Error: " + e);
         }
         return listCandidates;
     }

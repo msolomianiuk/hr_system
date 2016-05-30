@@ -126,9 +126,7 @@ $(document).ready(function () {
             contentType: 'application/json',
             mimeType: 'application/json',
             success: updateAddress,
-            error: function (data) {
-                // console.log(data);
-            }
+            error: AlertSuccess
         });
 
     });

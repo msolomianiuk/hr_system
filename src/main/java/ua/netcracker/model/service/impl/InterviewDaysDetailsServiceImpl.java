@@ -94,8 +94,16 @@ public class InterviewDaysDetailsServiceImpl implements InterviewDaysDetailsServ
     }
 
     @Override
-    public void update(InterviewDaysDetails interviewDaysDetails) {
-        interviewDaysDetailsDAO.update(interviewDaysDetails);
+    public String update(InterviewDaysDetails interviewDaysDetails) {
+        if (dateService.validTwoTimes(interviewDaysDetails.getStartTime(),interviewDaysDetails.getEndTime())) {
+            if (addressService.findById(interviewDaysDetails.getAddressId()).getRoomCapacity() > interviewDaysDetails.getCountPersonal() * 2) {
+                interviewDaysDetailsDAO.update(interviewDaysDetails);
+                return "Success";
+            } else {
+               return "This room can not accommodate all the people";
+            }
+        } else
+            return "Please, enter valid time!";
     }
 
     @Override

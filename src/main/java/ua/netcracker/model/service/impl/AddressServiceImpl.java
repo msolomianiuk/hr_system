@@ -39,8 +39,8 @@ public class AddressServiceImpl implements AddressService {
     }
 
     @Override
-    public void delete(long id) {
-        addressDAO.remove(id);
+    public boolean delete(long id) {
+        return addressDAO.remove(id);
     }
 
     @Override
