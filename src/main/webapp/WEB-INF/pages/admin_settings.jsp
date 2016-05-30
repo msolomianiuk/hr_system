@@ -263,11 +263,11 @@
                             <div class="panel panel-success">
                                 <div class="panel-heading" role="button" data-toggle="collapse" href="#main-setting4"
                                      aria-expanded="true" aria-controls="main-setting4">
-                                    <h3 class="panel-title">Anketa</h3>
+                                    <h3 class="panel-title">Profile</h3>
                                 </div>
                                 <div class="panel-body" id="main-setting5">
                                     <div id="Anketa">
-                                        <h1>Anketa</h1>
+                                        <h1>Profile</h1>
                                         <div class="x_content">
                                             <div class="candidate-profile row">
                                                 <form class="form-horizontal form-label-left col-md-9 col-sm-9 col-xs-12" novalidate>

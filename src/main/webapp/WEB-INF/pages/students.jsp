@@ -258,7 +258,7 @@
             </div>
 
             <div class="panel panel-success">
-                <h3 class="panel-title">Mail dispatch</h3>
+                <h3 class="panel-title Mail_Dispatch">Mail dispatch</h3>
 
                 <div class="panel-body" id="main-setting4">
                     <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
