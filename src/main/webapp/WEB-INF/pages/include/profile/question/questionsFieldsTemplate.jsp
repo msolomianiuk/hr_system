@@ -8,7 +8,7 @@
     <!-- number input -->
     <div class="item form-group int-input-type">
     <%@ include file="questionFieldsObvertkaTop.jsp" %>
-        <input type="number" name="" required="required" class="form-control col-md-7 col-xs-12" placeholder="">
+        <input type="number" name="" required="required" data-validate-minmax="1,100000" class="form-control col-md-7 col-xs-12" placeholder="">
     <%@ include file="questionFieldsObvertksFooter.jsp"%>
 
     <!-- select input -->
