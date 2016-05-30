@@ -18,4 +18,6 @@ public interface InterviewDaysDetailsDAO extends DAO<InterviewDaysDetails> {
     List<Map<String, Object>> findAllInterviewDetailsAddress();
 
     Map<String, Object> findInterviewDetailsAddressById(Integer id);
+
+    public void removeByCourseId(int course_id);
 }
