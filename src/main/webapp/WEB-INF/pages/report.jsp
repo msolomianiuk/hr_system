@@ -138,7 +138,7 @@
                         <div class="panel panel-success">
                             <div class="panel-heading" role="button" data-toggle="collapse" href="#main-setting1"
                                  aria-expanded="true" aria-controls="main-setting1">
-                                <h3 class="panel-title">Main Report</h3>
+                                <h3 class="panel-title">Report By Course and Student Status</h3>
                                 <p>Select course, students status and click button Show Reports </p>
                             </div>
                             <div class="panel-body" id="main-setting1">

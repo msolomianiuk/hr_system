@@ -24,7 +24,7 @@ public class ReportDAOImpl implements ReportDAO {
     @Autowired
     private DataSource dataSource;
 
-    private static final String SQL_MAIN_REPORT = "SELECT u.email, u.name, u.surname, u.patronymic, q.caption as question, ca.value as answer, s.value as status " +
+    private static final String SQL_MAIN_REPORT = "SELECT s.value as status, u.email, u.name, u.surname, u.patronymic, q.caption as question, ca.value as answer " +
             "FROM \"hr_system\".users u " +
             "INNER JOIN \"hr_system\".candidate c ON u.id = c.user_id " +
             "INNER JOIN \"hr_system\".candidate_answer ca ON c.id = ca.candidate_id " +
@@ -48,12 +48,12 @@ public class ReportDAOImpl implements ReportDAO {
             return new ArrayList<>();
         } catch (Exception ex) {
             LOGGER.error("User request ", ex);
-            Collection<Collection<String>> defaultReport = new ArrayList<>();
-            Collection<String> defaultRow = new ArrayList<String>() {{
-                add("empty");
+            Collection<Collection<String>> emptyReport = new ArrayList<Collection<String>>() {{
+                add(new ArrayList<String>() {{
+                    add("empty");
+                }});
             }};
-            defaultReport.add(defaultRow);
-            return defaultReport;
+            return emptyReport;
         }
     }
 
@@ -71,7 +71,7 @@ public class ReportDAOImpl implements ReportDAO {
     public boolean checkQuery(String sql) {
         try {
             JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-           jdbcTemplate.queryForList(sql);
+            jdbcTemplate.queryForList(sql);
             return true;
         } catch (Exception ex) {
             LOGGER.trace("User request ", ex);

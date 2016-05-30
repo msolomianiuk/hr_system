@@ -47,12 +47,14 @@ public class ReportServiceImpl implements ReportService {
     @Override
     public Collection<Collection<String>> getStudentsByCourseId(int courseId) {
         report = reportDao.getStudentsByCourseId(courseId);
+        description = "All students from "+ courseId;
         return report;
     }
 
     @Override
     public Collection<Collection<String>> getStudentsByCourseIdAndStatus(int courseId, String status) {
         report = reportDao.getStudentsByCourseIdAndStatusId(courseId, Status.valueOf(status).getId());
+        description = status+ " students from " +courseId;
         return report;
     }
 
