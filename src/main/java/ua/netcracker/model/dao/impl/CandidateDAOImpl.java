@@ -569,14 +569,7 @@ public class CandidateDAOImpl implements CandidateDAO {
         return listCandidates;
     }
 
-    @Override
-    public Collection<Candidate> filtration(List<Answer> expected, Integer limit, Integer offset) {
-        if (expected.isEmpty()) {
-            return paginationCandidates(limit, offset);
-        }
-
-        String sql = PAGINATION.concat(" WHERE cand.id IN ");
-
+    private String appendQueryByAnswers(String sql, List<Answer> expected) {
         for (Answer answer : expected) {
             sql = sql.concat("(SELECT candidate_id " +
                     " FROM \"hr_system\".candidate_answer" +
@@ -591,6 +584,20 @@ public class CandidateDAOImpl implements CandidateDAO {
             sql = sql.concat(")");
         }
 
+        return sql;
+    }
+
+    @Override
+    public Collection<Candidate> filtration(List<Answer> expected, Integer limit, Integer offset) {
+        if (expected.isEmpty()) {
+            return paginationCandidates(limit, offset);
+        }
+
+        String sql = PAGINATION.concat(" WHERE cand.id IN ");
+
+
+        sql = appendQueryByAnswers(sql, expected);
+
         sql = sql.concat(" ORDER BY cand.course_id DESC,cand.interviewer_id,cand.status_id DESC," +
                 " cand.id LIMIT " + limit + " offset " + offset);
 
@@ -601,22 +608,10 @@ public class CandidateDAOImpl implements CandidateDAO {
     public Long getRows(List<Answer> expected) {
         String sql = "SELECT count(*) FROM \"hr_system\".candidate";
         if (!expected.isEmpty()) {
+
             sql += " WHERE candidate.id IN ";
 
-            for (Answer answer : expected) {
-                sql = sql.concat("(SELECT candidate_id " +
-                        " FROM \"hr_system\".candidate_answer" +
-                        " WHERE question_id = " + answer.getQuestionId() + " AND value LIKE '%" +
-                        answer.getValue() + "%' AND candidate_id IN ");
-            }
-
-            //cut off last "AND candidate_id IN "
-            sql = sql.substring(0, sql.length() - 20);
-
-            for (int i = 0; i < expected.size(); i++) {
-                sql = sql.concat(")");
-            }
-
+            sql = appendQueryByAnswers(sql, expected);
         }
 
         Long rows = null;
