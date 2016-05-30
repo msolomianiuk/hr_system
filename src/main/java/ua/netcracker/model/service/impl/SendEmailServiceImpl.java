@@ -3,6 +3,7 @@ package ua.netcracker.model.service.impl;
 import org.apache.log4j.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -12,6 +13,7 @@ import ua.netcracker.model.entity.Address;
 import ua.netcracker.model.service.*;
 
 import javax.mail.MessagingException;
+import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.util.*;
 
@@ -32,6 +34,8 @@ public class SendEmailServiceImpl implements SendEmailService {
     private AddressDAO addressDAO;
     @Autowired
     private JavaMailSender mailSender;
+    @Autowired
+    private SimpleMailMessage templateMessage;
 
     @Override
     public void sendEmail(String[] toEmails, String subject, String text) {
@@ -40,6 +44,7 @@ public class SendEmailServiceImpl implements SendEmailService {
         try {
             mimeMessage.setContent(text, "text/html; charset=UTF-8");
             helper.setSubject(subject);
+            helper.setFrom(templateMessage.getFrom());
             helper.setBcc(toEmails);
             mailSender.send(mimeMessage);
         } catch (MessagingException messagingException) {
@@ -58,17 +63,17 @@ public class SendEmailServiceImpl implements SendEmailService {
         EmailTemplate emailTemplate = emailTemplateDAO.find(Template.TEMPLATE_SUCCESS_REGISTRATION.getId());
         String email = replacePatterns(emailTemplate.getTemplate(), user, password);
         sendEmail(user.getEmail(), emailTemplate.getDescription(), email.replaceAll("\\{url\\}",
-                "http://31.131.25.206:8080/hr_system-1.0-SNAPSHOT"));//!!!!!
+                "http://31.131.25.54:8080/hr_system-1.0-SNAPSHOT"));//!!!!!
     }
 
     @Override
     public void sendEmailToStudentsByStatus(Status status) {
-        //LOGGER.debug("status === " + status);
         Collection<Candidate> candidates = candidateDAO.findCandidateByStatus(status.getStatus());
         EmailTemplate emailTemplate = getTemplateByCandidateStatus(status);
         for (Candidate candidate : candidates) {
             String email = getEmailByCandidateStatus(emailTemplate.getTemplate(), candidate, status);
-            sendEmail(candidate.getUser().getEmail(), emailTemplate.getDescription(), email);
+            User user = userDAO.find(candidate.getUserId());
+            sendEmail(user.getEmail(), emailTemplate.getDescription(), email);
         }
     }
 
