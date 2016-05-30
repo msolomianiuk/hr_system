@@ -56,15 +56,13 @@ public class CourseSettingServiceImpl implements CourseSettingService {
 
         if (validDate(registrationStartDate, registrationEndDate,
                 interviewStartDate, interviewEndDate, courseStartDate)) {
-            if (validateData(interviewTimeForStudent, studentForInterviewCount, studentForCourseCount)) {
-
-                return getCourseSetting(registrationStartDate, registrationEndDate,
-                        interviewStartDate, interviewEndDate,
-                        courseStartDate, interviewTimeForStudent,
-                        studentForInterviewCount, studentForCourseCount);
-            }
+            return getCourseSetting(registrationStartDate, registrationEndDate,
+                    interviewStartDate, interviewEndDate,
+                    courseStartDate, interviewTimeForStudent,
+                    studentForInterviewCount, studentForCourseCount);
+        } else {
+            return null;
         }
-        return null;
     }
 
     private boolean validDate(String registrationStartDate, String registrationEndDate,
@@ -95,7 +93,9 @@ public class CourseSettingServiceImpl implements CourseSettingService {
                             validate(interviewStartDate, registrationStartDate) &&
 
                             validate(registrationEndDate, registrationStartDate)) {
+
                         return true;
+
                     }
                 }
             }
@@ -105,22 +105,8 @@ public class CourseSettingServiceImpl implements CourseSettingService {
         return false;
     }
 
-    private boolean validate(String start, String end) {
+    public boolean validate(String start, String end) {
         return dateService.getDate(start).isAfter(dateService.getDate(end));
-    }
-
-    private boolean validateData(String interviewTimeForStudent,
-                                 String studentForInterviewCount,
-                                 String studentForCourseCount) {
-        try {
-            if ((int) Math.ceil(Integer.valueOf(interviewTimeForStudent)) == 0 ||
-                    (int) Math.ceil(Integer.valueOf(studentForInterviewCount)) == 0 ||
-                    (int) Math.ceil(Integer.valueOf(studentForCourseCount)) == 0) {
-            }
-        } catch (Exception e) {
-            LOGGER.error(e);
-        }
-        return false;
     }
 
     private CourseSetting getCourseSetting(String registrationStartDate, String registrationEndDate,
