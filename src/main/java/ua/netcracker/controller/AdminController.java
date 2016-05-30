@@ -540,7 +540,7 @@ public class AdminController {
     @RequestMapping(value = "/get_list", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<Collection<Question>> getAllQuestion(@RequestParam String id) {
-        Collection<Question> collection = questionService.getAllIsView(Integer.parseInt(id));
+        Collection<Question> collection = questionService.getAllByCourseId(Integer.parseInt(id));
         if (collection.isEmpty()) {
             return (ResponseEntity<Collection<Question>>) ResponseEntity.EMPTY;
         }

@@ -47,7 +47,7 @@ public class QuestionDAOImpl implements QuestionDAO {
             "FROM \"hr_system\".question_course_maps qcp " +
             "INNER JOIN \"hr_system\".question q ON qcp.question_id = q.id " +
             "INNER JOIN \"hr_system\".type t ON q.type_id = t.id " +
-            "WHERE qcp.course_id = ?";
+            "WHERE qcp.course_id = ";
 
     private static final String SELECT_TYPE_ID = "SELECT id FROM \"hr_system\".type WHERE value = ?";
 

@@ -56,13 +56,16 @@ public class CourseSettingServiceImpl implements CourseSettingService {
 
         if (validDate(registrationStartDate, registrationEndDate,
                 interviewStartDate, interviewEndDate, courseStartDate)) {
-            return getCourseSetting(registrationStartDate, registrationEndDate,
-                    interviewStartDate, interviewEndDate,
-                    courseStartDate, interviewTimeForStudent,
-                    studentForInterviewCount, studentForCourseCount);
-        } else {
-            return null;
+            if (Integer.valueOf(interviewTimeForStudent) != 0 &&
+                    Integer.valueOf(studentForInterviewCount) != 0 &&
+                    Integer.valueOf(studentForCourseCount) != 0) {
+                return getCourseSetting(registrationStartDate, registrationEndDate,
+                        interviewStartDate, interviewEndDate,
+                        courseStartDate, interviewTimeForStudent,
+                        studentForInterviewCount, studentForCourseCount);
+            }
         }
+        return null;
     }
 
     private boolean validDate(String registrationStartDate, String registrationEndDate,

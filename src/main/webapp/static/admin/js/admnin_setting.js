@@ -280,7 +280,7 @@ $(document).ready(function () {
         var isMandatory = $("#IsMandatorySolo").val();
         var orderNumber = parseInt(($("#CaptionUpdate").attr("order_number")));
         var id = parseInt(($("#CaptionUpdate").attr("question_id")));
-        var isView = $("#isView").val();
+        var isView = true;
 
 
         $.ajax({
@@ -317,7 +317,7 @@ $(document).ready(function () {
         var isMandatory = $("#IsMandatorySolo").val();
         var orderNumber = parseInt(($("#CaptionUpdate").attr("order_number")));
         var id = parseInt(($("#CaptionUpdate").attr("question_id")));
-        var isView = $("#isView").val();
+        var isView = true;
         $.ajax({
             url: location_origin+"/update_question",
             type: "POST",
@@ -483,10 +483,7 @@ function getQuestion (data){
     '<option selected>Choose Type</option>'+
     '</select>'+
     '<select  id="IsMandatorySolo"  class="status form-control select-and-text">'+
-    '<option>true</option>'+
-    '<option>false</option>'+
-    '</select>'+
-    '<select  id="isView"  class="status form-control select-and-text">'+
+    '<option selected>IsMadatory</option>'+
     '<option>true</option>'+
     '<option>false</option>'+
     '</select>'+
