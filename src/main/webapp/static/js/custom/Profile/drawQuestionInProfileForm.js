@@ -7,16 +7,16 @@ function drawQuestionForm(questionsList) {
         switch (questionsList[index].type) {
             case "Text":
                 questionType = "text";
-                break
+                break;
             case "Number":
                 questionType = "int";
-                break
+                break;
             case "Select":
                 questionType = "select";
-                break
+                break;
             case "Checkboxes":
                 questionType = "check";
-                break
+                break;
             case "Select or text":
                 questionType = "textANDselect";
                 break
@@ -31,7 +31,7 @@ function drawQuestionForm(questionsList) {
         questionInput.find("input").attr("id", "question-" + questionsList[index].id);
 
         switch (questionsList[index].caption){
-            case "How old are you?":
+            case "Age:":
                 questionInput.find("input").attr("data-validate-minmax","18,99");
                 break;
             case "Course:":

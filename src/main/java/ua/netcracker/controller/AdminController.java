@@ -196,7 +196,7 @@ public class AdminController {
     public ResponseEntity<InterviewDaysDetails> getInterviewDetailsByDate(
             @RequestParam String id
     ) {
-        InterviewDaysDetails interviewDaysDetails = null;
+        InterviewDaysDetails interviewDaysDetails;
         interviewDaysDetails = interviewDaysDetailsService.findById(interviewDaysDetailsService.findByDate(id).getId());
         if (interviewDaysDetails != null) {
             return ResponseEntity.ok(interviewDaysDetails);
@@ -239,19 +239,13 @@ public class AdminController {
                 end_time,
                 addressService.findByAddress(address_id).getId()
         );
-        if (dateService.validTwoTimes(start_time, end_time)) {
-            if (addressService.findById(interviewDaysDetails.getAddressId()).getRoomCapacity() > interviewDaysDetails.getCountPersonal() * 2) {
-                interviewDaysDetailsService.update(interviewDaysDetails);
-                return ResponseEntity
-                        .status(HttpStatus.ACCEPTED).body(ResponseEntity.ok("Success"));
-            } else {
-                return ResponseEntity
-                        .status(HttpStatus.BAD_REQUEST).body("This room can not accommodate all the people");
-            }
-        } else
+        String result = interviewDaysDetailsService.update(interviewDaysDetails);
+        if (result.equals("Success"))
             return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST).body("Please, enter valid time!");
-
+                        .status(HttpStatus.ACCEPTED).body(ResponseEntity.ok("Success"));
+        else
+            return ResponseEntity
+                        .status(HttpStatus.BAD_REQUEST).body(result);
     }
 
     @RequestMapping(value = "/date_list", method = RequestMethod.GET)
@@ -344,8 +338,11 @@ public class AdminController {
     public ResponseEntity removeAddress(
             @RequestParam String id
     ) {
-        addressService.delete(Integer.parseInt(id));
+        if (addressService.delete(Integer.parseInt(id)))
         return ResponseEntity.ok(Integer.parseInt(id));
+                else
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST).body("This address is used. You can not remove it.");
     }
 
     @RequestMapping(value = "/sortCandidate", method = RequestMethod.GET)
@@ -615,7 +612,7 @@ public class AdminController {
     }
 
     @RequestMapping(value = "/getRows", method = RequestMethod.GET)
-    public ResponseEntity<Long> getRows(@RequestParam String answersJsonString) {
+    public ResponseEntity<Long> getRows(@RequestParam String answersJsonString) throws NullPointerException{
 
         Collection<Answer> answers = JsonParsing.parseJsonString(answersJsonString);
 
@@ -690,7 +687,7 @@ public class AdminController {
     @RequestMapping(value = "/candidateCount", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<Integer> userId(
-    ) {
+    ) throws NullPointerException {
         int countStudents = candidateService.getCandidateCount();
 
         return ResponseEntity.ok(countStudents);

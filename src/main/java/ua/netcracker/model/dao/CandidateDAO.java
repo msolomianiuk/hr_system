@@ -48,7 +48,7 @@ public interface CandidateDAO extends DAO<Candidate> {
 
     Collection<Candidate> findForSearch(Integer elementPage, Integer fromElement, String find);
 
-    Collection<Candidate> paginationCandidates(Integer elementPage, Integer fromElement);
+    Collection<Candidate> paginationCandidates(Integer limet, Integer offset);
 
     Collection<Candidate> filtration(List<Answer> expected, Integer limit, Integer offset);
 

@@ -24,7 +24,7 @@ public interface InterviewDaysDetailsService {
 
     void addDateList(CourseSetting courseSetting);
 
-    void update(InterviewDaysDetails interviewDaysDetails);
+    String update(InterviewDaysDetails interviewDaysDetails);
 
     void removeByCourseId(int course_id);
 

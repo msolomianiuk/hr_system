@@ -21,7 +21,6 @@ import ua.netcracker.model.service.QuestionService;
 import java.util.Collection;
 import java.util.List;
 
-
 @Controller
 public class CandidateController {
 
@@ -34,12 +33,13 @@ public class CandidateController {
     @Autowired
     private GeneratePDFService pdfService;
 
-
+//  Main page
     @RequestMapping(value = "/student", method = RequestMethod.GET)
     public String getProfilePage() {
         return "student";
     }
 
+//  Get all questions for draw it on front
     @RequestMapping(value = "/service/getAllMandatoryQuestions", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<Collection<Question>> getAllMandatoryQuestions() {
@@ -51,15 +51,14 @@ public class CandidateController {
         return new ResponseEntity<>(questions, HttpStatus.OK);
     }
 
-
+//  Save candidate answers in DB
     @RequestMapping(value = "/service/saveAnswers", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<Candidate> setAnswers(@RequestParam String answersJsonString) throws NullPointerException{
-
         return ResponseEntity.ok(candidateService.saveAnswers(answersJsonString));
     }
 
-
+//  Get current candidate answers for input it in form
     @RequestMapping(value = "/service/getAnswers", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<Collection<Answer>> getAnswers() {
@@ -71,6 +70,7 @@ public class CandidateController {
         return new ResponseEntity<Collection<Answer>>(answers, HttpStatus.OK);
     }
 
+//  Get current candidate PDF profile
     @RequestMapping(value = "/service/getPDF", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<byte[]> getPDF() {
