@@ -134,17 +134,13 @@ public class SendEmailServiceImpl implements SendEmailService {
     private String getEmailByCandidateStatus(String template, Candidate candidate, Status status) {
         switch (status) {
             case Interview_dated:
-                try {
-                    InterviewDaysDetails interviewDaysDetails = interviewDaysDetailsDAO.find(candidate.getInterviewDaysDetailsId());
-                    Address address = addressDAO.find(interviewDaysDetails.getAddressId());
-                    /**
-                     * Remind about coming interview a day before
-                     */
-                    sendReminderInterview(candidate, interviewDaysDetails, address);
-                    return replacePatterns(template, interviewDaysDetails, address);
-                } catch (Exception e) {
-                    LOGGER.info("ERROR while sending email to Status.Interview_dated!!! " + e.getMessage());
-                }
+                InterviewDaysDetails interviewDaysDetails = interviewDaysDetailsDAO.find(candidate.getInterviewDaysDetailsId());
+                Address address = addressDAO.find(interviewDaysDetails.getAddressId());
+                /**
+                 * Remind about coming interview a day before
+                 */
+                sendReminderInterview(candidate, interviewDaysDetails, address);
+                return replacePatterns(template, interviewDaysDetails, address);
             case Interview_passed:
             case Job_accepted:
             case No_interview:
@@ -164,11 +160,13 @@ public class SendEmailServiceImpl implements SendEmailService {
         try {
             mimeMessage.setContent(email, "text/html; charset=UTF-8");
             helper.setSubject(emailTemplate.getDescription());
-            helper.setBcc(candidate.getUser().getEmail());
+            helper.setFrom(templateMessage.getFrom());
+            helper.setBcc(userDAO.find(candidate.getUserId()).getEmail());
             String[] date = interviewDaysDetails.getInterviewDate().split(" ");
             helper.setSentDate(new Date(new GregorianCalendar(Integer.valueOf(date[0]), Integer.valueOf(date[1]),
                     Integer.valueOf(date[2]) - 1).getTimeInMillis()));
             mailSender.send(mimeMessage);
+            LOGGER.info("Message about coming interview to candidate with id = " + candidate.getId() + " was sent");
         } catch (MessagingException messagingException) {
             LOGGER.debug(messagingException.getStackTrace());
             LOGGER.info(messagingException.getMessage());
