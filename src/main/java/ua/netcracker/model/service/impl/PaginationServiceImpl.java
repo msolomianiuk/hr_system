@@ -48,11 +48,11 @@ public class PaginationServiceImpl implements PaginationService {
 
     @Override
     public Collection<Candidate> pagination(Integer limitRows, Integer fromElement) {
-        int element = 0;
+        int offset = 0;
         if ((fromElement - 1) != 0) {
-            element = (fromElement - 1) * limitRows;
+            offset = (fromElement - 1) * limitRows;
         }
-        return candidateDAO.paginationCandidates(limitRows, element);
+        return candidateDAO.paginationCandidates(limitRows, offset);
     }
 
     @Override
