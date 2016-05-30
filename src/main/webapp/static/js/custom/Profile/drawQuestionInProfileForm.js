@@ -31,7 +31,7 @@ function drawQuestionForm(questionsList) {
         questionInput.find("input").attr("id", "question-" + questionsList[index].id);
 
         switch (questionsList[index].caption){
-            case "How old are you?":
+            case "":
                 questionInput.find("input").attr("data-validate-minmax","18,99");
                 break;
             case "Course:":
