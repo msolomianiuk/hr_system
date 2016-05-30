@@ -35,7 +35,7 @@ public class UploadImageController implements HandlerExceptionResolver {
                               @RequestParam(value = "width") int width,
                               @RequestParam(value = "height") int height) throws Exception {
         if (!image.isEmpty() && image.getContentType().equals("image/jpeg")) {
-            userService.saveUserPhoto(image,x,y,width,height);
+            userService.saveUserPhoto(image, x, y, width, height);
         } else {
             model.addAttribute("uploadPhotoError");
         }
@@ -44,11 +44,11 @@ public class UploadImageController implements HandlerExceptionResolver {
 
     @Override
     public ModelAndView resolveException(HttpServletRequest arg0, HttpServletResponse arg1, Object arg2, Exception exception) {
-        Map<Object, Object> model = new HashMap<Object, Object>();
+        Map<String, Object> model = new HashMap<>();
         if (exception instanceof MultipartException) {
             model.put("error", "Sorry, file too large!");
         }
-        return new ModelAndView("/error", (Map) model);
+        return new ModelAndView("/error", model);
     }
 
 }

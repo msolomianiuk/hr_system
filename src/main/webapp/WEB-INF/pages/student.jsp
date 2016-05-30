@@ -68,6 +68,8 @@
 </div>
 <script src="<c:url value="/static/js/bootstrap.min.js"/>"></script>
 <script src="<c:url value="/static/js/nprogress.js"/>"></script>
+<script src="<c:url value="/static/js/validator/validator.js"/>"></script>
+<script src="<c:url value="/static/js/custom/Profile/validator.js"/>"></script>
 <!-- bootstrap progress js -->
 <%@ include file="include/links/linksBootstrapProgressJs.jsp" %>
 <!-- custom css+js -->
@@ -76,5 +78,7 @@
 <%@ include file="include/profile/customJsLinks.jsp" %>
 <!-- js for PNotify -->
 <%@ include file="include/links/linksPNotify.jsp" %>
+
+
 </body>
 </html>

@@ -6,25 +6,19 @@ import org.springframework.stereotype.Service;
 import ua.netcracker.model.dao.UserDAO;
 import ua.netcracker.model.entity.Role;
 import ua.netcracker.model.entity.User;
-import ua.netcracker.model.service.CandidateService;
+import ua.netcracker.model.securiry.SHA256PasswordEncoder;
 import ua.netcracker.model.service.RegistrationService;
 import ua.netcracker.model.service.ValidationService;
 
-import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 @Service
 public class RegistrationServiceImpl implements RegistrationService {
-
     private static final Logger LOGGER = Logger.getLogger(RegistrationServiceImpl.class);
-    @Autowired
-    private CourseSettingServiceImpl courseSettingService;
+
     @Autowired
     private UserDAO userDao;
-
-    @Autowired
-    private CandidateService candidateService;
 
     @Autowired
     private SendEmailServiceImpl sendEmailServiceImpl;
@@ -32,19 +26,8 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Autowired
     private ValidationService validationService;
 
-    @Override
-    public String sha256Password(String password) {
-        try {
-            MessageDigest md = MessageDigest.getInstance("SHA-256");
-
-            md.update(password.getBytes("UTF-8"));
-            byte[] digest = md.digest();
-            return String.format("%064x", new java.math.BigInteger(1, digest));
-        } catch (Exception e) {
-            LOGGER.error(e);
-        }
-        return null;
-    }
+    @Autowired
+    private SHA256PasswordEncoder passwordEncoder;
 
     @Override
     public boolean registrationStudent(String email, String name, String surname, String patronymic, String password) {
@@ -55,11 +38,10 @@ public class RegistrationServiceImpl implements RegistrationService {
                 validationService.nameValidation(patronymic) &&
                 validationService.passwordValidation(password)) {
 
-            User user = new User(email, sha256Password(password), name, surname, patronymic,
+            User user = new User(email, passwordEncoder.encode(password), name, surname, patronymic,
                     new ArrayList<>(Arrays.asList(Role.ROLE_STUDENT)));
             if (userDao.insert(user)) {
                 sendEmailServiceImpl.sendEmailAboutSuccessfulRegistration(user, password);
-
                 return true;
             }
             sendEmailServiceImpl.sendEmailAboutCriticalError("ERROR in registrationStudent with email: " + email);

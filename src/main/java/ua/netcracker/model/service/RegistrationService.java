@@ -28,5 +28,4 @@ public interface RegistrationService {
      */
     boolean isFreeEmail(String email);
 
-    String sha256Password(String password);
 }

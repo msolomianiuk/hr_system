@@ -12,10 +12,6 @@ import java.util.List;
  * @version 1.0
  */
 public interface UserDAO extends DAO<User> {
-    List<User> findByName(String name);
-
-    List<User> findBySurname(String surname);
-
     List<User> getAllPersonalById(int idRole);
 
     User findByEmail(String email);

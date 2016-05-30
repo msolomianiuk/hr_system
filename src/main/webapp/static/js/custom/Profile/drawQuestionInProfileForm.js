@@ -30,6 +30,15 @@ function drawQuestionForm(questionsList) {
         questionInput.find("select").attr("name", "question-" + questionsList[index].id);
         questionInput.find("input").attr("id", "question-" + questionsList[index].id);
 
+        switch (questionsList[index].caption){
+            case "How old are you?":
+                questionInput.find("input").attr("data-validate-minmax","18,99");
+                break;
+            case "Course:":
+                questionInput.find("input").attr("data-validate-minmax","1,6");
+                break;
+        }
+        
         questionsAnswers = questionsList[index].answerVariants;
 
         if ((questionType == "select") || (questionType == "textANDselect")) {
