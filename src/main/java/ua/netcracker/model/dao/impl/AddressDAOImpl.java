@@ -74,8 +74,8 @@ public class AddressDAOImpl implements AddressDAO {
         return jdbcTemplateFactory.getJdbcTemplate(dataSource).update(REMOVE_SQL, id) > 0;
         } catch (Exception e){
             LOGGER.error("Error: " + e);
+            return false;
         }
-        return false;
     }
 
     @Override

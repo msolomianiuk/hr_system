@@ -344,8 +344,11 @@ public class AdminController {
     public ResponseEntity removeAddress(
             @RequestParam String id
     ) {
-        addressService.delete(Integer.parseInt(id));
+        if (addressService.delete(Integer.parseInt(id)))
         return ResponseEntity.ok(Integer.parseInt(id));
+                else
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST).body("This address is used. You can not remove it.");
     }
 
     @RequestMapping(value = "/sortCandidate", method = RequestMethod.GET)
