@@ -14,7 +14,7 @@ import java.util.*;
  * Created by Legion on 08.05.2016.
  */
 @Service
-public class PaginationServiceImp {
+public class PaginationServiceImpl {
 
     @Autowired
     private CandidateDAO candidateDAO;

@@ -14,7 +14,7 @@ import ua.netcracker.model.service.*;
 import ua.netcracker.model.service.date.DateService;
 import ua.netcracker.model.service.impl.CandidateServiceImpl;
 import ua.netcracker.model.service.impl.CourseSettingServiceImpl;
-import ua.netcracker.model.service.impl.PaginationServiceImp;
+import ua.netcracker.model.service.impl.PaginationServiceImpl;
 import ua.netcracker.model.service.impl.QuestionServiceImpl;
 import ua.netcracker.model.utils.JsonParsing;
 
@@ -29,7 +29,7 @@ import java.util.Map;
 @RequestMapping(value = "/admin", method = RequestMethod.GET)
 public class AdminController {
     @Autowired
-    private PaginationServiceImp paginationServiceImp;
+    private PaginationServiceImpl paginationServiceImpl;
     @Autowired
     private QuestionServiceImpl questionService;
 
@@ -577,7 +577,7 @@ public class AdminController {
                 selected.add(answer);
             }
         }
-        List<Candidate> filtered = (List<Candidate>) paginationServiceImp.filterCandidates(selected, Integer.parseInt(elementPage), Integer.parseInt(fromElement));
+        List<Candidate> filtered = (List<Candidate>) paginationServiceImpl.filterCandidates(selected, Integer.parseInt(elementPage), Integer.parseInt(fromElement));
 
         if (filtered.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -605,7 +605,7 @@ public class AdminController {
 
     @RequestMapping(value = "/getFirst", method = RequestMethod.GET)
     public ResponseEntity<Collection<Candidate>> getCandidate() {
-        Collection<Candidate> candidates = paginationServiceImp.pagination(
+        Collection<Candidate> candidates = paginationServiceImpl.pagination(
                 Integer.valueOf(10),
                 Integer.valueOf(1));
         if (candidates.isEmpty()) {
@@ -626,7 +626,7 @@ public class AdminController {
             }
         }
 
-        Long rows = paginationServiceImp.getRows(selected);
+        Long rows = paginationServiceImpl.getRows(selected);
         if (rows == 0) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -657,7 +657,7 @@ public class AdminController {
     public ResponseEntity<String> rowsFind(
             @RequestParam String find
     ) {
-        long rows = paginationServiceImp.rowsFind(find);
+        long rows = paginationServiceImpl.rowsFind(find);
         if (rows == 0) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }

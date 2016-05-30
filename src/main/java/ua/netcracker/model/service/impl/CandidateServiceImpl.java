@@ -34,7 +34,7 @@ public class CandidateServiceImpl implements CandidateService {
     private int userId;
 
     @Autowired
-    private PaginationServiceImp paginationServiceImp;
+    private PaginationServiceImpl paginationServiceImpl;
     @Autowired
     private QuestionService questionService;
     @Autowired
@@ -274,7 +274,7 @@ public class CandidateServiceImpl implements CandidateService {
         }
         Collection<Candidate> listCandidates = new ArrayList<>();
         try {
-            listCandidates.addAll(paginationServiceImp.findForSearch(limitRows, element, find));
+            listCandidates.addAll(paginationServiceImpl.findForSearch(limitRows, element, find));
         } catch (DataAccessException e) {
             LOGGER.error("Method: getCandidate" + " Error: " + e);
         }
