@@ -28,10 +28,6 @@ public class AnswersDAOImpl implements AnswersDAO {
     private static final String INSERT =
             "INSERT INTO \"hr_system\".candidate_answer(candidate_id, question_id, value) VALUES(?,?,?)";
     private static final String DELETE_ALL = "DELETE FROM \"hr_system\".candidate_answer WHERE candidate_id =?";
-    private static final String UPDATE = "UPDATE \"hr_system\".candidate_answer SET value=? WHERE question_id =? AND " +
-            " candidate_id = ?";
-    private static final String SELECT_ANSWER = "SELECT candidate_id, question_id, caption ,value FROM " +
-            "\"hr_system\".candidate_answer join \"hr_system\".question on question_id = id where candidate_id = ";
 
 
     @Autowired
@@ -51,7 +47,6 @@ public class AnswersDAOImpl implements AnswersDAO {
             LOGGER.error("Method: findAll" + " Error: " + e);
         }
         return answers;
-
     }
 
     @Override
@@ -106,7 +101,6 @@ public class AnswersDAOImpl implements AnswersDAO {
         } catch (DataAccessException e) {
             LOGGER.error("Method: deleteAnswers" + " Error: " + e);
         }
-
     }
 
 
@@ -141,17 +135,22 @@ public class AnswersDAOImpl implements AnswersDAO {
     }
 
     @Override
-    public Collection<Candidate> findAll() {
+    public Collection<Answer> findAll() {
         return null;
     }
 
     @Override
-    public Candidate find(int id) {
+    public Answer find(int id) {
         return null;
     }
 
     @Override
-    public boolean insert(Candidate entity) {
+    public boolean insert(Answer entity) {
+        return false;
+    }
+
+    @Override
+    public boolean update(Answer entity) {
         return false;
     }
 

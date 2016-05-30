@@ -3,6 +3,7 @@ package ua.netcracker.model.service.impl;
 import org.apache.log4j.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -12,6 +13,7 @@ import ua.netcracker.model.entity.Address;
 import ua.netcracker.model.service.*;
 
 import javax.mail.MessagingException;
+import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.util.*;
 
@@ -32,6 +34,8 @@ public class SendEmailServiceImpl implements SendEmailService {
     private AddressDAO addressDAO;
     @Autowired
     private JavaMailSender mailSender;
+    @Autowired
+    private SimpleMailMessage templateMessage;
 
     @Override
     public void sendEmail(String[] toEmails, String subject, String text) {
@@ -40,6 +44,7 @@ public class SendEmailServiceImpl implements SendEmailService {
         try {
             mimeMessage.setContent(text, "text/html; charset=UTF-8");
             helper.setSubject(subject);
+            helper.setFrom(templateMessage.getFrom());
             helper.setBcc(toEmails);
             mailSender.send(mimeMessage);
         } catch (MessagingException messagingException) {
@@ -58,17 +63,17 @@ public class SendEmailServiceImpl implements SendEmailService {
         EmailTemplate emailTemplate = emailTemplateDAO.find(Template.TEMPLATE_SUCCESS_REGISTRATION.getId());
         String email = replacePatterns(emailTemplate.getTemplate(), user, password);
         sendEmail(user.getEmail(), emailTemplate.getDescription(), email.replaceAll("\\{url\\}",
-                "http://31.131.25.206:8080/hr_system-1.0-SNAPSHOT"));//!!!!!
+                "http://31.131.25.54:8080/hr_system-1.0-SNAPSHOT"));//!!!!!
     }
 
     @Override
     public void sendEmailToStudentsByStatus(Status status) {
-        //LOGGER.debug("status === " + status);
         Collection<Candidate> candidates = candidateDAO.findCandidateByStatus(status.getStatus());
         EmailTemplate emailTemplate = getTemplateByCandidateStatus(status);
         for (Candidate candidate : candidates) {
             String email = getEmailByCandidateStatus(emailTemplate.getTemplate(), candidate, status);
-            sendEmail(candidate.getUser().getEmail(), emailTemplate.getDescription(), email);
+            User user = userDAO.find(candidate.getUserId());
+            sendEmail(user.getEmail(), emailTemplate.getDescription(), email);
         }
     }
 
@@ -129,17 +134,13 @@ public class SendEmailServiceImpl implements SendEmailService {
     private String getEmailByCandidateStatus(String template, Candidate candidate, Status status) {
         switch (status) {
             case Interview_dated:
-                try {
-                    InterviewDaysDetails interviewDaysDetails = interviewDaysDetailsDAO.find(candidate.getInterviewDaysDetailsId());
-                    Address address = addressDAO.find(interviewDaysDetails.getAddressId());
-                    /**
-                     * Remind about coming interview a day before
-                     */
-                    sendReminderInterview(candidate, interviewDaysDetails, address);
-                    return replacePatterns(template, interviewDaysDetails, address);
-                } catch (Exception e) {
-                    LOGGER.info("ERROR while sending email to Status.Interview_dated!!! " + e.getMessage());
-                }
+                InterviewDaysDetails interviewDaysDetails = interviewDaysDetailsDAO.find(candidate.getInterviewDaysDetailsId());
+                Address address = addressDAO.find(interviewDaysDetails.getAddressId());
+                /**
+                 * Remind about coming interview a day before
+                 */
+                sendReminderInterview(candidate, interviewDaysDetails, address);
+                return replacePatterns(template, interviewDaysDetails, address);
             case Interview_passed:
             case Job_accepted:
             case No_interview:
@@ -159,11 +160,13 @@ public class SendEmailServiceImpl implements SendEmailService {
         try {
             mimeMessage.setContent(email, "text/html; charset=UTF-8");
             helper.setSubject(emailTemplate.getDescription());
-            helper.setBcc(candidate.getUser().getEmail());
+            helper.setFrom(templateMessage.getFrom());
+            helper.setBcc(userDAO.find(candidate.getUserId()).getEmail());
             String[] date = interviewDaysDetails.getInterviewDate().split(" ");
             helper.setSentDate(new Date(new GregorianCalendar(Integer.valueOf(date[0]), Integer.valueOf(date[1]),
                     Integer.valueOf(date[2]) - 1).getTimeInMillis()));
             mailSender.send(mimeMessage);
+            LOGGER.info("Message about coming interview to candidate with id = " + candidate.getId() + " was sent");
         } catch (MessagingException messagingException) {
             LOGGER.debug(messagingException.getStackTrace());
             LOGGER.info(messagingException.getMessage());

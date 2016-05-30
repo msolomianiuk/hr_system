@@ -10,8 +10,7 @@ import java.util.Collection;
 /**
  * Created by Alex on 06.05.2016.
  */
-public interface AnswersDAO extends DAO<Candidate> {
-
+public interface AnswersDAO extends DAO<Answer> {
     Collection<Answer> findAll(int candidateId);
 
     Collection<Answer> findAllIsView(Candidate candidate, Collection<Question> listQuestions);
@@ -19,4 +18,6 @@ public interface AnswersDAO extends DAO<Candidate> {
     void saveAll(Candidate candidate);
 
     void deleteAnswers(int candidateId);
+
+    boolean update(Candidate candidate);
 }

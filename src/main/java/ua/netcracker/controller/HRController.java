@@ -118,12 +118,12 @@ public class HRController {
     public boolean setCandidateStatus(@RequestParam Integer candidateId,
                                       @RequestParam Integer statusId
     ) {
-        return candidateService.updateCandidateStatus(candidateId, Status.values()[statusId-1]);
+        return candidateService.updateCandidateStatus(candidateId, Status.values()[statusId - 1]);
     }
 
     @RequestMapping(value = "hr/service/getCandidateCount", method = RequestMethod.GET)
     @ResponseBody
-    public Integer getCandidateCount() {
+    public Integer getCandidateCount() throws NullPointerException {
         return candidateService.getCandidateCount();
     }
 

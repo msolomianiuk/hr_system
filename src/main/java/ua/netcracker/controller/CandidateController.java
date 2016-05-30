@@ -19,7 +19,6 @@ import ua.netcracker.model.service.GeneratePDFService;
 import ua.netcracker.model.service.QuestionService;
 
 import java.util.Collection;
-import java.util.List;
 
 
 @Controller
@@ -54,7 +53,7 @@ public class CandidateController {
 
     @RequestMapping(value = "/service/saveAnswers", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity<Candidate> setAnswers(@RequestParam String answersJsonString) throws NullPointerException{
+    public ResponseEntity<Candidate> setAnswers(@RequestParam String answersJsonString) throws NullPointerException {
 
         return ResponseEntity.ok(candidateService.saveAnswers(answersJsonString));
     }
@@ -63,12 +62,12 @@ public class CandidateController {
     @RequestMapping(value = "/service/getAnswers", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<Collection<Answer>> getAnswers() {
-        List<Answer> answers = (List<Answer>) candidateService.
+        Collection<Answer> answers = candidateService.
                 getAllCandidateAnswers(candidateService.getCurrentCandidate());
         if (answers.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        return new ResponseEntity<Collection<Answer>>(answers, HttpStatus.OK);
+        return new ResponseEntity<>(answers, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/service/getPDF", method = RequestMethod.GET)
