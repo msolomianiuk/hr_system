@@ -39,21 +39,6 @@ import java.util.Map;
 public class InterviewDaysDetailsServiceImpl implements InterviewDaysDetailsService {
     static final Logger LOGGER = Logger.getLogger(InterviewDaysDetailsServiceImpl.class);
 
-//    private static final String INTERVIEW_DETAILS_ADDRESS_SQL =
-//            "SELECT hr_system.interview_days_details.id, date, start_time, end_time, hr_system.address.address, hr_system.address.room_capacity, count_students, count_personal" +
-//                    " FROM hr_system.interview_days_details" +
-//                    " LEFT JOIN hr_system.address" +
-//                    " ON hr_system.interview_days_details.address_id=hr_system.address.id" +
-//                    " WHERE course_id = ? " +
-//                    " ORDER BY hr_system.interview_days_details.date ";
-//    private static final String INTERVIEW_DETAILS_ADDRESS_BY_ID_SQL =
-//            "SELECT hr_system.interview_days_details.id, date, start_time, end_time, hr_system.address.address, hr_system.address.room_capacity, count_students, count_personal" +
-//                    " FROM hr_system.interview_days_details" +
-//                    " LEFT JOIN hr_system.address" +
-//                    " ON hr_system.interview_days_details.address_id=hr_system.address.id" +
-//                    " WHERE hr_system.interview_days_details.id = ? " +
-//                    " ORDER BY hr_system.interview_days_details.date ";
-
     private static final String REMOVE_SQL_BY_COURSE_ID = "DELETE FROM \"hr_system\".interview_days_details WHERE course_id = ?";
 
     @Autowired
@@ -143,44 +128,44 @@ public class InterviewDaysDetailsServiceImpl implements InterviewDaysDetailsServ
     @Override
     public String sortCandidateToDays(CourseSetting courseSetting) {
         if (isFiled()) {
-            int countCandidateWithStatusInterviewDate = candidateService.getCandidateByStatus(status.Interview_dated.getStatus()).size();
+            int candidateWithStatusInterviewDateCount = candidateService.getCandidateByStatus(status.Interview_dated.getStatus()).size();
             CourseSetting lastCourseSetting = courseSettingService.getLastSetting();
-            int countFree = lastCourseSetting.getStudentInterviewCount() - countCandidateWithStatusInterviewDate;
+            int freeCandidatesCount = lastCourseSetting.getStudentInterviewCount() - candidateWithStatusInterviewDateCount;
             List<Candidate> candidateList = (ArrayList<Candidate>) candidateService.getCandidateByStatus(status.Interview.getStatus());
-            int countMaxCandidatePerDay = dateService.studentPerDay();
-            LocalDate dayOfInterview = LocalDate.parse(lastCourseSetting.getInterviewStartDate());
-            int index = 0;
-            int countDays;
+            if (candidateList.isEmpty()) return "No candidate with status 'INTERVIEW'";
+            int maxCandidatesAtDay = dateService.studentPerDay();
+            LocalDate dayInterview = LocalDate.parse(lastCourseSetting.getInterviewStartDate());
+            int candidateIndex = 0;
+            int daysCount;
             int remainder;
-            if (countFree >= candidateList.size()) {
-                countDays = countCandidateWithStatusInterviewDate / countMaxCandidatePerDay;
-                remainder = countCandidateWithStatusInterviewDate % countMaxCandidatePerDay;
+            if (freeCandidatesCount >= candidateList.size()) {
+                daysCount = candidateWithStatusInterviewDateCount / maxCandidatesAtDay;
+                remainder = candidateWithStatusInterviewDateCount % maxCandidatesAtDay;
                 if (remainder == 0) {
-                    if (countDays != 0)
-                        dayOfInterview = dayOfInterview.plusDays(countDays + 1);
+                    if (daysCount != 0)
+                        dayInterview = dayInterview.plusDays(daysCount + 1);
                 } else {
-                    dayOfInterview = dayOfInterview.plusDays(countDays);
+                    dayInterview = dayInterview.plusDays(daysCount);
                 }
-                InterviewDaysDetails interviewDaysDetails = findByDate(String.valueOf(dayOfInterview));
-                int countCandidatesPerDay = candidateService.getCandidateCountByInterviewId(interviewDaysDetails.getId());
-                while (index < candidateList.size()) {
-                    if ((countMaxCandidatePerDay - countCandidatesPerDay) == 0) {
-                        dayOfInterview = dayOfInterview.plusDays(1);
-                        interviewDaysDetails = findByDate(String.valueOf(dayOfInterview));
-                        countCandidatesPerDay = candidateService.getCandidateCountByInterviewId(interviewDaysDetails.getId());
+                InterviewDaysDetails interviewDaysDetails = findByDate(String.valueOf(dayInterview));
+                int currentCandidatesAtDayCount = candidateService.getCandidateCountByInterviewId(interviewDaysDetails.getId());
+                while (candidateIndex < candidateList.size()) {
+                    if ((maxCandidatesAtDay - currentCandidatesAtDayCount) == 0) {
+                        dayInterview = dayInterview.plusDays(1);
+                        interviewDaysDetails = findByDate(String.valueOf(dayInterview));
+                        currentCandidatesAtDayCount = candidateService.getCandidateCountByInterviewId(interviewDaysDetails.getId());
                     }
                     Candidate candidate = new Candidate();
-                    candidate.setId(candidateList.get(index).getId());
+                    candidate.setId(candidateList.get(candidateIndex).getId());
                     candidate.setStatusId(status.Interview_dated.getId());
                     candidate.setInterviewDaysDetailsId(interviewDaysDetails.getId());
                     candidateService.updateCandidate(candidate);
-                    index++;
-                    countCandidatesPerDay++;
+                    candidateIndex++;
+                    currentCandidatesAtDayCount++;
                 }
-                return "Success";
-
+                return "Success, you have appointed "+candidateList.size()+" candidates";
             } else {
-                return "Limit Exceeded candidates! " + "You have " + countFree + " free places, but you want add "
+                return "Limit Exceeded candidates! " + "You have " + freeCandidatesCount + " free places, but you want add "
                         + candidateList.size() + " candidates";
             }
         } else {
