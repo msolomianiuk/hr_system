@@ -23,7 +23,7 @@
                                 aria-controls="collapseExample">
                             Subject 1
                         </button>
-                        <div class="collapse subject-body" id="subject-1">
+                        <div class="collapse subject-body" id="subject-0">
                             <div class="well ">
                                 <ul class="question-list">
                                 </ul>
