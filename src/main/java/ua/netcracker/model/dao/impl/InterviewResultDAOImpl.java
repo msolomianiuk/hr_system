@@ -31,7 +31,7 @@ public class InterviewResultDAOImpl implements InterviewResultDAO {
                     "on i.recommendation_id = r.id where i.candidate_id =?";
     private static final String FIND_COMMENT =
             "Select response from \"hr_system\".interview_result where i.candidate_id = ?";
-    private static final String FIND_ALL = "Select ir.interviewer_id, ir.mark, ir.comment, r.value from \"hr_system\".interview_result ir " +
+    private static final String FIND_BY_CANDIDATE_ID = "Select ir.interviewer_id, ir.mark, ir.comment, r.value from \"hr_system\".interview_result ir " +
             "inner join \"hr_system\".recommendation r on ir.recommendation_id = r.id where ir.candidate_id = ?";
     private static final String CREATE = "Insert into \"hr_system\".interview_result " +
             "(interviewer_id, candidate_id, mark, comment, recommendation_id) values (?, ?, ?, ?, ?)";
@@ -44,7 +44,7 @@ public class InterviewResultDAOImpl implements InterviewResultDAO {
         Collection<InterviewResult> results = new ArrayList<>();
         try {
             JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-            List<Map<String, Object>> rows = jdbcTemplate.queryForList(FIND_ALL, candidateId);
+            List<Map<String, Object>> rows = jdbcTemplate.queryForList(FIND_BY_CANDIDATE_ID, candidateId);
             for (Map<String, Object> row : rows) {
                 InterviewResult interviewResult = new InterviewResult();
                 interviewResult.setInterviewerId((int) row.get("interviewer_id"));
