@@ -1,6 +1,6 @@
 package ua.netcracker.model.service.impl;
 
-import org.apache.log4j.Logger;
+import org.springframework.stereotype.Service;
 import ua.netcracker.model.service.ValidationService;
 
 import java.util.regex.Matcher;
@@ -12,8 +12,6 @@ import java.util.regex.Pattern;
  * @author Bersik (Serhii Kisilchuk)
  */
 public class ValidationServiceImpl implements ValidationService {
-
-    private static final Logger LOGGER = Logger.getLogger(ValidationServiceImpl.class);
 
     private Pattern emailPattern;
     private Pattern namePattern;

@@ -15,6 +15,7 @@ import ua.netcracker.model.entity.*;
 import ua.netcracker.model.securiry.UserAuthenticationDetails;
 import ua.netcracker.model.service.CandidateService;
 import ua.netcracker.model.service.CourseSettingService;
+import ua.netcracker.model.service.PaginationService;
 import ua.netcracker.model.service.QuestionService;
 import ua.netcracker.model.utils.JsonParsing;
 
@@ -34,7 +35,7 @@ public class CandidateServiceImpl implements CandidateService {
     private int userId;
 
     @Autowired
-    private PaginationServiceImp paginationServiceImp;
+    private PaginationService paginationService;
     @Autowired
     private QuestionService questionService;
     @Autowired
@@ -85,10 +86,8 @@ public class CandidateServiceImpl implements CandidateService {
             for (Candidate candidate : getPartCandidatesWithAnswer(with, to)) {
                 Collection<Answer> listAnswers = answersDAO.findAllIsView(candidate, questionService.
                         getAllIsView(courseSettingService.getLastSetting().getId()));
-
                 candidate.setAnswers(listAnswers);
                 listCandidates.add(candidate);
-
             }
         } catch (DataAccessException e) {
             LOGGER.error("Method: getPartCandidatesIsViewWithAnswer" + " Error: " + e);
@@ -121,7 +120,7 @@ public class CandidateServiceImpl implements CandidateService {
     }
 
     @Override
-    public Integer getCandidateCount() {
+    public Integer getCandidateCount() throws NullPointerException {
         return candidateDAO.getCandidateCount(courseSettingService.getLastSetting().getId());
     }
 
@@ -134,7 +133,6 @@ public class CandidateServiceImpl implements CandidateService {
     public Candidate getCandidateByUserId(Integer userId) {
         return candidateDAO.findByUserId(userId);
     }
-
 
     @Override
     public Status getStatusById(Integer statusId) throws IllegalArgumentException {
@@ -186,16 +184,13 @@ public class CandidateServiceImpl implements CandidateService {
             candidate.setStatusId(Status.Ready.getId());
             candidate.setCourseId(courseSettingService.getLastSetting().getId());
             saveCandidate(candidate);
-            try {
-                candidate = getCandidateById(userId);
-            } catch (NullPointerException e) {
-                LOGGER.info("Method: saveAnswers " + e.getStackTrace()
-                        + " Message: " + e.getMessage());
-                LOGGER.debug(e.getStackTrace(), e);
-            }
+            candidate = getCurrentCandidate();
+            candidate.setAnswers(listAnswers);
+            answersDAO.saveAll(candidate);
+        } else {
+            candidate.setAnswers(listAnswers);
+            saveOrUpdateAnswers(candidate);
         }
-        candidate.setAnswers(listAnswers);
-        saveOrUpdateAnswers(candidate);
         return candidate;
     }
 
@@ -224,7 +219,6 @@ public class CandidateServiceImpl implements CandidateService {
             LOGGER.error("Method: deleteAnswers" + " Error: " + e);
         }
     }
-
 
     @Override
     public void saveOrUpdateAnswers(Candidate candidate) {
@@ -263,8 +257,8 @@ public class CandidateServiceImpl implements CandidateService {
     }
 
     @Override
-    public boolean updateCandidateStatus(Integer candidateID, Integer newStatusID) {
-        return candidateDAO.updateCandidateStatus(candidateID, newStatusID);
+    public boolean updateCandidateStatus(Integer candidateID, Status newStatus) {
+        return candidateDAO.updateCandidateStatus(candidateID, newStatus);
     }
 
     @Override
@@ -275,7 +269,7 @@ public class CandidateServiceImpl implements CandidateService {
         }
         Collection<Candidate> listCandidates = new ArrayList<>();
         try {
-            listCandidates.addAll(paginationServiceImp.findForSearch(limitRows, element, find));
+            listCandidates.addAll(paginationService.findForSearch(limitRows, element, find));
         } catch (DataAccessException e) {
             LOGGER.error("Method: getCandidate" + " Error: " + e);
         }

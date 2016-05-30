@@ -34,15 +34,10 @@
     <bean id="multipartResolver"
           class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
 
-        <!-- Maximum file size: 10MB -->
-        <!-- 10MB = 1250000 Byte -->
+        <!-- Maximum file size: 2MB -->
         <property name="maxUploadSize" value="2000000"/>
         <!--<property name="uploadTempDir" ref="uploadDirResource" />-->
     </bean>
-
-    <!--<bean id="uploadDirResource" class="org.springframework.core.io.FileSystemResource">
-        <constructor-arg value="${userPhotoFolder}"/>
-    </bean>-->
 
     <!-- Method viewResolver configures a view resolver to identify the real view.-->
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">

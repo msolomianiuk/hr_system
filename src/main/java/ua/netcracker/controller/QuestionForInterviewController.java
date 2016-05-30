@@ -20,7 +20,7 @@ public class QuestionForInterviewController {
 
     @RequestMapping(value = "/service/getAllQuestionForInterview", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<Collection<QuestionForInterview>> getQuestionsForInterview(){
+    public ResponseEntity<Collection<QuestionForInterview>> getQuestionsForInterview() {
         Collection<QuestionForInterview> questionForInterview =
                 questionForInterviewService.getAllSubjectAndQuestion();
         if (questionForInterview == null) {
@@ -33,7 +33,7 @@ public class QuestionForInterviewController {
     @ResponseBody
     public Integer addQuestion(@RequestParam Integer subjectId,
                                @RequestParam String questionValue
-    ){
+    ) throws NullPointerException {
         questionForInterviewService.setQuestion(subjectId, questionValue);
         return questionForInterviewService.getLastQuestionId();
     }
@@ -41,15 +41,15 @@ public class QuestionForInterviewController {
     @RequestMapping(value = "/service/editQuestion", method = RequestMethod.GET)
     @ResponseBody
     public Boolean editQuestion(@RequestParam Integer questionId,
-                               @RequestParam String questionValue,
-                               @RequestParam Integer subjectId
-    ){
+                                @RequestParam String questionValue,
+                                @RequestParam Integer subjectId
+    ) {
         return questionForInterviewService.updateQuestion(questionId, questionValue, subjectId);
     }
 
     @RequestMapping(value = "/service/deleteQuestion", method = RequestMethod.GET)
     @ResponseBody
-    public Boolean deleteQuestion(@RequestParam Integer questionId){
+    public Boolean deleteQuestion(@RequestParam Integer questionId) {
         return questionForInterviewService.remove(questionId);
     }
 }

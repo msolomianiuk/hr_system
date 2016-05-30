@@ -2,7 +2,6 @@ package ua.netcracker.model.dao.impl;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -12,7 +11,6 @@ import org.springframework.stereotype.Repository;
 import ua.netcracker.model.dao.UserDAO;
 import ua.netcracker.model.entity.Role;
 import ua.netcracker.model.entity.User;
-import ua.netcracker.model.service.SendEmailService;
 
 import javax.sql.DataSource;
 import java.sql.PreparedStatement;
@@ -33,8 +31,6 @@ public class UserDAOImpl implements UserDAO {
     private static final String SQL_UPDATE = "UPDATE \"hr_system\".users SET email=?,password=?,name=?,surname=?," +
             "patronymic=?,image=? WHERE id=?";
     private static final String SQL_REMOVE = "DELETE FROM \"hr_system\".users WHERE id=?";
-    private static final String SQL_FIND_BY_NAME = "SELECT * FROM \"hr_system\".users WHERE name=?";
-    private static final String SQL_FIND_BY_SURNAME = "SELECT * FROM \"hr_system\".users WHERE surname=?";
     private static final String SQL_GET_ALL_PERSONAL_BY_ROLE = "SELECT * " +
             "FROM \"hr_system\".users u " +
             "JOIN \"hr_system\".role_users_maps rol ON rol.user_id = u.id " +
@@ -53,8 +49,7 @@ public class UserDAOImpl implements UserDAO {
     @Autowired
     private JdbcTemplate jdbcTemplate;
     private SimpleJdbcInsert simpleJdbcInsert;
-    @Autowired
-    private SendEmailService sendEmailService;
+
     @Autowired
     public void setSimpleJdbcInsert(DataSource dataSource) {
         simpleJdbcInsert = new SimpleJdbcInsert(dataSource).
@@ -65,34 +60,47 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public Collection<User> findAll() {
-        List<User> users = jdbcTemplate.query(SQL_FIND_ALL, new RowMapper<User>() {
-            @Override
-            public User mapRow(ResultSet rs, int rowNumber) throws SQLException {
-                return createUserWithResultSet(rs);
+        List<User> users = null;
+        try {
+            users = jdbcTemplate.query(SQL_FIND_ALL, new RowMapper<User>() {
+                @Override
+                public User mapRow(ResultSet rs, int rowNumber) throws SQLException {
+                    return createUserWithResultSet(rs);
+                }
+            });
+            for (User user : users) {
+                user.setRoles(getUserRolesById(user.getId()));
             }
-        });
-        for (User user : users) {
-            user.setRoles(getUserRolesById(user.getId()));
+        } catch (Exception e) {
+            LOGGER.error(e);
         }
         return users;
     }
 
+
     @Override
     public User find(int id) {
+        return find(SQL_FIND, id);
+    }
+
+    @Override
+    public User findByEmail(String email) {
+        return find(SQL_FIND_BY_EMAIL, email);
+    }
+
+    private User find(String query, Object param) {
         User user = null;
         try {
             user = jdbcTemplate.queryForObject(
-                    SQL_FIND,
+                    query,
                     new RowMapper<User>() {
                         public User mapRow(ResultSet rs, int rowNum) throws SQLException {
                             return createUserWithResultSet(rs);
                         }
-                    }, id);
-
+                    }, param);
             user.setRoles(getUserRolesById(user.getId()));
         } catch (Exception e) {
             LOGGER.info(e);
-            sendEmailService.sendEmailAboutCriticalError("Error in find User(Login Error)" + e.getMessage());
         }
         return user;
     }
@@ -112,100 +120,70 @@ public class UserDAOImpl implements UserDAO {
                 user.setId(key.intValue());
                 return insertUserRoles(user);
             }
-        } catch (DuplicateKeyException ex) {
-            return false;
+        } catch (Exception ex) {
+            LOGGER.error(ex);
         }
         return false;
     }
 
     @Override
     public boolean update(User user) {
-        if (jdbcTemplate.update(SQL_UPDATE, user.getEmail(), user.getPassword(), user.getName(), user.getSurname(),
-                user.getPatronymic(), user.getImage(), user.getId()) == 1) {
-            if (removeUserRoles(user.getId()))
-                return insertUserRoles(user);
+        try {
+            if (jdbcTemplate.update(SQL_UPDATE, user.getEmail(), user.getPassword(), user.getName(), user.getSurname(),
+                    user.getPatronymic(), user.getImage(), user.getId()) == 1) {
+                if (removeUserRoles(user.getId()))
+                    return insertUserRoles(user);
+            }
+        } catch (Exception ex) {
+            LOGGER.error(ex);
         }
         return false;
     }
 
     @Override
     public boolean remove(User user) {
-        if (jdbcTemplate.update(SQL_REMOVE, user.getId()) == 1) {
-            return removeUserRoles(user.getId());
+        try {
+            if (jdbcTemplate.update(SQL_REMOVE, user.getId()) == 1) {
+                return removeUserRoles(user.getId());
+            }
+        } catch (Exception ex) {
+            LOGGER.error(ex);
         }
         return false;
     }
 
     @Override
     public Integer findAllWorkers() {
-        try{
-            Integer count = jdbcTemplate.queryForObject(SQL_FIND_ALL_WORKERS, new RowMapper<Integer>() {
+        try {
+            return jdbcTemplate.queryForObject(SQL_FIND_ALL_WORKERS, new RowMapper<Integer>() {
                 @Override
                 public Integer mapRow(ResultSet rs, int rowNum) throws SQLException {
                     return rs.getInt(1);
                 }
             });
-            return count;
-        }catch (Exception e){
-            LOGGER.error("Error: " + e);
+        } catch (Exception e) {
+            LOGGER.error(e);
         }
         return 0;
-    }
-
-
-
-    @Override
-    public List<User> findByName(String name) {
-        return jdbcTemplate.query(SQL_FIND_BY_NAME, new RowMapper<User>() {
-            @Override
-            public User mapRow(ResultSet rs, int rowNumber) throws SQLException {
-                return createUserWithResultSet(rs);
-            }
-        }, name);
-    }
-
-    @Override
-    public List<User> findBySurname(String surname) {
-        return jdbcTemplate.query(SQL_FIND_BY_SURNAME, new RowMapper<User>() {
-            @Override
-            public User mapRow(ResultSet rs, int rowNumber) throws SQLException {
-                return createUserWithResultSet(rs);
-            }
-        }, surname);
     }
 
     @Override
     public List<User> getAllPersonalById(int roleId) {
         List<User> users = null;
-        if (roleId >= 1 && roleId <= 4) {
-            users = jdbcTemplate.query(SQL_GET_ALL_PERSONAL_BY_ROLE, new RowMapper<User>() {
+        try {
+            if (roleId >= 1 && roleId <= 4) {
+                users = jdbcTemplate.query(SQL_GET_ALL_PERSONAL_BY_ROLE, new RowMapper<User>() {
 
-                @Override
-                public User mapRow(ResultSet rs, int rowNumber) throws SQLException {
-                    return createUserWithResultSet(rs);
-                }
-            }, roleId);
+                    @Override
+                    public User mapRow(ResultSet rs, int rowNumber) throws SQLException {
+                        return createUserWithResultSet(rs);
+                    }
+                }, roleId);
+            }
+        } catch (Exception e) {
+            LOGGER.error(e);
         }
         return users;
-    }
-
-    @Override
-    public User findByEmail(String email) {
-        User user = null;
-        try {
-            user = jdbcTemplate.queryForObject(
-                    SQL_FIND_BY_EMAIL,
-                    new RowMapper<User>() {
-                        public User mapRow(ResultSet rs, int rowNum) throws SQLException {
-                            return createUserWithResultSet(rs);
-                        }
-                    }, email);
-
-            user.setRoles(getUserRolesById(user.getId()));
-        }catch (Exception e){
-            LOGGER.info(e);
-        }
-        return user;
     }
 
     private User createUserWithResultSet(ResultSet rs) throws SQLException {
@@ -220,43 +198,58 @@ public class UserDAOImpl implements UserDAO {
         return user;
     }
 
-
     @Override
     public List<Role> getUserRolesById(int userId) {
-        return jdbcTemplate.query(
-                SQL_GET_USER_ROLES_BY_USER_ID,
-                new RowMapper<Role>() {
-                    public Role mapRow(ResultSet rs, int rowNum) throws SQLException {
-                        return Role.valueOf(rs.getString("name"));
-                    }
-                }, userId);
+        List<Role> roles = null;
+        try {
+            roles = jdbcTemplate.query(
+                    SQL_GET_USER_ROLES_BY_USER_ID,
+                    new RowMapper<Role>() {
+                        public Role mapRow(ResultSet rs, int rowNum) throws SQLException {
+                            return Role.valueOf(rs.getString("name"));
+                        }
+                    }, userId);
+        } catch (Exception e) {
+            LOGGER.error(e);
+        }
+        return roles;
     }
 
     @Override
     public boolean insertUserRoles(final User user) {
         final Object[] roles = user.getRoles().toArray();
-        int[] res = jdbcTemplate.batchUpdate(SQL_INSERT_USER_ROLES, new BatchPreparedStatementSetter() {
-            @Override
-            public void setValues(PreparedStatement preparedStatement, int i) throws SQLException {
-                Role role = (Role) (roles[i]);
-                preparedStatement.setInt(1, role.getId());
-                preparedStatement.setInt(2, user.getId());
-            }
+        try {
+            int[] res = jdbcTemplate.batchUpdate(SQL_INSERT_USER_ROLES, new BatchPreparedStatementSetter() {
+                @Override
+                public void setValues(PreparedStatement preparedStatement, int i) throws SQLException {
+                    Role role = (Role) (roles[i]);
+                    preparedStatement.setInt(1, role.getId());
+                    preparedStatement.setInt(2, user.getId());
+                }
 
-            @Override
-            public int getBatchSize() {
-                return roles.length;
+                @Override
+                public int getBatchSize() {
+                    return roles.length;
+                }
+            });
+            for (int i : res) {
+                if (i != 1)
+                    return false;
             }
-        });
-        for (int i : res) {
-            if (i != 1)
-                return false;
+            return true;
+        } catch (Exception e) {
+            LOGGER.error(e);
         }
-        return true;
+        return false;
     }
 
     @Override
     public boolean removeUserRoles(int userId) {
-        return jdbcTemplate.update(SQL_REMOVE_USER_ROLES, userId) > 0;
+        try {
+            return jdbcTemplate.update(SQL_REMOVE_USER_ROLES, userId) > 0;
+        } catch (Exception e) {
+            LOGGER.error(e);
+        }
+        return false;
     }
 }

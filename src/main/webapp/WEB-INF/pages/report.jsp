@@ -47,6 +47,7 @@
     <script src="<c:url value="/static/admin/js/report/jquery.validate.min.js"/>"></script>
     <script src="<c:url value="/static/admin/js/textarea/autosize.min.js"/>"></script>
     <script src="<c:url value="/static/admin/js/nprogress.js"/>"></script>
+    <script src="<c:url value="/static/js/custom/baseUrl.js"/>"></script>
 </head>
 
 <body class="nav-md">
@@ -227,6 +228,9 @@
                                     <button type="button" class="btn btn-success btn-create" data-toggle="modal"
                                             data-target=".bs-example-modal-lg-dev">Create New
                                     </button>
+                                    <button type="button" class="btn btn-success btn-show-deleted-reports" data-toggle="modal"
+                                            data-target=".modal-lg-dev-del-reports">View Deleted Reports
+                                    </button>
                                     <form class="report_developer_form">
                                     </form>
                                     <div class="modal fade bs-example-modal-lg-dev" tabindex="-1" role="dialog"
@@ -237,7 +241,7 @@
                                                     <button type="button" class="close" data-dismiss="modal"><span
                                                             aria-hidden="true">×</span>
                                                     </button>
-                                                    <h4 class="modal-title" id="myModalLabel1">You can manage
+                                                    <h4 class="modal-title" id="myModalLabel1">You can create
                                                         this report</h4>
                                                 </div>
                                                 <div class="modal-body">
@@ -245,7 +249,6 @@
                                                         <div class="dev_panel_description">
                                                         </div>
                                                         <br>
-
                                                         <div class="dev_panel_query">
                                                         </div>
                                                     </form>
@@ -267,6 +270,30 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="modal fade modal-lg-dev-del-reports" tabindex="-1" role="dialog"
+                                         aria-hidden="true">
+                                        <div class="modal-dialog modal-lg">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal"><span
+                                                            aria-hidden="true">×</span>
+                                                    </button>
+                                                    <h4 class="modal-title" id="myModalLabel2">You can return reports to
+                                                        main list</h4>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class = "deleted_reports">
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-default" id="btn-close"
+                                                            data-dismiss="modal">
+                                                        Close
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -274,7 +301,7 @@
                 </div>
             </div>
             <!-- footer content -->
-            
+
         </div>
     </div>
 </div>

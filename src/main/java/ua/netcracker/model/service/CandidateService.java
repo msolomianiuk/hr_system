@@ -61,7 +61,7 @@ public interface CandidateService {
 
     Map<Integer, String> getAllStatus();
 
-    boolean updateCandidateStatus(Integer candidateID, Integer newStatusID);
+    boolean updateCandidateStatus(Integer candidateID, Status newStatus);
 
     public Collection<Candidate> getCandidate(Integer limitRows, Integer fromElement, String find);
 

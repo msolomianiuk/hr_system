@@ -52,12 +52,13 @@
     -->
     <authentication-manager>
         <authentication-provider user-service-ref="userDetailsService">
-            <password-encoder hash="sha-256"/>
+            <password-encoder ref="passwordEncoder"/>
         </authentication-provider>
     </authentication-manager>
 
-    <beans:bean id="userDetailsService"
-                class="ua.netcracker.model.service.impl.CustomUserDetailsServiceImpl"/>
+    <beans:bean id="userDetailsService" class="ua.netcracker.model.service.impl.CustomUserDetailsServiceImpl"/>
+
+    <beans:bean id="passwordEncoder" class="ua.netcracker.model.securiry.SHA256PasswordEncoder"/>
 
     <beans:bean id="customSuccessHandler" class="ua.netcracker.configuration.CustomSuccessHandler"/>
 

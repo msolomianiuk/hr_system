@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RestController;
 import ua.netcracker.model.dao.UserDAO;
 import ua.netcracker.model.entity.Role;
 import ua.netcracker.model.entity.User;
+import ua.netcracker.model.securiry.SHA256PasswordEncoder;
 
-import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -34,18 +34,8 @@ public class RegistrationPersonalRestController {
         this.userDAO = userDAO;
     }
 
-    private static String sha256Password(String password) {
-        try {
-            MessageDigest md = MessageDigest.getInstance("SHA-256");
-
-            md.update(password.getBytes("UTF-8"));
-            byte[] digest = md.digest();
-            return String.format("%064x", new java.math.BigInteger(1, digest));
-        } catch (Exception e) {
-//            LOGGER.error(e);
-        }
-        return null;
-    }
+    @Autowired
+    private SHA256PasswordEncoder passwordEncoder;
 
     public static Role getRoleByStr(String role) {
         return Role.valueOf(role);
@@ -65,7 +55,7 @@ public class RegistrationPersonalRestController {
         user.setName(name_peronal);
         user.setSurname(sername_peronal);
         user.setPatronymic(patronymic_peronal);
-        user.setPassword(sha256Password(password_peronal));
+        user.setPassword(passwordEncoder.encode(password_peronal));
         user.setEmail(email_peronal);
         user.setRoles(new ArrayList<>(Arrays.asList(getRoleByStr(Role_Id))));
 

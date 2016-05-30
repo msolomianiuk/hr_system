@@ -1,10 +1,3 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: Серый
-  Date: 13.05.2016
-  Time: 5:25
-  To change this template use File | Settings | File Templates.
---%>
 <form class="form-horizontal form-label-left" novalidate>
   <!-- text input -->
   <div class="item form-group text-input-type">
