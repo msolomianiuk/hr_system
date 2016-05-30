@@ -615,7 +615,7 @@ public class AdminController {
     }
 
     @RequestMapping(value = "/getRows", method = RequestMethod.GET)
-    public ResponseEntity<Long> getRows(@RequestParam String answersJsonString) {
+    public ResponseEntity<Long> getRows(@RequestParam String answersJsonString) throws NullPointerException{
 
         Collection<Answer> answers = JsonParsing.parseJsonString(answersJsonString);
 
@@ -690,7 +690,7 @@ public class AdminController {
     @RequestMapping(value = "/candidateCount", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<Integer> userId(
-    ) {
+    ) throws NullPointerException {
         int countStudents = candidateService.getCandidateCount();
 
         return ResponseEntity.ok(countStudents);

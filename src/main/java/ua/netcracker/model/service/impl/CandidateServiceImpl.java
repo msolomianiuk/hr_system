@@ -15,6 +15,7 @@ import ua.netcracker.model.entity.*;
 import ua.netcracker.model.securiry.UserAuthenticationDetails;
 import ua.netcracker.model.service.CandidateService;
 import ua.netcracker.model.service.CourseSettingService;
+import ua.netcracker.model.service.PaginationService;
 import ua.netcracker.model.service.QuestionService;
 import ua.netcracker.model.utils.JsonParsing;
 
@@ -34,7 +35,7 @@ public class CandidateServiceImpl implements CandidateService {
     private int userId;
 
     @Autowired
-    private PaginationServiceImpl paginationServiceImpl;
+    private PaginationService paginationService;
     @Autowired
     private QuestionService questionService;
     @Autowired
@@ -85,10 +86,8 @@ public class CandidateServiceImpl implements CandidateService {
             for (Candidate candidate : getPartCandidatesWithAnswer(with, to)) {
                 Collection<Answer> listAnswers = answersDAO.findAllIsView(candidate, questionService.
                         getAllIsView(courseSettingService.getLastSetting().getId()));
-
                 candidate.setAnswers(listAnswers);
                 listCandidates.add(candidate);
-
             }
         } catch (DataAccessException e) {
             LOGGER.error("Method: getPartCandidatesIsViewWithAnswer" + " Error: " + e);
@@ -121,7 +120,7 @@ public class CandidateServiceImpl implements CandidateService {
     }
 
     @Override
-    public Integer getCandidateCount() {
+    public Integer getCandidateCount() throws NullPointerException {
         return candidateDAO.getCandidateCount(courseSettingService.getLastSetting().getId());
     }
 
@@ -134,7 +133,6 @@ public class CandidateServiceImpl implements CandidateService {
     public Candidate getCandidateByUserId(Integer userId) {
         return candidateDAO.findByUserId(userId);
     }
-
 
     @Override
     public Status getStatusById(Integer statusId) throws IllegalArgumentException {
@@ -198,7 +196,6 @@ public class CandidateServiceImpl implements CandidateService {
 
     @Override
     public Candidate getCurrentCandidate() throws NullPointerException {
-        Candidate candidate = null;
         userId = 0;
         try {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -208,11 +205,10 @@ public class CandidateServiceImpl implements CandidateService {
                                 getAuthentication().getPrincipal();
                 userId = userDetails.getUserId();
             }
-            candidate = getCandidateByUserId(userId);
         } catch (Exception e) {
             LOGGER.error("Method: getCurrentCandidate" + " Error: " + e);
         }
-        return candidate;
+        return getCandidateByUserId(userId);
     }
 
     @Override
@@ -223,7 +219,6 @@ public class CandidateServiceImpl implements CandidateService {
             LOGGER.error("Method: deleteAnswers" + " Error: " + e);
         }
     }
-
 
     @Override
     public void saveOrUpdateAnswers(Candidate candidate) {
@@ -274,7 +269,7 @@ public class CandidateServiceImpl implements CandidateService {
         }
         Collection<Candidate> listCandidates = new ArrayList<>();
         try {
-            listCandidates.addAll(paginationServiceImpl.findForSearch(limitRows, element, find));
+            listCandidates.addAll(paginationService.findForSearch(limitRows, element, find));
         } catch (DataAccessException e) {
             LOGGER.error("Method: getCandidate" + " Error: " + e);
         }

@@ -49,14 +49,16 @@ public class CandidateDAOImpl implements CandidateDAO {
     private static final String SELECT_CANDIDATE_COUNT_BY_INTERVIEWDID =
             "SELECT COUNT(*) FROM \"hr_system\".candidate WHERE interview_days_details_id = ";
     private static final String PAGINATION = "WITH cand AS " +
-            "(SELECT  DISTINCT ON(candidate.id) candidate.id,u.name,u.email ,u.surname, u.patronymic,candidate.status_id, candidate.course_id , ir.interviewer_id, ir.mark, ir.comment, r.value " +
+            "(SELECT  DISTINCT ON(candidate.id) candidate.id,u.name,u.email ,u.surname, u.patronymic,"
+            + "candidate.status_id, candidate.course_id , ir.interviewer_id, ir.mark, ir.comment, r.value " +
             "FROM \"hr_system\".users u " +
             "JOIN \"hr_system\".role_users_maps rol ON rol.user_id = u.id " +
             "JOIN \"hr_system\".candidate candidate ON candidate.user_id = u.id " +
             "LEFT OUTER JOIN \"hr_system\".interview_result ir on candidate.id = ir.candidate_id " +
             "LEFT OUTER JOIN \"hr_system\".recommendation r on ir.recommendation_id = r.id " +
             "WHERE rol.role_id = 5 ) " +
-            "SELECT  cand.id,cand.name,cand.email ,cand.surname, cand.patronymic,cand.status_id, cand.course_id , cand.interviewer_id, cand.mark, cand.comment, cand.value " +
+            "SELECT  cand.id,cand.name,cand.email ,cand.surname, cand.patronymic,cand.status_id, cand.course_id ," +
+            " cand.interviewer_id, cand.mark, cand.comment, cand.value " +
             "FROM cand ";
 
     @Autowired
@@ -328,7 +330,6 @@ public class CandidateDAOImpl implements CandidateDAO {
         return listCandidates;
     }
 
-    //Розібратися з цією 1 і 0
     @Override
     public Integer getCandidateCount(int courseId) {
         try {
@@ -355,7 +356,6 @@ public class CandidateDAOImpl implements CandidateDAO {
         return 0;
     }
 
-    //теж саме з 1
     @Override
     public Integer getCandidateCountByInterviewId(int interviewId) {
         try {
@@ -455,14 +455,17 @@ public class CandidateDAOImpl implements CandidateDAO {
         try {
             jdbcTemplate = new JdbcTemplate(dataSource);
             listCandidates = jdbcTemplate.query(
-                    "WITH cand AS (SELECT  DISTINCT ON(candidate.id) candidate.id,u.name,u.email ,u.surname, u.patronymic,candidate.status_id, candidate.course_id , ir.interviewer_id, ir.mark, ir.comment, r.value " +
+                    "WITH cand AS (SELECT  DISTINCT ON(candidate.id) candidate.id,u.name,u.email ,u.surname, " +
+                            "u.patronymic,candidate.status_id, candidate.course_id , ir.interviewer_id, ir.mark," +
+                            " ir.comment, r.value " +
                             "FROM \"hr_system\".users u " +
                             "JOIN \"hr_system\".role_users_maps rol ON rol.user_id = u.id " +
                             "JOIN \"hr_system\".candidate candidate ON candidate.user_id = u.id " +
                             "LEFT OUTER JOIN \"hr_system\".interview_result ir on candidate.id = ir.candidate_id " +
                             "LEFT OUTER JOIN \"hr_system\".recommendation r on ir.recommendation_id = r.id " +
                             "LEFT OUTER JOIN \"hr_system\".status status on candidate.status_id = status.id " +
-                            "LEFT OUTER JOIN \"hr_system\".candidate_answer answer on candidate.id = answer.candidate_id " +
+                            "LEFT OUTER JOIN \"hr_system\".candidate_answer answer on " +
+                            "candidate.id = answer.candidate_id " +
                             "WHERE rol.role_id = 5  " +
                             "and( name LIKE '%" + find + "%' " +
                             "or surname LIKE '%" + find + "%' " +
@@ -488,7 +491,8 @@ public class CandidateDAOImpl implements CandidateDAO {
                             candidate.setStatusId(resultSet.getInt("status_id"));
                             candidate.setCourseId(resultSet.getInt("course_id"));
 
-                            Collection<InterviewResult> list = interviewResultDAO.findResultsByCandidateId(candidate.getId());
+                            Collection<InterviewResult> list = interviewResultDAO.
+                                    findResultsByCandidateId(candidate.getId());
                             candidate.setInterviewResults(list);
 
                             return candidate;
@@ -507,9 +511,11 @@ public class CandidateDAOImpl implements CandidateDAO {
 
         Collection<Candidate> listCandidates = new ArrayList<>();
         try {
-            String sql = PAGINATION + "ORDER BY cand.course_id DESC,cand.interviewer_id,cand.status_id DESC, cand.id LIMIT ";
+            String sql = PAGINATION +
+                    "ORDER BY cand.course_id DESC,cand.interviewer_id,cand.status_id DESC, cand.id LIMIT ";
             jdbcTemplate = new JdbcTemplate(dataSource);
-            listCandidates.addAll(jdbcTemplate.query(sql + elementPage + " offset " + fromElement, new RowMapper<Candidate>() {
+            listCandidates.addAll(jdbcTemplate.query(sql + elementPage + " offset " + fromElement,
+                    new RowMapper<Candidate>() {
                 @Override
                 public Candidate mapRow(ResultSet resultSet, int i) throws SQLException {
                     Candidate candidate = new Candidate();
