@@ -39,8 +39,6 @@ import java.util.Map;
 public class InterviewDaysDetailsServiceImpl implements InterviewDaysDetailsService {
     static final Logger LOGGER = Logger.getLogger(InterviewDaysDetailsServiceImpl.class);
 
-    private static final String REMOVE_SQL_BY_COURSE_ID = "DELETE FROM \"hr_system\".interview_days_details WHERE course_id = ?";
-
     @Autowired
     private InterviewDaysDetailsDAO interviewDaysDetailsDAO;
 
@@ -113,7 +111,7 @@ public class InterviewDaysDetailsServiceImpl implements InterviewDaysDetailsServ
 
     @Override
     public void removeByCourseId(int course_id) {
-        jdbcTemplateFactory.getJdbcTemplate(dataSource).update(REMOVE_SQL_BY_COURSE_ID, course_id);
+        interviewDaysDetailsDAO.removeByCourseId(course_id);
     }
 
     @Override
@@ -147,8 +145,12 @@ public class InterviewDaysDetailsServiceImpl implements InterviewDaysDetailsServ
             int daysCount;
             int remainder;
             if (freeCandidatesCount >= candidateList.size()) {
-                daysCount = candidateWithStatusInterviewDateCount / maxCandidatesAtDay;
-                remainder = candidateWithStatusInterviewDateCount % maxCandidatesAtDay;
+                try {
+                    daysCount = candidateWithStatusInterviewDateCount / maxCandidatesAtDay;
+                    remainder = candidateWithStatusInterviewDateCount % maxCandidatesAtDay;
+                }catch (ArithmeticException e ){
+                    return "Count of student is incorrect";
+                }
                 if (remainder == 0) {
                     if (daysCount != 0)
                         dayInterview = dayInterview.plusDays(daysCount + 1);

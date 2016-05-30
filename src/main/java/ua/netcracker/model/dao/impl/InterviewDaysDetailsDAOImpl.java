@@ -43,6 +43,7 @@ public class InterviewDaysDetailsDAOImpl implements InterviewDaysDetailsDAO {
     private static final String FIND_SQL_BY_DATE = "SELECT id, course_id, date, start_time, end_time, address_id FROM \"hr_system\".interview_days_details WHERE date = ?";
     private static final String INSERT_SQL = "INSERT INTO \"hr_system\".interview_days_details(course_id, date, start_time, end_time, address_id, count_students, count_personal) VALUES (?, ?, ?, ?, ?, ?, ?);";
     private static final String INSERT_DATE_SQL = "INSERT INTO \"hr_system\".interview_days_details(course_id, date) VALUES (?, ?);";
+    private static final String REMOVE_SQL_BY_COURSE_ID = "DELETE FROM \"hr_system\".interview_days_details WHERE course_id = ?";
     private static final String INTERVIEW_DETAILS_ADDRESS_SQL =
             "SELECT hr_system.interview_days_details.id, date, start_time, end_time, hr_system.address.address, hr_system.address.room_capacity, count_students, count_personal" +
                     " FROM hr_system.interview_days_details" +
@@ -148,6 +149,14 @@ public class InterviewDaysDetailsDAOImpl implements InterviewDaysDetailsDAO {
             LOGGER.error("Error: " + e);
         }
         return false;
+    }
+
+    public void removeByCourseId(int course_id) {
+        try {
+        jdbcTemplateFactory.getJdbcTemplate(dataSource).update(REMOVE_SQL_BY_COURSE_ID, course_id);
+        } catch (Exception e){
+            LOGGER.error("Error: " + e);
+        }
     }
 
     @Override
